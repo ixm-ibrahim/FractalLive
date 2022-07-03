@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <None Remove="Shaders\geometry.vert" />
+    <None Remove="Shaders\mandelbrot.frag" />
   </ItemGroup>
 
 </Project>

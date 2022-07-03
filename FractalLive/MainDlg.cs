@@ -31,14 +31,14 @@ namespace FractalLive
         
         private void InitObjects()
         {
-            float[] plane =
+            TexturedVertex[] plane =
             {
-                -1,-1,  //  1,-1 +----+ 1,1
-                -1, 1,  //       |   /|
-                 1, 1,  //       |  / |
-                 1,-1,  //       | /  |
-                -1,-1,  //       |/   |
-                 1, 1,  // -1,-1 +----+ -1,1
+                new TexturedVertex(-1,-1,0,0,0,0,0,0),  //  1,-1 +----+ 1,1
+                new TexturedVertex(-1, 1,0,0,0,0,0,1),  //       |   /|
+                new TexturedVertex( 1, 1,0,0,0,0,1,1),  //       |  / |
+                new TexturedVertex( 1,-1,0,0,0,0,1,0),  //       | /  |
+                new TexturedVertex(-1,-1,0,0,0,0,0,0),  //       |/   |
+                new TexturedVertex( 1, 1,0,0,0,0,1,1),  // -1,-1 +----+ -1,1
             };
 
             vboPlane = GL.GenBuffer();
@@ -47,17 +47,20 @@ namespace FractalLive
             GL.BindVertexArray(vaoPlane);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vboPlane);
-            GL.BufferData(BufferTarget.ArrayBuffer, plane.Length * sizeof(float), plane, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, plane.Length * TexturedVertex.Size, plane, BufferUsageHint.StaticDraw);
 
-            GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 2*sizeof(float), 0);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 8*sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
+
+            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 8*sizeof(float),  6*sizeof(float));
+            GL.EnableVertexAttribArray(1);
         }
 
         private void InitShaders()
         {
 
 
-            mandelbrot = new Shader("Shaders/plane_simple.vert", "Shaders/mandelbrot_simple.frag");
+            mandelbrot = new Shader("Shaders/geometry.vert", "Shaders/mandelbrot.frag");
             mandelbrot.Use();
         }
 
