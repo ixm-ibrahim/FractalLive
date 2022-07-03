@@ -1,0 +1,2 @@
+﻿point, line, and cross orbit traps
+julia centering for lambda
