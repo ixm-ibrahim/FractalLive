@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -80,6 +81,8 @@ namespace FractalLive
             GL.BindVertexArray(vaoPlane);
             GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
 
+            mandelbrotCamera.Render();
+
             /*
             Matrix4 lookat = Matrix4.LookAt(0, 5, 5, 0, 0, 0, 0, 1, 0);
             GL.MatrixMode(MatrixMode.Modelview);
@@ -144,7 +147,10 @@ namespace FractalLive
 
             InitObjects();
             InitShaders();
-            
+
+            applicationTime = new Stopwatch();
+            mandelbrotCamera = new Camera();
+
             NativeInputRadioButton.Checked = true;
 
             // Make sure that when the GLControl is resized or needs to be painted,
@@ -188,6 +194,8 @@ namespace FractalLive
 
             // Ensure that the viewport and projection matrix are set correctly initially.
             glControl_Resize(glControl, EventArgs.Empty);
+
+            applicationTime.Start();
         }
 
         private void MainDlg_FormClosing(object sender, FormClosingEventArgs e)
@@ -297,23 +305,27 @@ namespace FractalLive
         #endregion
 
         #region Properties
-        
+
         #endregion
 
         #region Fields
+        internal static Stopwatch? applicationTime;
+
         private OpenTK.WinForms.INativeInput _nativeInput;
         private Timer _timer = null!;
         private float _angle = 0.0f;
 
-        Camera mandelbrotCamera;
-        Camera juliaCamera;
+        private Shader mandelbrot;
 
-        int vboPlane, vaoPlane;
+        private Camera mandelbrotCamera;
+        private Camera juliaCamera;
+        private Camera juliaMatingCamera;
+
+        private int vboPlane, vaoPlane;
 
         #endregion
 
-        #region Variables
-        Shader mandelbrot;
+        #region Constants
 
         #endregion
     }

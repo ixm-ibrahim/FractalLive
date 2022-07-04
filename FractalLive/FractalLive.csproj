@@ -27,6 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Shaders\axis.frag" />
+    <None Remove="Shaders\axis.vert" />
     <None Remove="Shaders\geometry.vert" />
     <None Remove="Shaders\mandelbrot.frag" />
   </ItemGroup>
