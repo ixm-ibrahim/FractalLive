@@ -27,23 +27,25 @@ namespace FractalLive
         {
             public Mode mode;
             public Projection projection;
-            public double fov;
+            public float fov;
             public bool showTarget;
             public bool showAxis;
-            public double moveSpeed;
-            public double zoomSpeed;
-            public double mouseSensitivity;
-            public double nearClipping;
-            public double farClipping;
+            public float moveSpeed;
+            public float turnSpeed;
+            public float zoomSpeed;
+            public float mouseSensitivity;
+            public float nearClipping;
+            public float farClipping;
 
-            public Settings(Mode mode, double fov = 67.5, Projection projection = Projection.CARTESIAN, bool showTarget = false, bool showAxis = false, double moveSpeed = .5, double zoomSpeed = .1, double mouseSensitivity = .2, double nearClipping = 0.1, double farClipping = 100)
+            public Settings(Mode mode, float fov = 67.5f, Projection projection = Projection.CARTESIAN, bool showTarget = false, bool showAxis = false, float moveSpeed = .5f, float turnSpeed = .2f, float zoomSpeed = .1f, float mouseSensitivity = .2f, float nearClipping = 0.1f, float farClipping = 100f)
             {
                 this.mode = Mode.FLAT;
                 this.projection = Projection.CARTESIAN;
-                this.fov = fov;
+                this.fov = MathHelper.DegreesToRadians(fov);
                 this.showTarget = showTarget;
                 this.showAxis = showAxis;
                 this.moveSpeed = moveSpeed;
+                this.turnSpeed = turnSpeed;
                 this.zoomSpeed = zoomSpeed;
                 this.mouseSensitivity = mouseSensitivity;
                 this.nearClipping = nearClipping;
@@ -55,8 +57,8 @@ namespace FractalLive
         #region Constructors
         public Camera(int aspectRatio = 1)
         {
-            flatSettings = new Settings(Mode.FLAT, 45.0);
-            freeSettings = new Settings(Mode.FREE, 67.5);
+            flatSettings = new Settings(Mode.FLAT, 45.0f);
+            freeSettings = new Settings(Mode.FREE, 67.5f);
             currentSettings = flatSettings;
             
             FullScreen = false;
@@ -203,13 +205,294 @@ namespace FractalLive
         {
             targetDistance = (target - position).Length;
         }
+
+        void UpdateTarget()
+        {
+            target = MoveAlongAxis(position, direction, targetDistance);
+        }
+
+
+        // Gets the view matrix
+        public Matrix4 GetViewMatrix()
+        {
+            return Matrix4.LookAt(position, direction + position, up);
+            //return Matrix4.LookAt(Position, direction, up);
+        }
+
+        // Gets the projection matrix @DOES NOT WORK AS INTENDED
+        public Matrix4 GetOrthographicMatrix(int Width, int Height)
+        {
+            return Matrix4.CreateOrthographic(Width, Height, currentSettings.nearClipping, currentSettings.farClipping);
+            //return Matrix4.LookAt(Position, Direction + direction, Up);
+        }
+
+        // Gets the projection matrix
+        public Matrix4 GetProjectionMatrix()
+        {
+            return Matrix4.CreatePerspectiveFieldOfView(currentSettings.fov, AspectRatio, currentSettings.nearClipping, currentSettings.farClipping);
+            //return Matrix4.CreatePerspectiveFieldOfView(fov, AspectRatio, 0.0001f, targetDistance * 10);
+        }
+
+
+        public void MoveAlongAxis(Vector3 axis, bool updateTarget = true)
+        {
+            MoveAlongAxis(axis, 1, updateTarget);
+        }
+        public void MoveAlongAxis(Vector3 axis, float distance, bool updateTarget = true)
+        {
+            UpdateTargetDistance();
+            position += axis * distance * currentSettings.moveSpeed;
+
+            if (updateTarget)
+                UpdateTarget();
+        }
+        public static Vector3 MoveAlongAxis(Vector3 position, Vector3 axis, float distance)
+        {
+            return position + (axis * distance);
+        }
+
+        public void Zoom(float distance = 1)
+        {
+            //MoveAlongAxis(direction, currentSettings.zoomSpeed * distance * targetDistance, false);
+            MoveAlongAxis(direction, currentSettings.zoomSpeed * distance * (position - position.Normalized()).Length, false);
+        }
+
+        public void ZoomAlongAxis(Vector3 axis, float distance)
+        {
+            MoveAlongAxis(axis, currentSettings.zoomSpeed * distance * targetDistance, false);
+        }
+
+        public void ZoomTarget(Vector3 target, float distance, bool updateTarget = true)
+        {
+            UpdateTargetDistance();
+            MoveAlongAxis((target - position).Normalized(), currentSettings.zoomSpeed * distance * targetDistance, false);
+
+            if (updateTarget)
+                UpdateTarget();
+        }
+
+        public void RotateX(float angle, bool updateTarget = true)
+        {
+            UpdateTargetDistance();
+            ArcBall(Vector3.UnitX, angle);
+
+            if (updateTarget)
+                UpdateTarget();
+        }
+
+        public void RotateY(float angle, bool updateTarget = true)
+        {
+            UpdateTargetDistance();
+            ArcBall(Vector3.UnitY, angle);
+
+            if (updateTarget)
+                UpdateTarget();
+        }
+
+        public void RotateZ(float angle, bool updateTarget = true)
+        {
+            UpdateTargetDistance();
+            ArcBall(Vector3.UnitZ, angle);
+
+            if (updateTarget)
+                UpdateTarget();
+        }
+
+        //@OpenTK.Quaternion error has to do something with FromAxisAngle()
+        public void RotateYaw(float angle, Mode mode, bool updateTarget = true)
+        {
+            UpdateTargetDistance();
+
+            if (mode == Mode.FPS)
+                Yaw += angle * currentSettings.turnSpeed;
+            else
+                //RotateVectors(Quaternion.FromAxisAngle(MathHelper.DegreesToRadians(angle * currentSettings.turnSpeed), new Vector3D(up)));
+                RotateVectors(Quaternion.FromAxisAngle(up, MathHelper.DegreesToRadians(-angle * currentSettings.turnSpeed)));
+
+            if (updateTarget)
+                UpdateTarget();
+        }
+
+        public void RotatePitch(float angle, Mode mode, bool updateTarget = true)
+        {
+            UpdateTargetDistance();
+
+            if (mode == Mode.FPS)
+                Pitch += angle * currentSettings.turnSpeed;
+            else
+                //RotateVectors(Quaternion.FromAxisAngle(MathHelper.DegreesToRadians(angle * turnSpeed), new Vector3D(right)));
+                RotateVectors(Quaternion.FromAxisAngle(right, MathHelper.DegreesToRadians(angle * currentSettings.turnSpeed)));
+
+            if (updateTarget)
+                UpdateTarget();
+        }
+
+        public void RotateRoll(float angle, bool updateTarget = true)
+        {
+            UpdateTargetDistance();
+
+            //RotateVectors(Quaternion.FromAxisAngle(MathHelper.DegreesToRadians(angle * turnSpeed), new Vector3D(direction)));
+            RotateVectors(Quaternion.FromAxisAngle(direction, MathHelper.DegreesToRadians(angle * currentSettings.turnSpeed)));
+
+            if (updateTarget)
+                UpdateTarget();
+        }
+
+        public static Vector3 Rotate(Vector3 position, Vector3 axis, float angle)
+        {
+            Quaternion localRotation = Quaternion.FromAxisAngle(axis, MathHelper.DegreesToRadians(angle));
+
+			return localRotation.Inverted() * (localRotation * position);
+            /*Quaternion localRotation = Quaternion.FromAxisAngle(angle * Math.PI / 360, new Vector3D(axis));
+
+            Vector3D v = localRotation.Inverse() * (localRotation * new Vector3D(position));
+
+            position.X = (float)v.X;
+            position.Y = (float)v.Y;
+            position.Z = (float)v.Z;
+
+            return position;*/
+        }
+
+        public void ArcBallYaw(float angle, Mode mode, bool aroundOrigin = false)
+        {
+            position -= (aroundOrigin ? Vector3.Zero : target);
+
+            if (mode == Mode.FPS)
+                Yaw += angle * currentSettings.turnSpeed;
+            else
+                RotateVectors(Quaternion.FromAxisAngle(up, MathHelper.DegreesToRadians(currentSettings.turnSpeed * angle)));
+
+            position = (direction * -position.Length) + (aroundOrigin ? Vector3.Zero : target);
+
+            if (aroundOrigin)
+                UpdateTarget();
+        }
+
+        public void ArcBallPitch(float angle, Mode mode, bool aroundOrigin = false)
+        {
+            position -= (aroundOrigin ? Vector3.Zero : target);
+
+            if (mode == Mode.FPS)
+                Pitch += angle * currentSettings.turnSpeed;
+            else
+                RotateVectors(Quaternion.FromAxisAngle(right, MathHelper.DegreesToRadians(currentSettings.turnSpeed * angle)));
+
+            position = (direction * -position.Length) + (aroundOrigin ? Vector3.Zero : target);
+
+            if (aroundOrigin)
+                UpdateTarget();
+        }
+
+        public void ArcBall(Vector3 axis, float angle, bool aroundOrigin = true)
+        {
+            //RotateVectors(Quaternion.FromAxisAngle(turnSpeed * MathHelper.DegreesToRadians(angle), new Vector3D(axis)));
+            RotateVectors(Quaternion.FromAxisAngle(axis, currentSettings.turnSpeed * MathHelper.DegreesToRadians(angle)));
+
+            position = (Vector3.UnitZ * -position.Length) + (aroundOrigin ? Vector3.Zero : target);
+
+            if (aroundOrigin)
+                UpdateTarget();
+        }
+
+        // Updates direction vertices based on yaw and pitch
+        void RotateVectors()
+        {
+            // First the direction matrix is calculated using some basic trigonometry
+            direction.X = (float)Math.Cos(pitch) * (float)Math.Cos(yaw);
+            direction.Y = (float)Math.Sin(pitch);
+            direction.Z = (float)Math.Cos(pitch) * (float)Math.Sin(yaw);
+
+            // We need to make sure the vectors are all normalized, as otherwise we would get some funky results
+            direction = Vector3.Normalize(direction);
+
+            // Calculate both the right and the up vector using cross product
+            //		Note that we are calculating the right from the global up, this behaviour might
+            //		not be what you need for all cameras so keep this in mind if you do not want a FPS camera
+            right = Vector3.Normalize(Vector3.Cross(direction, Vector3.UnitY));
+            up = Vector3.Normalize(Vector3.Cross(right, direction));
+        }
+        // Updates direction vertices based on quaternion
+        void RotateVectors(Quaternion localRotation)
+        {
+			
+			ApplyRotationToVector(localRotation, ref right);
+			ApplyRotationToVector(localRotation, ref up);
+			ApplyRotationToVector(localRotation, ref direction);
+			/*
+            var hAxis = new Vector3D(right);
+            var vAxis = new Vector3D(up);
+            var dir = new Vector3D(direction);
+
+            ApplyRotationToVector(localRotation, ref hAxis);
+            ApplyRotationToVector(localRotation, ref vAxis);
+            ApplyRotationToVector(localRotation, ref dir);
+
+            right.X = (float)hAxis.X;
+            right.Y = (float)hAxis.Y;
+            right.Z = (float)hAxis.Z;
+
+            up.X = (float)vAxis.X;
+            up.Y = (float)vAxis.Y;
+            up.Z = (float)vAxis.Z;
+
+            direction.X = (float)dir.X;
+            direction.Y = (float)dir.Y;
+            direction.Z = (float)dir.Z;
+            */
+            yaw = (float)Math.Atan2(direction.X, -direction.Z) - MathHelper.PiOver2;
+            pitch = (float)Math.Asin(direction.Y);
+        }
+
+        //void ApplyRotationToVector(Quaternion rotation, ref Vector3D v)
+        void ApplyRotationToVector(Quaternion rotation, ref Vector3 v)
+        {
+            //v = tmp * (rotation * v);
+            //v = rotation.Inverted() * (rotation * v);
+            v = rotation * v;
+        }
+
         #endregion
 
         #region Properties
-        public double AspectRatio { get; set; }
+        public float AspectRatio { get; set; }
         public Settings CurrentSettings => currentSettings;
         public bool FullScreen { get; set; }
         public bool Lock { get; set; }
+
+        // Changing this can simulate a zoom
+        public float FOV
+        {
+            get => MathHelper.RadiansToDegrees(currentSettings.fov);
+
+            set => currentSettings.fov = MathHelper.DegreesToRadians(MathHelper.Clamp(value, 1f, 45f));
+        }
+
+        public float Pitch
+        {
+            get => MathHelper.RadiansToDegrees(pitch);
+
+            set
+            {
+                // We clamp the pitch value between -89 and 89 to prevent the camera from going upside down, and
+                // to avoid gimbal lock
+                pitch = MathHelper.DegreesToRadians(MathHelper.Clamp(value, -89f, 89f));
+
+                RotateVectors();
+            }
+        }
+
+        public float Yaw
+        {
+            get => MathHelper.RadiansToDegrees(yaw);
+
+            set
+            {
+                yaw = MathHelper.DegreesToRadians(value);
+
+                RotateVectors();
+            }
+        }
 
         #endregion
 
@@ -218,9 +501,13 @@ namespace FractalLive
         private Vector3 right;
         private Vector3 up;
         private Vector3 direction;
-        private Vector3 orientation;
         private Vector3 target;
         private float targetDistance;
+
+        private Vector3 orientation;
+        float yaw = -MathHelper.PiOver2;
+        float pitch = 0;
+        float roll;
 
         private Settings currentSettings;
         private Settings flatSettings;

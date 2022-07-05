@@ -1,2 +1,6 @@
 ﻿point, line, and cross orbit traps
 julia centering for lambda
+setting for inverting camera controls
+remove degreestoradians for RotatePitch/Yaw (and all other imstances where turnSpeed is used)
+test if FromAxisAngle requires a normalized axis
+should arcball rotating have its own speed?
