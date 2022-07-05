@@ -4,3 +4,8 @@ setting for inverting camera controls
 remove degreestoradians for RotatePitch/Yaw (and all other imstances where turnSpeed is used)
 test if FromAxisAngle requires a normalized axis
 should arcball rotating have its own speed?
+see if currentCamera can be replaced with a Mode
+figure out culling
+roll 2d vs 3d
+shader SetDouble, Vector2d
+camera roll

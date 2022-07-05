@@ -72,66 +72,37 @@ namespace FractalLive
 
         private void Render()
         {
-            glControl.MakeCurrent();
-
-            GL.ClearColor(Color4.MidnightBlue);
-            //GL.Enable(EnableCap.DepthTest);
-
-            mandelbrot.Use();
-            GL.BindVertexArray(vaoPlane);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
-
-            mandelbrotCamera.Render();
-
-            /*
-            Matrix4 lookat = Matrix4.LookAt(0, 5, 5, 0, 0, 0, 0, 1, 0);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref lookat);
-
-            GL.Rotate(_angle, 0.0f, 1.0f, 0.0f);
-
+            GL.ClearColor(Color4.Black);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            GL.Begin(PrimitiveType.Quads);
+            ref Fractal.Settings fractalSettings = ref CurrentSettings;
+            ref Shader shader = ref CurrentShader;
+            ref Camera camera = ref CurrentCamera;
 
-            GL.Color4(Color4.Silver);
-            GL.Vertex3(-1.0f, -1.0f, -1.0f);
-            GL.Vertex3(-1.0f, 1.0f, -1.0f);
-            GL.Vertex3(1.0f, 1.0f, -1.0f);
-            GL.Vertex3(1.0f, -1.0f, -1.0f);
 
-            GL.Color4(Color4.Honeydew);
-            GL.Vertex3(-1.0f, -1.0f, -1.0f);
-            GL.Vertex3(1.0f, -1.0f, -1.0f);
-            GL.Vertex3(1.0f, -1.0f, 1.0f);
-            GL.Vertex3(-1.0f, -1.0f, 1.0f);
 
-            GL.Color4(Color4.Moccasin);
-            GL.Vertex3(-1.0f, -1.0f, -1.0f);
-            GL.Vertex3(-1.0f, -1.0f, 1.0f);
-            GL.Vertex3(-1.0f, 1.0f, 1.0f);
-            GL.Vertex3(-1.0f, 1.0f, -1.0f);
+            shader.SetMatrix4("projection", camera.GetProjectionMatrix());
+            shader.SetMatrix4("view", camera.GetViewMatrix());
+            shader.SetMatrix4("model", Matrix4.Identity);
 
-            GL.Color4(Color4.IndianRed);
-            GL.Vertex3(-1.0f, -1.0f, 1.0f);
-            GL.Vertex3(1.0f, -1.0f, 1.0f);
-            GL.Vertex3(1.0f, 1.0f, 1.0f);
-            GL.Vertex3(-1.0f, 1.0f, 1.0f);
+            shader.SetBool("is3D", camera.Is3D());
+            camera.Roll += .1f;
+            shader.SetFloat("rollAngle", camera.Roll);
+            shader.SetDouble("zoom", Math.Pow(2, fractalSettings.Zoom));
+            shader.SetFloat("aspectRatio", camera.AspectRatio);
+            Log(camera.Roll.ToString());
+            shader.SetVector2d("center", fractalSettings.Center);
 
-            GL.Color4(Color4.PaleVioletRed);
-            GL.Vertex3(-1.0f, 1.0f, -1.0f);
-            GL.Vertex3(-1.0f, 1.0f, 1.0f);
-            GL.Vertex3(1.0f, 1.0f, 1.0f);
-            GL.Vertex3(1.0f, 1.0f, -1.0f);
+            if (currentFractal == Fractal.Type.MANDELBROT)
+            {
+                mandelbrot.Use();
+                GL.BindVertexArray(vaoPlane);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
 
-            GL.Color4(Color4.ForestGreen);
-            GL.Vertex3(1.0f, -1.0f, -1.0f);
-            GL.Vertex3(1.0f, 1.0f, -1.0f);
-            GL.Vertex3(1.0f, 1.0f, 1.0f);
-            GL.Vertex3(1.0f, -1.0f, 1.0f);
+                mandelbrotCamera.Render();
+            }
+            
 
-            GL.End();
-            */
             glControl.SwapBuffers();
         }
         #endregion
@@ -149,6 +120,9 @@ namespace FractalLive
             InitShaders();
 
             applicationTime = new Stopwatch();
+            currentFractal = Fractal.Type.MANDELBROT;
+
+            mandelbrotSettings = new Fractal.Settings(Fractal.Type.MANDELBROT);
             mandelbrotCamera = new Camera();
 
             NativeInputRadioButton.Checked = true;
@@ -187,15 +161,23 @@ namespace FractalLive
             _timer.Tick += (sender, e) =>
             {
                 _angle += 0.5f;
-                Render();
+                //Render();
+                glControl_Paint(null, null);
             };
-            _timer.Interval = 1000/60;   // 1000 ms per sec / 16.67 ms per frame = 60 FPS
+            _timer.Interval = 1000/fps;   // 1000 ms per sec / 16.67 ms per frame = 60 FPS
             _timer.Start();
 
             // Ensure that the viewport and projection matrix are set correctly initially.
             glControl_Resize(glControl, EventArgs.Empty);
 
+            GL.Enable(EnableCap.DepthTest);
+            //GL.Enable(EnableCap.CullFace);
+            //GL.CullFace(CullFaceMode.Back);
+            //GL.FrontFace(FrontFaceDirection.Cw);
+
             applicationTime.Start();
+
+            lastFrame = applicationTime.ElapsedMilliseconds;
         }
 
         private void MainDlg_FormClosing(object sender, FormClosingEventArgs e)
@@ -224,9 +206,13 @@ namespace FractalLive
             GL.Viewport(0, 0, glControl.ClientSize.Width, glControl.ClientSize.Height);
 
             float aspect_ratio = Math.Max(glControl.ClientSize.Width, 1) / (float)Math.Max(glControl.ClientSize.Height, 1);
-            Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, 64);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref perpective);
+            //Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, 64);
+            //GL.MatrixMode(MatrixMode.Projection);
+            //GL.LoadMatrix(ref perpective);
+
+            //juliaCamera.AspectRatio = aspect_ratio;
+            mandelbrotCamera.AspectRatio = aspect_ratio;
+            //juliaMatingCamera.AspectRatio = aspect_ratio;
         }
 
         /// <summary>
@@ -236,12 +222,15 @@ namespace FractalLive
         /// <param name="e"></param>
         private void glControl_Paint(object sender, PaintEventArgs e)
         {
-            //glControl.MakeCurrent();
+            glControl.MakeCurrent();
 
-            //GL.ClearColor(Color4.MidnightBlue);
-            //GL.Clear(ClearBufferMask.ColorBufferBit);
+            float currentFrame = applicationTime.ElapsedMilliseconds;
+            deltaTime = (currentFrame - lastFrame) / 1000;
+            lastFrame = currentFrame;
+            
+            // input
 
-            //glControl.SwapBuffers();
+            // update fractal
 
             Render();
         }
@@ -305,21 +294,86 @@ namespace FractalLive
         #endregion
 
         #region Properties
-
+        private ref Camera CurrentCamera
+        {
+            get
+            {
+                switch (currentFractal)
+                {
+                    case Fractal.Type.MANDELBROT:
+                        return ref mandelbrotCamera;
+                    case Fractal.Type.JULIA:
+                        return ref juliaCamera;
+                    case Fractal.Type.JULIA_MATING:
+                        return ref juliaMatingCamera;
+                    default:
+                        return ref customCamera;
+                }
+            }
+        }
+        private ref Fractal.Settings CurrentSettings
+        {
+            get
+            {
+                switch (currentFractal)
+                {
+                    case Fractal.Type.MANDELBROT:
+                        return ref mandelbrotSettings;
+                    case Fractal.Type.JULIA:
+                        return ref juliaSettings;
+                    case Fractal.Type.JULIA_MATING:
+                        return ref juliaMatingSettings;
+                    default:
+                        return ref customSettings;
+                }
+            }
+        }
+        private ref Shader CurrentShader
+        {
+            get
+            {
+                switch (currentFractal)
+                {
+                    case Fractal.Type.MANDELBROT:
+                        return ref mandelbrot;
+                    case Fractal.Type.JULIA:
+                        return ref julia;
+                    case Fractal.Type.JULIA_MATING:
+                        return ref juliaMating;
+                    default:
+                        return ref custom;
+                }
+            }
+        }
         #endregion
 
         #region Fields
         internal static Stopwatch? applicationTime;
-
+        private int fps = 60;
         private OpenTK.WinForms.INativeInput _nativeInput;
         private Timer _timer = null!;
         private float _angle = 0.0f;
 
-        private Shader mandelbrot;
+        float deltaTime = 0;
+        float lastFrame = 0;
 
+        private Fractal.Type currentFractal;
+
+        private Fractal.Settings mandelbrotSettings;
+        private Shader mandelbrot;
         private Camera mandelbrotCamera;
+
+        private Fractal.Settings juliaSettings;
+        private Shader julia;
         private Camera juliaCamera;
+
+        private Fractal.Settings juliaMatingSettings;
+        private Shader juliaMating;
         private Camera juliaMatingCamera;
+
+        private Fractal.Settings customSettings;
+        private Shader custom;
+        private Camera customCamera;
 
         private int vboPlane, vaoPlane;
 

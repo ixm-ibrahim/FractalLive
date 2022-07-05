@@ -148,6 +148,17 @@ namespace FractalLive
         //     3. Use the appropriate GL.Uniform* function to set the uniform.
 
         /// <summary>
+        /// Set a uniform bool on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetBool(string name, bool data)
+        {
+            GL.UseProgram(Handle);
+            GL.Uniform1(_uniformLocations[name], data ? 1 : 0);
+        }
+        
+        /// <summary>
         /// Set a uniform int on this shader.
         /// </summary>
         /// <param name="name">The name of the uniform</param>
@@ -168,6 +179,17 @@ namespace FractalLive
             GL.UseProgram(Handle);
             GL.Uniform1(_uniformLocations[name], data);
         }
+        
+        /// <summary>
+        /// Set a uniform double on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetDouble(string name, double data)
+        {
+            GL.UseProgram(Handle);
+            GL.Uniform1(_uniformLocations[name], (float)data);
+        }
 
         /// <summary>
         /// Set a uniform Matrix4 on this shader
@@ -185,6 +207,28 @@ namespace FractalLive
             GL.UniformMatrix4(_uniformLocations[name], true, ref data);
         }
 
+        /// <summary>
+        /// Set a uniform Vector2 on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetVector2(string name, Vector2 data)
+        {
+            GL.UseProgram(Handle);
+            GL.Uniform2(_uniformLocations[name], data);
+        }
+        
+        /// <summary>
+        /// Set a uniform Vector2d on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetVector2d(string name, Vector2d data)
+        {
+            GL.UseProgram(Handle);
+            GL.Uniform2(_uniformLocations[name], (float)data.X, (float)data.Y);
+        }
+        
         /// <summary>
         /// Set a uniform Vector3 on this shader.
         /// </summary>

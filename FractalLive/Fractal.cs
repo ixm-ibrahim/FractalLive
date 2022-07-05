@@ -10,27 +10,32 @@ namespace FractalLive
     class Fractal
     {
         #region Enumerations
-        enum Type
+        public enum Type
+        {
+            CUSTOM, JULIA, MANDELBROT, JULIA_MATING
+        }
+
+        public enum Formula
         {
             CUSTOM, MANDELBROT, LAMBDA
         }
 
-        enum Buddhabrot
+        public enum Buddhabrot
         {
             NORMAL, INVERSE, NEBULABROT
         }
 
-        enum Coloring
+        public enum Coloring
         {
             CUSTOM, BLACK, WHITE, CLASSIC, SMOOTH, DOMAIN_A, DOMAIN_B, DOMAIN_C, DOMAIN_D, DOMAIN_E, DOMAIN_F, DOMAIN_G, COUNT
         }
 
-        enum OrbitTrap
+        public enum OrbitTrap
         {
             CUSTOM, CIRCLE, SQUARE, RECTANGLE, REAL, IMAGINARY, POINT, LINE, CROSS, COUNT
         }
 
-        enum Projection
+        public enum Projection
         {
             NORMAL, INVERSE, RIEMANN_SPHERE
         }
@@ -38,11 +43,12 @@ namespace FractalLive
         #endregion
 
         #region Structures
-        struct Settings
+        public struct Settings
         {
-            public Settings(Type type = Type.MANDELBROT)
+            public Settings(Type type = Type.MANDELBROT, Formula formula = Formula.MANDELBROT)
             {
                 Type = type;
+                Formula = formula;
                 buddhabrot = Buddhabrot.NORMAL;
                 ExteriorColoring = Coloring.WHITE;
                 InteriorColoring = Coloring.BLACK;
@@ -67,37 +73,40 @@ namespace FractalLive
                 BailoutPoint = new Vector2d(0,0);
                 Center = new Vector2d(0, 0);
                 Julia = new Vector2d(-0.4, 0.6);
+                JuliaMating = new Vector2d(0.285, 0.01);
                 BailoutLine = new Vector4d(0,0,0,1);
                 FoldOffset = new Vector4d(0,0,0,0);
             }
 
-            Type Type { get; set; }
-            Buddhabrot buddhabrot { get; set; }
-            Coloring ExteriorColoring { get; set; }
-            Coloring InteriorColoring { get; set; }
-            OrbitTrap OrbitTrap { get; set; }
-            Projection Projection { get; set; }
-            bool IsBuddhabrot { get; set; }
-            bool IsConjugate { get; set; }
-            bool IsJulia { get; set; }
-            bool IsJuliaCentered { get; set; }
-            bool UseDistance { get; set; }
-            bool UseLighting { get; set; }
-            bool UseTerrainColor { get; set; }
-            double Bailout { get; set; }
-            double C_Power { get; set; }
-            double FoldAngle { get; set; }
-            double FoldCount { get; set; }
-            double MaxIterations { get; set; }
-            double MaxOrbitDistance { get; set; }
-            double Power { get; set; }
-            double TerrainHeight { get; set; }
-            double Zoom { get; set; }
-            Vector2d BailoutPoint { get; set; }
-            Vector2d Center { get; set; }
-            Vector2d Julia { get; set; }
-            Vector4d BailoutLine { get; set; }
-            Vector4d FoldOffset { get; set; }
+            public Type Type { get; set; }
+            public Formula Formula { get; set; }
+            public Buddhabrot buddhabrot { get; set; }
+            public Coloring ExteriorColoring { get; set; }
+            public Coloring InteriorColoring { get; set; }
+            public OrbitTrap OrbitTrap { get; set; }
+            public Projection Projection { get; set; }
+            public bool IsBuddhabrot { get; set; }
+            public bool IsConjugate { get; set; }
+            public bool IsJulia { get; set; }
+            public bool IsJuliaCentered { get; set; }
+            public bool UseDistance { get; set; }
+            public bool UseLighting { get; set; }
+            public bool UseTerrainColor { get; set; }
+            public double Bailout { get; set; }
+            public double C_Power { get; set; }
+            public double FoldAngle { get; set; }
+            public double FoldCount { get; set; }
+            public double MaxIterations { get; set; }
+            public double MaxOrbitDistance { get; set; }
+            public double Power { get; set; }
+            public double TerrainHeight { get; set; }
+            public double Zoom { get; set; }
+            public Vector2d BailoutPoint { get; set; }
+            public Vector2d Center { get; set; }
+            public Vector2d Julia { get; set; }
+            public Vector2d JuliaMating { get; set; }
+            public Vector4d BailoutLine { get; set; }
+            public Vector4d FoldOffset { get; set; }
         }
         #endregion
 

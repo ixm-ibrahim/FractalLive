@@ -307,7 +307,7 @@ namespace FractalLive
                 Yaw += angle * currentSettings.turnSpeed;
             else
                 //RotateVectors(Quaternion.FromAxisAngle(MathHelper.DegreesToRadians(angle * currentSettings.turnSpeed), new Vector3D(up)));
-                RotateVectors(Quaternion.FromAxisAngle(up, MathHelper.DegreesToRadians(-angle * currentSettings.turnSpeed)));
+                RotateVectors(Quaternion.FromAxisAngle(up, MathHelper.DegreesToRadians(angle * currentSettings.turnSpeed)));
 
             if (updateTarget)
                 UpdateTarget();
@@ -448,8 +448,13 @@ namespace FractalLive
         void ApplyRotationToVector(Quaternion rotation, ref Vector3 v)
         {
             //v = tmp * (rotation * v);
-            //v = rotation.Inverted() * (rotation * v);
+            //v = rotation.Inverted() * (rotation * v); // GLM overrides this
             v = rotation * v;
+        }
+
+        public bool Is3D()
+        {
+            return CurrentMode != Mode.FLAT;
         }
 
         #endregion
@@ -459,6 +464,7 @@ namespace FractalLive
         public Settings CurrentSettings => currentSettings;
         public bool FullScreen { get; set; }
         public bool Lock { get; set; }
+        public Mode CurrentMode => CurrentSettings.mode;
 
         // Changing this can simulate a zoom
         public float FOV
@@ -494,6 +500,8 @@ namespace FractalLive
             }
         }
 
+        public float Roll { get; set; }
+
         #endregion
 
         #region Fields
@@ -507,7 +515,7 @@ namespace FractalLive
         private Vector3 orientation;
         float yaw = -MathHelper.PiOver2;
         float pitch = 0;
-        float roll;
+        float roll = 0;
 
         private Settings currentSettings;
         private Settings flatSettings;
