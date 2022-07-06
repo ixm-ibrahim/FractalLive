@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            System.Windows.Forms.Label text_MaxIterations;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainDlg));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,8 +64,21 @@
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.WinFormsInputRadioButton = new System.Windows.Forms.RadioButton();
             this.NativeInputRadioButton = new System.Windows.Forms.RadioButton();
+            this.input_MaxIterations = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            text_MaxIterations = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).BeginInit();
             this.SuspendLayout();
+            // 
+            // text_MaxIterations
+            // 
+            text_MaxIterations.AutoSize = true;
+            text_MaxIterations.Location = new System.Drawing.Point(518, 26);
+            text_MaxIterations.Name = "text_MaxIterations";
+            text_MaxIterations.Size = new System.Drawing.Size(88, 15);
+            text_MaxIterations.TabIndex = 6;
+            text_MaxIterations.Text = "Max Iterations: ";
             // 
             // menuStrip1
             // 
@@ -358,11 +372,46 @@
             this.NativeInputRadioButton.UseVisualStyleBackColor = true;
             this.NativeInputRadioButton.CheckedChanged += new System.EventHandler(this.NativeInputRadioButton_CheckedChanged);
             // 
+            // input_MaxIterations
+            // 
+            this.input_MaxIterations.Location = new System.Drawing.Point(629, 24);
+            this.input_MaxIterations.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.input_MaxIterations.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.input_MaxIterations.Name = "input_MaxIterations";
+            this.input_MaxIterations.Size = new System.Drawing.Size(48, 23);
+            this.input_MaxIterations.TabIndex = 8;
+            this.input_MaxIterations.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.input_MaxIterations.ValueChanged += new System.EventHandler(this.input_MaxIterations_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(518, 50);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(44, 15);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Bailout";
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(689, 374);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.input_MaxIterations);
+            this.Controls.Add(text_MaxIterations);
             this.Controls.Add(this.NativeInputRadioButton);
             this.Controls.Add(this.WinFormsInputRadioButton);
             this.Controls.Add(this.LogTextBox);
@@ -374,6 +423,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainDlg_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -414,6 +464,8 @@
 		private System.Windows.Forms.TextBox LogTextBox;
 		private System.Windows.Forms.RadioButton WinFormsInputRadioButton;
 		private System.Windows.Forms.RadioButton NativeInputRadioButton;
-	}
+        private System.Windows.Forms.NumericUpDown input_MaxIterations;
+        private System.Windows.Forms.Label label1;
+    }
 }
 

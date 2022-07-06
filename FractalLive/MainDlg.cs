@@ -50,6 +50,7 @@ namespace FractalLive
         public MainDlg()
         {
             inputState.Init();
+
             InitializeComponent();
         }
 
@@ -120,8 +121,8 @@ namespace FractalLive
 
             shader.SetVector2d("center", fractalSettings.Center);
             shader.SetFloat("rollAngle", camera.Roll);
-
-
+            shader.SetInt("maxIterations", fractalSettings.MaxIterations);
+            
             if (currentFractal == Fractal.Type.MANDELBROT)
             {
                 mandelbrot.Use();
@@ -154,28 +155,19 @@ namespace FractalLive
             mandelbrotSettings = new Fractal.Settings(Fractal.Type.MANDELBROT);
             mandelbrotCamera = new Camera();
 
+            // Default values
+            input_MaxIterations.Value = CurrentSettings.MaxIterations;
             NativeInputRadioButton.Checked = false;
 
-            // Make sure that when the GLControl is resized or needs to be painted,
-            // we update our projection matrix or re-render its contents, respectively.
+            // Callbacks
             glControl.Resize += glControl_Resize;
             glControl.Paint += glControl_Update;
 
-            // Log any focus changes.
             glControl.GotFocus += (sender, e) => inputState.Focus = true;
             glControl.LostFocus += (sender, e) => inputState.Focus = false;
 
             // Log WinForms keyboard/mouse events.
             /*
-            glControl.MouseDown += (sender, e) =>
-            {
-                glControl.Focus();
-                Log($"WinForms Mouse down: ({e.X},{e.Y})");
-            };
-            glControl.MouseUp += (sender, e) =>
-                Log($"WinForms Mouse up: ({e.X},{e.Y})");
-            glControl.MouseMove += (sender, e) =>
-                Log($"WinForms Mouse move: ({e.X},{e.Y})");
             glControl.KeyDown += (sender, e) =>
                 Log($"WinForms Key down: {e.KeyCode}");
             glControl.KeyUp += (sender, e) =>
@@ -217,6 +209,7 @@ namespace FractalLive
             _timer.Interval = 1000/fps;   // 1000 ms per sec / 16.67 ms per frame = 60 FPS
             _timer.Start();
 
+            // Start window
             // Ensure that the viewport and projection matrix are set correctly initially.
             glControl_Resize(glControl, EventArgs.Empty);
 
@@ -277,8 +270,6 @@ namespace FractalLive
             float currentFrame = applicationTime.ElapsedMilliseconds;
             deltaTime = (currentFrame - lastFrame) / 1000;
             lastFrame = currentFrame;
-
-            // input
 
             // update fractal
             CurrentCamera.Roll += 1f;
@@ -353,6 +344,11 @@ namespace FractalLive
             Vector2 mousePos = CurrentSettings.Center + (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
             CurrentSettings.Zoom += scrollOffset * CurrentCamera.CurrentZoomSpeed;
             CurrentSettings.Center = mousePos - (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
+        }
+
+        private void input_MaxIterations_ValueChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.MaxIterations = (int)input_MaxIterations.Value;
         }
 
         private void WinFormsInputRadioButton_CheckedChanged(object sender, EventArgs e)

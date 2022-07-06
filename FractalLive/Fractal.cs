@@ -97,8 +97,8 @@ namespace FractalLive
             public double Bailout { get; set; }
             public double C_Power { get; set; }
             public double FoldAngle { get; set; }
-            public double FoldCount { get; set; }
-            public double MaxIterations { get; set; }
+            public int FoldCount { get; set; }
+            public int MaxIterations { get; set; }
             public double MaxOrbitDistance { get; set; }
             public double Power { get; set; }
             public double TerrainHeight { get; set; }
