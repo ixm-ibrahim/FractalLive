@@ -17,6 +17,10 @@ uniform float aspectRatio;
 
 uniform vec2 center;
 
+uniform float initialRadius;
+uniform float normalizedCoordsWidth;
+uniform float normalizedCoordsHeight;
+
 out vec2 FragPos;
 out vec2 TexCoords;
 
@@ -39,10 +43,8 @@ void main(void)
 	    float s = sin(a);
 	    float c = cos(a);
 	    vec2 newPos = vec2(aPos.x*c - aPos.y*s, aPos.y*c + aPos.x*s);
-
-        FragPos = newPos;
-
-        FragPos = vec2(aspectRatio,1)*aPos.xy/zoom;
+        
+        FragPos = initialRadius*vec2(normalizedCoordsWidth,normalizedCoordsHeight)*aPos.xy/zoom;
 	    FragPos = center + vec2(FragPos.x*c - FragPos.y*s, FragPos.y*c + FragPos.x*s);
     }
 }

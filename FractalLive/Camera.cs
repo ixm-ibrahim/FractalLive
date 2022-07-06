@@ -471,7 +471,7 @@ namespace FractalLive
         {
             get => MathHelper.RadiansToDegrees(currentSettings.fov);
 
-            set => currentSettings.fov = MathHelper.DegreesToRadians(MathHelper.Clamp(value, 1f, 45f));
+            set => currentSettings.fov = MathHelper.DegreesToRadians(value);
         }
 
         public float Pitch

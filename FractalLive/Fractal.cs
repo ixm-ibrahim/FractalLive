@@ -61,6 +61,7 @@ namespace FractalLive
                 UseDistance = false;
                 UseLighting = false;
                 UseTerrainColor = false;
+                InitialDisplayRadius = 2;
                 Bailout = 2;
                 C_Power = 1;
                 FoldAngle = 0;
@@ -92,6 +93,7 @@ namespace FractalLive
             public bool UseDistance { get; set; }
             public bool UseLighting { get; set; }
             public bool UseTerrainColor { get; set; }
+            public float InitialDisplayRadius { get; set; }
             public double Bailout { get; set; }
             public double C_Power { get; set; }
             public double FoldAngle { get; set; }

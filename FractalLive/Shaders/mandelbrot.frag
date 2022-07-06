@@ -20,7 +20,7 @@ vec2 c_2(vec2 c);
 vec3 Mandelbrot()
 {
 	int iter = 0;
-	vec2 z = MandelbrotLoop(FragPos*2, 100, iter);
+	vec2 z = MandelbrotLoop(FragPos, 100, iter);
 
 	if (iter >= 100)
 		return vec3(1.0);

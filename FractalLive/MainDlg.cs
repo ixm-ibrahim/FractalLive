@@ -86,12 +86,14 @@ namespace FractalLive
             shader.SetMatrix4("model", Matrix4.Identity);
 
             shader.SetBool("is3D", camera.Is3D());
-            camera.Roll += .1f;
-            shader.SetFloat("rollAngle", camera.Roll);
             shader.SetDouble("zoom", Math.Pow(2, fractalSettings.Zoom));
-            shader.SetFloat("aspectRatio", camera.AspectRatio);
-            Log(camera.Roll.ToString());
+            shader.SetFloat("initialRadius", fractalSettings.InitialDisplayRadius);
+            shader.SetFloat("normalizedCoordsWidth", (float)glControl.Width / Math.Max(minGLWidth, minGLHeight));
+            shader.SetFloat("normalizedCoordsHeight", (float)glControl.Height / Math.Max(minGLWidth, minGLHeight));
+
             shader.SetVector2d("center", fractalSettings.Center);
+            shader.SetFloat("rollAngle", camera.Roll);
+
 
             if (currentFractal == Fractal.Type.MANDELBROT)
             {
@@ -353,6 +355,9 @@ namespace FractalLive
         private OpenTK.WinForms.INativeInput _nativeInput;
         private Timer _timer = null!;
         private float _angle = 0.0f;
+
+        private const int minGLWidth = 500;
+        private const int minGLHeight = 309;
 
         float deltaTime = 0;
         float lastFrame = 0;
