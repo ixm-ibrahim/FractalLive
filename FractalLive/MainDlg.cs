@@ -156,7 +156,6 @@ namespace FractalLive
             mandelbrotCamera = new Camera();
 
             // Default values
-            input_MaxIterations.Value = CurrentSettings.MaxIterations;
             NativeInputRadioButton.Checked = false;
 
             // Callbacks
@@ -271,8 +270,11 @@ namespace FractalLive
             deltaTime = (currentFrame - lastFrame) / 1000;
             lastFrame = currentFrame;
 
+            // input
+            input_MaxIterations.Value = CurrentSettings.MaxIterations;
+
             // update fractal
-            CurrentCamera.Roll += 1f;
+
             Render();
         }
 
