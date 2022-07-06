@@ -71,12 +71,12 @@ namespace FractalLive
                 Power = 2;
                 TerrainHeight = 0;
                 Zoom = 0;
-                BailoutPoint = new Vector2d(0,0);
-                Center = new Vector2d(0, 0);
-                Julia = new Vector2d(-0.4, 0.6);
-                JuliaMating = new Vector2d(0.285, 0.01);
-                BailoutLine = new Vector4d(0,0,0,1);
-                FoldOffset = new Vector4d(0,0,0,0);
+                BailoutPoint = new Vector2(0,0);
+                Center = new Vector2(0, 0);
+                Julia = new Vector2(-0.4f, 0.6f);
+                JuliaMating = new Vector2(0.285f, 0.01f);
+                BailoutLine = new Vector4(0,0,0,1);
+                FoldOffset = new Vector4(0,0,0,0);
             }
 
             public Type Type { get; set; }
@@ -103,12 +103,12 @@ namespace FractalLive
             public double Power { get; set; }
             public double TerrainHeight { get; set; }
             public double Zoom { get; set; }
-            public Vector2d BailoutPoint { get; set; }
-            public Vector2d Center { get; set; }
-            public Vector2d Julia { get; set; }
-            public Vector2d JuliaMating { get; set; }
-            public Vector4d BailoutLine { get; set; }
-            public Vector4d FoldOffset { get; set; }
+            public Vector2 BailoutPoint { get; set; }
+            public Vector2 Center { get; set; }
+            public Vector2 Julia { get; set; }
+            public Vector2 JuliaMating { get; set; }
+            public Vector4 BailoutLine { get; set; }
+            public Vector4 FoldOffset { get; set; }
         }
         #endregion
 

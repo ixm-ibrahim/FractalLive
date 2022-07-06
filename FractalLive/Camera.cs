@@ -37,7 +37,7 @@ namespace FractalLive
             public float nearClipping;
             public float farClipping;
 
-            public Settings(Mode mode, float fov = 67.5f, Projection projection = Projection.CARTESIAN, bool showTarget = false, bool showAxis = false, float moveSpeed = .5f, float turnSpeed = .2f, float zoomSpeed = .1f, float mouseSensitivity = .2f, float nearClipping = 0.1f, float farClipping = 100f)
+            public Settings(Mode mode, float fov = 67.5f, Projection projection = Projection.CARTESIAN, bool showTarget = false, bool showAxis = false, float moveSpeed = .03f, float turnSpeed = .2f, float zoomSpeed = .1f, float mouseSensitivity = .2f, float nearClipping = 0.1f, float farClipping = 100f)
             {
                 this.mode = Mode.FLAT;
                 this.projection = Projection.CARTESIAN;
@@ -465,6 +465,9 @@ namespace FractalLive
         public bool FullScreen { get; set; }
         public bool Lock { get; set; }
         public Mode CurrentMode => CurrentSettings.mode;
+        public float CurrentMoveSpeed => CurrentSettings.moveSpeed;
+        public float CurrentZoomSpeed => CurrentSettings.zoomSpeed;
+
 
         // Changing this can simulate a zoom
         public float FOV

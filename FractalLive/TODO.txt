@@ -10,3 +10,6 @@ roll 2d vs 3d
 shader SetDouble, Vector2d
 camera roll
 initial zoom conditions
+follow random center of fractal (ai?)
+convert right variables to doubles
+

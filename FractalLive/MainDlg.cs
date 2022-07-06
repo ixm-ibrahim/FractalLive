@@ -13,7 +13,33 @@ namespace FractalLive
         #endregion
 
         #region Structures
+        public struct InputState
+        {
+            public void Init()
+            {
+                Focus = false;
+                MouseRightDown = false;
+                MouseLeftDown = false;
+                ControlDown = false;
+                ShiftDown = false;
+                AltDown = false;
+                PreviousMouseX = MousePosition.X;
+                PreviousMouseY = MousePosition.Y;
+                GLMousePositionX = 0;
+                GLMousePositionY = 0;
+            }
 
+            public bool Focus { get; set; }
+            public bool MouseRightDown { get; set; }
+            public bool MouseLeftDown { get; set; }
+            public bool ControlDown { get; set; }
+            public bool ShiftDown { get; set; }
+            public bool AltDown { get; set; }
+            public int PreviousMouseX { get; set; }
+            public int PreviousMouseY { get; set; }
+            public int GLMousePositionX { get; set; }
+            public int GLMousePositionY { get; set; }
+        }
         #endregion
 
         #region Constructors
@@ -23,6 +49,7 @@ namespace FractalLive
         /// </summary>
         public MainDlg()
         {
+            inputState.Init();
             InitializeComponent();
         }
 
@@ -127,20 +154,19 @@ namespace FractalLive
             mandelbrotSettings = new Fractal.Settings(Fractal.Type.MANDELBROT);
             mandelbrotCamera = new Camera();
 
-            NativeInputRadioButton.Checked = true;
+            NativeInputRadioButton.Checked = false;
 
             // Make sure that when the GLControl is resized or needs to be painted,
             // we update our projection matrix or re-render its contents, respectively.
             glControl.Resize += glControl_Resize;
-            glControl.Paint += glControl_Paint;
+            glControl.Paint += glControl_Update;
 
             // Log any focus changes.
-            glControl.GotFocus += (sender, e) =>
-                Log("Focus in");
-            glControl.LostFocus += (sender, e) =>
-                Log("Focus out");
+            glControl.GotFocus += (sender, e) => inputState.Focus = true;
+            glControl.LostFocus += (sender, e) => inputState.Focus = false;
 
             // Log WinForms keyboard/mouse events.
+            /*
             glControl.MouseDown += (sender, e) =>
             {
                 glControl.Focus();
@@ -156,15 +182,37 @@ namespace FractalLive
                 Log($"WinForms Key up: {e.KeyCode}");
             glControl.KeyPress += (sender, e) =>
                 Log($"WinForms Key press: {e.KeyChar}");
+            */
+            glControl.MouseDown += (sender, e) =>
+            {
+                glControl.Focus();
 
+                if (e.Button == MouseButtons.Left)
+                    inputState.MouseLeftDown = true;
+                if (e.Button == MouseButtons.Right)
+                {
+                    inputState.MouseRightDown = true;
+                    Cursor.Hide();
+                }
+            };
+            glControl.MouseUp += (sender, e) =>
+            {
+                if (e.Button == MouseButtons.Left)
+                    inputState.MouseLeftDown = false;
+                if (e.Button == MouseButtons.Right)
+                {
+                    inputState.MouseRightDown = false;
+                    Cursor.Show();
+                }
+            };
+            glControl.MouseMove += glControl_MouseMove;
+            glControl.MouseWheel += glControl_MouseWheel;
 
             // Redraw the screen every 1/60 of a second.
             _timer = new Timer();
             _timer.Tick += (sender, e) =>
             {
-                _angle += 0.5f;
-                //Render();
-                glControl_Paint(null, null);
+                glControl_Update(glControl, null);
             };
             _timer.Interval = 1000/fps;   // 1000 ms per sec / 16.67 ms per frame = 60 FPS
             _timer.Start();
@@ -222,24 +270,24 @@ namespace FractalLive
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void glControl_Paint(object sender, PaintEventArgs e)
+        private void glControl_Update(object sender, PaintEventArgs e)
         {
             glControl.MakeCurrent();
 
             float currentFrame = applicationTime.ElapsedMilliseconds;
             deltaTime = (currentFrame - lastFrame) / 1000;
             lastFrame = currentFrame;
-            
+
             // input
 
             // update fractal
-
+            CurrentCamera.Roll += 1f;
             Render();
         }
 
         #endregion
 
-        #region Buttons
+        #region Input
 
         /// <summary>
         /// Callback for handling File->Exit
@@ -260,6 +308,53 @@ namespace FractalLive
                 MessageBoxButtons.OK);
         }
 
+        private void glControl_MouseMove(object? sender, MouseEventArgs e)
+        {
+            inputState.GLMousePositionX = e.X;
+            inputState.GLMousePositionY = e.Y;
+
+            int deltaX = inputState.PreviousMouseX - MousePosition.X;
+            int deltaY = inputState.PreviousMouseY - MousePosition.Y;
+
+            if (inputState.MouseRightDown)
+            {
+                Cursor.Position = new System.Drawing.Point(inputState.PreviousMouseX, inputState.PreviousMouseY);
+                
+                if (CurrentCamera.CurrentMode == Camera.Mode.FLAT)
+                {
+                    float rad = MathHelper.DegreesToRadians(CurrentCamera.Roll);
+                    float rad90 = rad + MathHelper.Pi / 2;
+                    float factor = CurrentCamera.CurrentMoveSpeed / (float)Math.Pow(2,CurrentSettings.Zoom);
+
+                    CurrentSettings.Center += new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad)) * (float)deltaX * factor;
+                    CurrentSettings.Center -= new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90)) * (float)deltaY * factor;
+                }
+                
+            }
+
+            inputState.PreviousMouseX = MousePosition.X;
+            inputState.PreviousMouseY = MousePosition.Y;
+        }
+
+        private void glControl_MouseWheel(object? sender, MouseEventArgs e)
+        {
+            int scrollOffset = e.Delta > 0 ? 1 : (e.Delta < 1 ? -1 : 0);
+
+            float rad = MathHelper.DegreesToRadians(CurrentCamera.Roll);
+            float rad90 = rad + MathHelper.Pi / 2;
+
+            Vector2 xRoll = new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad));
+            Vector2 yRoll = new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90));
+
+            Vector2 normalizedMousePos = new Vector2((float)inputState.GLMousePositionX / glControl.Width, (float)inputState.GLMousePositionY / glControl.Height) * 2 - new Vector2(1,1);
+            Vector2 aspectRatio = new Vector2(glControl.Width, -glControl.Height) / Math.Max(minGLWidth, minGLHeight);
+            Vector2 offset = normalizedMousePos * CurrentSettings.InitialDisplayRadius * aspectRatio;
+            
+            Vector2 mousePos = CurrentSettings.Center + (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
+            CurrentSettings.Zoom += scrollOffset * CurrentCamera.CurrentZoomSpeed;
+            CurrentSettings.Center = mousePos - (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
+        }
+
         private void WinFormsInputRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             glControl.DisableNativeInput();
@@ -273,23 +368,12 @@ namespace FractalLive
             {
                 _nativeInput = nativeInput;
 
-                _nativeInput.MouseDown += (e) =>
-                {
-                    glControl.Focus();
-                    Log("Native Mouse down");
-                };
-                _nativeInput.MouseUp += (e) =>
-                    Log("Native Mouse up");
-                _nativeInput.MouseMove += (e) =>
-                    Log($"Native mouse position: {e.Position.X}, {e.Position.Y}\n\tDelta: {e.DeltaX},{e.DeltaY}");
                 _nativeInput.KeyDown += (e) =>
                     Log($"Native Key down: {e.Key}");
                 _nativeInput.KeyUp += (e) =>
                     Log($"Native Key up: {e.Key}");
-                _nativeInput.TextInput += (e) =>
-                    Log($"Native Text input: {e.AsString}");
-                _nativeInput.JoystickConnected += (e) =>
-                    Log($"Native Joystick connected: {e.JoystickId}");
+                _nativeInput.MouseWheel += (e) =>
+                    Log($"Native Key up: {e.Offset}");
             }
         }
 
@@ -350,11 +434,11 @@ namespace FractalLive
         #endregion
 
         #region Fields
-        internal static Stopwatch? applicationTime;
-        private int fps = 60;
         private OpenTK.WinForms.INativeInput _nativeInput;
+        internal static Stopwatch? applicationTime;
         private Timer _timer = null!;
-        private float _angle = 0.0f;
+        private int fps = 60;
+        private InputState inputState;
 
         private const int minGLWidth = 500;
         private const int minGLHeight = 309;
