@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
@@ -17,24 +18,64 @@ namespace FractalLive
         {
             public void Init()
             {
+                keysDown = new Dictionary<Keys, bool>();
+
                 Focus = false;
                 MouseRightDown = false;
                 MouseLeftDown = false;
-                ControlDown = false;
-                ShiftDown = false;
-                AltDown = false;
                 PreviousMouseX = MousePosition.X;
                 PreviousMouseY = MousePosition.Y;
                 GLMousePositionX = 0;
                 GLMousePositionY = 0;
+
+                // modifiers
+                keysDown[Keys.ControlKey] = false;
+                keysDown[Keys.RControlKey] = false;
+                keysDown[Keys.LControlKey] = false;
+                keysDown[Keys.ShiftKey] = false;
+                keysDown[Keys.RShiftKey] = false;
+                keysDown[Keys.LShiftKey] = false;
+                // panning/movement
+                keysDown[Keys.W] = false;
+                keysDown[Keys.A] = false;
+                keysDown[Keys.S] = false;
+                keysDown[Keys.D] = false;
+                keysDown[Keys.Z] = false;
+                keysDown[Keys.X] = false;
+                // rolling
+                keysDown[Keys.Q] = false;
+                keysDown[Keys.E] = false;
+                // fractal settings
+                keysDown[Keys.D1] = false;          // max iterations
+                keysDown[Keys.D2] = false;          // bailout
+                keysDown[Keys.Oemcomma] = false;    // bailout (y value)
+                keysDown[Keys.OemPeriod] = false;   // bailout (second x value)
+                keysDown[Keys.OemQuestion] = false; // bailout (second y value)
+                keysDown[Keys.D3] = false;          // max distance
+                keysDown[Keys.D4] = false;          // distance fineness
+                keysDown[Keys.D5] = false;          // power
+                keysDown[Keys.D6] = false;          // c power
+                keysDown[Keys.D7] = false;          // fold count
+                keysDown[Keys.D8] = false;          // fold angle
+                keysDown[Keys.D9] = false;          // fold offset x
+                keysDown[Keys.D0] = false;          // fold offset y
+                keysDown[Keys.OemMinus] = false;    // toggle conjugate
+                keysDown[Keys.Oemplus] = false;     // toggle distance estimation
+                keysDown[Keys.Oemtilde] = false;    // screenshot
             }
+
+            public bool IsKeyDown(Keys key)
+            {
+                return keysDown.GetValueOrDefault(key);
+            }
+
+            public Dictionary<Keys, bool> keysDown;
 
             public bool Focus { get; set; }
             public bool MouseRightDown { get; set; }
             public bool MouseLeftDown { get; set; }
-            public bool ControlDown { get; set; }
-            public bool ShiftDown { get; set; }
-            public bool AltDown { get; set; }
+            public bool ControlDown => keysDown[Keys.ControlKey] || keysDown[Keys.RControlKey] || keysDown[Keys.LControlKey];
+            public bool ShiftDown => keysDown[Keys.ShiftKey] || keysDown[Keys.RShiftKey] || keysDown[Keys.LShiftKey];
             public int PreviousMouseX { get; set; }
             public int PreviousMouseY { get; set; }
             public int GLMousePositionX { get; set; }
@@ -114,14 +155,16 @@ namespace FractalLive
             shader.SetMatrix4("model", Matrix4.Identity);
 
             shader.SetBool("is3D", camera.Is3D());
-            shader.SetDouble("zoom", Math.Pow(2, fractalSettings.Zoom));
-            shader.SetFloat("initialRadius", fractalSettings.InitialDisplayRadius);
+            shader.SetDouble("zoom", Math.Pow(2, fractalSettings.Zoom.Value));
+            shader.SetFloat("initialRadius", fractalSettings.InitialDisplayRadius.Value);
             shader.SetFloat("normalizedCoordsWidth", (float)glControl.Width / Math.Max(minGLWidth, minGLHeight));
             shader.SetFloat("normalizedCoordsHeight", (float)glControl.Height / Math.Max(minGLWidth, minGLHeight));
 
             shader.SetVector2d("center", fractalSettings.Center);
             shader.SetFloat("rollAngle", camera.Roll);
-            shader.SetInt("maxIterations", fractalSettings.MaxIterations);
+            shader.SetInt("maxIterations", fractalSettings.MaxIterations.Value);
+            shader.SetInt("orbitTrap", (int)fractalSettings.OrbitTrap);
+            shader.SetFloat("bailout", fractalSettings.Bailout.Value);
             
             if (currentFractal == Fractal.Type.MANDELBROT)
             {
@@ -157,6 +200,9 @@ namespace FractalLive
 
             // Default values
             NativeInputRadioButton.Checked = false;
+            input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
+            input_OrbitTrap.SelectedIndex = (int)CurrentSettings.OrbitTrap;
+            input_BailoutX.Text = CurrentSettings.Bailout.Value.ToString();
 
             // Callbacks
             glControl.Resize += glControl_Resize;
@@ -166,14 +212,6 @@ namespace FractalLive
             glControl.LostFocus += (sender, e) => inputState.Focus = false;
 
             // Log WinForms keyboard/mouse events.
-            /*
-            glControl.KeyDown += (sender, e) =>
-                Log($"WinForms Key down: {e.KeyCode}");
-            glControl.KeyUp += (sender, e) =>
-                Log($"WinForms Key up: {e.KeyCode}");
-            glControl.KeyPress += (sender, e) =>
-                Log($"WinForms Key press: {e.KeyChar}");
-            */
             glControl.MouseDown += (sender, e) =>
             {
                 glControl.Focus();
@@ -198,6 +236,9 @@ namespace FractalLive
             };
             glControl.MouseMove += glControl_MouseMove;
             glControl.MouseWheel += glControl_MouseWheel;
+            glControl.KeyDown += glControl_KeyDown;
+            glControl.KeyUp += glControl_KeyUp;
+            glControl.KeyPress += glControl_KeyPress;
 
             // Redraw the screen every 1/60 of a second.
             _timer = new Timer();
@@ -217,6 +258,7 @@ namespace FractalLive
             //GL.CullFace(CullFaceMode.Back);
             //GL.FrontFace(FrontFaceDirection.Cw);
 
+            glControl.Focus();
             applicationTime.Start();
 
             lastFrame = applicationTime.ElapsedMilliseconds;
@@ -271,10 +313,26 @@ namespace FractalLive
             lastFrame = currentFrame;
 
             // input
-            input_MaxIterations.Value = CurrentSettings.MaxIterations;
+            float modifier = inputState.keysDown[Keys.Oemtilde] ? -1 : 1;
+            if (inputState.ShiftDown)
+                modifier *= 10;
+            if (inputState.ControlDown)
+                modifier /= 10;
+
+            if (inputState.keysDown[Keys.D1])
+            {
+                CurrentSettings.MaxIterations += (int)(modifier * 10);
+                input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
+            }
+            if (inputState.keysDown[Keys.D2])
+            {
+                CurrentSettings.Bailout += modifier / 5;
+                input_BailoutX.Text = CurrentSettings.Bailout.Value.ToString();
+            }
+
+            // update controls
 
             // update fractal
-
             Render();
         }
 
@@ -317,7 +375,7 @@ namespace FractalLive
                 {
                     float rad = MathHelper.DegreesToRadians(CurrentCamera.Roll);
                     float rad90 = rad + MathHelper.Pi / 2;
-                    float factor = CurrentCamera.CurrentMoveSpeed / (float)Math.Pow(2,CurrentSettings.Zoom);
+                    float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2,CurrentSettings.Zoom.Value);
 
                     CurrentSettings.Center += new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad)) * (float)deltaX * factor;
                     CurrentSettings.Center -= new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90)) * (float)deltaY * factor;
@@ -341,18 +399,112 @@ namespace FractalLive
 
             Vector2 normalizedMousePos = new Vector2((float)inputState.GLMousePositionX / glControl.Width, (float)inputState.GLMousePositionY / glControl.Height) * 2 - new Vector2(1,1);
             Vector2 aspectRatio = new Vector2(glControl.Width, -glControl.Height) / Math.Max(minGLWidth, minGLHeight);
-            Vector2 offset = normalizedMousePos * CurrentSettings.InitialDisplayRadius * aspectRatio;
+            Vector2 offset = normalizedMousePos * CurrentSettings.InitialDisplayRadius.Value * aspectRatio;
             
-            Vector2 mousePos = CurrentSettings.Center + (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
+            Vector2 mousePos = CurrentSettings.Center + (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom.Value);
             CurrentSettings.Zoom += scrollOffset * CurrentCamera.CurrentZoomSpeed;
-            CurrentSettings.Center = mousePos - (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
+            CurrentSettings.Center = mousePos - (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom.Value);
         }
 
+        private void glControl_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.LControlKey)
+                inputState.keysDown[Keys.LControlKey] = true;
+            else if (e.KeyCode == Keys.RControlKey)
+                inputState.keysDown[Keys.RControlKey] = true;
+            else if (e.KeyCode == Keys.ControlKey)
+                inputState.keysDown[Keys.ControlKey] = true;
+            else if (e.KeyCode == Keys.ShiftKey)
+                inputState.keysDown[Keys.ShiftKey] = true;
+            else if (e.KeyCode == Keys.LShiftKey)
+                inputState.keysDown[Keys.LShiftKey] = true;
+            else if (e.KeyCode == Keys.RShiftKey)
+                inputState.keysDown[Keys.RShiftKey] = true;
+            else if (e.KeyCode == Keys.Oemtilde)
+                inputState.keysDown[Keys.Oemtilde] = true;
+            else if (e.KeyCode == Keys.Alt)
+            {
+                inputState.keysDown[Keys.Alt] = true;
+                inputState.keysDown[Keys.Alt] = true;
+            }
+            else if (e.KeyCode == Keys.D1)
+                inputState.keysDown[Keys.D1] = true;
+            else if (e.KeyCode == Keys.D2)
+                inputState.keysDown[Keys.D2] = true;
+
+            //Log("Key down: " + e.KeyCode.ToString());
+            //Log("\tinputState.keysDown[Keys.D1]: " + inputState.keysDown[Keys.D1].ToString());
+        }
+
+        private void glControl_KeyUp(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.LControlKey)
+                inputState.keysDown[Keys.LControlKey] = false;
+            else if (e.KeyCode == Keys.RControlKey)
+                inputState.keysDown[Keys.RControlKey] = false;
+            else if (e.KeyCode == Keys.ControlKey)
+                inputState.keysDown[Keys.ControlKey] = false;
+            else if (e.KeyCode == Keys.ShiftKey)
+                inputState.keysDown[Keys.ShiftKey] = false;
+            else if (e.KeyCode == Keys.LShiftKey)
+                inputState.keysDown[Keys.LShiftKey] = false;
+            else if (e.KeyCode == Keys.RShiftKey)
+                inputState.keysDown[Keys.RShiftKey] = false;
+            else if (e.KeyCode == Keys.Oemtilde)
+                inputState.keysDown[Keys.Oemtilde] = false;
+            else if (e.KeyCode == Keys.Alt)
+            {
+                inputState.keysDown[Keys.Alt] = false;
+                inputState.keysDown[Keys.Alt] = false;
+            }
+            else if (e.KeyCode == Keys.D1)
+                inputState.keysDown[Keys.D1] = false;
+            else if (e.KeyCode == Keys.D2)
+                inputState.keysDown[Keys.D2] = false;
+
+            //Log("Key up: " + e.KeyCode.ToString());
+            //Log("\tinputState.keysDown[Keys.D1]: " + inputState.keysDown[Keys.D1].ToString());
+        }
+
+        private void glControl_KeyPress(object? sender, KeyPressEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Controls
         private void input_MaxIterations_ValueChanged(object sender, EventArgs e)
         {
-            CurrentSettings.MaxIterations = (int)input_MaxIterations.Value;
+            CurrentSettings.MaxIterations.SetValue((int)input_MaxIterations.Value);
+        }
+        
+        private void input_OrbitTrap_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            CurrentSettings.OrbitTrap = (Fractal.OrbitTrap)input_OrbitTrap.SelectedIndex;
         }
 
+        private void input_BailoutX_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // only allow numbers and backspace
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar==8);
+        }
+        private void input_BailoutX_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                glControl.Focus(); // force leave
+        }
+        private void input_BailoutX_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!float.TryParse(input_BailoutX.Text, out _))
+                e.Cancel = true;
+        }
+
+        private void input_BailoutX_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.Bailout.SetValue(float.Parse(input_BailoutX.Text));
+            input_BailoutX.Text = CurrentSettings.Bailout.Value.ToString(); // in case number gets restricted by bounds
+        }
         private void WinFormsInputRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             glControl.DisableNativeInput();
@@ -374,7 +526,6 @@ namespace FractalLive
                     Log($"Native Key up: {e.Offset}");
             }
         }
-
         #endregion
 
         #region Properties
@@ -469,5 +620,6 @@ namespace FractalLive
         #region Constants
 
         #endregion
+
     }
 }

@@ -31,13 +31,14 @@ namespace FractalLive
             public bool showTarget;
             public bool showAxis;
             public float moveSpeed;
+            public float panSpeed;
             public float turnSpeed;
             public float zoomSpeed;
             public float mouseSensitivity;
             public float nearClipping;
             public float farClipping;
 
-            public Settings(Mode mode, float fov = 67.5f, Projection projection = Projection.CARTESIAN, bool showTarget = false, bool showAxis = false, float moveSpeed = .03f, float turnSpeed = .2f, float zoomSpeed = .1f, float mouseSensitivity = .2f, float nearClipping = 0.1f, float farClipping = 100f)
+            public Settings(Mode mode, float fov = 67.5f, Projection projection = Projection.CARTESIAN, bool showTarget = false, bool showAxis = false, float moveSpeed = .03f, float panSpeed = .015f, float turnSpeed = .2f, float zoomSpeed = .1f, float mouseSensitivity = .2f, float nearClipping = 0.1f, float farClipping = 100f)
             {
                 this.mode = Mode.FLAT;
                 this.projection = Projection.CARTESIAN;
@@ -45,6 +46,7 @@ namespace FractalLive
                 this.showTarget = showTarget;
                 this.showAxis = showAxis;
                 this.moveSpeed = moveSpeed;
+                this.panSpeed = panSpeed;
                 this.turnSpeed = turnSpeed;
                 this.zoomSpeed = zoomSpeed;
                 this.mouseSensitivity = mouseSensitivity;
@@ -466,6 +468,7 @@ namespace FractalLive
         public bool Lock { get; set; }
         public Mode CurrentMode => CurrentSettings.mode;
         public float CurrentMoveSpeed => CurrentSettings.moveSpeed;
+        public float CurrentPanSpeed => CurrentSettings.panSpeed;
         public float CurrentZoomSpeed => CurrentSettings.zoomSpeed;
 
 

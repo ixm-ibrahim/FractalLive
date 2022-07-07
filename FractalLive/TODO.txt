@@ -12,4 +12,8 @@ camera roll
 initial zoom conditions
 follow random center of fractal (ai?)
 convert right variables to doubles
-
+more functions to break down larger functions
+make Fractal Settings properties easier to use
+focus glControl upon application start
+enable copy and paste in textboxes
+undo redo

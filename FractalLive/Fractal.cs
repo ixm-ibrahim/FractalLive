@@ -32,7 +32,7 @@ namespace FractalLive
 
         public enum OrbitTrap
         {
-            CUSTOM, CIRCLE, SQUARE, RECTANGLE, REAL, IMAGINARY, POINT, LINE, CROSS, COUNT
+            CUSTOM = -1, CIRCLE = 0, SQUARE = 1, REAL = 2, IMAGINARY = 3, RECTANGLE = 4, POINT = 5, LINE = 6, CROSS = 7, COUNT
         }
 
         public enum Projection
@@ -61,16 +61,16 @@ namespace FractalLive
                 UseDistance = false;
                 UseLighting = false;
                 UseTerrainColor = false;
-                InitialDisplayRadius = 2;
-                Bailout = 2;
-                C_Power = 1;
-                FoldAngle = 0;
-                FoldCount = 0;
-                MaxIterations = 100;
-                MaxOrbitDistance = 100;
-                Power = 2;
-                TerrainHeight = 0;
-                Zoom = 0;
+                InitialDisplayRadius = new FloatBounds(2, .01f, 100);
+                Bailout = new FloatBounds(2, 0, (float)maxVal);
+                C_Power = new FloatBounds(1, (float)-maxVal, (float)maxVal);
+                FoldAngle = new FloatBounds(0, (float)-maxVal, (float)maxVal);
+                FoldCount = new IntBounds(0, 0, 100);
+                MaxIterations = new IntBounds(100, 0, 9999);
+                MaxOrbitDistance = new FloatBounds(100, 0, (float)maxVal);
+                Power = new FloatBounds(2, (float)-maxVal, (float)maxVal);
+                TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
+                Zoom = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 BailoutPoint = new Vector2(0,0);
                 Center = new Vector2(0, 0);
                 Julia = new Vector2(-0.4f, 0.6f);
@@ -93,16 +93,16 @@ namespace FractalLive
             public bool UseDistance { get; set; }
             public bool UseLighting { get; set; }
             public bool UseTerrainColor { get; set; }
-            public float InitialDisplayRadius { get; set; }
-            public double Bailout { get; set; }
-            public double C_Power { get; set; }
-            public double FoldAngle { get; set; }
-            public int FoldCount { get; set; }
-            public int MaxIterations { get; set; }
-            public double MaxOrbitDistance { get; set; }
-            public double Power { get; set; }
-            public double TerrainHeight { get; set; }
-            public double Zoom { get; set; }
+            public FloatBounds InitialDisplayRadius { get; set; }
+            public FloatBounds Bailout { get; set; }
+            public FloatBounds C_Power { get; set; }
+            public FloatBounds FoldAngle { get; set; }
+            public IntBounds FoldCount { get; set; }
+            public IntBounds MaxIterations { get; set; }
+            public FloatBounds MaxOrbitDistance { get; set; }
+            public FloatBounds Power { get; set; }
+            public FloatBounds TerrainHeight { get; set; }
+            public FloatBounds Zoom { get; set; }
             public Vector2 BailoutPoint { get; set; }
             public Vector2 Center { get; set; }
             public Vector2 Julia { get; set; }
@@ -128,9 +128,9 @@ namespace FractalLive
 
         #endregion
 
-        #region Variables
-
-
+        #region Constants
+        const double maxVal = 1e99;
+        const double minVal = 1e-99;
         #endregion
     }
 }
