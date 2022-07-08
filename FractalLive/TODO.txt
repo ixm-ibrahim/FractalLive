@@ -20,3 +20,5 @@ undo redo
 text box that spawns input textbox/combo box when clicked
 interior orbit trap and more options
 left click decides orbit trap point and others
+see if raising zoom to power can be optimized in shaders
+investigate bug where Update is called after exit

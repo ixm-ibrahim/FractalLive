@@ -156,7 +156,7 @@ namespace FractalLive
             shader.SetMatrix4("model", Matrix4.Identity);
 
             shader.SetBool("is3D", camera.Is3D());
-            shader.SetDouble("zoom", Math.Pow(2, fractalSettings.Zoom.Value));
+            shader.SetDouble("zoom", fractalSettings.Zoom.Value);
             shader.SetFloat("initialRadius", fractalSettings.InitialDisplayRadius.Value);
             shader.SetFloat("normalizedCoordsWidth", (float)glControl.Width / Math.Max(minGLWidth, minGLHeight));
             shader.SetFloat("normalizedCoordsHeight", (float)glControl.Height / Math.Max(minGLWidth, minGLHeight));
@@ -323,7 +323,7 @@ namespace FractalLive
 
             if (inputState.keysDown[Keys.D1])
             {
-                CurrentSettings.MaxIterations += (int)(modifier * 10);
+                CurrentSettings.MaxIterations += (int)(modifier * 5);
                 input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
             }
             if (inputState.keysDown[Keys.D2])
@@ -464,7 +464,7 @@ namespace FractalLive
             else if (e.KeyCode == Keys.Oemcomma)
                 inputState.keysDown[Keys.Oemcomma] = true;
             else if (e.KeyCode == Keys.OemPeriod)
-                inputState.keysDown[Keys.Oemcomma] = true;
+                inputState.keysDown[Keys.OemPeriod] = true;
 
             //Log("Key down: " + e.KeyCode.ToString());
             //Log("\tinputState.keysDown[Keys.D1]: " + inputState.keysDown[Keys.D1].ToString());
@@ -500,7 +500,7 @@ namespace FractalLive
             else if (e.KeyCode == Keys.Oemcomma)
                 inputState.keysDown[Keys.Oemcomma] = false;
             else if (e.KeyCode == Keys.OemPeriod)
-                inputState.keysDown[Keys.Oemcomma] = false;
+                inputState.keysDown[Keys.OemPeriod] = false;
 
             //Log("Key up: " + e.KeyCode.ToString());
             //Log("\tinputState.keysDown[Keys.D1]: " + inputState.keysDown[Keys.D1].ToString());
@@ -552,8 +552,8 @@ namespace FractalLive
 
         private void input_Bailout_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 8);
+            // only allow numbers, period, negative symbol, and backspace
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
         }
         private void input_Bailout_KeyDown(object sender, KeyEventArgs e)
         {
@@ -576,8 +576,8 @@ namespace FractalLive
 
         private void input_Bailout1X_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar==8);
+            // only allow numbers, period, negative symbol, and backspace
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
         }
         private void input_Bailout1X_KeyDown(object sender, KeyEventArgs e)
         {
@@ -605,8 +605,8 @@ namespace FractalLive
 
         private void input_Bailout1Y_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 8);
+            // only allow numbers, period, negative symbol, and backspace
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
         }
         private void input_Bailout1Y_KeyDown(object sender, KeyEventArgs e)
         {

@@ -1,5 +1,7 @@
 ﻿#version 450 core
 
+#define M_PI 3.1415926535897932384626433832795
+
 
 #define TRAP_CUSTOM						-1
 #define TRAP_CIRCLE						0
@@ -31,12 +33,14 @@ vec2 MandelbrotDistanceLoop(vec2 c, int maxIteration, inout int iter);
 
 void main()
 {
-	FragColor = vec4(Mandelbrot() * vec3(TexCoords,1), 1.0);
+	//FragColor = vec4(Mandelbrot() * vec3(TexCoords,1), 1.0);
+	FragColor = vec4(Mandelbrot(), 1.0);
 }
 
 vec2 c_2(vec2 c);
-bool WithinOrbitTrap(vec2 z);
+bool IsBounded(vec2 z);
 bool NeedDistance();
+float GetOrbitTrap(vec2 z, inout float trap);
 
 vec3 Mandelbrot()
 {
@@ -53,7 +57,9 @@ vec3 Mandelbrot()
 		//return vec3(1.0);
 
     if (orbitTrap == TRAP_POINT)
-	    return (0.5 + 0.5*sin( 4.1 + 2.0*trap + vec3(1.0,0.5,0.0) )) * pow( clamp( 2.00*zoom,    0.0, 1.0 ), 0.5 );
+	    //return (0.5 + 0.5*sin( 4.1 + 2.0*trap + vec3(1.0,0.5,0.0) )) * pow( clamp( 2.00*zoom,    0.0, 1.0 ), 0.5 );
+	    //return vec3(0.5 + 0.5*(sin(trap)));
+	    return vec3(trap);
 
 	return vec3(sqrt(float(iter)/maxIterations));
 }
@@ -61,24 +67,40 @@ vec3 Mandelbrot()
 vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
 {
 	vec2 z = vec2(0);
-	for (iter = 0; iter < maxIterations && WithinOrbitTrap(z); ++iter)
+    trap = length(c);
+	for (iter = 0; iter < maxIterations && IsBounded(z); ++iter)
 	{
 		z = c_2(z) + c;
 
-        if (orbitTrap == TRAP_POINT)
-            //trap = min(trap, length(z - bailoutPoint));
-            trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
+        trap = GetOrbitTrap(z, trap);
 	}
     
-    trap = pow( clamp( 0.4*trap, 0.0, 1.0 ), 0.25 );
+    //trap = pow( bailout*trap, 0.25 );
+    //trap = pow( trap, 0.5 );
+    //trap = pow( clamp( bailout*trap, 0.0, 1.0 ), 0.25 );
+    //trap = bailout*trap;
+    //trap = clamp(round(bailout*trap*pow(2,zoom)), 0.0, 1.0);
 
+    trap = trap*pow(2,zoom);
+
+
+    trap = pow( trap, bailout );
+
+    //trap = clamp(2.5*trap, 0.0, 1.0);
+    //trap = bailout*atan(trap) / (M_PI/2);
+    //trap = trap/(0.1+trap);
+    //trap=1-exp(-bailout*trap);
+    trap = trap/length(c);
+
+    //trap = pow(trap,bailout);
+    //trap = trap*pow(2,zoom);
 	return z;
 }
 
 vec2 MandelbrotDistanceLoop(vec2 c, int maxIterations, inout int iter)
 {
 	vec2 z = vec2(0);
-	for (iter = 0; iter < maxIterations && WithinOrbitTrap(z); ++iter)
+	for (iter = 0; iter < maxIterations && IsBounded(z); ++iter)
 	{
 		z = c_2(z) + c;
 	}
@@ -86,7 +108,7 @@ vec2 MandelbrotDistanceLoop(vec2 c, int maxIterations, inout int iter)
 	return z;
 }
 
-bool WithinOrbitTrap(vec2 z)
+bool IsBounded(vec2 z)
 {
     switch (orbitTrap)
     {
@@ -101,10 +123,31 @@ bool WithinOrbitTrap(vec2 z)
         case TRAP_RECTANGLE:
             return abs(z.x) < bailoutRectangle.x && abs(z.y) < bailoutRectangle.y;
         default:
-            return z.x*z.x + z.y*z.y < bailout*bailout;
+            //return z.x*z.x + z.y*z.y < bailout*bailout;
+            return z.x*z.x + z.y*z.y < 1024;
     }
 
     return false;
+}
+
+float GetOrbitTrap(vec2 z, inout float trap)
+{
+    switch (orbitTrap)
+    {
+        case TRAP_POINT:
+            trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
+            break;
+        case TRAP_LINE:
+            trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
+            break;
+        case TRAP_CROSS:
+            trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
+            break;
+        default:
+            trap = 0;
+    }
+
+    return trap;
 }
 
 vec2 c_2(vec2 c)
