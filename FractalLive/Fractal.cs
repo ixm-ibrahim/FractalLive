@@ -12,32 +12,32 @@ namespace FractalLive
         #region Enumerations
         public enum Type
         {
-            CUSTOM, JULIA, MANDELBROT, JULIA_MATING
+            Custom = -1, Mandelbrot = 0, Julia = 1, Julia_Mating = 2
         }
 
         public enum Formula
         {
-            CUSTOM, MANDELBROT, LAMBDA
+            Custom = -1, Classic = 0, Lambda = 1
         }
 
         public enum Buddhabrot
         {
-            NORMAL, INVERSE, NEBULABROT
+            Normal, Inverse, Nebulabrot
         }
 
         public enum Coloring
         {
-            CUSTOM, BLACK, WHITE, CLASSIC, SMOOTH, DOMAIN_A, DOMAIN_B, DOMAIN_C, DOMAIN_D, DOMAIN_E, DOMAIN_F, DOMAIN_G, COUNT
+            Custom, Black, White, Classic, Smooth, Domain_A, Domain_B, Domain_C, Domain_D, Domain_E, Domain_F, Domain_G, COUNT
         }
 
         public enum OrbitTrap
         {
-            CUSTOM = -1, CIRCLE = 0, SQUARE = 1, REAL = 2, IMAGINARY = 3, RECTANGLE = 4, POINT = 5, LINE = 6, CROSS = 7, COUNT
+            Custom = -1, Circle = 0, Square = 1, Real = 2, Imaginary = 3, Rectangle = 4, Point = 5, Triangle = 6, Line = 7, Cross = 8, COUNT
         }
 
         public enum Projection
         {
-            NORMAL, INVERSE, RIEMANN_SPHERE
+            Normal, Inverse, Riemann_Sphere
         }
 
         #endregion
@@ -45,15 +45,15 @@ namespace FractalLive
         #region Structures
         public struct Settings
         {
-            public Settings(Type type = Type.MANDELBROT, Formula formula = Formula.MANDELBROT)
+            public Settings(Type type = Type.Mandelbrot, Formula formula = Formula.Classic)
             {
                 Type = type;
                 Formula = formula;
-                buddhabrot = Buddhabrot.NORMAL;
-                ExteriorColoring = Coloring.WHITE;
-                InteriorColoring = Coloring.BLACK;
-                OrbitTrap = OrbitTrap.CIRCLE;
-                Projection = Projection.NORMAL;
+                buddhabrot = Buddhabrot.Normal;
+                ExteriorColoring = Coloring.White;
+                InteriorColoring = Coloring.Black;
+                OrbitTrap = OrbitTrap.Circle;
+                Projection = Projection.Normal;
                 IsBuddhabrot = false;
                 IsConjugate = false;
                 IsJulia = false;
@@ -71,44 +71,53 @@ namespace FractalLive
                 Power = new FloatBounds(2, (float)-maxVal, (float)maxVal);
                 TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 Zoom = new FloatBounds(0, (float)-maxVal, (float)maxVal);
+                BailoutRectangle = new Vector2(2,2);
                 BailoutPoint = new Vector2(0,0);
                 Center = new Vector2(0, 0);
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating = new Vector2(0.285f, 0.01f);
                 BailoutLine = new Vector4(0,0,0,1);
+                BailoutLine2 = new Vector4(0,1,0,0);
                 FoldOffset = new Vector4(0,0,0,0);
             }
 
-            public Type Type { get; set; }
-            public Formula Formula { get; set; }
-            public Buddhabrot buddhabrot { get; set; }
-            public Coloring ExteriorColoring { get; set; }
-            public Coloring InteriorColoring { get; set; }
-            public OrbitTrap OrbitTrap { get; set; }
-            public Projection Projection { get; set; }
-            public bool IsBuddhabrot { get; set; }
-            public bool IsConjugate { get; set; }
-            public bool IsJulia { get; set; }
-            public bool IsJuliaCentered { get; set; }
-            public bool UseDistance { get; set; }
-            public bool UseLighting { get; set; }
-            public bool UseTerrainColor { get; set; }
-            public FloatBounds InitialDisplayRadius { get; set; }
-            public FloatBounds Bailout { get; set; }
-            public FloatBounds C_Power { get; set; }
-            public FloatBounds FoldAngle { get; set; }
-            public IntBounds FoldCount { get; set; }
-            public IntBounds MaxIterations { get; set; }
-            public FloatBounds MaxOrbitDistance { get; set; }
-            public FloatBounds Power { get; set; }
-            public FloatBounds TerrainHeight { get; set; }
-            public FloatBounds Zoom { get; set; }
-            public Vector2 BailoutPoint { get; set; }
-            public Vector2 Center { get; set; }
-            public Vector2 Julia { get; set; }
-            public Vector2 JuliaMating { get; set; }
-            public Vector4 BailoutLine { get; set; }
-            public Vector4 FoldOffset { get; set; }
+            public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
+            public bool Is2DBailout => OrbitTrap >= OrbitTrap.Rectangle && OrbitTrap <= OrbitTrap.Point;
+            public bool Is3DBailout => OrbitTrap >= OrbitTrap.Triangle && OrbitTrap <= OrbitTrap.Triangle;
+            public bool Is4DBailout => OrbitTrap >= OrbitTrap.Line && OrbitTrap <= OrbitTrap.Line;
+
+            public Type Type;
+            public Formula Formula;
+            public Buddhabrot buddhabrot;
+            public Coloring ExteriorColoring;
+            public Coloring InteriorColoring;
+            public OrbitTrap OrbitTrap;
+            public Projection Projection;
+            public bool IsBuddhabrot;
+            public bool IsConjugate;
+            public bool IsJulia;
+            public bool IsJuliaCentered;
+            public bool UseDistance;
+            public bool UseLighting;
+            public bool UseTerrainColor;
+            public FloatBounds InitialDisplayRadius;
+            public FloatBounds Bailout;
+            public FloatBounds C_Power;
+            public FloatBounds FoldAngle;
+            public IntBounds FoldCount;
+            public IntBounds MaxIterations;
+            public FloatBounds MaxOrbitDistance;
+            public FloatBounds Power;
+            public FloatBounds TerrainHeight;
+            public FloatBounds Zoom;
+            public Vector2 BailoutRectangle;
+            public Vector2 BailoutPoint;
+            public Vector2 Center;
+            public Vector2 Julia;
+            public Vector2 JuliaMating;
+            public Vector4 BailoutLine;
+            public Vector4 BailoutLine2;
+            public Vector4 FoldOffset;
         }
         #endregion
 

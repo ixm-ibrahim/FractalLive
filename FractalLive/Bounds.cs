@@ -50,10 +50,7 @@ namespace FractalLive
         {
             b.Value += val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }
@@ -61,10 +58,7 @@ namespace FractalLive
         {
             b.Value -= val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }
@@ -72,10 +66,7 @@ namespace FractalLive
         {
             b.Value *= val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }
@@ -83,10 +74,7 @@ namespace FractalLive
         {
             b.Value /= val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }
@@ -133,10 +121,7 @@ namespace FractalLive
         {
             b.Value += val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }
@@ -144,10 +129,7 @@ namespace FractalLive
         {
             b.Value -= val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }
@@ -155,10 +137,7 @@ namespace FractalLive
         {
             b.Value *= val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }
@@ -166,10 +145,7 @@ namespace FractalLive
         {
             b.Value /= val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }
@@ -216,10 +192,7 @@ namespace FractalLive
         {
             b.Value += val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }
@@ -227,10 +200,7 @@ namespace FractalLive
         {
             b.Value -= val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }
@@ -238,10 +208,7 @@ namespace FractalLive
         {
             b.Value *= val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }
@@ -249,10 +216,7 @@ namespace FractalLive
         {
             b.Value /= val;
 
-            if (b.Value < b.Minimum)
-                b.Value = b.Minimum;
-            if (b.Value > b.Maximum)
-                b.Value = b.Maximum;
+            Math.Clamp(b.Value, b.Minimum, b.Maximum);
 
             return b;
         }

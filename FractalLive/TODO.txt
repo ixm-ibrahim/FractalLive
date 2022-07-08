@@ -17,3 +17,6 @@ make Fractal Settings properties easier to use
 focus glControl upon application start
 enable copy and paste in textboxes
 undo redo
+text box that spawns input textbox/combo box when clicked
+interior orbit trap and more options
+left click decides orbit trap point and others
