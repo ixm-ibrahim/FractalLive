@@ -18,7 +18,7 @@ focus glControl upon application start
 enable copy and paste in textboxes
 undo redo
 text box that spawns input textbox/combo box when clicked
-interior orbit trap and more options
+interior orbit trap and more options (like skipping n iterations, pausing zoom coloring)
 left click decides orbit trap point and others
 see if raising zoom to power can be optimized in shaders
-investigate bug where Update is called after exit
+investigate bug where Update is called after exit, and menu disappears

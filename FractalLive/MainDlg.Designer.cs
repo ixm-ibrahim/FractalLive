@@ -491,6 +491,7 @@
             "Imaginary",
             "Rectangle",
             "Point",
+            "Triangle",
             "Line",
             "Cross/2 Lines"});
             this.input_OrbitTrap.Location = new System.Drawing.Point(68, 109);
@@ -507,6 +508,10 @@
             this.input_Bailout2X.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout2X.TabIndex = 22;
             this.input_Bailout2X.Text = "0";
+            this.input_Bailout2X.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_Bailout2X_KeyDown);
+            this.input_Bailout2X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Bailout2X_KeyPress);
+            this.input_Bailout2X.Validating += new System.ComponentModel.CancelEventHandler(this.input_Bailout2X_Validating);
+            this.input_Bailout2X.Validated += new System.EventHandler(this.input_Bailout2X_Validated);
             // 
             // input_FractalFormula
             // 
@@ -530,6 +535,10 @@
             this.input_Bailout2Y.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout2Y.TabIndex = 23;
             this.input_Bailout2Y.Text = "0";
+            this.input_Bailout2Y.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_Bailout2Y_KeyDown);
+            this.input_Bailout2Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Bailout2Y_KeyPress);
+            this.input_Bailout2Y.Validating += new System.ComponentModel.CancelEventHandler(this.input_Bailout2Y_Validating);
+            this.input_Bailout2Y.Validated += new System.EventHandler(this.input_Bailout2Y_Validated);
             // 
             // input_FractalType
             // 

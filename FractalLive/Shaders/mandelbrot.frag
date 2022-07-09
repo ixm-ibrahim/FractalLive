@@ -26,6 +26,7 @@ uniform int orbitTrap;
 uniform float bailout;
 uniform vec2 bailoutRectangle;
 uniform vec2 bailoutPoint;
+uniform vec4 bailoutLine;
 
 vec3 Mandelbrot();
 vec2 MandelbrotLoop(vec2 c, int maxIteration, inout int iter, inout float trap);
@@ -56,9 +57,11 @@ vec3 Mandelbrot()
 	//if (iter >= maxIterations)
 		//return vec3(1.0);
 
-    if (orbitTrap == TRAP_POINT)
-	    //return (0.5 + 0.5*sin( 4.1 + 2.0*trap + vec3(1.0,0.5,0.0) )) * pow( clamp( 2.00*zoom,    0.0, 1.0 ), 0.5 );
-	    //return vec3(0.5 + 0.5*(sin(trap)));
+    //if (orbitTrap == TRAP_LINE)
+        //return vec3(0);
+
+    if (orbitTrap == TRAP_POINT || orbitTrap == TRAP_LINE)
+	    //return vec3(0.5 + 0.5*(sin(bailout*trap)));
 	    return vec3(trap);
 
 	return vec3(sqrt(float(iter)/maxIterations));
@@ -67,7 +70,8 @@ vec3 Mandelbrot()
 vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
 {
 	vec2 z = vec2(0);
-    trap = length(c);
+    trap = 1e20;
+    //trap = length(c);
 	for (iter = 0; iter < maxIterations && IsBounded(z); ++iter)
 	{
 		z = c_2(z) + c;
@@ -75,25 +79,9 @@ vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
         trap = GetOrbitTrap(z, trap);
 	}
     
-    //trap = pow( bailout*trap, 0.25 );
-    //trap = pow( trap, 0.5 );
-    //trap = pow( clamp( bailout*trap, 0.0, 1.0 ), 0.25 );
-    //trap = bailout*trap;
-    //trap = clamp(round(bailout*trap*pow(2,zoom)), 0.0, 1.0);
+    //trap = clamp(pow( trap*pow(2,zoom), 0.25 ), 0.0, 1.0); // control 1
+    //trap = 1.0 / (1.0 + exp(-7.0 * (trap - 0.5)));  // control 2
 
-    trap = trap*pow(2,zoom);
-
-
-    trap = pow( trap, bailout );
-
-    //trap = clamp(2.5*trap, 0.0, 1.0);
-    //trap = bailout*atan(trap) / (M_PI/2);
-    //trap = trap/(0.1+trap);
-    //trap=1-exp(-bailout*trap);
-    trap = trap/length(c);
-
-    //trap = pow(trap,bailout);
-    //trap = trap*pow(2,zoom);
 	return z;
 }
 
@@ -130,15 +118,28 @@ bool IsBounded(vec2 z)
     return false;
 }
 
+float length_squared(vec2 a, vec2 b)
+{
+    return pow(length(b - a), 2);
+}
+
+float DistanceToLine(vec2 p, vec2 a, vec2 b)
+{
+    return abs((b.x-a.x)*(a.y-p.y) - (a.x-p.x)*(b.y-a.y)) / sqrt(pow(b.x-a.x,2) + pow(b.y-a.y,2));
+}
+
 float GetOrbitTrap(vec2 z, inout float trap)
 {
     switch (orbitTrap)
     {
         case TRAP_POINT:
             trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
+            //trap = min(trap, log(abs(dot(z-bailoutPoint,z-bailoutPoint))));
             break;
         case TRAP_LINE:
+            //trap = min(trap, DistanceToLine(z, bailoutLine.xy, bailoutLine.zw));
             trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
+            bailoutLine;
             break;
         case TRAP_CROSS:
             trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));

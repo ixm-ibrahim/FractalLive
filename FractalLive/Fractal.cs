@@ -62,7 +62,7 @@ namespace FractalLive
                 UseLighting = false;
                 UseTerrainColor = false;
                 InitialDisplayRadius = new FloatBounds(2, .01f, 100);
-                Bailout = new FloatBounds(2, 0, (float)maxVal);
+                Bailout = 2;
                 C_Power = new FloatBounds(1, (float)-maxVal, (float)maxVal);
                 FoldAngle = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 FoldCount = new IntBounds(0, 0, 100);
@@ -76,7 +76,7 @@ namespace FractalLive
                 Center = new Vector2(0, 0);
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating = new Vector2(0.285f, 0.01f);
-                BailoutLine = new Vector4(0,0,0,1);
+                BailoutLine = new Vector4(0,0,1,0);
                 BailoutLine2 = new Vector4(0,1,0,0);
                 FoldOffset = new Vector4(0,0,0,0);
             }
@@ -100,8 +100,8 @@ namespace FractalLive
             public bool UseDistance;
             public bool UseLighting;
             public bool UseTerrainColor;
+            public float Bailout;
             public FloatBounds InitialDisplayRadius;
-            public FloatBounds Bailout;
             public FloatBounds C_Power;
             public FloatBounds FoldAngle;
             public IntBounds FoldCount;
