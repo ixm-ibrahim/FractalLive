@@ -267,6 +267,7 @@ namespace FractalLive
             //GL.FrontFace(FrontFaceDirection.Cw);
 
             glControl.Focus();
+            button_Menu1_Click(null, null);
             applicationTime.Start();
 
             lastFrame = applicationTime.ElapsedMilliseconds;
@@ -784,6 +785,35 @@ namespace FractalLive
                 CurrentSettings.BailoutCross2.W = float.Parse(GetFrom2D(input_Bailout2Y.Text, false));
                 input_Bailout2Y.Text = Make2D(CurrentSettings.BailoutCross2.Z, CurrentSettings.BailoutCross2.W);
             }
+        }
+
+        private void button_Menu1_Click(object sender, EventArgs e)
+        {
+            panel_FormulaMenu.Show();
+            panel_OrbitTrapMenu.Hide();
+
+
+        }
+        private void button_Menu2_Click(object sender, EventArgs e)
+        {
+            panel_FormulaMenu.Hide();
+            panel_OrbitTrapMenu.Show();
+
+
+        }
+        private void button_Menu3_Click(object sender, EventArgs e)
+        {
+            panel_FormulaMenu.Hide();
+            panel_OrbitTrapMenu.Hide();
+
+
+        }
+        private void button_Menu4_Click(object sender, EventArgs e)
+        {
+            panel_FormulaMenu.Hide();
+            panel_OrbitTrapMenu.Hide();
+
+
         }
 
         private void WinFormsInputRadioButton_CheckedChanged(object sender, EventArgs e)

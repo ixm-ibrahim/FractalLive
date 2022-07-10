@@ -88,21 +88,24 @@
             this.label_Bailout = new System.Windows.Forms.Label();
             this.button_Menu3 = new System.Windows.Forms.Button();
             this.input_Bailout = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
+            this.button_Menu4 = new System.Windows.Forms.Button();
             this.panel_FormulaMenu = new System.Windows.Forms.Panel();
             this.label_Bailout1 = new System.Windows.Forms.Label();
             this.input_Bailout1X = new System.Windows.Forms.TextBox();
+            this.panel_OrbitTrapMenu = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             label_MaxIterations = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).BeginInit();
             this.panel_FormulaMenu.SuspendLayout();
+            this.panel_OrbitTrapMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_MaxIterations
             // 
             label_MaxIterations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             label_MaxIterations.AutoSize = true;
-            label_MaxIterations.Location = new System.Drawing.Point(3, 82);
+            label_MaxIterations.Location = new System.Drawing.Point(4, 82);
             label_MaxIterations.Name = "label_MaxIterations";
             label_MaxIterations.Size = new System.Drawing.Size(88, 15);
             label_MaxIterations.TabIndex = 6;
@@ -359,11 +362,10 @@
             // 
             // LogTextBox
             // 
-            this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(353, 339);
+            this.LogTextBox.Location = new System.Drawing.Point(353, 337);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
@@ -398,9 +400,8 @@
             // 
             // glControl
             // 
-            this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.glControl.API = OpenTK.Windowing.Common.ContextAPI.OpenGL;
             this.glControl.APIVersion = new System.Version(3, 3, 0, 0);
             this.glControl.Flags = OpenTK.Windowing.Common.ContextFlags.Default;
@@ -415,7 +416,7 @@
             // button_Left
             // 
             this.button_Left.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Left.Location = new System.Drawing.Point(3, 313);
+            this.button_Left.Location = new System.Drawing.Point(521, 340);
             this.button_Left.Name = "button_Left";
             this.button_Left.Size = new System.Drawing.Size(50, 25);
             this.button_Left.TabIndex = 33;
@@ -425,7 +426,7 @@
             // button_Right
             // 
             this.button_Right.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Right.Location = new System.Drawing.Point(105, 313);
+            this.button_Right.Location = new System.Drawing.Point(623, 340);
             this.button_Right.Name = "button_Right";
             this.button_Right.Size = new System.Drawing.Size(50, 25);
             this.button_Right.TabIndex = 22;
@@ -436,7 +437,7 @@
             // 
             this.label_OrbitTrap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_OrbitTrap.AutoSize = true;
-            this.label_OrbitTrap.Location = new System.Drawing.Point(3, 112);
+            this.label_OrbitTrap.Location = new System.Drawing.Point(3, 25);
             this.label_OrbitTrap.Name = "label_OrbitTrap";
             this.label_OrbitTrap.Size = new System.Drawing.Size(62, 15);
             this.label_OrbitTrap.TabIndex = 9;
@@ -447,7 +448,7 @@
             // 
             this.label_Bailout2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_Bailout2.AutoSize = true;
-            this.label_Bailout2.Location = new System.Drawing.Point(3, 199);
+            this.label_Bailout2.Location = new System.Drawing.Point(3, 112);
             this.label_Bailout2.Name = "label_Bailout2";
             this.label_Bailout2.Size = new System.Drawing.Size(59, 15);
             this.label_Bailout2.TabIndex = 14;
@@ -458,7 +459,7 @@
             // 
             this.label_Formula.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_Formula.AutoSize = true;
-            this.label_Formula.Location = new System.Drawing.Point(3, 51);
+            this.label_Formula.Location = new System.Drawing.Point(4, 51);
             this.label_Formula.Name = "label_Formula";
             this.label_Formula.Size = new System.Drawing.Size(54, 15);
             this.label_Formula.TabIndex = 20;
@@ -468,7 +469,7 @@
             // input_Bailout1Y
             // 
             this.input_Bailout1Y.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_Bailout1Y.Location = new System.Drawing.Point(116, 167);
+            this.input_Bailout1Y.Location = new System.Drawing.Point(116, 80);
             this.input_Bailout1Y.Name = "input_Bailout1Y";
             this.input_Bailout1Y.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout1Y.TabIndex = 17;
@@ -493,7 +494,7 @@
             "Point",
             "Line",
             "Cross/2 Lines"});
-            this.input_OrbitTrap.Location = new System.Drawing.Point(68, 109);
+            this.input_OrbitTrap.Location = new System.Drawing.Point(68, 22);
             this.input_OrbitTrap.Name = "input_OrbitTrap";
             this.input_OrbitTrap.Size = new System.Drawing.Size(87, 23);
             this.input_OrbitTrap.TabIndex = 10;
@@ -502,7 +503,7 @@
             // input_Bailout2X
             // 
             this.input_Bailout2X.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_Bailout2X.Location = new System.Drawing.Point(72, 196);
+            this.input_Bailout2X.Location = new System.Drawing.Point(72, 109);
             this.input_Bailout2X.Name = "input_Bailout2X";
             this.input_Bailout2X.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout2X.TabIndex = 22;
@@ -521,7 +522,7 @@
             this.input_FractalFormula.Items.AddRange(new object[] {
             "Classic",
             "Lambda"});
-            this.input_FractalFormula.Location = new System.Drawing.Point(68, 51);
+            this.input_FractalFormula.Location = new System.Drawing.Point(69, 51);
             this.input_FractalFormula.Name = "input_FractalFormula";
             this.input_FractalFormula.Size = new System.Drawing.Size(87, 23);
             this.input_FractalFormula.TabIndex = 21;
@@ -529,7 +530,7 @@
             // input_Bailout2Y
             // 
             this.input_Bailout2Y.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_Bailout2Y.Location = new System.Drawing.Point(115, 196);
+            this.input_Bailout2Y.Location = new System.Drawing.Point(115, 109);
             this.input_Bailout2Y.Name = "input_Bailout2Y";
             this.input_Bailout2Y.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout2Y.TabIndex = 23;
@@ -549,7 +550,7 @@
             "Mandelbrot",
             "Julia",
             "Julia Mating"});
-            this.input_FractalType.Location = new System.Drawing.Point(68, 22);
+            this.input_FractalType.Location = new System.Drawing.Point(69, 22);
             this.input_FractalType.Name = "input_FractalType";
             this.input_FractalType.Size = new System.Drawing.Size(87, 23);
             this.input_FractalType.TabIndex = 19;
@@ -557,7 +558,7 @@
             // input_Power
             // 
             this.input_Power.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_Power.Location = new System.Drawing.Point(72, 225);
+            this.input_Power.Location = new System.Drawing.Point(73, 109);
             this.input_Power.Name = "input_Power";
             this.input_Power.Size = new System.Drawing.Size(84, 23);
             this.input_Power.TabIndex = 28;
@@ -567,7 +568,7 @@
             // 
             this.label_FractalType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_FractalType.AutoSize = true;
-            this.label_FractalType.Location = new System.Drawing.Point(3, 25);
+            this.label_FractalType.Location = new System.Drawing.Point(4, 25);
             this.label_FractalType.Name = "label_FractalType";
             this.label_FractalType.Size = new System.Drawing.Size(45, 15);
             this.label_FractalType.TabIndex = 18;
@@ -578,7 +579,7 @@
             // 
             this.label_Power.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_Power.AutoSize = true;
-            this.label_Power.Location = new System.Drawing.Point(3, 228);
+            this.label_Power.Location = new System.Drawing.Point(4, 112);
             this.label_Power.Name = "label_Power";
             this.label_Power.Size = new System.Drawing.Size(46, 15);
             this.label_Power.TabIndex = 29;
@@ -588,7 +589,7 @@
             // input_CPower
             // 
             this.input_CPower.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_CPower.Location = new System.Drawing.Point(72, 254);
+            this.input_CPower.Location = new System.Drawing.Point(73, 138);
             this.input_CPower.Name = "input_CPower";
             this.input_CPower.Size = new System.Drawing.Size(84, 23);
             this.input_CPower.TabIndex = 30;
@@ -598,7 +599,7 @@
             // 
             this.label_CPower.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_CPower.AutoSize = true;
-            this.label_CPower.Location = new System.Drawing.Point(3, 257);
+            this.label_CPower.Location = new System.Drawing.Point(4, 141);
             this.label_CPower.Name = "label_CPower";
             this.label_CPower.Size = new System.Drawing.Size(57, 15);
             this.label_CPower.TabIndex = 31;
@@ -609,7 +610,7 @@
             // 
             this.input_MaxIterations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.input_MaxIterations.CausesValidation = false;
-            this.input_MaxIterations.Location = new System.Drawing.Point(90, 80);
+            this.input_MaxIterations.Location = new System.Drawing.Point(91, 80);
             this.input_MaxIterations.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -628,12 +629,13 @@
             // button_Menu1
             // 
             this.button_Menu1.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu1.Location = new System.Drawing.Point(3, 281);
+            this.button_Menu1.Location = new System.Drawing.Point(521, 308);
             this.button_Menu1.Name = "button_Menu1";
             this.button_Menu1.Size = new System.Drawing.Size(35, 25);
             this.button_Menu1.TabIndex = 34;
             this.button_Menu1.Text = "1";
             this.button_Menu1.UseVisualStyleBackColor = true;
+            this.button_Menu1.Click += new System.EventHandler(this.button_Menu1_Click);
             // 
             // label_FormulaMenu
             // 
@@ -648,17 +650,18 @@
             // button_Menu2
             // 
             this.button_Menu2.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu2.Location = new System.Drawing.Point(42, 281);
+            this.button_Menu2.Location = new System.Drawing.Point(560, 308);
             this.button_Menu2.Name = "button_Menu2";
             this.button_Menu2.Size = new System.Drawing.Size(35, 25);
             this.button_Menu2.TabIndex = 35;
             this.button_Menu2.Text = "2";
             this.button_Menu2.UseVisualStyleBackColor = true;
+            this.button_Menu2.Click += new System.EventHandler(this.button_Menu2_Click);
             // 
             // label_Bailout
             // 
             this.label_Bailout.AutoSize = true;
-            this.label_Bailout.Location = new System.Drawing.Point(3, 141);
+            this.label_Bailout.Location = new System.Drawing.Point(3, 54);
             this.label_Bailout.Name = "label_Bailout";
             this.label_Bailout.Size = new System.Drawing.Size(100, 15);
             this.label_Bailout.TabIndex = 35;
@@ -667,17 +670,18 @@
             // button_Menu3
             // 
             this.button_Menu3.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu3.Location = new System.Drawing.Point(81, 281);
+            this.button_Menu3.Location = new System.Drawing.Point(599, 308);
             this.button_Menu3.Name = "button_Menu3";
             this.button_Menu3.Size = new System.Drawing.Size(35, 25);
             this.button_Menu3.TabIndex = 36;
             this.button_Menu3.Text = "3";
             this.button_Menu3.UseVisualStyleBackColor = true;
+            this.button_Menu3.Click += new System.EventHandler(this.button_Menu3_Click);
             // 
             // input_Bailout
             // 
             this.input_Bailout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_Bailout.Location = new System.Drawing.Point(116, 138);
+            this.input_Bailout.Location = new System.Drawing.Point(116, 51);
             this.input_Bailout.Name = "input_Bailout";
             this.input_Bailout.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout.TabIndex = 36;
@@ -687,57 +691,41 @@
             this.input_Bailout.Validating += new System.ComponentModel.CancelEventHandler(this.input_Bailout_Validating);
             this.input_Bailout.Validated += new System.EventHandler(this.input_Bailout_Validated);
             // 
-            // button5
+            // button_Menu4
             // 
-            this.button5.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button5.Location = new System.Drawing.Point(121, 281);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(35, 25);
-            this.button5.TabIndex = 37;
-            this.button5.Text = "4";
-            this.button5.UseVisualStyleBackColor = true;
+            this.button_Menu4.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_Menu4.Location = new System.Drawing.Point(639, 308);
+            this.button_Menu4.Name = "button_Menu4";
+            this.button_Menu4.Size = new System.Drawing.Size(35, 25);
+            this.button_Menu4.TabIndex = 37;
+            this.button_Menu4.Text = "4";
+            this.button_Menu4.UseVisualStyleBackColor = true;
+            this.button_Menu4.Click += new System.EventHandler(this.button_Menu4_Click);
             // 
             // panel_FormulaMenu
             // 
-            this.panel_FormulaMenu.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_FormulaMenu.CausesValidation = false;
-            this.panel_FormulaMenu.Controls.Add(this.label_Bailout1);
-            this.panel_FormulaMenu.Controls.Add(this.input_Bailout1X);
-            this.panel_FormulaMenu.Controls.Add(this.button5);
-            this.panel_FormulaMenu.Controls.Add(this.input_Bailout);
-            this.panel_FormulaMenu.Controls.Add(this.button_Menu3);
-            this.panel_FormulaMenu.Controls.Add(this.label_Bailout);
-            this.panel_FormulaMenu.Controls.Add(this.button_Menu2);
             this.panel_FormulaMenu.Controls.Add(this.label_FormulaMenu);
-            this.panel_FormulaMenu.Controls.Add(this.button_Menu1);
+            this.panel_FormulaMenu.Controls.Add(this.label_Formula);
+            this.panel_FormulaMenu.Controls.Add(this.input_FractalFormula);
+            this.panel_FormulaMenu.Controls.Add(this.input_FractalType);
+            this.panel_FormulaMenu.Controls.Add(this.input_Power);
             this.panel_FormulaMenu.Controls.Add(this.input_MaxIterations);
+            this.panel_FormulaMenu.Controls.Add(this.label_FractalType);
             this.panel_FormulaMenu.Controls.Add(label_MaxIterations);
-            this.panel_FormulaMenu.Controls.Add(this.label_CPower);
             this.panel_FormulaMenu.Controls.Add(this.input_CPower);
             this.panel_FormulaMenu.Controls.Add(this.label_Power);
-            this.panel_FormulaMenu.Controls.Add(this.label_FractalType);
-            this.panel_FormulaMenu.Controls.Add(this.input_Power);
-            this.panel_FormulaMenu.Controls.Add(this.input_FractalType);
-            this.panel_FormulaMenu.Controls.Add(this.input_Bailout2Y);
-            this.panel_FormulaMenu.Controls.Add(this.input_FractalFormula);
-            this.panel_FormulaMenu.Controls.Add(this.input_Bailout2X);
-            this.panel_FormulaMenu.Controls.Add(this.input_OrbitTrap);
-            this.panel_FormulaMenu.Controls.Add(this.input_Bailout1Y);
-            this.panel_FormulaMenu.Controls.Add(this.label_Formula);
-            this.panel_FormulaMenu.Controls.Add(this.label_Bailout2);
-            this.panel_FormulaMenu.Controls.Add(this.label_OrbitTrap);
-            this.panel_FormulaMenu.Controls.Add(this.button_Right);
-            this.panel_FormulaMenu.Controls.Add(this.button_Left);
+            this.panel_FormulaMenu.Controls.Add(this.label_CPower);
             this.panel_FormulaMenu.Location = new System.Drawing.Point(518, 24);
             this.panel_FormulaMenu.Name = "panel_FormulaMenu";
-            this.panel_FormulaMenu.Size = new System.Drawing.Size(159, 345);
+            this.panel_FormulaMenu.Size = new System.Drawing.Size(159, 276);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
             // label_Bailout1
             // 
             this.label_Bailout1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_Bailout1.AutoSize = true;
-            this.label_Bailout1.Location = new System.Drawing.Point(3, 170);
+            this.label_Bailout1.Location = new System.Drawing.Point(3, 83);
             this.label_Bailout1.Name = "label_Bailout1";
             this.label_Bailout1.Size = new System.Drawing.Size(59, 15);
             this.label_Bailout1.TabIndex = 39;
@@ -747,7 +735,7 @@
             // input_Bailout1X
             // 
             this.input_Bailout1X.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_Bailout1X.Location = new System.Drawing.Point(72, 167);
+            this.input_Bailout1X.Location = new System.Drawing.Point(72, 80);
             this.input_Bailout1X.Name = "input_Bailout1X";
             this.input_Bailout1X.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout1X.TabIndex = 38;
@@ -756,6 +744,34 @@
             this.input_Bailout1X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Bailout1X_KeyPress);
             this.input_Bailout1X.Validating += new System.ComponentModel.CancelEventHandler(this.input_Bailout1X_Validating);
             this.input_Bailout1X.Validated += new System.EventHandler(this.input_Bailout1X_Validated);
+            // 
+            // panel_OrbitTrapMenu
+            // 
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_Bailout1);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_Bailout1X);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label1);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrap);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_Bailout);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_Bailout2);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_Bailout1Y);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_Bailout);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrap);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_Bailout2X);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_Bailout2Y);
+            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(518, 24);
+            this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
+            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(159, 276);
+            this.panel_OrbitTrapMenu.TabIndex = 33;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label1.Location = new System.Drawing.Point(22, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(113, 19);
+            this.label1.TabIndex = 35;
+            this.label1.Text = "Orbit Trap Menu";
             // 
             // MainDlg
             // 
@@ -768,6 +784,13 @@
             this.Controls.Add(this.glControl);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.panel_FormulaMenu);
+            this.Controls.Add(this.panel_OrbitTrapMenu);
+            this.Controls.Add(this.button_Menu1);
+            this.Controls.Add(this.button_Menu2);
+            this.Controls.Add(this.button_Menu3);
+            this.Controls.Add(this.button_Menu4);
+            this.Controls.Add(this.button_Left);
+            this.Controls.Add(this.button_Right);
             this.MinimumSize = new System.Drawing.Size(705, 413);
             this.Name = "MainDlg";
             this.Text = "GLControl Input Test";
@@ -777,6 +800,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).EndInit();
             this.panel_FormulaMenu.ResumeLayout(false);
             this.panel_FormulaMenu.PerformLayout();
+            this.panel_OrbitTrapMenu.ResumeLayout(false);
+            this.panel_OrbitTrapMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -841,10 +866,12 @@
         private System.Windows.Forms.Label label_Bailout;
         private System.Windows.Forms.Button button_Menu3;
         private System.Windows.Forms.TextBox input_Bailout;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button_Menu4;
         private System.Windows.Forms.Panel panel_FormulaMenu;
         private System.Windows.Forms.TextBox input_Bailout1X;
         private System.Windows.Forms.Label label_Bailout1;
+        private System.Windows.Forms.Panel panel_OrbitTrapMenu;
+        private System.Windows.Forms.Label label1;
     }
 }
 
