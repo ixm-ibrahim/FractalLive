@@ -76,8 +76,9 @@ namespace FractalLive
                 Center = new Vector2(0, 0);
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating = new Vector2(0.285f, 0.01f);
-                BailoutLine = new Vector4(0,0,1,0);
-                BailoutLine2 = new Vector4(0,1,0,0);
+                BailoutLine = new Vector4(-8,-9.5f,-2,-3);
+                BailoutCross1 = new Vector4(0,1,0,0);
+                BailoutCross2 = new Vector4(0,1,0,0);
                 FoldOffset = new Vector4(0,0,0,0);
             }
 
@@ -116,7 +117,8 @@ namespace FractalLive
             public Vector2 Julia;
             public Vector2 JuliaMating;
             public Vector4 BailoutLine;
-            public Vector4 BailoutLine2;
+            public Vector4 BailoutCross1;
+            public Vector4 BailoutCross2;
             public Vector4 FoldOffset;
         }
         #endregion

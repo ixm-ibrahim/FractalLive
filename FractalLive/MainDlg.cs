@@ -169,7 +169,11 @@ namespace FractalLive
             shader.SetVector2("bailoutRectangle", fractalSettings.BailoutRectangle);
             shader.SetVector2("bailoutPoint", fractalSettings.BailoutPoint);
             shader.SetVector4("bailoutLine", fractalSettings.BailoutLine);
-            
+
+            Log(input_OrbitTrap.SelectedIndex.ToString());
+            Log(((int)fractalSettings.OrbitTrap).ToString());
+            Log("");
+
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
                 mandelbrot.Use();
@@ -318,9 +322,9 @@ namespace FractalLive
             // input
             float modifier = inputState.keysDown[Keys.Oemtilde] ? -1 : 1;
             if (inputState.ShiftDown)
-                modifier *= 10;
+                modifier *= 5;
             if (inputState.ControlDown)
-                modifier /= 10;
+                modifier /= 5;
 
             if (inputState.keysDown[Keys.D1])
             {
@@ -386,7 +390,6 @@ namespace FractalLive
             }
 
             // update controls
-            Log(input_OrbitTrap.SelectedIndex.ToString());
 
             // update fractal
             Render();
@@ -678,8 +681,8 @@ namespace FractalLive
             }
             else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Line)
             {
-                CurrentSettings.BailoutLine.Y = float.Parse(input_Bailout1X.Text);
-                input_Bailout1X.Text = CurrentSettings.BailoutLine.Y.ToString();
+                CurrentSettings.BailoutLine.Y = float.Parse(input_Bailout1Y.Text);
+                input_Bailout1Y.Text = CurrentSettings.BailoutLine.Y.ToString();
             }
         }
 
@@ -726,8 +729,8 @@ namespace FractalLive
         {
             if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Line)
             {
-                CurrentSettings.BailoutLine.Z = float.Parse(input_Bailout2Y.Text);
-                input_Bailout2Y.Text = CurrentSettings.BailoutLine.Z.ToString();
+                CurrentSettings.BailoutLine.W = float.Parse(input_Bailout2Y.Text);
+                input_Bailout2Y.Text = CurrentSettings.BailoutLine.W.ToString();
             }
         }
 

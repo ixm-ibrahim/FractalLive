@@ -49,10 +49,7 @@ vec3 Mandelbrot()
     float trap = 1e99;
 	vec2 z;
     
-    if (NeedDistance())
-        z = MandelbrotDistanceLoop(FragPos, maxIterations, iter);
-    else
-        z = MandelbrotLoop(FragPos, maxIterations, iter, trap);
+    z = MandelbrotLoop(FragPos, maxIterations, iter, trap);
 
 	//if (iter >= maxIterations)
 		//return vec3(1.0);
@@ -79,19 +76,10 @@ vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
         trap = GetOrbitTrap(z, trap);
 	}
     
-    //trap = clamp(pow( trap*pow(2,zoom), 0.25 ), 0.0, 1.0); // control 1
-    //trap = 1.0 / (1.0 + exp(-7.0 * (trap - 0.5)));  // control 2
-
-	return z;
-}
-
-vec2 MandelbrotDistanceLoop(vec2 c, int maxIterations, inout int iter)
-{
-	vec2 z = vec2(0);
-	for (iter = 0; iter < maxIterations && IsBounded(z); ++iter)
-	{
-		z = c_2(z) + c;
-	}
+    trap = clamp(pow( trap*pow(2,zoom), 0.25 ), 0.0, 1.0); // control 1
+    //trap = clamp(pow( trap*zoom, 0.25 ), 0.0, 1.0); // control 1
+    //trap = clamp(pow( trap, 0.25 ), 0.0, 1.0)*pow(2,zoom); // control 1
+    trap = 1.0 / (1.0 + exp(-7.0 * (trap - 0.5)));  // control 2
 
 	return z;
 }
@@ -137,8 +125,8 @@ float GetOrbitTrap(vec2 z, inout float trap)
             //trap = min(trap, log(abs(dot(z-bailoutPoint,z-bailoutPoint))));
             break;
         case TRAP_LINE:
-            //trap = min(trap, DistanceToLine(z, bailoutLine.xy, bailoutLine.zw));
-            trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
+            trap = min(trap, DistanceToLine(z, bailoutLine.xy, bailoutLine.zw));
+            //trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
             bailoutLine;
             break;
         case TRAP_CROSS:
@@ -154,9 +142,4 @@ float GetOrbitTrap(vec2 z, inout float trap)
 vec2 c_2(vec2 c)
 {
     return vec2(c.x*c.x - c.y*c.y, 2*c.x*c.y);
-}
-
-bool NeedDistance()
-{
-    return orbitTrap == TRAP_LINE || orbitTrap == TRAP_CROSS;
 }
