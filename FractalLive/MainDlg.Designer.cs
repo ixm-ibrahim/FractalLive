@@ -491,7 +491,6 @@
             "Imaginary",
             "Rectangle",
             "Point",
-            "Triangle",
             "Line",
             "Cross/2 Lines"});
             this.input_OrbitTrap.Location = new System.Drawing.Point(68, 109);

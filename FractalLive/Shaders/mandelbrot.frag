@@ -10,9 +10,8 @@
 #define TRAP_IMAG						3
 #define TRAP_RECTANGLE					4
 #define TRAP_POINT						5
-#define TRAP_TRIANGLE					6
-#define TRAP_LINE						7
-#define TRAP_CROSS						8
+#define TRAP_LINE						6
+#define TRAP_CROSS						7
 
 out vec4 FragColor;
 
@@ -27,6 +26,8 @@ uniform float bailout;
 uniform vec2 bailoutRectangle;
 uniform vec2 bailoutPoint;
 uniform vec4 bailoutLine;
+uniform vec4 bailoutCross1;
+uniform vec4 bailoutCross2;
 
 vec3 Mandelbrot();
 vec2 MandelbrotLoop(vec2 c, int maxIteration, inout int iter, inout float trap);
@@ -34,8 +35,8 @@ vec2 MandelbrotDistanceLoop(vec2 c, int maxIteration, inout int iter);
 
 void main()
 {
-	//FragColor = vec4(Mandelbrot() * vec3(TexCoords,1), 1.0);
-	FragColor = vec4(Mandelbrot(), 1.0);
+	FragColor = vec4(Mandelbrot() * vec3(TexCoords,1), 1.0);
+	//FragColor = vec4(Mandelbrot(), 1.0);
 }
 
 vec2 c_2(vec2 c);
@@ -57,7 +58,7 @@ vec3 Mandelbrot()
     //if (orbitTrap == TRAP_LINE)
         //return vec3(0);
 
-    if (orbitTrap == TRAP_POINT || orbitTrap == TRAP_LINE)
+    if (orbitTrap == TRAP_POINT || orbitTrap == TRAP_LINE || orbitTrap == TRAP_CROSS)
 	    //return vec3(0.5 + 0.5*(sin(bailout*trap)));
 	    return vec3(trap);
 
@@ -99,8 +100,8 @@ bool IsBounded(vec2 z)
         case TRAP_RECTANGLE:
             return abs(z.x) < bailoutRectangle.x && abs(z.y) < bailoutRectangle.y;
         default:
-            //return z.x*z.x + z.y*z.y < bailout*bailout;
-            return z.x*z.x + z.y*z.y < 1024;
+            return z.x*z.x + z.y*z.y < bailout*bailout;
+            //return z.x*z.x + z.y*z.y < 1024;
     }
 
     return false;
@@ -126,11 +127,10 @@ float GetOrbitTrap(vec2 z, inout float trap)
             break;
         case TRAP_LINE:
             trap = min(trap, DistanceToLine(z, bailoutLine.xy, bailoutLine.zw));
-            //trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
-            bailoutLine;
             break;
         case TRAP_CROSS:
-            trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
+            trap = min(trap, min(DistanceToLine(z, bailoutCross1.xy, bailoutCross1.zw), DistanceToLine(z, bailoutCross2.xy, bailoutCross2.zw)));
+            //trap = min(trap, min(abs(z.x), abs(z.y)));
             break;
         default:
             trap = 0;

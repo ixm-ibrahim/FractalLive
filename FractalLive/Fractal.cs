@@ -32,7 +32,7 @@ namespace FractalLive
 
         public enum OrbitTrap
         {
-            Custom = -1, Circle = 0, Square = 1, Real = 2, Imaginary = 3, Rectangle = 4, Point = 5, Triangle = 6, Line = 7, Cross = 8, COUNT
+            Custom = -1, Circle = 0, Square = 1, Real = 2, Imaginary = 3, Rectangle = 4, Point = 5, Line = 6, Cross = 7, COUNT
         }
 
         public enum Projection
@@ -76,15 +76,16 @@ namespace FractalLive
                 Center = new Vector2(0, 0);
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating = new Vector2(0.285f, 0.01f);
-                BailoutLine = new Vector4(-8,-9.5f,-2,-3);
-                BailoutCross1 = new Vector4(0,1,0,0);
-                BailoutCross2 = new Vector4(0,1,0,0);
+                //BailoutLine = new Vector4(-8,-9.5f,-2,-3);
+                BailoutLine = new Vector4(0,0,0,1);
+                BailoutCross1 = new Vector4(0,0,0,1);
+                BailoutCross2 = new Vector4(0,0,1,0);
                 FoldOffset = new Vector4(0,0,0,0);
             }
 
             public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
             public bool Is2DBailout => OrbitTrap >= OrbitTrap.Rectangle && OrbitTrap <= OrbitTrap.Point;
-            public bool Is3DBailout => OrbitTrap >= OrbitTrap.Triangle && OrbitTrap <= OrbitTrap.Triangle;
+            //public bool Is3DBailout => OrbitTrap >= OrbitTrap.Triangle && OrbitTrap <= OrbitTrap.Triangle;
             public bool Is4DBailout => OrbitTrap >= OrbitTrap.Line && OrbitTrap <= OrbitTrap.Line;
 
             public Type Type;

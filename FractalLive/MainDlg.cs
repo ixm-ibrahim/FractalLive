@@ -169,10 +169,8 @@ namespace FractalLive
             shader.SetVector2("bailoutRectangle", fractalSettings.BailoutRectangle);
             shader.SetVector2("bailoutPoint", fractalSettings.BailoutPoint);
             shader.SetVector4("bailoutLine", fractalSettings.BailoutLine);
-
-            Log(input_OrbitTrap.SelectedIndex.ToString());
-            Log(((int)fractalSettings.OrbitTrap).ToString());
-            Log("");
+            shader.SetVector4("bailoutCross1", fractalSettings.BailoutCross1);
+            shader.SetVector4("bailoutCross2", fractalSettings.BailoutCross2);
 
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
@@ -353,6 +351,11 @@ namespace FractalLive
                     CurrentSettings.BailoutLine.X += modifier / 5;
                     input_Bailout1X.Text = CurrentSettings.BailoutLine.X.ToString();
                 }
+                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
+                {
+                    CurrentSettings.BailoutCross1.X += modifier / 5;
+                    input_Bailout1X.Text = Replace2D(CurrentSettings.BailoutCross1.X.ToString(), input_Bailout1X.Text, true);
+                }
             }
             if (inputState.keysDown[Keys.Oemcomma])
             {
@@ -371,6 +374,11 @@ namespace FractalLive
                     CurrentSettings.BailoutLine.Y += modifier / 5;
                     input_Bailout1Y.Text = CurrentSettings.BailoutLine.Y.ToString();
                 }
+                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
+                {
+                    CurrentSettings.BailoutCross1.Y += modifier / 5;
+                    input_Bailout1X.Text = Replace2D(CurrentSettings.BailoutCross1.Y.ToString(), input_Bailout1X.Text, false);
+                }
             }
             if (inputState.keysDown[Keys.OemPeriod])
             {
@@ -379,6 +387,11 @@ namespace FractalLive
                     CurrentSettings.BailoutLine.Z += modifier / 5;
                     input_Bailout2X.Text = CurrentSettings.BailoutLine.Z.ToString();
                 }
+                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
+                {
+                    CurrentSettings.BailoutCross1.Z += modifier / 5;
+                    input_Bailout1Y.Text = Replace2D(CurrentSettings.BailoutCross1.Z.ToString(), input_Bailout1Y.Text, true);
+                }
             }
             if (inputState.keysDown[Keys.OemQuestion])
             {
@@ -386,6 +399,11 @@ namespace FractalLive
                 {
                     CurrentSettings.BailoutLine.W += modifier / 5;
                     input_Bailout2Y.Text = CurrentSettings.BailoutLine.W.ToString();
+                }
+                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
+                {
+                    CurrentSettings.BailoutCross1.W += modifier / 5;
+                    input_Bailout1Y.Text = Replace2D(CurrentSettings.BailoutCross1.W.ToString(), input_Bailout1Y.Text, false);
                 }
             }
 
@@ -591,13 +609,26 @@ namespace FractalLive
                 input_Bailout2X.Text = CurrentSettings.BailoutLine.Z.ToString();
                 input_Bailout2Y.Text = CurrentSettings.BailoutLine.W.ToString();
             }
+            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
+            {
+                input_Bailout.Enabled = true;
+                input_Bailout1X.Enabled = true;
+                input_Bailout1Y.Enabled = true;
+                input_Bailout2X.Enabled = true;
+                input_Bailout2Y.Enabled = true;
+
+                input_Bailout1X.Text = Make2D(CurrentSettings.BailoutCross1.X, CurrentSettings.BailoutCross1.Y);
+                input_Bailout1Y.Text = Make2D(CurrentSettings.BailoutCross1.Z, CurrentSettings.BailoutCross1.W);
+                input_Bailout2X.Text = Make2D(CurrentSettings.BailoutCross2.X, CurrentSettings.BailoutCross2.Y);
+                input_Bailout2Y.Text = Make2D(CurrentSettings.BailoutCross2.Z, CurrentSettings.BailoutCross2.W);
+            }
 
         }
 
         private void input_Bailout_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers, period, negative symbol, and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
+            // only allow numbers, period, negative symbol, and backspace (and comma, if cross orbit trap)
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && e.KeyChar == 188));
         }
         private void input_Bailout_KeyDown(object sender, KeyEventArgs e)
         {
@@ -611,17 +642,14 @@ namespace FractalLive
         }
         private void input_Bailout_Validated(object sender, EventArgs e)
         {
-            if (CurrentSettings.Is1DBailout || CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Point)
-            {
-                CurrentSettings.Bailout = float.Parse(input_Bailout.Text);
-                input_Bailout.Text = CurrentSettings.Bailout.ToString(); // in case number gets restricted by bounds
-            }
+            CurrentSettings.Bailout = float.Parse(input_Bailout.Text);
+            input_Bailout.Text = CurrentSettings.Bailout.ToString(); // in case number gets restricted by bounds
         }
 
         private void input_Bailout1X_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers, period, negative symbol, and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
+            // only allow numbers, period, negative symbol, and backspace (and comma, if cross orbit trap)
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && e.KeyChar == 188));
         }
         private void input_Bailout1X_KeyDown(object sender, KeyEventArgs e)
         {
@@ -650,12 +678,18 @@ namespace FractalLive
                 CurrentSettings.BailoutLine.X = float.Parse(input_Bailout1X.Text);
                 input_Bailout1X.Text = CurrentSettings.BailoutLine.X.ToString();
             }
+            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
+            {
+                CurrentSettings.BailoutCross1.X = float.Parse(GetFrom2D(input_Bailout1X.Text, true));
+                CurrentSettings.BailoutCross1.Y = float.Parse(GetFrom2D(input_Bailout1X.Text, false));
+                input_Bailout1X.Text = Make2D(CurrentSettings.BailoutCross1.X, CurrentSettings.BailoutCross1.Y);
+            }
         }
 
         private void input_Bailout1Y_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers, period, negative symbol, and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
+            // only allow numbers, period, negative symbol, and backspace (and comma, if cross orbit trap)
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && e.KeyChar == 188));
         }
         private void input_Bailout1Y_KeyDown(object sender, KeyEventArgs e)
         {
@@ -684,12 +718,18 @@ namespace FractalLive
                 CurrentSettings.BailoutLine.Y = float.Parse(input_Bailout1Y.Text);
                 input_Bailout1Y.Text = CurrentSettings.BailoutLine.Y.ToString();
             }
+            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
+            {
+                CurrentSettings.BailoutCross1.Z = float.Parse(GetFrom2D(input_Bailout1Y.Text, true));
+                CurrentSettings.BailoutCross1.W = float.Parse(GetFrom2D(input_Bailout1Y.Text, false));
+                input_Bailout1Y.Text = Make2D(CurrentSettings.BailoutCross1.Z, CurrentSettings.BailoutCross1.W);
+            }
         }
 
         private void input_Bailout2X_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers, period, negative symbol, and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
+            // only allow numbers, period, negative symbol, and backspace (and comma, if cross orbit trap)
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && e.KeyChar == 188));
         }
         private void input_Bailout2X_KeyDown(object sender, KeyEventArgs e)
         {
@@ -707,6 +747,12 @@ namespace FractalLive
             {
                 CurrentSettings.BailoutLine.Z = float.Parse(input_Bailout2X.Text);
                 input_Bailout2X.Text = CurrentSettings.BailoutLine.Z.ToString();
+            }
+            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
+            {
+                CurrentSettings.BailoutCross2.X = float.Parse(GetFrom2D(input_Bailout2X.Text, true));
+                CurrentSettings.BailoutCross2.Y = float.Parse(GetFrom2D(input_Bailout2X.Text, false));
+                input_Bailout2X.Text = Make2D(CurrentSettings.BailoutCross2.X, CurrentSettings.BailoutCross2.Y);
             }
         }
 
@@ -731,6 +777,12 @@ namespace FractalLive
             {
                 CurrentSettings.BailoutLine.W = float.Parse(input_Bailout2Y.Text);
                 input_Bailout2Y.Text = CurrentSettings.BailoutLine.W.ToString();
+            }
+            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
+            {
+                CurrentSettings.BailoutCross2.Z = float.Parse(GetFrom2D(input_Bailout2Y.Text, true));
+                CurrentSettings.BailoutCross2.W = float.Parse(GetFrom2D(input_Bailout2Y.Text, false));
+                input_Bailout2Y.Text = Make2D(CurrentSettings.BailoutCross2.Z, CurrentSettings.BailoutCross2.W);
             }
         }
 
@@ -870,6 +922,23 @@ namespace FractalLive
                 ret[i] = float.Parse(values[i]);
 
             return ret;
+        }
+
+        internal string Make2D(float x, float y)
+        {
+            return x.ToString() + ", " + y.ToString();
+        }
+
+        internal string GetFrom2D(string input, bool getFirst)
+        {
+            return input.Replace(" ", "").Split(',')[getFirst ? 0 : 1];
+        }
+
+        internal string Replace2D(string input, string original, bool replaceFirst)
+        {
+            string[] values = original.Replace(" ", "").Split(',');
+            values[replaceFirst ? 0 : 1] = input;
+            return values[0] + ", " + values[1];
         }
         #endregion
     }
