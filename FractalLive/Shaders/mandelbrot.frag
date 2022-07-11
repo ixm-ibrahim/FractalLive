@@ -9,9 +9,8 @@
 #define TRAP_REAL						2
 #define TRAP_IMAG						3
 #define TRAP_RECTANGLE					4
-#define TRAP_POINT						5
-#define TRAP_LINE						6
-#define TRAP_CROSS						7
+#define TRAP_POINTS						5
+#define TRAP_LINES						6
 
 out vec4 FragColor;
 
@@ -58,7 +57,7 @@ vec3 Mandelbrot()
     //if (orbitTrap == TRAP_LINE)
         //return vec3(0);
 
-    if (orbitTrap == TRAP_POINT || orbitTrap == TRAP_LINE || orbitTrap == TRAP_CROSS)
+    if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
 	    //return vec3(0.5 + 0.5*(sin(bailout*trap)));
 	    return vec3(trap);
 
@@ -121,15 +120,15 @@ float GetOrbitTrap(vec2 z, inout float trap)
 {
     switch (orbitTrap)
     {
-        case TRAP_POINT:
+        case TRAP_POINTS:
             trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
             //trap = min(trap, log(abs(dot(z-bailoutPoint,z-bailoutPoint))));
             break;
-        case TRAP_LINE:
+        case TRAP_LINES:
             trap = min(trap, DistanceToLine(z, bailoutLine.xy, bailoutLine.zw));
             break;
-        case TRAP_CROSS:
-            trap = min(trap, min(DistanceToLine(z, bailoutCross1.xy, bailoutCross1.zw), DistanceToLine(z, bailoutCross2.xy, bailoutCross2.zw)));
+        //case TRAP_CROSS:
+            //trap = min(trap, min(DistanceToLine(z, bailoutCross1.xy, bailoutCross1.zw), DistanceToLine(z, bailoutCross2.xy, bailoutCross2.zw)));
             //trap = min(trap, min(abs(z.x), abs(z.y)));
             break;
         default:

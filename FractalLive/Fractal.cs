@@ -32,7 +32,7 @@ namespace FractalLive
 
         public enum OrbitTrap
         {
-            Custom = -1, Circle = 0, Square = 1, Real = 2, Imaginary = 3, Rectangle = 4, Point = 5, Line = 6, Cross = 7, COUNT
+            Custom = -1, Circle = 0, Square = 1, Real = 2, Imaginary = 3, Rectangle = 4, Points = 5, Lines = 6, COUNT
         }
 
         public enum Projection
@@ -63,30 +63,31 @@ namespace FractalLive
                 UseTerrainColor = false;
                 InitialDisplayRadius = new FloatBounds(2, .01f, 100);
                 Bailout = 2;
-                C_Power = new FloatBounds(1, (float)-maxVal, (float)maxVal);
+                C_Power = 1;
                 FoldAngle = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 FoldCount = new IntBounds(0, 0, 100);
                 MaxIterations = new IntBounds(100, 0, 9999);
                 MaxOrbitDistance = new FloatBounds(100, 0, (float)maxVal);
-                Power = new FloatBounds(2, (float)-maxVal, (float)maxVal);
+                Power = 2;
                 TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 Zoom = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 BailoutRectangle = new Vector2(2,2);
-                BailoutPoint = new Vector2(0,0);
+                BailoutPoints = new Vector2[16];
+                BailoutPoints[0] = Vector2.Zero;
                 Center = new Vector2(0, 0);
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating = new Vector2(0.285f, 0.01f);
                 //BailoutLine = new Vector4(-8,-9.5f,-2,-3);
-                BailoutLine = new Vector4(0,0,0,1);
-                BailoutCross1 = new Vector4(0,0,0,1);
-                BailoutCross2 = new Vector4(0,0,1,0);
+                BailoutLines = new Vector4[16];
+                BailoutLines[0] = new Vector4(0,0,0,1);
+                BailoutLines[1] = new Vector4(0,0,1,0);
                 FoldOffset = new Vector4(0,0,0,0);
             }
 
             public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
-            public bool Is2DBailout => OrbitTrap >= OrbitTrap.Rectangle && OrbitTrap <= OrbitTrap.Point;
+            public bool Is2DBailout => OrbitTrap >= OrbitTrap.Rectangle && OrbitTrap <= OrbitTrap.Points;
             //public bool Is3DBailout => OrbitTrap >= OrbitTrap.Triangle && OrbitTrap <= OrbitTrap.Triangle;
-            public bool Is4DBailout => OrbitTrap >= OrbitTrap.Line && OrbitTrap <= OrbitTrap.Line;
+            //public bool Is4DBailout => OrbitTrap >= OrbitTrap.Line && OrbitTrap <= OrbitTrap.Line;
 
             public Type Type;
             public Formula Formula;
@@ -104,22 +105,20 @@ namespace FractalLive
             public bool UseTerrainColor;
             public float Bailout;
             public FloatBounds InitialDisplayRadius;
-            public FloatBounds C_Power;
+            public float C_Power;
             public FloatBounds FoldAngle;
             public IntBounds FoldCount;
             public IntBounds MaxIterations;
             public FloatBounds MaxOrbitDistance;
-            public FloatBounds Power;
+            public float Power;
             public FloatBounds TerrainHeight;
             public FloatBounds Zoom;
             public Vector2 BailoutRectangle;
-            public Vector2 BailoutPoint;
             public Vector2 Center;
             public Vector2 Julia;
             public Vector2 JuliaMating;
-            public Vector4 BailoutLine;
-            public Vector4 BailoutCross1;
-            public Vector4 BailoutCross2;
+            public Vector2[] BailoutPoints;
+            public Vector4[] BailoutLines;
             public Vector4 FoldOffset;
         }
         #endregion

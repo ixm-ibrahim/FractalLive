@@ -48,10 +48,6 @@ namespace FractalLive
                 // fractal settings
                 keysDown[Keys.D1] = false;          // max iterations
                 keysDown[Keys.D2] = false;          // bailout (general)
-                keysDown[Keys.M] = false;           // bailout 1 (x value)
-                keysDown[Keys.Oemcomma] = false;    // bailout 1 (y value)
-                keysDown[Keys.OemPeriod] = false;   // bailout 2 (second x value)
-                keysDown[Keys.OemQuestion] = false; // bailout 2 (second y value)
                 keysDown[Keys.D3] = false;          // max distance
                 keysDown[Keys.D4] = false;          // distance fineness
                 keysDown[Keys.D5] = false;          // power
@@ -99,7 +95,7 @@ namespace FractalLive
         #endregion
 
         #region Methods
-        
+
         private void InitObjects()
         {
             TexturedVertex[] plane =
@@ -120,10 +116,10 @@ namespace FractalLive
             GL.BindBuffer(BufferTarget.ArrayBuffer, vboPlane);
             GL.BufferData(BufferTarget.ArrayBuffer, plane.Length * TexturedVertex.Size, plane, BufferUsageHint.StaticDraw);
 
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 8*sizeof(float), 0);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
-            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 8*sizeof(float),  6*sizeof(float));
+            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
             GL.EnableVertexAttribArray(1);
         }
 
@@ -167,10 +163,8 @@ namespace FractalLive
             shader.SetInt("orbitTrap", (int)fractalSettings.OrbitTrap);
             shader.SetFloat("bailout", fractalSettings.Bailout);
             shader.SetVector2("bailoutRectangle", fractalSettings.BailoutRectangle);
-            shader.SetVector2("bailoutPoint", fractalSettings.BailoutPoint);
-            shader.SetVector4("bailoutLine", fractalSettings.BailoutLine);
-            shader.SetVector4("bailoutCross1", fractalSettings.BailoutCross1);
-            shader.SetVector4("bailoutCross2", fractalSettings.BailoutCross2);
+            shader.SetVector2("bailoutPoint", fractalSettings.BailoutPoints[0]);
+            shader.SetVector4("bailoutLine", fractalSettings.BailoutLines[0]);
 
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
@@ -180,14 +174,14 @@ namespace FractalLive
 
                 mandelbrotCamera.Render();
             }
-            
+
 
             glControl.SwapBuffers();
         }
         #endregion
 
         #region Callbacks
-        
+
         /// <summary>
         /// Callback when form is loaded
         /// </summary>
@@ -210,6 +204,9 @@ namespace FractalLive
             input_FractalFormula.SelectedIndex = (int)CurrentSettings.Formula;
             input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
             input_OrbitTrap.SelectedIndex = (int)CurrentSettings.OrbitTrap;
+            input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Value;
+            input_OrbitRange.Maximum = CurrentSettings.MaxIterations.Value;
+            input_EditingBailoutTrap.Maximum = 1;
             input_OrbitTrap_SelectionChangeCommitted(null, null);
 
             // Callbacks
@@ -254,7 +251,7 @@ namespace FractalLive
             {
                 glControl_Update(glControl, null);
             };
-            _timer.Interval = 1000/fps;   // 1000 ms per sec / 16.67 ms per frame = 60 FPS
+            _timer.Interval = 1000 / fps;   // 1000 ms per sec / 16.67 ms per frame = 60 FPS
             _timer.Start();
 
             // Start window
@@ -325,86 +322,84 @@ namespace FractalLive
             if (inputState.ControlDown)
                 modifier /= 5;
 
-            if (inputState.keysDown[Keys.D1])
+            int editingBailoutTrap = (int)input_EditingBailoutTrap.Value - 1;
+
+            if (panel_FormulaMenu.Enabled)
             {
-                CurrentSettings.MaxIterations += (int)(modifier * 2);
-                input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
-            }
-            if (inputState.keysDown[Keys.D2])
-            {
-                CurrentSettings.Bailout += modifier / 5;
-                input_Bailout.Text = CurrentSettings.Bailout.ToString();
-            }
-            if (inputState.keysDown[Keys.M])
-            {
-                if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
+                if (inputState.keysDown[Keys.D1])
                 {
-                    CurrentSettings.BailoutRectangle.X += modifier / 5;
-                    input_Bailout1X.Text = CurrentSettings.BailoutRectangle.X.ToString();
+                    CurrentSettings.MaxIterations += (int)(modifier * 2);
+                    input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
                 }
-                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Point)
+                if (inputState.keysDown[Keys.D2])
                 {
-                    CurrentSettings.BailoutPoint.X += modifier / 5;
-                    input_Bailout1X.Text = CurrentSettings.BailoutPoint.X.ToString();
+                    CurrentSettings.Power += (int)(modifier * 2);
+                    input_Power.Text = CurrentSettings.Power.ToString();
                 }
-                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Line)
+                if (inputState.keysDown[Keys.D3])
                 {
-                    CurrentSettings.BailoutLine.X += modifier / 5;
-                    input_Bailout1X.Text = CurrentSettings.BailoutLine.X.ToString();
-                }
-                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
-                {
-                    CurrentSettings.BailoutCross1.X += modifier / 5;
-                    input_Bailout1X.Text = Replace2D(CurrentSettings.BailoutCross1.X.ToString(), input_Bailout1X.Text, true);
+                    CurrentSettings.C_Power += (int)(modifier * 2);
+                    input_CPower.Text = CurrentSettings.C_Power.ToString();
                 }
             }
-            if (inputState.keysDown[Keys.Oemcomma])
+            else if (panel_OrbitTrapMenu.Enabled)
             {
-                if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
+                if (inputState.keysDown[Keys.D1])
                 {
-                    CurrentSettings.BailoutRectangle.Y += modifier / 5;
-                    input_Bailout1Y.Text = CurrentSettings.BailoutRectangle.Y.ToString();
+                    CurrentSettings.Bailout += modifier / 5;
+                    input_Bailout.Text = CurrentSettings.Bailout.ToString();
                 }
-                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Point)
+                if (inputState.keysDown[Keys.D2])
                 {
-                    CurrentSettings.BailoutPoint.Y += modifier / 5;
-                    input_Bailout1Y.Text = CurrentSettings.BailoutPoint.Y.ToString();
+                    if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
+                    {
+                        CurrentSettings.BailoutRectangle.X += modifier / 5;
+                        input_BailoutX.Text = CurrentSettings.BailoutRectangle.X.ToString();
+                    }
+                    else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
+                    {
+                        CurrentSettings.BailoutPoints[editingBailoutTrap].X += modifier / 5;
+                        input_BailoutX.Text = CurrentSettings.BailoutPoints[editingBailoutTrap].X.ToString();
+                    }
+                    else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
+                    {
+                        CurrentSettings.BailoutLines[editingBailoutTrap].X += modifier / 5;
+                        input_BailoutX.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrap].X.ToString(), input_BailoutX.Text, true);
+                    }
                 }
-                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Line)
+                if (inputState.keysDown[Keys.D3])
                 {
-                    CurrentSettings.BailoutLine.Y += modifier / 5;
-                    input_Bailout1Y.Text = CurrentSettings.BailoutLine.Y.ToString();
+                    if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
+                    {
+                        CurrentSettings.BailoutRectangle.Y += modifier / 5;
+                        input_BailoutY.Text = CurrentSettings.BailoutRectangle.Y.ToString();
+                    }
+                    else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
+                    {
+                        CurrentSettings.BailoutPoints[editingBailoutTrap].Y += modifier / 5;
+                        input_BailoutY.Text = CurrentSettings.BailoutPoints[editingBailoutTrap].Y.ToString();
+                    }
+                    else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
+                    {
+                        CurrentSettings.BailoutLines[editingBailoutTrap].Y += modifier / 5;
+                        input_BailoutX.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrap].Y.ToString(), input_BailoutX.Text, false);
+                    }
                 }
-                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
+                if (inputState.keysDown[Keys.D4])
                 {
-                    CurrentSettings.BailoutCross1.Y += modifier / 5;
-                    input_Bailout1X.Text = Replace2D(CurrentSettings.BailoutCross1.Y.ToString(), input_Bailout1X.Text, false);
+                    if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
+                    {
+                        CurrentSettings.BailoutLines[editingBailoutTrap].Z += modifier / 5;
+                        input_BailoutY.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrap].Z.ToString(), input_BailoutY.Text, true);
+                    }
                 }
-            }
-            if (inputState.keysDown[Keys.OemPeriod])
-            {
-                if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Line)
+                if (inputState.keysDown[Keys.D5])
                 {
-                    CurrentSettings.BailoutLine.Z += modifier / 5;
-                    input_Bailout2X.Text = CurrentSettings.BailoutLine.Z.ToString();
-                }
-                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
-                {
-                    CurrentSettings.BailoutCross1.Z += modifier / 5;
-                    input_Bailout1Y.Text = Replace2D(CurrentSettings.BailoutCross1.Z.ToString(), input_Bailout1Y.Text, true);
-                }
-            }
-            if (inputState.keysDown[Keys.OemQuestion])
-            {
-                if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Line)
-                {
-                    CurrentSettings.BailoutLine.W += modifier / 5;
-                    input_Bailout2Y.Text = CurrentSettings.BailoutLine.W.ToString();
-                }
-                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
-                {
-                    CurrentSettings.BailoutCross1.W += modifier / 5;
-                    input_Bailout1Y.Text = Replace2D(CurrentSettings.BailoutCross1.W.ToString(), input_Bailout1Y.Text, false);
+                    if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
+                    {
+                        CurrentSettings.BailoutLines[editingBailoutTrap].W += modifier / 5;
+                        input_BailoutY.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrap].W.ToString(), input_BailoutY.Text, false);
+                    }
                 }
             }
 
@@ -448,17 +443,17 @@ namespace FractalLive
             if (inputState.MouseRightDown)
             {
                 Cursor.Position = new System.Drawing.Point(inputState.PreviousMouseX, inputState.PreviousMouseY);
-                
+
                 if (CurrentCamera.CurrentMode == Camera.Mode.FLAT)
                 {
                     float rad = MathHelper.DegreesToRadians(CurrentCamera.Roll);
                     float rad90 = rad + MathHelper.Pi / 2;
-                    float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2,CurrentSettings.Zoom.Value);
+                    float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2, CurrentSettings.Zoom.Value);
 
                     CurrentSettings.Center += new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad)) * (float)deltaX * factor;
                     CurrentSettings.Center -= new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90)) * (float)deltaY * factor;
                 }
-                
+
             }
 
             inputState.PreviousMouseX = MousePosition.X;
@@ -475,10 +470,10 @@ namespace FractalLive
             Vector2 xRoll = new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad));
             Vector2 yRoll = new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90));
 
-            Vector2 normalizedMousePos = new Vector2((float)inputState.GLMousePositionX / glControl.Width, (float)inputState.GLMousePositionY / glControl.Height) * 2 - new Vector2(1,1);
+            Vector2 normalizedMousePos = new Vector2((float)inputState.GLMousePositionX / glControl.Width, (float)inputState.GLMousePositionY / glControl.Height) * 2 - new Vector2(1, 1);
             Vector2 aspectRatio = new Vector2(glControl.Width, -glControl.Height) / Math.Max(minGLWidth, minGLHeight);
             Vector2 offset = normalizedMousePos * CurrentSettings.InitialDisplayRadius.Value * aspectRatio;
-            
+
             Vector2 mousePos = CurrentSettings.Center + (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom.Value);
             CurrentSettings.Zoom += scrollOffset * CurrentCamera.CurrentZoomSpeed;
             CurrentSettings.Center = mousePos - (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom.Value);
@@ -509,14 +504,12 @@ namespace FractalLive
                 inputState.keysDown[Keys.D1] = true;
             else if (e.KeyCode == Keys.D2)
                 inputState.keysDown[Keys.D2] = true;
-            else if (e.KeyCode == Keys.M)
-                inputState.keysDown[Keys.M] = true;
-            else if (e.KeyCode == Keys.Oemcomma)
-                inputState.keysDown[Keys.Oemcomma] = true;
-            else if (e.KeyCode == Keys.OemPeriod)
-                inputState.keysDown[Keys.OemPeriod] = true;
-            else if (e.KeyCode == Keys.OemQuestion)
-                inputState.keysDown[Keys.OemQuestion] = true;
+            else if (e.KeyCode == Keys.D3)
+                inputState.keysDown[Keys.D3] = true;
+            else if (e.KeyCode == Keys.D4)
+                inputState.keysDown[Keys.D4] = true;
+            else if (e.KeyCode == Keys.D5)
+                inputState.keysDown[Keys.D5] = true;
         }
 
         private void glControl_KeyUp(object? sender, KeyEventArgs e)
@@ -544,14 +537,12 @@ namespace FractalLive
                 inputState.keysDown[Keys.D1] = false;
             else if (e.KeyCode == Keys.D2)
                 inputState.keysDown[Keys.D2] = false;
-            else if (e.KeyCode == Keys.M)
-                inputState.keysDown[Keys.M] = false;
-            else if (e.KeyCode == Keys.Oemcomma)
-                inputState.keysDown[Keys.Oemcomma] = false;
-            else if (e.KeyCode == Keys.OemPeriod)
-                inputState.keysDown[Keys.OemPeriod] = false;
-            else if (e.KeyCode == Keys.OemQuestion)
-                inputState.keysDown[Keys.OemQuestion] = false;
+            else if (e.KeyCode == Keys.D3)
+                inputState.keysDown[Keys.D3] = false;
+            else if (e.KeyCode == Keys.D4)
+                inputState.keysDown[Keys.D4] = false;
+            else if (e.KeyCode == Keys.D5)
+                inputState.keysDown[Keys.D5] = false;
 
         }
 
@@ -566,70 +557,98 @@ namespace FractalLive
         private void input_MaxIterations_ValueChanged(object sender, EventArgs e)
         {
             CurrentSettings.MaxIterations.SetValue((int)input_MaxIterations.Value);
+
+            input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Value;
+            if (input_StartOrbit.Value > CurrentSettings.MaxIterations.Value)
+                input_StartOrbit.Value = CurrentSettings.MaxIterations.Value;
+
+            input_OrbitRange.Maximum = CurrentSettings.MaxIterations.Value;
+            if (input_OrbitRange.Value > CurrentSettings.MaxIterations.Value)
+                input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;
         }
-        
+
         private void input_OrbitTrap_SelectionChangeCommitted(object sender, EventArgs e)
         {
             CurrentSettings.OrbitTrap = (Fractal.OrbitTrap)input_OrbitTrap.SelectedIndex;
 
+            input_EditingBailoutTrap.Value = 1;
+
             if (CurrentSettings.Is1DBailout)
             {
                 input_Bailout.Enabled = true;
-                input_Bailout1X.Enabled = false;
-                input_Bailout1Y.Enabled = false;
+                input_BailoutX.Enabled = false;
+                input_BailoutY.Enabled = false;
+
+                button_AddBailoutTrap.Enabled = false;
+                button_RemoveBailoutTrap.Enabled = false;
+                input_EditingBailoutTrap.Enabled = false;
 
                 input_Bailout.Text = CurrentSettings.Bailout.ToString();
             }
             else if (CurrentSettings.Is2DBailout)
             {
-                input_Bailout.Enabled = (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Point);
-                input_Bailout1X.Enabled = true;
-                input_Bailout1Y.Enabled = true;
+                bool isPoints = (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points);
+
+                input_Bailout.Enabled = isPoints;
+                input_BailoutX.Enabled = true;
+                input_BailoutY.Enabled = true;
+
+                button_AddBailoutTrap.Enabled = isPoints;
+                button_RemoveBailoutTrap.Enabled = isPoints;
+                input_EditingBailoutTrap.Enabled = isPoints;
 
                 if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
                 {
-                    input_Bailout1X.Text = CurrentSettings.BailoutRectangle.X.ToString();
-                    input_Bailout1Y.Text = CurrentSettings.BailoutRectangle.Y.ToString();
+                    input_BailoutX.Text = CurrentSettings.BailoutRectangle.X.ToString();
+                    input_BailoutY.Text = CurrentSettings.BailoutRectangle.Y.ToString();
                 }
-                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Point)
+                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
                 {
-                    input_Bailout1X.Text = CurrentSettings.BailoutPoint.X.ToString();
-                    input_Bailout1Y.Text = CurrentSettings.BailoutPoint.Y.ToString();
+                    input_BailoutX.Text = CurrentSettings.BailoutPoints[0].X.ToString();
+                    input_BailoutY.Text = CurrentSettings.BailoutPoints[0].Y.ToString();
                 }
             }
-            else if (CurrentSettings.Is4DBailout)
+            else // points and lines
             {
                 input_Bailout.Enabled = true;
-                input_Bailout1X.Enabled = true;
-                input_Bailout1Y.Enabled = true;
-                input_Bailout2X.Enabled = true;
-                input_Bailout2Y.Enabled = true;
+                input_BailoutX.Enabled = true;
+                input_BailoutY.Enabled = true;
 
-                input_Bailout1X.Text = CurrentSettings.BailoutLine.X.ToString();
-                input_Bailout1Y.Text = CurrentSettings.BailoutLine.Y.ToString();
-                input_Bailout2X.Text = CurrentSettings.BailoutLine.Z.ToString();
-                input_Bailout2Y.Text = CurrentSettings.BailoutLine.W.ToString();
-            }
-            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
-            {
-                input_Bailout.Enabled = true;
-                input_Bailout1X.Enabled = true;
-                input_Bailout1Y.Enabled = true;
-                input_Bailout2X.Enabled = true;
-                input_Bailout2Y.Enabled = true;
+                button_AddBailoutTrap.Enabled = true;
+                button_RemoveBailoutTrap.Enabled = true;
+                input_EditingBailoutTrap.Enabled = true;
 
-                input_Bailout1X.Text = Make2D(CurrentSettings.BailoutCross1.X, CurrentSettings.BailoutCross1.Y);
-                input_Bailout1Y.Text = Make2D(CurrentSettings.BailoutCross1.Z, CurrentSettings.BailoutCross1.W);
-                input_Bailout2X.Text = Make2D(CurrentSettings.BailoutCross2.X, CurrentSettings.BailoutCross2.Y);
-                input_Bailout2Y.Text = Make2D(CurrentSettings.BailoutCross2.Z, CurrentSettings.BailoutCross2.W);
+                if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
+                    label_EditingOrbitBailout.Text = "Editing Point";
+                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
+                    label_EditingOrbitBailout.Text = "Editing Line";
+
+                input_BailoutX.Text = Make2D(CurrentSettings.BailoutLines[0].X, CurrentSettings.BailoutLines[0].Y);
+                input_BailoutY.Text = Make2D(CurrentSettings.BailoutLines[0].Z, CurrentSettings.BailoutLines[0].W);
             }
 
         }
 
+        private void input_EditingBailoutTrap_ValueChanged(object sender, EventArgs e)
+        {
+            int index = (int)input_EditingBailoutTrap.Value - 1;
+
+            if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
+            {
+                input_BailoutX.Text = CurrentSettings.BailoutPoints[index].X.ToString();
+                input_BailoutY.Text = CurrentSettings.BailoutPoints[index].Y.ToString();
+            }
+            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
+            {
+                input_BailoutX.Text = Make2D(CurrentSettings.BailoutLines[index].X, CurrentSettings.BailoutLines[index].Y);
+                input_BailoutY.Text = Make2D(CurrentSettings.BailoutLines[index].Z, CurrentSettings.BailoutLines[index].W);
+            }
+        }
+
         private void input_Bailout_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers, period, negative symbol, and backspace (and comma, if cross orbit trap)
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && e.KeyChar == 188));
+            // only allow numbers, period, negative symbol, and backspace
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
         }
         private void input_Bailout_KeyDown(object sender, KeyEventArgs e)
         {
@@ -650,7 +669,7 @@ namespace FractalLive
         private void input_Bailout1X_KeyPress(object sender, KeyPressEventArgs e)
         {
             // only allow numbers, period, negative symbol, and backspace (and comma, if cross orbit trap)
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && e.KeyChar == 188));
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines && e.KeyChar == 188));
         }
         private void input_Bailout1X_KeyDown(object sender, KeyEventArgs e)
         {
@@ -659,38 +678,35 @@ namespace FractalLive
         }
         private void input_Bailout1X_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if ((CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Cross && !TryParse1DFloat(input_Bailout1X.Text)) || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && !TryParse2DFloat(input_Bailout1X.Text)))
+            if ((CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Lines && !TryParse1DFloat(input_BailoutX.Text)) || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines && !TryParse2DFloat(input_BailoutX.Text)))
                 e.Cancel = true;
         }
         private void input_Bailout1X_Validated(object sender, EventArgs e)
         {
+            int editingBailoutTrap = (int)input_EditingBailoutTrap.Value - 1;
+
             if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
             {
-                CurrentSettings.BailoutRectangle.X = float.Parse(input_Bailout1X.Text);
-                input_Bailout1X.Text = CurrentSettings.BailoutRectangle.X.ToString();
+                CurrentSettings.BailoutRectangle.X = float.Parse(input_BailoutX.Text);
+                input_BailoutX.Text = CurrentSettings.BailoutRectangle.X.ToString();
             }
-            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Point)
+            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
             {
-                CurrentSettings.BailoutPoint.X = float.Parse(input_Bailout1X.Text);
-                input_Bailout1X.Text = CurrentSettings.BailoutPoint.X.ToString();
+                CurrentSettings.BailoutPoints[editingBailoutTrap].X = float.Parse(input_BailoutX.Text);
+                input_BailoutX.Text = CurrentSettings.BailoutPoints[editingBailoutTrap].X.ToString();
             }
-            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Line)
+            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
             {
-                CurrentSettings.BailoutLine.X = float.Parse(input_Bailout1X.Text);
-                input_Bailout1X.Text = CurrentSettings.BailoutLine.X.ToString();
-            }
-            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
-            {
-                CurrentSettings.BailoutCross1.X = float.Parse(GetFrom2D(input_Bailout1X.Text, true));
-                CurrentSettings.BailoutCross1.Y = float.Parse(GetFrom2D(input_Bailout1X.Text, false));
-                input_Bailout1X.Text = Make2D(CurrentSettings.BailoutCross1.X, CurrentSettings.BailoutCross1.Y);
+                CurrentSettings.BailoutLines[editingBailoutTrap].X = float.Parse(GetFrom2D(input_BailoutX.Text, true));
+                CurrentSettings.BailoutLines[editingBailoutTrap].Y = float.Parse(GetFrom2D(input_BailoutX.Text, false));
+                input_BailoutX.Text = Make2D(CurrentSettings.BailoutLines[editingBailoutTrap].X, CurrentSettings.BailoutLines[editingBailoutTrap].Y);
             }
         }
 
         private void input_Bailout1Y_KeyPress(object sender, KeyPressEventArgs e)
         {
             // only allow numbers, period, negative symbol, and backspace (and comma, if cross orbit trap)
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && e.KeyChar == 188));
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines && e.KeyChar == 188));
         }
         private void input_Bailout1Y_KeyDown(object sender, KeyEventArgs e)
         {
@@ -699,119 +715,119 @@ namespace FractalLive
         }
         private void input_Bailout1Y_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if ((CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Cross && !TryParse1DFloat(input_Bailout1Y.Text)) || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && !TryParse2DFloat(input_Bailout1Y.Text)))
+            if ((CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Lines && !TryParse1DFloat(input_BailoutY.Text)) || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines && !TryParse2DFloat(input_BailoutY.Text)))
                 e.Cancel = true;
         }
         private void input_Bailout1Y_Validated(object sender, EventArgs e)
         {
+            int editingBailoutTrap = (int)input_EditingBailoutTrap.Value - 1;
+
             if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
             {
-                CurrentSettings.BailoutRectangle.Y = float.Parse(input_Bailout1Y.Text);
-                input_Bailout1Y.Text = CurrentSettings.BailoutRectangle.Y.ToString();
+                CurrentSettings.BailoutRectangle.Y = float.Parse(input_BailoutY.Text);
+                input_BailoutY.Text = CurrentSettings.BailoutRectangle.Y.ToString();
             }
-            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Point)
+            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
             {
-                CurrentSettings.BailoutPoint.Y = float.Parse(input_Bailout1Y.Text);
-                input_Bailout1Y.Text = CurrentSettings.BailoutPoint.Y.ToString();
+                CurrentSettings.BailoutPoints[editingBailoutTrap].Y = float.Parse(input_BailoutY.Text);
+                input_BailoutY.Text = CurrentSettings.BailoutPoints[editingBailoutTrap].Y.ToString();
             }
-            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Line)
+            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
             {
-                CurrentSettings.BailoutLine.Y = float.Parse(input_Bailout1Y.Text);
-                input_Bailout1Y.Text = CurrentSettings.BailoutLine.Y.ToString();
-            }
-            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
-            {
-                CurrentSettings.BailoutCross1.Z = float.Parse(GetFrom2D(input_Bailout1Y.Text, true));
-                CurrentSettings.BailoutCross1.W = float.Parse(GetFrom2D(input_Bailout1Y.Text, false));
-                input_Bailout1Y.Text = Make2D(CurrentSettings.BailoutCross1.Z, CurrentSettings.BailoutCross1.W);
+                CurrentSettings.BailoutLines[editingBailoutTrap].X = float.Parse(GetFrom2D(input_BailoutY.Text, true));
+                CurrentSettings.BailoutLines[editingBailoutTrap].Y = float.Parse(GetFrom2D(input_BailoutY.Text, false));
+                input_BailoutY.Text = Make2D(CurrentSettings.BailoutLines[editingBailoutTrap].X, CurrentSettings.BailoutLines[editingBailoutTrap].Y);
             }
         }
 
-        private void input_Bailout2X_KeyPress(object sender, KeyPressEventArgs e)
+        private void button_AddBailoutTrap_Click(object sender, EventArgs e)
         {
-            // only allow numbers, period, negative symbol, and backspace (and comma, if cross orbit trap)
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && e.KeyChar == 188));
-        }
-        private void input_Bailout2X_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
-        }
-        private void input_Bailout2X_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if ((CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Cross && !TryParse1DFloat(input_Bailout2X.Text)) || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && !TryParse2DFloat(input_Bailout2X.Text)))
-                e.Cancel = true;
-        }
-        private void input_Bailout2X_Validated(object sender, EventArgs e)
-        {
-            if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Line)
+            if (input_EditingBailoutTrap.Maximum < 16)
             {
-                CurrentSettings.BailoutLine.Z = float.Parse(input_Bailout2X.Text);
-                input_Bailout2X.Text = CurrentSettings.BailoutLine.Z.ToString();
-            }
-            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
-            {
-                CurrentSettings.BailoutCross2.X = float.Parse(GetFrom2D(input_Bailout2X.Text, true));
-                CurrentSettings.BailoutCross2.Y = float.Parse(GetFrom2D(input_Bailout2X.Text, false));
-                input_Bailout2X.Text = Make2D(CurrentSettings.BailoutCross2.X, CurrentSettings.BailoutCross2.Y);
-            }
-        }
+                input_EditingBailoutTrap.Maximum++;
+                input_EditingBailoutTrap.Value = input_EditingBailoutTrap.Maximum;
 
-        private void input_Bailout2Y_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            // only allow numbers, period, negative symbol, and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
-        }
-        private void input_Bailout2Y_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
-        }
-        private void input_Bailout2Y_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if ((CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Cross && !TryParse1DFloat(input_Bailout2Y.Text)) || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross && !TryParse2DFloat(input_Bailout2Y.Text)))
-                e.Cancel = true;
-        }
-        private void input_Bailout2Y_Validated(object sender, EventArgs e)
-        {
-            if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Line)
-            {
-                CurrentSettings.BailoutLine.W = float.Parse(input_Bailout2Y.Text);
-                input_Bailout2Y.Text = CurrentSettings.BailoutLine.W.ToString();
+                if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
+                {
+                    CurrentSettings.BailoutPoints[(int)input_EditingBailoutTrap.Maximum - 1] = Vector2.One;
+
+                    input_BailoutX.Text = CurrentSettings.BailoutPoints[CurrentSettings.BailoutPoints.Length - 1].X.ToString();
+                    input_BailoutY.Text = CurrentSettings.BailoutPoints[CurrentSettings.BailoutPoints.Length - 1].Y.ToString();
+                }
+                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
+                {
+                    CurrentSettings.BailoutLines[(int)input_EditingBailoutTrap.Maximum - 1] = Vector4.One;
+
+                    input_BailoutX.Text = Make2D(CurrentSettings.BailoutLines[CurrentSettings.BailoutLines.Length - 1].X, CurrentSettings.BailoutLines[CurrentSettings.BailoutLines.Length - 1].Y);
+                    input_BailoutY.Text = Make2D(CurrentSettings.BailoutLines[CurrentSettings.BailoutLines.Length - 1].Z, CurrentSettings.BailoutLines[CurrentSettings.BailoutLines.Length - 1].W);
+                }
             }
-            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Cross)
+            
+        }
+        private void button_RemoveBailoutTrap_Click(object sender, EventArgs e)
+        {
+            if (input_EditingBailoutTrap.Maximum > 1)
             {
-                CurrentSettings.BailoutCross2.Z = float.Parse(GetFrom2D(input_Bailout2Y.Text, true));
-                CurrentSettings.BailoutCross2.W = float.Parse(GetFrom2D(input_Bailout2Y.Text, false));
-                input_Bailout2Y.Text = Make2D(CurrentSettings.BailoutCross2.Z, CurrentSettings.BailoutCross2.W);
+                if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
+                {
+                    var tmp = new List<Vector2>(CurrentSettings.BailoutPoints);
+                    tmp.RemoveAt((int)input_EditingBailoutTrap.Value - 1);
+                    CurrentSettings.BailoutPoints = tmp.ToArray();
+
+                    input_BailoutX.Text = CurrentSettings.BailoutPoints[0].X.ToString();
+                    input_BailoutY.Text = CurrentSettings.BailoutPoints[0].Y.ToString();
+                }
+                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
+                {
+                    var tmp = new List<Vector4>(CurrentSettings.BailoutLines);
+                    tmp.RemoveAt((int)input_EditingBailoutTrap.Value - 1);
+                    CurrentSettings.BailoutLines = tmp.ToArray();
+
+                    input_BailoutX.Text = Make2D(CurrentSettings.BailoutLines[0].X, CurrentSettings.BailoutLines[0].Y);
+                    input_BailoutY.Text = Make2D(CurrentSettings.BailoutLines[0].Z, CurrentSettings.BailoutLines[0].W);
+                }
+
+                input_EditingBailoutTrap.Maximum--;
+                input_EditingBailoutTrap.Value = 1;
+
+
             }
+            
         }
 
         private void button_Menu1_Click(object sender, EventArgs e)
         {
             panel_FormulaMenu.Show();
+            panel_FormulaMenu.Enabled = true;
             panel_OrbitTrapMenu.Hide();
+            panel_OrbitTrapMenu.Enabled = false;
 
 
         }
         private void button_Menu2_Click(object sender, EventArgs e)
         {
             panel_FormulaMenu.Hide();
+            panel_FormulaMenu.Enabled = false;
             panel_OrbitTrapMenu.Show();
+            panel_OrbitTrapMenu.Enabled = true;
 
 
         }
         private void button_Menu3_Click(object sender, EventArgs e)
         {
             panel_FormulaMenu.Hide();
+            panel_FormulaMenu.Enabled = false;
             panel_OrbitTrapMenu.Hide();
+            panel_OrbitTrapMenu.Enabled = false;
 
 
         }
         private void button_Menu4_Click(object sender, EventArgs e)
         {
             panel_FormulaMenu.Hide();
+            panel_FormulaMenu.Enabled = false;
             panel_OrbitTrapMenu.Hide();
+            panel_OrbitTrapMenu.Enabled = false;
 
 
         }
