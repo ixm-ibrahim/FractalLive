@@ -22,3 +22,4 @@ see if raising zoom to power can be optimized in shaders
 investigate bug where Update is called after exit, and menu disappears
 adjustable zoom factor
 replace line and cross orbit trap with lines, and point with points (up to 3)
+minimize calls to GL.Uniform

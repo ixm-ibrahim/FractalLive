@@ -24,9 +24,12 @@ uniform int orbitTrap;
 uniform float bailout;
 uniform vec2 bailoutRectangle;
 uniform vec2 bailoutPoint;
-uniform vec4 bailoutLine;
-uniform vec4 bailoutCross1;
-uniform vec4 bailoutCross2;
+//uniform vec4 bailoutLine;
+
+uniform vec2[16] bailoutPoints;
+uniform int bailoutPointsCount;
+uniform vec4[16] bailoutLines;
+uniform int bailoutLinesCount;
 
 vec3 Mandelbrot();
 vec2 MandelbrotLoop(vec2 c, int maxIteration, inout int iter, inout float trap);
@@ -34,7 +37,7 @@ vec2 MandelbrotDistanceLoop(vec2 c, int maxIteration, inout int iter);
 
 void main()
 {
-	FragColor = vec4(Mandelbrot() * vec3(TexCoords,1), 1.0);
+	FragColor = vec4(Mandelbrot() * vec3(TexCoords,1), 1.0);bailoutPoints;
 	//FragColor = vec4(Mandelbrot(), 1.0);
 }
 
@@ -121,11 +124,17 @@ float GetOrbitTrap(vec2 z, inout float trap)
     switch (orbitTrap)
     {
         case TRAP_POINTS:
-            trap = min(trap, dot(z-bailoutPoint,z-bailoutPoint));
+            ////trap = min(trap, dot(z-bailoutPoints[0],z-bailoutPoints[0]));
+            for (int i = 0; i < bailoutPointsCount; i++)
+            //for (int i = 0; i < 1; i++)
+                trap = min(trap,dot(z-bailoutPoints[i],z-bailoutPoints[i]));
             //trap = min(trap, log(abs(dot(z-bailoutPoint,z-bailoutPoint))));
             break;
         case TRAP_LINES:
-            trap = min(trap, DistanceToLine(z, bailoutLine.xy, bailoutLine.zw));
+            //trap = min(trap, DistanceToLine(z, bailoutLine.xy, bailoutLine.zw));
+            for (int i = 0; i < bailoutLinesCount; i++)
+                trap = min(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw));
+            //trap = min(trap, DistanceToLine(z, bailoutLines[0].xy, bailoutLines[0].zw));
             break;
         //case TRAP_CROSS:
             //trap = min(trap, min(DistanceToLine(z, bailoutCross1.xy, bailoutCross1.zw), DistanceToLine(z, bailoutCross2.xy, bailoutCross2.zw)));
@@ -135,7 +144,7 @@ float GetOrbitTrap(vec2 z, inout float trap)
             trap = 0;
     }
 
-    return trap;
+    return trap;bailoutPoint;bailoutPointsCount;bailoutLinesCount;
 }
 
 vec2 c_2(vec2 c)

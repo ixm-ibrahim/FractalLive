@@ -230,6 +230,24 @@ namespace FractalLive
         }
         
         /// <summary>
+        /// Set a uniform Vector2 array on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetVector2Array(string name, Vector2[] data)
+        {
+            float[] tmp = new float[data.Length * 2];
+            for(int i = 0; i < data.Length; i++)
+            {
+                tmp[2*i] = data[i].X;
+                tmp[2*i + 1] = data[i].Y;
+            }
+
+            GL.UseProgram(Handle);
+            GL.Uniform2(_uniformLocations[name + "[0]"], data.Length*2, tmp);
+        }
+
+        /// <summary>
         /// Set a uniform Vector3 on this shader.
         /// </summary>
         /// <param name="name">The name of the uniform</param>
@@ -249,6 +267,26 @@ namespace FractalLive
         {
             GL.UseProgram(Handle);
             GL.Uniform4(_uniformLocations[name], data);
+        }
+
+        /// <summary>
+        /// Set a uniform Vector4 array on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetVector4Array(string name, Vector4[] data)
+        {
+            float[] tmp = new float[data.Length * 4];
+            for (int i = 0; i < data.Length; i++)
+            {
+                tmp[4*i] = data[i].X;
+                tmp[4*i + 1] = data[i].Y;
+                tmp[4*i + 2] = data[i].Z;
+                tmp[4*i + 3] = data[i].W;
+            }
+
+            GL.UseProgram(Handle);
+            GL.Uniform4(_uniformLocations[name + "[0]"], data.Length * 4, tmp);
         }
 
         #region Properties
