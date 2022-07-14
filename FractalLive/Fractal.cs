@@ -32,7 +32,7 @@ namespace FractalLive
 
         public enum EditingOrbitTrap
         {
-            Both, Interior, Exterior
+            Both = 0, Interior = 1, Exterior = 2
         }
         
         public enum OrbitTrap
@@ -89,9 +89,11 @@ namespace FractalLive
                 BailoutRectangle = new Vector2(2,2);
                 BailoutPoints = new Vector2[16];
                 BailoutPoints[0] = Vector2.Zero;
+                BailoutPointsCount = 1;
                 BailoutLines = new Vector4[16];
                 BailoutLines[0] = new Vector4(0,0,0,1);
                 BailoutLines[1] = new Vector4(0,0,1,0);
+                BailoutLinesCount = 2;
                 I_OrbitTrap = OrbitTrap.Circle;
                 I_StartOrbit = 1;
                 I_OrbitRange = MaxIterations.Value;
@@ -101,9 +103,11 @@ namespace FractalLive
                 I_BailoutRectangle = new Vector2(2,2);
                 I_BailoutPoints = new Vector2[16];
                 I_BailoutPoints[0] = Vector2.Zero;
+                I_BailoutPointsCount = 1;
                 I_BailoutLines = new Vector4[16];
                 I_BailoutLines[0] = new Vector4(0,0,0,1);
                 I_BailoutLines[1] = new Vector4(0,0,1,0);
+                I_BailoutLinesCount = 2;
                 E_OrbitTrap = OrbitTrap.Circle;
                 E_StartOrbit = 1;
                 E_OrbitRange = MaxIterations.Value;
@@ -113,9 +117,11 @@ namespace FractalLive
                 E_BailoutRectangle = new Vector2(2,2);
                 E_BailoutPoints = new Vector2[16];
                 E_BailoutPoints[0] = Vector2.Zero;
+                E_BailoutPointsCount = 1;
                 E_BailoutLines = new Vector4[16];
                 E_BailoutLines[0] = new Vector4(0,0,0,1);
                 E_BailoutLines[1] = new Vector4(0,0,1,0);
+                E_BailoutLinesCount = 2;
             }
 
             public bool Is1DBailout => (EditingOrbitTrap == EditingOrbitTrap.Both && OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary)
@@ -126,31 +132,6 @@ namespace FractalLive
                                     || (EditingOrbitTrap == EditingOrbitTrap.Exterior && E_OrbitTrap >= OrbitTrap.Rectangle && E_OrbitTrap <= OrbitTrap.Points);
             //public bool Is3DBailout => OrbitTrap >= OrbitTrap.Triangle && OrbitTrap <= OrbitTrap.Triangle;
             //public bool Is4DBailout => OrbitTrap >= OrbitTrap.Line && OrbitTrap <= OrbitTrap.Line;
-
-            public void CopyIToE()
-            {
-                E_OrbitTrap = I_OrbitTrap;
-                E_StartOrbit = I_StartOrbit;
-                E_OrbitRange = I_OrbitRange;
-                E_Bailout = I_Bailout;
-                E_BailoutFactor1 = I_BailoutFactor1;
-                E_BailoutFactor2 = I_BailoutFactor2;
-                E_BailoutRectangle = I_BailoutRectangle;
-                I_BailoutPoints.CopyTo(E_BailoutPoints, 0);
-                I_BailoutLines.CopyTo(E_BailoutLines, 0);
-            }
-            public void CopyEToI()
-            {
-                I_OrbitTrap = E_OrbitTrap;
-                I_StartOrbit = E_StartOrbit;
-                I_OrbitRange = E_OrbitRange;
-                I_Bailout = E_Bailout;
-                I_BailoutFactor1 = E_BailoutFactor1;
-                I_BailoutFactor2 = E_BailoutFactor2;
-                I_BailoutRectangle = E_BailoutRectangle;
-                E_BailoutPoints.CopyTo(I_BailoutPoints, 0);
-                E_BailoutLines.CopyTo(I_BailoutLines, 0);
-            }
 
             public void SetOrbitTrap(OrbitTrap orbitTrap)
             {
@@ -309,20 +290,14 @@ namespace FractalLive
                         return BailoutPoints;
                 }
             }
-            public void SetPoints(List<Vector2> list)
+            public int GetPointsCount()
             {
-                switch (EditingOrbitTrap)
-                {
-                    case EditingOrbitTrap.Interior:
-                        I_BailoutPoints = list.ToArray();
-                        break;
-                    case EditingOrbitTrap.Exterior:
-                        E_BailoutPoints = list.ToArray();
-                        break;
-                    default:
-                        BailoutPoints = list.ToArray();
-                        break;
-                }
+                if (EditingOrbitTrap == EditingOrbitTrap.Interior)
+                    return I_BailoutPointsCount;
+                if (EditingOrbitTrap == EditingOrbitTrap.Exterior)
+                    return E_BailoutPointsCount;
+
+                return BailoutPointsCount;
             }
             public Vector2 GetPoint(int index)
             {
@@ -336,19 +311,49 @@ namespace FractalLive
                         return BailoutPoints[index];
                 }
             }
-            public void SetPoint(int index, Vector2 point)
+            public void AddPoint(Vector2 point)
             {
                 switch (EditingOrbitTrap)
                 {
                     case EditingOrbitTrap.Interior:
-                        I_BailoutPoints[index] = point;
+                        I_BailoutPoints[I_BailoutPointsCount++] = point;
                         break;
                     case EditingOrbitTrap.Exterior:
-                        E_BailoutPoints[index] = point;
+                        E_BailoutPoints[E_BailoutPointsCount++] = point;
                         break;
                     default:
-                        BailoutPoints[index] = point;
+                        BailoutPoints[BailoutPointsCount++] = point;
                         break;
+                }
+            }
+            public void RemovePoint(int index)
+            {
+                switch (EditingOrbitTrap)
+                {
+                    case EditingOrbitTrap.Interior:
+                    {
+                        var tmp = new List<Vector2>(I_BailoutPoints);
+                        tmp.RemoveAt(index);
+                        I_BailoutPoints = tmp.ToArray();
+                        I_BailoutPointsCount--;
+                        break;
+                    }
+                    case EditingOrbitTrap.Exterior:
+                    {
+                        var tmp = new List<Vector2>(E_BailoutPoints);
+                        tmp.RemoveAt(index);
+                        E_BailoutPoints = tmp.ToArray();
+                        E_BailoutPointsCount--;
+                        break;
+                    }
+                    default:
+                    {
+                        var tmp = new List<Vector2>(BailoutPoints);
+                        tmp.RemoveAt(index);
+                        BailoutPoints = tmp.ToArray();
+                        BailoutPointsCount--;
+                        break;
+                    }
                 }
             }
             public void SetPointX(int index, float value)
@@ -424,20 +429,14 @@ namespace FractalLive
                         return BailoutLines;
                 }
             }
-            public void SetLines(List<Vector4> list)
+            public int GetLinesCount()
             {
-                switch (EditingOrbitTrap)
-                {
-                    case EditingOrbitTrap.Interior:
-                        I_BailoutLines = list.ToArray();
-                        break;
-                    case EditingOrbitTrap.Exterior:
-                        E_BailoutLines = list.ToArray();
-                        break;
-                    default:
-                        BailoutLines = list.ToArray();
-                        break;
-                }
+                if (EditingOrbitTrap == EditingOrbitTrap.Interior)
+                    return I_BailoutLinesCount;
+                if (EditingOrbitTrap == EditingOrbitTrap.Exterior)
+                    return E_BailoutLinesCount;
+
+                return BailoutLinesCount;
             }
             public Vector4 GetLine(int index)
             {
@@ -451,16 +450,49 @@ namespace FractalLive
                         return BailoutLines[index];
                 }
             }
-            public Vector4 SetLine(int index, Vector4 line)
+            public void AddLine(Vector4 line)
             {
                 switch (EditingOrbitTrap)
                 {
                     case EditingOrbitTrap.Interior:
-                        return I_BailoutLines[index] = line;
+                        I_BailoutLines[I_BailoutLinesCount++] = line;
+                        break;
                     case EditingOrbitTrap.Exterior:
-                        return E_BailoutLines[index] = line;
+                        E_BailoutLines[E_BailoutLinesCount++] = line;
+                        break;
                     default:
-                        return BailoutLines[index] = line;
+                        BailoutLines[BailoutLinesCount++] = line;
+                        break;
+                }
+            }
+            public void RemoveLine(int index)
+            {
+                switch (EditingOrbitTrap)
+                {
+                    case EditingOrbitTrap.Interior:
+                    {
+                        var tmp = new List<Vector4>(I_BailoutLines);
+                        tmp.RemoveAt(index);
+                        I_BailoutLines = tmp.ToArray();
+                        I_BailoutLinesCount--;
+                        break;
+                    }
+                    case EditingOrbitTrap.Exterior:
+                    {
+                        var tmp = new List<Vector4>(E_BailoutLines);
+                        tmp.RemoveAt(index);
+                        E_BailoutLines = tmp.ToArray();
+                        E_BailoutLinesCount--;
+                        break;
+                    }
+                    default:
+                    {
+                        var tmp = new List<Vector4>(BailoutLines);
+                        tmp.RemoveAt(index);
+                        BailoutLines = tmp.ToArray();
+                        BailoutLinesCount--;
+                        break;
+                    }
                 }
             }
             public void SetLineX(int index, float value)
@@ -590,9 +622,9 @@ namespace FractalLive
             public Coloring ExteriorColoring;
             public Coloring InteriorColoring;
             public EditingOrbitTrap EditingOrbitTrap;
-            private OrbitTrap OrbitTrap;
-            private OrbitTrap I_OrbitTrap;
-            private OrbitTrap E_OrbitTrap;
+            public OrbitTrap OrbitTrap;
+            public OrbitTrap I_OrbitTrap;
+            public OrbitTrap E_OrbitTrap;
             public Projection Projection;
             public bool IsBuddhabrot;
             public bool IsConjugate;
@@ -601,21 +633,21 @@ namespace FractalLive
             public bool UseDistance;
             public bool UseLighting;
             public bool UseTerrainColor;
-            private int StartOrbit;
-            private int I_StartOrbit;
-            private int E_StartOrbit;
-            private int OrbitRange;
-            private int I_OrbitRange;
-            private int E_OrbitRange;
-            private float Bailout;
-            private float BailoutFactor1;
-            private float BailoutFactor2;
-            private float I_Bailout;
-            private float I_BailoutFactor1;
-            private float I_BailoutFactor2;
-            private float E_Bailout;
-            private float E_BailoutFactor1;
-            private float E_BailoutFactor2;
+            public int StartOrbit;
+            public int I_StartOrbit;
+            public int E_StartOrbit;
+            public int OrbitRange;
+            public int I_OrbitRange;
+            public int E_OrbitRange;
+            public float Bailout;
+            public float BailoutFactor1;
+            public float BailoutFactor2;
+            public float I_Bailout;
+            public float I_BailoutFactor1;
+            public float I_BailoutFactor2;
+            public float E_Bailout;
+            public float E_BailoutFactor1;
+            public float E_BailoutFactor2;
             public FloatBounds InitialDisplayRadius;
             public float C_Power;
             public FloatBounds FoldAngle;
@@ -625,18 +657,24 @@ namespace FractalLive
             public float Power;
             public FloatBounds TerrainHeight;
             public FloatBounds Zoom;
-            private Vector2 BailoutRectangle;
-            private Vector2 I_BailoutRectangle;
-            private Vector2 E_BailoutRectangle;
+            public Vector2 BailoutRectangle;
+            public Vector2 I_BailoutRectangle;
+            public Vector2 E_BailoutRectangle;
             public Vector2 Center;
             public Vector2 Julia;
             public Vector2 JuliaMating;
-            private Vector2[] BailoutPoints;
-            private Vector4[] BailoutLines;
-            private Vector2[] I_BailoutPoints;
-            private Vector2[] E_BailoutPoints;
-            private Vector4[] I_BailoutLines;
-            private Vector4[] E_BailoutLines;
+            public Vector2[] BailoutPoints;
+            public int BailoutPointsCount;
+            public Vector4[] BailoutLines;
+            public int BailoutLinesCount;
+            public Vector2[] I_BailoutPoints;
+            public int I_BailoutPointsCount;
+            public Vector2[] E_BailoutPoints;
+            public int E_BailoutPointsCount;
+            public Vector4[] I_BailoutLines;
+            public int I_BailoutLinesCount;
+            public Vector4[] E_BailoutLines;
+            public int E_BailoutLinesCount;
             public Vector4 FoldOffset;
         }
         #endregion

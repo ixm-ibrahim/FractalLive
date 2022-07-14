@@ -23,8 +23,6 @@ uniform int maxIterations;
 uniform int orbitTrap;
 uniform float bailout;
 uniform vec2 bailoutRectangle;
-uniform vec2 bailoutPoint;
-//uniform vec4 bailoutLine;
 
 uniform vec2[16] bailoutPoints;
 uniform int bailoutPointsCount;
@@ -144,7 +142,7 @@ float GetOrbitTrap(vec2 z, inout float trap)
             trap = 0;
     }
 
-    return trap;bailoutPoint;bailoutPointsCount;bailoutLinesCount;
+    return trap;
 }
 
 vec2 c_2(vec2 c)

@@ -160,15 +160,13 @@ namespace FractalLive
             shader.SetVector2d("center", fractalSettings.Center);
             shader.SetFloat("rollAngle", camera.Roll);
             shader.SetInt("maxIterations", fractalSettings.MaxIterations.Value);
-            shader.SetInt("orbitTrap", (int)fractalSettings.GetOrbitTrap());
-            shader.SetFloat("bailout", fractalSettings.GetBailout());
-            shader.SetVector2("bailoutRectangle", fractalSettings.GetRectangle());
-            shader.SetVector2Array("bailoutPoints", fractalSettings.GetPoints());
-            shader.SetInt("bailoutPointsCount", (int)input_EditingBailoutTrap.Maximum);
-            shader.SetVector2("bailoutPoint", fractalSettings.GetPoint(0));
-            //shader.SetVector4("bailoutLine", fractalSettings.BailoutLines[0]);
-            shader.SetVector4Array("bailoutLines", fractalSettings.GetLines());
-            shader.SetInt("bailoutLinesCount", (int)input_EditingBailoutTrap.Maximum);
+            shader.SetInt("orbitTrap", (int)fractalSettings.OrbitTrap);
+            shader.SetFloat("bailout", fractalSettings.Bailout);
+            shader.SetVector2("bailoutRectangle", fractalSettings.BailoutRectangle);
+            shader.SetVector2Array("bailoutPoints", fractalSettings.BailoutPoints);
+            shader.SetInt("bailoutPointsCount", fractalSettings.BailoutPointsCount);
+            shader.SetVector4Array("bailoutLines", fractalSettings.BailoutLines);
+            shader.SetInt("bailoutLinesCount", fractalSettings.BailoutLinesCount);
 
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
@@ -179,7 +177,6 @@ namespace FractalLive
                 mandelbrotCamera.Render();
             }
 
-            Log(input_EditingBailoutTrap.Value.ToString());
             glControl.SwapBuffers();
         }
         #endregion
@@ -211,7 +208,6 @@ namespace FractalLive
             input_OrbitTrap.SelectedIndex = 0;
             input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Value;
             input_OrbitRange.Maximum = CurrentSettings.MaxIterations.Value;
-            input_EditingBailoutTrap.Maximum = 1;
             input_OrbitTrapInterior.Checked = true;
             input_OrbitTrapExterior.Checked = true;
             input_OrbitTrap_SelectionChangeCommitted(null, null);
@@ -329,7 +325,6 @@ namespace FractalLive
             if (inputState.ControlDown)
                 modifier /= 5;
 
-            int editingBailoutTrap = (int)input_EditingBailoutTrap.Value - 1;
 
             if (panel_FormulaMenu.Enabled)
             {
@@ -351,6 +346,8 @@ namespace FractalLive
             }
             else if (panel_OrbitTrapMenu.Enabled)
             {
+                int editingBailoutTrap = (int)input_EditingBailoutTrap.Value - 1;
+
                 if (inputState.keysDown[Keys.D1])
                 {
                     CurrentSettings.AdjustBailout(modifier / 5);
@@ -574,11 +571,15 @@ namespace FractalLive
                 input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;
         }
 
+        private void input_EditingOrbitTrap_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            CurrentSettings.EditingOrbitTrap = (Fractal.EditingOrbitTrap)input_EditingOrbitTrap.SelectedIndex;
+            input_OrbitTrap_SelectionChangeCommitted(null, null);
+        }
+
         private void input_OrbitTrap_SelectionChangeCommitted(object sender, EventArgs e)
         {
             CurrentSettings.SetOrbitTrap((Fractal.OrbitTrap)input_OrbitTrap.SelectedIndex);
-
-            input_EditingBailoutTrap.Value = 1;
 
             if (CurrentSettings.Is1DBailout)
             {
@@ -592,7 +593,7 @@ namespace FractalLive
 
                 input_Bailout.Text = CurrentSettings.GetBailout().ToString();
             }
-            else if (CurrentSettings.GetOrbitTrap() == Fractal.OrbitTrap.Rectangle)
+            else if (CurrentSettings.Is2DBailout)
             {
                 bool isPoints = (CurrentSettings.GetOrbitTrap() == Fractal.OrbitTrap.Points);
 
@@ -611,11 +612,12 @@ namespace FractalLive
                 }
                 else if (CurrentSettings.GetOrbitTrap() == Fractal.OrbitTrap.Points)
                 {
-                    input_EditingBailoutTrap.Maximum = CurrentSettings.GetPoints().Length;//bug
+                    input_EditingBailoutTrap.Maximum = CurrentSettings.GetPointsCount();
+                    input_EditingBailoutTrap.Value = input_EditingBailoutTrap.Maximum;
                     label_EditingOrbitBailout.Text = "Editing Point";
 
-                    input_BailoutX.Text = CurrentSettings.GetPoint(0).X.ToString();
-                    input_BailoutY.Text = CurrentSettings.GetPoint(0).Y.ToString();
+                    input_BailoutX.Text = CurrentSettings.GetPoint(CurrentSettings.GetPointsCount() - 1).X.ToString();
+                    input_BailoutY.Text = CurrentSettings.GetPoint(CurrentSettings.GetPointsCount() - 1).Y.ToString();
                 }
             }
             else // lines
@@ -628,11 +630,67 @@ namespace FractalLive
                 button_RemoveBailoutTrap.Enabled = true;
                 input_EditingBailoutTrap.Enabled = true;
 
-                input_EditingBailoutTrap.Maximum = CurrentSettings.GetLines().Length;
+                input_EditingBailoutTrap.Maximum = CurrentSettings.GetLinesCount();
+                input_EditingBailoutTrap.Value = input_EditingBailoutTrap.Maximum;
                 label_EditingOrbitBailout.Text = "Editing Line";
 
-                input_BailoutX.Text = Make2D(CurrentSettings.GetLine(0).X, CurrentSettings.GetLine(0).Y);
-                input_BailoutY.Text = Make2D(CurrentSettings.GetLine(0).Z, CurrentSettings.GetLine(0).W);
+                input_BailoutX.Text = Make2D(CurrentSettings.GetLine(CurrentSettings.GetLinesCount() - 1).X, CurrentSettings.GetLine(CurrentSettings.GetLinesCount() - 1).Y);
+                input_BailoutY.Text = Make2D(CurrentSettings.GetLine(CurrentSettings.GetLinesCount() - 1).Z, CurrentSettings.GetLine(CurrentSettings.GetLinesCount() - 1).W);
+            }
+
+        }
+
+        private void button_AddBailoutTrap_Click(object sender, EventArgs e)
+        {
+            if (input_EditingBailoutTrap.Maximum < 16)
+            {
+                input_EditingBailoutTrap.Maximum++;
+
+                if (CurrentSettings.GetOrbitTrap() == Fractal.OrbitTrap.Points)
+                {
+                    CurrentSettings.AddPoint(Vector2.Zero);
+                    input_EditingBailoutTrap.Value = CurrentSettings.GetPointsCount();
+
+                    input_BailoutX.Text = CurrentSettings.GetPoint(CurrentSettings.GetPointsCount() - 1).X.ToString();
+                    input_BailoutY.Text = CurrentSettings.GetPoint(CurrentSettings.GetPointsCount() - 1).Y.ToString();
+                }
+                else if (CurrentSettings.GetOrbitTrap() == Fractal.OrbitTrap.Lines)
+                {
+                    CurrentSettings.AddLine(Vector4.UnitW);
+                    input_EditingBailoutTrap.Value = CurrentSettings.GetLinesCount();
+
+                    input_BailoutX.Text = Make2D(CurrentSettings.GetLine(CurrentSettings.GetLinesCount() - 1).X, CurrentSettings.GetLine(CurrentSettings.GetLinesCount() - 1).Y);
+                    input_BailoutY.Text = Make2D(CurrentSettings.GetLine(CurrentSettings.GetLinesCount() - 1).Z, CurrentSettings.GetLine(CurrentSettings.GetLinesCount() - 1).W);
+                }
+            }
+
+        }
+        private void button_RemoveBailoutTrap_Click(object sender, EventArgs e)
+        {
+            if (input_EditingBailoutTrap.Maximum > 1)
+            {
+                if (CurrentSettings.GetOrbitTrap() == Fractal.OrbitTrap.Points)
+                {
+                    CurrentSettings.RemovePoint((int)input_EditingBailoutTrap.Value - 1);
+
+                    int current = Math.Clamp((int)input_EditingBailoutTrap.Value, 1, CurrentSettings.GetPointsCount());
+                    input_EditingBailoutTrap.Value = current--;
+
+                    input_BailoutX.Text = CurrentSettings.GetPoint(current).X.ToString();
+                    input_BailoutY.Text = CurrentSettings.GetPoint(current).Y.ToString();
+                }
+                else if (CurrentSettings.GetOrbitTrap() == Fractal.OrbitTrap.Lines)
+                {
+                    CurrentSettings.RemoveLine((int)input_EditingBailoutTrap.Value - 1);
+
+                    int current = Math.Clamp((int)input_EditingBailoutTrap.Value, 1, CurrentSettings.GetLinesCount());
+                    input_EditingBailoutTrap.Value = current--;
+
+                    input_BailoutX.Text = Make2D(CurrentSettings.GetLine(current).X, CurrentSettings.GetLine(current).Y);
+                    input_BailoutY.Text = Make2D(CurrentSettings.GetLine(current).Z, CurrentSettings.GetLine(current).W);
+                }
+
+                input_EditingBailoutTrap.Maximum--;
             }
 
         }
@@ -746,62 +804,6 @@ namespace FractalLive
                 CurrentSettings.SetLineW(editingBailoutTrap, float.Parse(GetFrom2D(input_BailoutY.Text, false)));
                 input_BailoutY.Text = Make2D(CurrentSettings.GetLine(editingBailoutTrap).Z, CurrentSettings.GetLine(editingBailoutTrap).W);
             }
-        }
-
-        private void button_AddBailoutTrap_Click(object sender, EventArgs e)
-        {
-            if (input_EditingBailoutTrap.Maximum < 16)
-            {
-                input_EditingBailoutTrap.Maximum++;
-                input_EditingBailoutTrap.Value = input_EditingBailoutTrap.Maximum;
-
-                if (CurrentSettings.GetOrbitTrap() == Fractal.OrbitTrap.Points)
-                {
-                    CurrentSettings.SetPoint((int)input_EditingBailoutTrap.Maximum - 1, Vector2.One);
-
-                    input_BailoutX.Text = CurrentSettings.GetPoint(CurrentSettings.GetPoints().Length - 1).X.ToString();
-                    input_BailoutY.Text = CurrentSettings.GetPoint(CurrentSettings.GetPoints().Length - 1).Y.ToString();
-                }
-                else if (CurrentSettings.GetOrbitTrap() == Fractal.OrbitTrap.Lines)
-                {
-                    CurrentSettings.SetLine((int)input_EditingBailoutTrap.Maximum - 1, Vector4.One);
-
-                    input_BailoutX.Text = Make2D(CurrentSettings.GetLine(CurrentSettings.GetLines().Length - 1).X, CurrentSettings.GetLine(CurrentSettings.GetLines().Length - 1).Y);
-                    input_BailoutY.Text = Make2D(CurrentSettings.GetLine(CurrentSettings.GetLines().Length - 1).Z, CurrentSettings.GetLine(CurrentSettings.GetLines().Length - 1).W);
-                }
-            }
-            
-        }
-        private void button_RemoveBailoutTrap_Click(object sender, EventArgs e)
-        {
-            if (input_EditingBailoutTrap.Maximum > 1)
-            {
-                if (CurrentSettings.GetOrbitTrap() == Fractal.OrbitTrap.Points)
-                {
-                    var tmp = new List<Vector2>(CurrentSettings.GetPoints());
-                    tmp.RemoveAt((int)input_EditingBailoutTrap.Value - 1);
-                    CurrentSettings.SetPoints(tmp);
-
-                    int current = Math.Clamp((int)input_EditingBailoutTrap.Value, 1, (int)--input_EditingBailoutTrap.Maximum);
-                    input_EditingBailoutTrap.Value = current--;
-
-                    input_BailoutX.Text = CurrentSettings.GetPoint(current).X.ToString();
-                    input_BailoutY.Text = CurrentSettings.GetPoint(current).Y.ToString();
-                }
-                else if (CurrentSettings.GetOrbitTrap() == Fractal.OrbitTrap.Lines)
-                {
-                    var tmp = new List<Vector4>(CurrentSettings.GetLines());
-                    tmp.RemoveAt((int)input_EditingBailoutTrap.Value - 1);
-                    CurrentSettings.SetLines(tmp);
-
-                    int current = Math.Clamp((int)input_EditingBailoutTrap.Value, 1, (int)--input_EditingBailoutTrap.Maximum);
-                    input_EditingBailoutTrap.Value = current--;
-
-                    input_BailoutX.Text = Make2D(CurrentSettings.GetLine(current).X, CurrentSettings.GetLine(current).Y);
-                    input_BailoutY.Text = Make2D(CurrentSettings.GetLine(current).Z, CurrentSettings.GetLine(current).W);
-                }
-            }
-            
         }
 
         private void button_Menu1_Click(object sender, EventArgs e)
@@ -988,7 +990,6 @@ namespace FractalLive
         {
             return input.Replace(" ", "").Split(',')[getFirst ? 0 : 1];
         }
-
 
         internal string Replace2D(string input, string original, bool replaceFirst)
         {
