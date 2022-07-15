@@ -7,7 +7,6 @@ see if currentCamera can be replaced with a Mode
 figure out culling
 roll 2d vs 3d
 shader SetDouble, Vector2d
-camera roll
 initial zoom conditions
 follow random center of fractal (ai?)
 convert right variables to doubles
@@ -15,11 +14,12 @@ more functions to break down larger functions
 focus glControl upon application start
 enable copy and paste in textboxes
 undo redo
-text box that spawns input textbox/combo box when clicked
 interior orbit trap and more options (like skipping n iterations, pausing zoom coloring, min/avg/max/etc)
 left click decides orbit trap point and others
 see if raising zoom to power can be optimized in shaders
 investigate bug where Update is called after exit, and menu disappears
 adjustable zoom factor
-replace line and cross orbit trap with lines, and point with points (up to 3)
 minimize calls to GL.Uniform
+load and save settings
+focus glcontrol after each winforms input
+consolidate input textboxes
