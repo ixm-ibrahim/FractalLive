@@ -748,7 +748,7 @@
             this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutY);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_Bailout);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrap);
-            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(683, 24);
+            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(518, 24);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
             this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(159, 276);
             this.panel_OrbitTrapMenu.TabIndex = 33;
@@ -1023,6 +1023,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1078, 374);
+            this.Controls.Add(this.glControl);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.input_Zoom);
             this.Controls.Add(this.label_Center);
@@ -1035,16 +1036,15 @@
             this.Controls.Add(this.input_Texture);
             this.Controls.Add(this.label_ColorCycles);
             this.Controls.Add(this.LogTextBox);
-            this.Controls.Add(this.glControl);
-            this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.panel_FormulaMenu);
-            this.Controls.Add(this.panel_OrbitTrapMenu);
             this.Controls.Add(this.button_Menu1);
             this.Controls.Add(this.button_Menu2);
             this.Controls.Add(this.button_Menu3);
             this.Controls.Add(this.button_Menu4);
             this.Controls.Add(this.button_Left);
             this.Controls.Add(this.button_Right);
+            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.panel_FormulaMenu);
+            this.Controls.Add(this.panel_OrbitTrapMenu);
             this.MinimumSize = new System.Drawing.Size(705, 413);
             this.Name = "MainDlg";
             this.Text = "GLControl Input Test";
