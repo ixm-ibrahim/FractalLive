@@ -11,16 +11,29 @@
 #define TRAP_POINTS						5
 #define TRAP_LINES						6
 
+#define COL_CUSTOM						-1
+#define COL_BLACK						0
+#define COL_WHITE						1
+#define COL_ITERATION                   2
+#define COL_SMOOTH                      3
+#define COL_DOMAIN_SIMPLE               4
+#define COL_DOMAIN_NORMAL               5
+#define COL_DOMAIN_BRIGHTNESS           6
+#define COL_DOMAIN_BRIGHT_RINGS         7
+#define COL_DOMAIN_BRIGHT_RINGS_SMOOTH  8
+#define COL_DOMAIN_DARK_RINGS           9
+#define COL_DOMAIN_BRIGHT_DARK_SMOOTH   10
+
 out vec4 FragColor;
 
 in vec2 FragPos;
 in vec2 TexCoords;
 
+uniform float time;
 uniform float lockedZoom;
 
 uniform int maxIterations;
-
-uniform int showRegion;
+uniform float power;
 
 uniform int orbitTrap;
 uniform float bailout;
@@ -34,20 +47,28 @@ uniform int bailoutPointsCount;
 uniform vec4[16] bailoutLines;
 uniform int bailoutLinesCount;
 
+uniform bool splitInteriorExterior;
+uniform int coloring;
+uniform int interiorColoring;
+uniform int exteriorColoring;
+
 vec3 Mandelbrot();
 vec2 MandelbrotLoop(vec2 c, int maxIteration, inout int iter, inout float trap);
 vec2 MandelbrotDistanceLoop(vec2 c, int maxIteration, inout int iter);
 
 void main()
 {
-	FragColor = vec4(Mandelbrot() * vec3(TexCoords,1), 1.0);bailoutPoints;
-	//FragColor = vec4(Mandelbrot(), 1.0);
+	//FragColor = vec4(Mandelbrot() * vec3(TexCoords,1), 1.0);
+	FragColor = vec4(Mandelbrot(), 1.0);
 }
 
 vec2 c_2(vec2 c);
 bool IsBounded(vec2 z);
 bool NeedDistance();
 float GetOrbitTrap(vec2 z, int iter, inout float trap);
+vec3 GetColor(vec2 z, int iter);
+vec3 DomainColoring(int coloring, vec2 z, int iter);
+vec3 ColorFromHSV(vec3 color);
 
 vec3 Mandelbrot()
 {
@@ -65,9 +86,12 @@ vec3 Mandelbrot()
 
     if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
 	    //return vec3(0.5 + 0.5*(sin(bailout*trap))); // 4.5 is a good value
-	    return vec3(trap);
+	    //return vec3(trap);
+	    return trap * GetColor(z, iter);
 
-	return vec3(sqrt(float(iter)/maxIterations));
+	//return vec3(sqrt(float(iter)/maxIterations));
+	//return sqrt(float(iter)/maxIterations) *  GetColor(z, iter);
+	return GetColor(z, iter);
 }
 
 vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
@@ -145,4 +169,161 @@ float GetOrbitTrap(vec2 z, int iter, inout float trap)
 vec2 c_2(vec2 c)
 {
     return vec2(c.x*c.x - c.y*c.y, 2*c.x*c.y);
+}
+
+vec3 GetColor(vec2 z, int iter)
+{
+    // Decide the color based on the number of iterations
+    vec3 color;
+    if (iter >= maxIterations)
+    {
+        switch (splitInteriorExterior ? interiorColoring : coloring)
+        {
+            case COL_CUSTOM:
+                vec3 outerColor1 = vec3(0.13f, 0.94f, 0.13f);
+                vec3 outerColor2 = vec3(0.0f, 0.47f, 0.95f);
+            
+                float theta = sin(atan(float(z.y), float(z.x)) + time)*.5 + .5;
+
+                color = mix(outerColor1, outerColor2, theta);
+                break;
+            case COL_BLACK:
+                color = vec3(0);
+                break;
+            case COL_WHITE:
+                color = vec3(1);
+                break;
+            default:
+                color = DomainColoring(interiorColoring, z, iter);
+                break;
+        }
+    }
+    else
+    {
+        switch (splitInteriorExterior ? exteriorColoring : coloring)
+        {
+            case COL_CUSTOM:
+                vec3 outerColor1 = vec3(0.13f, 0.94f, 0.13f);
+                vec3 outerColor2 = vec3(0.0f, 0.47f, 0.95f);
+            
+                //float theta = sin(atan(float(z.y), float(z.x)) + time)*.5 + .5;
+
+                //color = mix(outerColor1, outerColor2, theta);
+                //color = mix(outerColor1, outerColor2, dist);
+                color = mix(outerColor1, outerColor2, iter/maxIterations);
+                break;
+            case COL_BLACK:
+                color = vec3(0);
+                break;
+            case COL_WHITE:
+                color = vec3(1);
+                break;
+            case COL_ITERATION:
+                color = vec3(sin(7 * (iter + time) / 17) * .5 + .5, sin(11 * (iter + time) / 29) * .5 + .5, sin(13 * (iter + time) / 41) * .5 + .5);
+                break;
+            case COL_SMOOTH:
+                float mu;
+        
+                mu = iter;
+                //mu = iter + 1 - (log2(log2(length(z))));
+                //mu = iter - log2(log2(dot(z,z))) + 4.0;
+                //mu = iter - log(log(dot(z,z))/(log(bailout)))/log(power);
+                //mu = iter - (log(log(length(z))/log(bailout.x)) / (sign(power)*log(abs(power))));
+                mu = iter - (log(log(length(z))/log(bailout.x)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
+                //mu = iter + 1 - (log(log(length(z))) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
+                //mu = iter - (log(log(length(z))/log(bailout.x)));
+
+                color = vec3(sin(7 * (mu + time) / 17) * .5 + .5, sin(11 * (mu + time) / 29) * .5 + .5, sin(13 * (mu + time) / 41) * .5 + .5);
+                break;
+            default:
+                color = DomainColoring(exteriorColoring, z, iter);
+                break;
+        }
+    }
+    
+    return color;
+}
+
+vec3 DomainColoring(int coloring, vec2 z, int iter)
+{
+    float t = time * 20;
+
+    vec3 color;
+
+    if (coloring == COL_ITERATION || coloring == COL_SMOOTH)
+        //return ColorFromHSV(vec3(atan(FragPosModel.y, FragPosModel.x) * 180 / M_PI + t, 1, 1));
+        return ColorFromHSV(vec3(atan(FragPos.y, FragPos.x) * 180 / M_PI + t, 1, 1));
+
+    float theta = sin(atan(float(z.y), float(z.x))) * 360 + t;
+	float r = length(z);
+        	
+	if (z.x == 0 && z.y == 0)
+	{
+		theta = 0;
+		r = 0;
+	}
+	else if (isnan(z.x) || isnan(z.y))
+	{
+		z = vec2(0);
+		theta = 0;
+		r = 0;
+	}
+
+    float twoPI = 2 * M_PI;
+    float s = abs(sin(mod(r * twoPI, twoPI)));
+	float b = sqrt(sqrt(abs(sin(mod(z.y * twoPI, twoPI)) * sin(mod(z.x * twoPI, twoPI)))));
+	float b2 = .5 * ((1 - s) + b + sqrt(pow(1 - s - b, 2) + 0.01));
+
+    switch (coloring)
+    {
+        case COL_DOMAIN_NORMAL:
+            color = ColorFromHSV(vec3(theta, s, b2 > 1 ? 1 : b2));
+            break;
+        case COL_DOMAIN_BRIGHTNESS:
+            color = ColorFromHSV(vec3(theta, 1, b2 > 1 ? 1 : b2));
+            break;
+        case COL_DOMAIN_BRIGHT_RINGS:
+            color = ColorFromHSV(vec3(theta, s, 1));
+            break;
+        case COL_DOMAIN_BRIGHT_RINGS_SMOOTH:
+            color = ColorFromHSV(vec3(theta, mod(r,1), 1));
+            break;
+        case COL_DOMAIN_DARK_RINGS:
+            color = ColorFromHSV(vec3(theta, 1, s));
+            break;
+        case COL_DOMAIN_BRIGHT_DARK_SMOOTH:
+            color = ColorFromHSV(vec3(theta, 1, mod(r,1)));
+            break;
+        default:
+            //color = mix(outerColor1, outerColor2, theta);
+            color = ColorFromHSV(vec3(theta, 1, 1));
+            break;
+    }
+    
+    return color;
+}
+
+vec3 ColorFromHSV(vec3 color)
+{
+    float hi = mod(floor(color.x / 60.0), 6);
+    float f = color.x / 60.0 - floor(color.x / 60.0);
+
+    //value = value * 255;
+    float v = color.z;
+    float p = color.z * (1 - color.y);
+    float q = color.z * (1 - f * color.y);
+    float t = color.z * (1 - (1 - f) * color.y);
+
+    if (hi == 0)
+        return vec3(v, t, p);
+    if (hi == 1)
+        return vec3(q, v, p);
+    if (hi == 2)
+        return vec3(p, v, t);
+    if (hi == 3)
+        return vec3(p, q, v);
+    if (hi == 4)
+        return vec3(t, p, v);
+
+    return vec3(v, p, q);
 }

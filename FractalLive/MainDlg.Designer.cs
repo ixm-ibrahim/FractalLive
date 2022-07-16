@@ -1194,6 +1194,7 @@
             this.input_Coloring.Name = "input_Coloring";
             this.input_Coloring.Size = new System.Drawing.Size(87, 23);
             this.input_Coloring.TabIndex = 63;
+            this.input_Coloring.SelectionChangeCommitted += new System.EventHandler(this.input_Coloring_SelectionChangeCommitted);
             // 
             // input_EditingColor
             // 
@@ -1209,6 +1210,7 @@
             this.input_EditingColor.Name = "input_EditingColor";
             this.input_EditingColor.Size = new System.Drawing.Size(87, 23);
             this.input_EditingColor.TabIndex = 61;
+            this.input_EditingColor.SelectionChangeCommitted += new System.EventHandler(this.input_EditingColor_SelectionChangeCommitted);
             // 
             // label_EditingColor
             // 

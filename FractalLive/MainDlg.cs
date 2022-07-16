@@ -163,6 +163,7 @@ namespace FractalLive
 
             // Menu 1
             shader.SetInt("maxIterations", fractalSettings.MaxIterations.Value);
+            shader.SetFloat("power", fractalSettings.Power);
 
             // Menu 2
             shader.SetInt("orbitTrap", (int)fractalSettings.OrbitTrap);
@@ -177,7 +178,12 @@ namespace FractalLive
             shader.SetInt("bailoutPointsCount", fractalSettings.BailoutPointsCount);
             shader.SetVector4Array("bailoutLines", fractalSettings.BailoutLines);
             shader.SetInt("bailoutLinesCount", fractalSettings.BailoutLinesCount);
-            
+
+            // Menu 3
+            shader.SetFloat("time", applicationTime.ElapsedMilliseconds / 1000.0f);
+            shader.SetBool("splitInteriorExterior", fractalSettings.EditingColor != Fractal.Editing.Both);
+            shader.SetInt("coloring", (int)fractalSettings.Coloring);
+
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
                 mandelbrot.Use();
@@ -213,13 +219,16 @@ namespace FractalLive
             input_FractalType.SelectedIndex = (int)CurrentSettings.Type;
             input_FractalFormula.SelectedIndex = (int)CurrentSettings.Formula;
             input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
+
             input_OrbitTrap.SelectedIndex = 0;
-            //input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Value;
             input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Maximum;
             input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;
             input_OrbitRange.Maximum = CurrentSettings.MaxIterations.Maximum;
-            //input_OrbitRange.Maximum = input_OrbitRange.Value;
             input_OrbitTrap_SelectionChangeCommitted(null, null);
+
+            input_EditingColor.SelectedIndex = 0;
+            input_Coloring.SelectedIndex = 3;
+
 
             // Callbacks
             glControl.Resize += glControl_Resize;
@@ -658,7 +667,7 @@ namespace FractalLive
 
         private void input_MaxIterations_ValueChanged(object sender, EventArgs e)
         {
-            if (CurrentSettings.MaxIterations.Value == CurrentSettings.OrbitRange)
+            if (CurrentSettings.MaxIterations.Value == CurrentSettings.OrbitRange && input_MaxIterations.Value != 0)
             {
                 CurrentSettings.OrbitRange = (int)input_MaxIterations.Value;
                 input_OrbitRange.Value = CurrentSettings.OrbitRange;
@@ -1023,27 +1032,16 @@ namespace FractalLive
             input_OrbitTrapFactor2.Text = CurrentSettings.BailoutFactor2.ToString();
         }
 
-        private void WinFormsInputRadioButton_CheckedChanged(object sender, EventArgs e)
+        private void input_EditingColor_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            glControl.DisableNativeInput();
+            CurrentSettings.EditingColor = (Fractal.Editing)input_EditingColor.SelectedIndex;
         }
 
-        private void NativeInputRadioButton_CheckedChanged(object sender, EventArgs e)
+        private void input_Coloring_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            OpenTK.WinForms.INativeInput nativeInput = glControl.EnableNativeInput();
-
-            if (_nativeInput == null)
-            {
-                _nativeInput = nativeInput;
-
-                _nativeInput.KeyDown += (e) =>
-                    Log($"Native Key down: {e.Key}");
-                _nativeInput.KeyUp += (e) =>
-                    Log($"Native Key up: {e.Key}");
-                _nativeInput.MouseWheel += (e) =>
-                    Log($"Native Key up: {e.Offset}");
-            }
+            CurrentSettings.SetColoring((Fractal.Coloring)input_Coloring.SelectedIndex);
         }
+
         #endregion
 
         #region Properties

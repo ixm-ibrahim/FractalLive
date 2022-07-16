@@ -27,7 +27,7 @@ namespace FractalLive
 
         public enum Coloring
         {
-            Custom, Black, White, Iteration, Smooth, Domain_1, Domain_2, Domain_3, Domain_4, Domain_5, Domain_6, Domain_7, COUNT
+            Custom = -1, Black = 0, White = 1, Iteration = 2, Smooth = 3, Domain_1 = 4, Domain_2 = 5, Domain_3 = 6, Domain_4 = 7, Domain_5 = 8, Domain_6 = 9, Domain_7 = 10, COUNT
         }
 
         public enum OrbitTrap
@@ -38,6 +38,11 @@ namespace FractalLive
         public enum Projection
         {
             Normal, Inverse, Riemann_Sphere
+        }
+
+        public enum Editing
+        {
+            Both, Interior, Exterior
         }
 
         #endregion
@@ -89,7 +94,36 @@ namespace FractalLive
                 BailoutLines[0] = new Vector4(0,0,0,1);
                 BailoutLines[1] = new Vector4(0,0,1,0);
                 BailoutLinesCount = 2;
-            }
+
+                EditingColor = Editing.Both;
+
+                Coloring = Coloring.Smooth;
+                ColorCycle = 1;
+                ColorFactor = 1;
+                UseDistanceEstimation = false;
+                MaxDistance = 1e20f;
+                DistFineness = 1;
+                Texture = "";
+                TextureBlend = 0.5f;
+
+                I_Coloring = Coloring.Smooth;
+                I_ColorCycle = 1;
+                I_ColorFactor = 1;
+                I_UseDistanceEstimation = false;
+                I_MaxDistance = 1e20f;
+                I_DistFineness = 1;
+                I_Texture = "";
+                I_TextureBlend = 0.5f;
+
+                E_Coloring = Coloring.Smooth;
+                E_ColorCycle = 1;
+                E_ColorFactor = 1;
+                E_UseDistanceEstimation = false;
+                E_MaxDistance = 1e20f;
+                E_DistFineness = 1;
+                E_Texture = "";
+                E_TextureBlend = 0.5f;
+        }
 
             public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
             public bool Is2DBailout => OrbitTrap >= OrbitTrap.Rectangle && OrbitTrap <= OrbitTrap.Points;
@@ -119,6 +153,22 @@ namespace FractalLive
                 tmp.RemoveAt(index);
                 BailoutLines = tmp.ToArray();
                 BailoutLinesCount--;
+            }
+
+            public void SetColoring(Coloring coloring)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_Coloring = coloring;
+                        break;
+                    case Editing.Exterior:
+                        E_Coloring = coloring;
+                        break;
+                    default:
+                        Coloring = coloring;
+                        break;
+                }
             }
 
             public Type Type;
@@ -159,6 +209,35 @@ namespace FractalLive
             public Vector4[] BailoutLines;
             public int BailoutLinesCount;
             public Vector4 FoldOffset;
+
+            public Editing EditingColor;
+
+            public Coloring Coloring;
+            public float ColorCycle;
+            public float ColorFactor;
+            public bool UseDistanceEstimation;
+            public float MaxDistance;
+            public float DistFineness;
+            public string Texture;
+            public float TextureBlend;
+
+            public Coloring I_Coloring;
+            public float I_ColorCycle;
+            public float I_ColorFactor;
+            public bool I_UseDistanceEstimation;
+            public float I_MaxDistance;
+            public float I_DistFineness;
+            public string I_Texture;
+            public float I_TextureBlend;
+
+            public Coloring E_Coloring;
+            public float E_ColorCycle;
+            public float E_ColorFactor;
+            public bool E_UseDistanceEstimation;
+            public float E_MaxDistance;
+            public float E_DistFineness;
+            public string E_Texture;
+            public float E_TextureBlend;
         }
         #endregion
 

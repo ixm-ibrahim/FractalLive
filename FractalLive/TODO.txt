@@ -27,3 +27,5 @@ locked zoom box
 buddhabrot menu 1
 lighting menu
 maximum orbit trap distance
+key for cycling orbit traps/colorings
+deal with interior colorings that wont work
