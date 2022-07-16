@@ -64,8 +64,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label_Bailout1X = new System.Windows.Forms.Label();
             this.LogTextBox = new System.Windows.Forms.TextBox();
-            this.NativeInputRadioButton = new System.Windows.Forms.RadioButton();
-            this.WinFormsInputRadioButton = new System.Windows.Forms.RadioButton();
             this.glControl = new OpenTK.WinForms.GLControl();
             this.button_Left = new System.Windows.Forms.Button();
             this.button_Right = new System.Windows.Forms.Button();
@@ -89,7 +87,6 @@
             this.input_Bailout = new System.Windows.Forms.TextBox();
             this.button_Menu4 = new System.Windows.Forms.Button();
             this.panel_FormulaMenu = new System.Windows.Forms.Panel();
-            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
             this.label_BailoutTrap = new System.Windows.Forms.Label();
             this.input_BailoutX = new System.Windows.Forms.TextBox();
             this.panel_OrbitTrapMenu = new System.Windows.Forms.Panel();
@@ -103,7 +100,6 @@
             this.button_RemoveBailoutTrap = new System.Windows.Forms.Button();
             this.button_AddBailoutTrap = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.input_DisableOrbitTrap = new System.Windows.Forms.CheckBox();
             this.label_Texture = new System.Windows.Forms.Label();
             this.input_Texture = new System.Windows.Forms.TextBox();
             this.checkBox_LockZoomFactor = new System.Windows.Forms.CheckBox();
@@ -420,32 +416,6 @@
             this.LogTextBox.Size = new System.Drawing.Size(159, 71);
             this.LogTextBox.TabIndex = 3;
             // 
-            // NativeInputRadioButton
-            // 
-            this.NativeInputRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.NativeInputRadioButton.AutoSize = true;
-            this.NativeInputRadioButton.Location = new System.Drawing.Point(912, 243);
-            this.NativeInputRadioButton.Name = "NativeInputRadioButton";
-            this.NativeInputRadioButton.Size = new System.Drawing.Size(65, 19);
-            this.NativeInputRadioButton.TabIndex = 5;
-            this.NativeInputRadioButton.TabStop = true;
-            this.NativeInputRadioButton.Text = "Exterior";
-            this.NativeInputRadioButton.UseVisualStyleBackColor = true;
-            this.NativeInputRadioButton.CheckedChanged += new System.EventHandler(this.NativeInputRadioButton_CheckedChanged);
-            // 
-            // WinFormsInputRadioButton
-            // 
-            this.WinFormsInputRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.WinFormsInputRadioButton.AutoSize = true;
-            this.WinFormsInputRadioButton.Location = new System.Drawing.Point(892, 218);
-            this.WinFormsInputRadioButton.Name = "WinFormsInputRadioButton";
-            this.WinFormsInputRadioButton.Size = new System.Drawing.Size(95, 19);
-            this.WinFormsInputRadioButton.TabIndex = 4;
-            this.WinFormsInputRadioButton.TabStop = true;
-            this.WinFormsInputRadioButton.Text = "Interior Color";
-            this.WinFormsInputRadioButton.UseVisualStyleBackColor = true;
-            this.WinFormsInputRadioButton.CheckedChanged += new System.EventHandler(this.WinFormsInputRadioButton_CheckedChanged);
-            // 
             // glControl
             // 
             this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -732,13 +702,6 @@
             this.panel_FormulaMenu.Size = new System.Drawing.Size(159, 276);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
-            // vScrollBar1
-            // 
-            this.vScrollBar1.Location = new System.Drawing.Point(845, 49);
-            this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(17, 80);
-            this.vScrollBar1.TabIndex = 59;
-            // 
             // label_BailoutTrap
             // 
             this.label_BailoutTrap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -941,16 +904,6 @@
             this.label1.TabIndex = 35;
             this.label1.Text = "Orbit Trap Menu";
             // 
-            // input_DisableOrbitTrap
-            // 
-            this.input_DisableOrbitTrap.AutoSize = true;
-            this.input_DisableOrbitTrap.Location = new System.Drawing.Point(878, 66);
-            this.input_DisableOrbitTrap.Name = "input_DisableOrbitTrap";
-            this.input_DisableOrbitTrap.Size = new System.Drawing.Size(119, 19);
-            this.input_DisableOrbitTrap.TabIndex = 46;
-            this.input_DisableOrbitTrap.Text = "Disable Orbit Trap";
-            this.input_DisableOrbitTrap.UseVisualStyleBackColor = true;
-            // 
             // label_Texture
             // 
             this.label_Texture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -979,6 +932,7 @@
             this.checkBox_LockZoomFactor.TabIndex = 38;
             this.checkBox_LockZoomFactor.Text = "Lock Zoom Factor";
             this.checkBox_LockZoomFactor.UseVisualStyleBackColor = true;
+            this.checkBox_LockZoomFactor.CheckedChanged += new System.EventHandler(this.checkBox_LockZoomFactor_CheckedChanged);
             // 
             // input_ColorCycles
             // 
@@ -1069,8 +1023,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1078, 374);
-            this.Controls.Add(this.vScrollBar1);
-            this.Controls.Add(this.input_DisableOrbitTrap);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.input_Zoom);
             this.Controls.Add(this.label_Center);
@@ -1082,8 +1034,6 @@
             this.Controls.Add(this.checkBox_LockZoomFactor);
             this.Controls.Add(this.input_Texture);
             this.Controls.Add(this.label_ColorCycles);
-            this.Controls.Add(this.WinFormsInputRadioButton);
-            this.Controls.Add(this.NativeInputRadioButton);
             this.Controls.Add(this.LogTextBox);
             this.Controls.Add(this.glControl);
             this.Controls.Add(this.menuStrip1);
@@ -1147,8 +1097,6 @@
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.Label label_Bailout1X;
         private System.Windows.Forms.TextBox LogTextBox;
-        private System.Windows.Forms.RadioButton NativeInputRadioButton;
-        private System.Windows.Forms.RadioButton WinFormsInputRadioButton;
         private OpenTK.WinForms.GLControl glControl;
         private System.Windows.Forms.Button button_Left;
         private System.Windows.Forms.Button button_Right;
@@ -1185,7 +1133,6 @@
         private System.Windows.Forms.Label label_ColorCycles;
         private System.Windows.Forms.TextBox input_ColorFactor;
         private System.Windows.Forms.Label label_ColorFactor;
-        private System.Windows.Forms.CheckBox input_DisableOrbitTrap;
         private System.Windows.Forms.NumericUpDown input_StartOrbit;
         private System.Windows.Forms.NumericUpDown input_EditingBailoutTrap;
         private System.Windows.Forms.NumericUpDown input_OrbitRange;
@@ -1197,7 +1144,6 @@
         private System.Windows.Forms.Label label_Center;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox input_Zoom;
-        private System.Windows.Forms.VScrollBar vScrollBar1;
     }
 }
 
