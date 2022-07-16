@@ -27,7 +27,7 @@ namespace FractalLive
 
         public enum Coloring
         {
-            Custom, Black, White, Classic, Smooth, Domain_1, Domain_2, Domain_3, Domain_4, Domain_5, Domain_6, Domain_7, COUNT
+            Custom, Black, White, Iteration, Smooth, Domain_1, Domain_2, Domain_3, Domain_4, Domain_5, Domain_6, Domain_7, COUNT
         }
 
         public enum OrbitTrap

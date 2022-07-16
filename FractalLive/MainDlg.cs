@@ -617,6 +617,8 @@ namespace FractalLive
             panel_FormulaMenu.Enabled = true;
             panel_OrbitTrapMenu.Hide();
             panel_OrbitTrapMenu.Enabled = false;
+            panel_ColorMenu.Hide();
+            panel_ColorMenu.Enabled = false;
 
 
         }
@@ -626,6 +628,8 @@ namespace FractalLive
             panel_FormulaMenu.Enabled = false;
             panel_OrbitTrapMenu.Show();
             panel_OrbitTrapMenu.Enabled = true;
+            panel_ColorMenu.Hide();
+            panel_ColorMenu.Enabled = false;
 
 
         }
@@ -635,6 +639,8 @@ namespace FractalLive
             panel_FormulaMenu.Enabled = false;
             panel_OrbitTrapMenu.Hide();
             panel_OrbitTrapMenu.Enabled = false;
+            panel_ColorMenu.Show();
+            panel_ColorMenu.Enabled = true;
 
 
         }
@@ -644,6 +650,8 @@ namespace FractalLive
             panel_FormulaMenu.Enabled = false;
             panel_OrbitTrapMenu.Hide();
             panel_OrbitTrapMenu.Enabled = false;
+            panel_ColorMenu.Hide();
+            panel_ColorMenu.Enabled = false;
 
 
         }

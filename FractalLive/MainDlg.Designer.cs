@@ -31,6 +31,7 @@
             System.Windows.Forms.Label label_MaxIterations;
             System.Windows.Forms.Label label_StartOrbit;
             System.Windows.Forms.Label label_OrbitRange;
+            System.Windows.Forms.Label label_TextureBlend;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainDlg));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -104,16 +105,29 @@
             this.input_Texture = new System.Windows.Forms.TextBox();
             this.checkBox_LockZoomFactor = new System.Windows.Forms.CheckBox();
             this.input_ColorCycles = new System.Windows.Forms.TextBox();
-            this.label_ColorCycles = new System.Windows.Forms.Label();
+            this.label_ColorFactors = new System.Windows.Forms.Label();
             this.input_ColorFactor = new System.Windows.Forms.TextBox();
-            this.label_ColorFactor = new System.Windows.Forms.Label();
             this.input_Center = new System.Windows.Forms.TextBox();
             this.label_Center = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
+            this.panel_ColorMenu = new System.Windows.Forms.Panel();
+            this.input_TextureBlend = new System.Windows.Forms.NumericUpDown();
+            this.button_ClearTexture = new System.Windows.Forms.Button();
+            this.input_MaxDistance = new System.Windows.Forms.TextBox();
+            this.input_DistanceFineness = new System.Windows.Forms.TextBox();
+            this.label_MaxDistance = new System.Windows.Forms.Label();
+            this.label_DistanceFineness = new System.Windows.Forms.Label();
+            this.checkBox_UseDistanceEstimation = new System.Windows.Forms.CheckBox();
+            this.label_Coloring = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.input_Coloring = new System.Windows.Forms.ComboBox();
+            this.input_EditingColor = new System.Windows.Forms.ComboBox();
+            this.label_EditingColor = new System.Windows.Forms.Label();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
+            label_TextureBlend = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).BeginInit();
             this.panel_FormulaMenu.SuspendLayout();
@@ -121,6 +135,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_EditingBailoutTrap)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_OrbitRange)).BeginInit();
+            this.panel_ColorMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).BeginInit();
             this.SuspendLayout();
             // 
             // label_MaxIterations
@@ -129,9 +145,9 @@
             label_MaxIterations.AutoSize = true;
             label_MaxIterations.Location = new System.Drawing.Point(3, 79);
             label_MaxIterations.Name = "label_MaxIterations";
-            label_MaxIterations.Size = new System.Drawing.Size(88, 15);
+            label_MaxIterations.Size = new System.Drawing.Size(85, 15);
             label_MaxIterations.TabIndex = 6;
-            label_MaxIterations.Text = "Max Iterations: ";
+            label_MaxIterations.Text = "Max Iterations:";
             label_MaxIterations.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label_StartOrbit
@@ -155,6 +171,17 @@
             label_OrbitRange.TabIndex = 49;
             label_OrbitRange.Text = "Orbit Range: ";
             label_OrbitRange.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label_TextureBlend
+            // 
+            label_TextureBlend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            label_TextureBlend.AutoSize = true;
+            label_TextureBlend.Location = new System.Drawing.Point(4, 237);
+            label_TextureBlend.Name = "label_TextureBlend";
+            label_TextureBlend.Size = new System.Drawing.Size(81, 15);
+            label_TextureBlend.TabIndex = 70;
+            label_TextureBlend.Text = "Texture Blend:";
+            label_TextureBlend.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // menuStrip1
             // 
@@ -908,7 +935,7 @@
             // 
             this.label_Texture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_Texture.AutoSize = true;
-            this.label_Texture.Location = new System.Drawing.Point(878, 44);
+            this.label_Texture.Location = new System.Drawing.Point(4, 212);
             this.label_Texture.Name = "label_Texture";
             this.label_Texture.Size = new System.Drawing.Size(48, 15);
             this.label_Texture.TabIndex = 40;
@@ -918,7 +945,7 @@
             // input_Texture
             // 
             this.input_Texture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_Texture.Location = new System.Drawing.Point(932, 41);
+            this.input_Texture.Location = new System.Drawing.Point(58, 209);
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
@@ -937,38 +964,29 @@
             // input_ColorCycles
             // 
             this.input_ColorCycles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_ColorCycles.Location = new System.Drawing.Point(990, 128);
+            this.input_ColorCycles.Location = new System.Drawing.Point(69, 77);
             this.input_ColorCycles.Name = "input_ColorCycles";
             this.input_ColorCycles.Size = new System.Drawing.Size(40, 23);
             this.input_ColorCycles.TabIndex = 43;
             this.input_ColorCycles.Text = "0";
             // 
-            // label_ColorCycles
+            // label_ColorFactors
             // 
-            this.label_ColorCycles.AutoSize = true;
-            this.label_ColorCycles.Location = new System.Drawing.Point(877, 130);
-            this.label_ColorCycles.Name = "label_ColorCycles";
-            this.label_ColorCycles.Size = new System.Drawing.Size(76, 15);
-            this.label_ColorCycles.TabIndex = 42;
-            this.label_ColorCycles.Text = "Color Cycles:";
+            this.label_ColorFactors.AutoSize = true;
+            this.label_ColorFactors.Location = new System.Drawing.Point(4, 80);
+            this.label_ColorFactors.Name = "label_ColorFactors";
+            this.label_ColorFactors.Size = new System.Drawing.Size(48, 15);
+            this.label_ColorFactors.TabIndex = 42;
+            this.label_ColorFactors.Text = "Factors:";
             // 
             // input_ColorFactor
             // 
             this.input_ColorFactor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_ColorFactor.Location = new System.Drawing.Point(990, 159);
+            this.input_ColorFactor.Location = new System.Drawing.Point(116, 77);
             this.input_ColorFactor.Name = "input_ColorFactor";
             this.input_ColorFactor.Size = new System.Drawing.Size(40, 23);
             this.input_ColorFactor.TabIndex = 45;
             this.input_ColorFactor.Text = "0";
-            // 
-            // label_ColorFactor
-            // 
-            this.label_ColorFactor.AutoSize = true;
-            this.label_ColorFactor.Location = new System.Drawing.Point(877, 162);
-            this.label_ColorFactor.Name = "label_ColorFactor";
-            this.label_ColorFactor.Size = new System.Drawing.Size(78, 15);
-            this.label_ColorFactor.TabIndex = 44;
-            this.label_ColorFactor.Text = "Color Factor: ";
             // 
             // input_Center
             // 
@@ -1018,23 +1036,203 @@
             this.input_Zoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_Zoom_Validating);
             this.input_Zoom.Validated += new System.EventHandler(this.input_Zoom_Validated);
             // 
+            // panel_ColorMenu
+            // 
+            this.panel_ColorMenu.Controls.Add(this.input_TextureBlend);
+            this.panel_ColorMenu.Controls.Add(label_TextureBlend);
+            this.panel_ColorMenu.Controls.Add(this.button_ClearTexture);
+            this.panel_ColorMenu.Controls.Add(this.input_MaxDistance);
+            this.panel_ColorMenu.Controls.Add(this.input_DistanceFineness);
+            this.panel_ColorMenu.Controls.Add(this.label_MaxDistance);
+            this.panel_ColorMenu.Controls.Add(this.label_DistanceFineness);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistanceEstimation);
+            this.panel_ColorMenu.Controls.Add(this.label_Texture);
+            this.panel_ColorMenu.Controls.Add(this.label_Coloring);
+            this.panel_ColorMenu.Controls.Add(this.label3);
+            this.panel_ColorMenu.Controls.Add(this.input_Texture);
+            this.panel_ColorMenu.Controls.Add(this.input_Coloring);
+            this.panel_ColorMenu.Controls.Add(this.input_EditingColor);
+            this.panel_ColorMenu.Controls.Add(this.label_EditingColor);
+            this.panel_ColorMenu.Controls.Add(this.label_ColorFactors);
+            this.panel_ColorMenu.Controls.Add(this.input_ColorCycles);
+            this.panel_ColorMenu.Controls.Add(this.input_ColorFactor);
+            this.panel_ColorMenu.Location = new System.Drawing.Point(683, 24);
+            this.panel_ColorMenu.Name = "panel_ColorMenu";
+            this.panel_ColorMenu.Size = new System.Drawing.Size(159, 276);
+            this.panel_ColorMenu.TabIndex = 59;
+            // 
+            // input_TextureBlend
+            // 
+            this.input_TextureBlend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.input_TextureBlend.CausesValidation = false;
+            this.input_TextureBlend.DecimalPlaces = 2;
+            this.input_TextureBlend.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.input_TextureBlend.Location = new System.Drawing.Point(100, 235);
+            this.input_TextureBlend.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.input_TextureBlend.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.input_TextureBlend.Name = "input_TextureBlend";
+            this.input_TextureBlend.Size = new System.Drawing.Size(56, 23);
+            this.input_TextureBlend.TabIndex = 71;
+            this.input_TextureBlend.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            // 
+            // button_ClearTexture
+            // 
+            this.button_ClearTexture.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_ClearTexture.Location = new System.Drawing.Point(30, 181);
+            this.button_ClearTexture.Name = "button_ClearTexture";
+            this.button_ClearTexture.Size = new System.Drawing.Size(96, 25);
+            this.button_ClearTexture.TabIndex = 69;
+            this.button_ClearTexture.Text = "Clear Texture";
+            this.button_ClearTexture.UseVisualStyleBackColor = true;
+            // 
+            // input_MaxDistance
+            // 
+            this.input_MaxDistance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.input_MaxDistance.Location = new System.Drawing.Point(116, 126);
+            this.input_MaxDistance.Name = "input_MaxDistance";
+            this.input_MaxDistance.Size = new System.Drawing.Size(40, 23);
+            this.input_MaxDistance.TabIndex = 65;
+            this.input_MaxDistance.Text = "2";
+            // 
+            // input_DistanceFineness
+            // 
+            this.input_DistanceFineness.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.input_DistanceFineness.Location = new System.Drawing.Point(116, 152);
+            this.input_DistanceFineness.Name = "input_DistanceFineness";
+            this.input_DistanceFineness.Size = new System.Drawing.Size(40, 23);
+            this.input_DistanceFineness.TabIndex = 67;
+            this.input_DistanceFineness.Text = "1";
+            // 
+            // label_MaxDistance
+            // 
+            this.label_MaxDistance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_MaxDistance.AutoSize = true;
+            this.label_MaxDistance.Location = new System.Drawing.Point(3, 129);
+            this.label_MaxDistance.Name = "label_MaxDistance";
+            this.label_MaxDistance.Size = new System.Drawing.Size(84, 15);
+            this.label_MaxDistance.TabIndex = 66;
+            this.label_MaxDistance.Text = "Max Distance: ";
+            this.label_MaxDistance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label_DistanceFineness
+            // 
+            this.label_DistanceFineness.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_DistanceFineness.AutoSize = true;
+            this.label_DistanceFineness.Location = new System.Drawing.Point(4, 155);
+            this.label_DistanceFineness.Name = "label_DistanceFineness";
+            this.label_DistanceFineness.Size = new System.Drawing.Size(106, 15);
+            this.label_DistanceFineness.TabIndex = 68;
+            this.label_DistanceFineness.Text = "Distance Fineness: ";
+            this.label_DistanceFineness.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // checkBox_UseDistanceEstimation
+            // 
+            this.checkBox_UseDistanceEstimation.AutoSize = true;
+            this.checkBox_UseDistanceEstimation.Location = new System.Drawing.Point(7, 106);
+            this.checkBox_UseDistanceEstimation.Name = "checkBox_UseDistanceEstimation";
+            this.checkBox_UseDistanceEstimation.Size = new System.Drawing.Size(152, 19);
+            this.checkBox_UseDistanceEstimation.TabIndex = 64;
+            this.checkBox_UseDistanceEstimation.Text = "Use Distance Estimation";
+            this.checkBox_UseDistanceEstimation.UseVisualStyleBackColor = true;
+            // 
+            // label_Coloring
+            // 
+            this.label_Coloring.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_Coloring.AutoSize = true;
+            this.label_Coloring.Location = new System.Drawing.Point(4, 48);
+            this.label_Coloring.Name = "label_Coloring";
+            this.label_Coloring.Size = new System.Drawing.Size(56, 15);
+            this.label_Coloring.TabIndex = 62;
+            this.label_Coloring.Text = "Coloring:";
+            this.label_Coloring.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label3.Location = new System.Drawing.Point(30, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(83, 19);
+            this.label3.TabIndex = 60;
+            this.label3.Text = "Color Menu";
+            // 
+            // input_Coloring
+            // 
+            this.input_Coloring.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.input_Coloring.CausesValidation = false;
+            this.input_Coloring.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.input_Coloring.FormattingEnabled = true;
+            this.input_Coloring.Items.AddRange(new object[] {
+            "Black",
+            "White",
+            "Interation",
+            "Smooth",
+            "Domain 1",
+            "Domain 2",
+            "Domain 3",
+            "Domain 4",
+            "Domain 5",
+            "Domain 6",
+            "Domain 7"});
+            this.input_Coloring.Location = new System.Drawing.Point(69, 48);
+            this.input_Coloring.Name = "input_Coloring";
+            this.input_Coloring.Size = new System.Drawing.Size(87, 23);
+            this.input_Coloring.TabIndex = 63;
+            // 
+            // input_EditingColor
+            // 
+            this.input_EditingColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.input_EditingColor.CausesValidation = false;
+            this.input_EditingColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.input_EditingColor.FormattingEnabled = true;
+            this.input_EditingColor.Items.AddRange(new object[] {
+            "Both",
+            "Interior",
+            "Exterior"});
+            this.input_EditingColor.Location = new System.Drawing.Point(69, 22);
+            this.input_EditingColor.Name = "input_EditingColor";
+            this.input_EditingColor.Size = new System.Drawing.Size(87, 23);
+            this.input_EditingColor.TabIndex = 61;
+            // 
+            // label_EditingColor
+            // 
+            this.label_EditingColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_EditingColor.AutoSize = true;
+            this.label_EditingColor.Location = new System.Drawing.Point(4, 25);
+            this.label_EditingColor.Name = "label_EditingColor";
+            this.label_EditingColor.Size = new System.Drawing.Size(47, 15);
+            this.label_EditingColor.TabIndex = 60;
+            this.label_EditingColor.Text = "Editing:";
+            this.label_EditingColor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1078, 374);
+            this.Controls.Add(this.panel_ColorMenu);
             this.Controls.Add(this.glControl);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.input_Zoom);
             this.Controls.Add(this.label_Center);
             this.Controls.Add(this.input_Center);
-            this.Controls.Add(this.label_Texture);
-            this.Controls.Add(this.input_ColorFactor);
-            this.Controls.Add(this.label_ColorFactor);
-            this.Controls.Add(this.input_ColorCycles);
             this.Controls.Add(this.checkBox_LockZoomFactor);
-            this.Controls.Add(this.input_Texture);
-            this.Controls.Add(this.label_ColorCycles);
             this.Controls.Add(this.LogTextBox);
             this.Controls.Add(this.button_Menu1);
             this.Controls.Add(this.button_Menu2);
@@ -1059,6 +1257,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_EditingBailoutTrap)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_OrbitRange)).EndInit();
+            this.panel_ColorMenu.ResumeLayout(false);
+            this.panel_ColorMenu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1130,9 +1331,8 @@
         private System.Windows.Forms.Button button_RemoveBailoutTrap;
         private System.Windows.Forms.Button button_AddBailoutTrap;
         private System.Windows.Forms.TextBox input_ColorCycles;
-        private System.Windows.Forms.Label label_ColorCycles;
+        private System.Windows.Forms.Label label_ColorFactors;
         private System.Windows.Forms.TextBox input_ColorFactor;
-        private System.Windows.Forms.Label label_ColorFactor;
         private System.Windows.Forms.NumericUpDown input_StartOrbit;
         private System.Windows.Forms.NumericUpDown input_EditingBailoutTrap;
         private System.Windows.Forms.NumericUpDown input_OrbitRange;
@@ -1144,6 +1344,19 @@
         private System.Windows.Forms.Label label_Center;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox input_Zoom;
+        private System.Windows.Forms.Panel panel_ColorMenu;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label_Coloring;
+        private System.Windows.Forms.ComboBox input_Coloring;
+        private System.Windows.Forms.ComboBox input_EditingColor;
+        private System.Windows.Forms.Label label_EditingColor;
+        private System.Windows.Forms.TextBox input_MaxDistance;
+        private System.Windows.Forms.TextBox input_DistanceFineness;
+        private System.Windows.Forms.Label label_MaxDistance;
+        private System.Windows.Forms.Label label_DistanceFineness;
+        private System.Windows.Forms.CheckBox checkBox_UseDistanceEstimation;
+        private System.Windows.Forms.Button button_ClearTexture;
+        private System.Windows.Forms.NumericUpDown input_TextureBlend;
     }
 }
 
