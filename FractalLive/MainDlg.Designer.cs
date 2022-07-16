@@ -64,8 +64,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label_Bailout1X = new System.Windows.Forms.Label();
             this.LogTextBox = new System.Windows.Forms.TextBox();
-            this.NativeInputRadioButton = new System.Windows.Forms.RadioButton();
-            this.WinFormsInputRadioButton = new System.Windows.Forms.RadioButton();
             this.glControl = new OpenTK.WinForms.GLControl();
             this.button_Left = new System.Windows.Forms.Button();
             this.button_Right = new System.Windows.Forms.Button();
@@ -89,7 +87,6 @@
             this.input_Bailout = new System.Windows.Forms.TextBox();
             this.button_Menu4 = new System.Windows.Forms.Button();
             this.panel_FormulaMenu = new System.Windows.Forms.Panel();
-            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
             this.label_BailoutTrap = new System.Windows.Forms.Label();
             this.input_BailoutX = new System.Windows.Forms.TextBox();
             this.panel_OrbitTrapMenu = new System.Windows.Forms.Panel();
@@ -103,18 +100,30 @@
             this.button_RemoveBailoutTrap = new System.Windows.Forms.Button();
             this.button_AddBailoutTrap = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.input_DisableOrbitTrap = new System.Windows.Forms.CheckBox();
             this.label_Texture = new System.Windows.Forms.Label();
             this.input_Texture = new System.Windows.Forms.TextBox();
             this.checkBox_LockZoomFactor = new System.Windows.Forms.CheckBox();
             this.input_ColorCycles = new System.Windows.Forms.TextBox();
-            this.label_ColorCycles = new System.Windows.Forms.Label();
             this.input_ColorFactor = new System.Windows.Forms.TextBox();
             this.label_ColorFactor = new System.Windows.Forms.Label();
             this.input_Center = new System.Windows.Forms.TextBox();
             this.label_Center = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.label_Zoom = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
+            this.label_TextureBlend = new System.Windows.Forms.Label();
+            this.input_TextureBlend = new System.Windows.Forms.NumericUpDown();
+            this.panel_ColorMenu = new System.Windows.Forms.Panel();
+            this.checkBox_UseDistanceEstimation = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label_ColorMenu = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.button_ClearTexture = new System.Windows.Forms.Button();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -125,6 +134,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_EditingBailoutTrap)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_OrbitRange)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).BeginInit();
+            this.panel_ColorMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_MaxIterations
@@ -142,7 +153,7 @@
             // 
             label_StartOrbit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             label_StartOrbit.AutoSize = true;
-            label_StartOrbit.Location = new System.Drawing.Point(3, 155);
+            label_StartOrbit.Location = new System.Drawing.Point(-680, 155);
             label_StartOrbit.Name = "label_StartOrbit";
             label_StartOrbit.Size = new System.Drawing.Size(67, 15);
             label_StartOrbit.TabIndex = 47;
@@ -153,7 +164,7 @@
             // 
             label_OrbitRange.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             label_OrbitRange.AutoSize = true;
-            label_OrbitRange.Location = new System.Drawing.Point(3, 181);
+            label_OrbitRange.Location = new System.Drawing.Point(-680, 181);
             label_OrbitRange.Name = "label_OrbitRange";
             label_OrbitRange.Size = new System.Drawing.Size(76, 15);
             label_OrbitRange.TabIndex = 49;
@@ -413,38 +424,12 @@
             this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(877, 290);
+            this.LogTextBox.Location = new System.Drawing.Point(683, 308);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
-            this.LogTextBox.Size = new System.Drawing.Size(159, 71);
+            this.LogTextBox.Size = new System.Drawing.Size(159, 53);
             this.LogTextBox.TabIndex = 3;
-            // 
-            // NativeInputRadioButton
-            // 
-            this.NativeInputRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.NativeInputRadioButton.AutoSize = true;
-            this.NativeInputRadioButton.Location = new System.Drawing.Point(912, 243);
-            this.NativeInputRadioButton.Name = "NativeInputRadioButton";
-            this.NativeInputRadioButton.Size = new System.Drawing.Size(65, 19);
-            this.NativeInputRadioButton.TabIndex = 5;
-            this.NativeInputRadioButton.TabStop = true;
-            this.NativeInputRadioButton.Text = "Exterior";
-            this.NativeInputRadioButton.UseVisualStyleBackColor = true;
-            this.NativeInputRadioButton.CheckedChanged += new System.EventHandler(this.NativeInputRadioButton_CheckedChanged);
-            // 
-            // WinFormsInputRadioButton
-            // 
-            this.WinFormsInputRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.WinFormsInputRadioButton.AutoSize = true;
-            this.WinFormsInputRadioButton.Location = new System.Drawing.Point(892, 218);
-            this.WinFormsInputRadioButton.Name = "WinFormsInputRadioButton";
-            this.WinFormsInputRadioButton.Size = new System.Drawing.Size(95, 19);
-            this.WinFormsInputRadioButton.TabIndex = 4;
-            this.WinFormsInputRadioButton.TabStop = true;
-            this.WinFormsInputRadioButton.Text = "Interior Color";
-            this.WinFormsInputRadioButton.UseVisualStyleBackColor = true;
-            this.WinFormsInputRadioButton.CheckedChanged += new System.EventHandler(this.WinFormsInputRadioButton_CheckedChanged);
             // 
             // glControl
             // 
@@ -485,7 +470,7 @@
             // 
             this.label_OrbitTrap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_OrbitTrap.AutoSize = true;
-            this.label_OrbitTrap.Location = new System.Drawing.Point(4, 25);
+            this.label_OrbitTrap.Location = new System.Drawing.Point(-679, 25);
             this.label_OrbitTrap.Name = "label_OrbitTrap";
             this.label_OrbitTrap.Size = new System.Drawing.Size(62, 15);
             this.label_OrbitTrap.TabIndex = 9;
@@ -506,7 +491,7 @@
             // input_BailoutY
             // 
             this.input_BailoutY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_BailoutY.Location = new System.Drawing.Point(115, 126);
+            this.input_BailoutY.Location = new System.Drawing.Point(-568, 126);
             this.input_BailoutY.Name = "input_BailoutY";
             this.input_BailoutY.Size = new System.Drawing.Size(40, 23);
             this.input_BailoutY.TabIndex = 17;
@@ -530,7 +515,7 @@
             "Rectangle",
             "Points",
             "Lines"});
-            this.input_OrbitTrap.Location = new System.Drawing.Point(69, 22);
+            this.input_OrbitTrap.Location = new System.Drawing.Point(-614, 22);
             this.input_OrbitTrap.Name = "input_OrbitTrap";
             this.input_OrbitTrap.Size = new System.Drawing.Size(87, 23);
             this.input_OrbitTrap.TabIndex = 10;
@@ -691,7 +676,7 @@
             // input_Bailout
             // 
             this.input_Bailout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_Bailout.Location = new System.Drawing.Point(116, 48);
+            this.input_Bailout.Location = new System.Drawing.Point(-567, 48);
             this.input_Bailout.Name = "input_Bailout";
             this.input_Bailout.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout.TabIndex = 36;
@@ -732,18 +717,11 @@
             this.panel_FormulaMenu.Size = new System.Drawing.Size(159, 276);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
-            // vScrollBar1
-            // 
-            this.vScrollBar1.Location = new System.Drawing.Point(845, 49);
-            this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(17, 80);
-            this.vScrollBar1.TabIndex = 59;
-            // 
             // label_BailoutTrap
             // 
             this.label_BailoutTrap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_BailoutTrap.AutoSize = true;
-            this.label_BailoutTrap.Location = new System.Drawing.Point(3, 129);
+            this.label_BailoutTrap.Location = new System.Drawing.Point(-680, 129);
             this.label_BailoutTrap.Name = "label_BailoutTrap";
             this.label_BailoutTrap.Size = new System.Drawing.Size(50, 15);
             this.label_BailoutTrap.TabIndex = 39;
@@ -753,7 +731,7 @@
             // input_BailoutX
             // 
             this.input_BailoutX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_BailoutX.Location = new System.Drawing.Point(72, 126);
+            this.input_BailoutX.Location = new System.Drawing.Point(-611, 126);
             this.input_BailoutX.Name = "input_BailoutX";
             this.input_BailoutX.Size = new System.Drawing.Size(40, 23);
             this.input_BailoutX.TabIndex = 38;
@@ -785,7 +763,7 @@
             this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutY);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_Bailout);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrap);
-            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(683, 24);
+            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(518, 24);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
             this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(159, 276);
             this.panel_OrbitTrapMenu.TabIndex = 33;
@@ -794,7 +772,7 @@
             // 
             this.label_OrbitTrapFactors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_OrbitTrapFactors.AutoSize = true;
-            this.label_OrbitTrapFactors.Location = new System.Drawing.Point(3, 206);
+            this.label_OrbitTrapFactors.Location = new System.Drawing.Point(-680, 206);
             this.label_OrbitTrapFactors.Name = "label_OrbitTrapFactors";
             this.label_OrbitTrapFactors.Size = new System.Drawing.Size(51, 15);
             this.label_OrbitTrapFactors.TabIndex = 54;
@@ -814,7 +792,7 @@
             // 
             this.input_StartOrbit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.input_StartOrbit.CausesValidation = false;
-            this.input_StartOrbit.Location = new System.Drawing.Point(90, 152);
+            this.input_StartOrbit.Location = new System.Drawing.Point(-593, 152);
             this.input_StartOrbit.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -838,7 +816,7 @@
             // input_OrbitTrapFactor1
             // 
             this.input_OrbitTrapFactor1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_OrbitTrapFactor1.Location = new System.Drawing.Point(72, 203);
+            this.input_OrbitTrapFactor1.Location = new System.Drawing.Point(-611, 203);
             this.input_OrbitTrapFactor1.Name = "input_OrbitTrapFactor1";
             this.input_OrbitTrapFactor1.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapFactor1.TabIndex = 53;
@@ -852,7 +830,7 @@
             // 
             this.input_EditingBailoutTrap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.input_EditingBailoutTrap.CausesValidation = false;
-            this.input_EditingBailoutTrap.Location = new System.Drawing.Point(91, 100);
+            this.input_EditingBailoutTrap.Location = new System.Drawing.Point(-592, 100);
             this.input_EditingBailoutTrap.Maximum = new decimal(new int[] {
             1,
             0,
@@ -876,7 +854,7 @@
             // input_OrbitTrapFactor2
             // 
             this.input_OrbitTrapFactor2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_OrbitTrapFactor2.Location = new System.Drawing.Point(116, 203);
+            this.input_OrbitTrapFactor2.Location = new System.Drawing.Point(-567, 203);
             this.input_OrbitTrapFactor2.Name = "input_OrbitTrapFactor2";
             this.input_OrbitTrapFactor2.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapFactor2.TabIndex = 52;
@@ -890,7 +868,7 @@
             // 
             this.input_OrbitRange.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.input_OrbitRange.CausesValidation = false;
-            this.input_OrbitRange.Location = new System.Drawing.Point(90, 178);
+            this.input_OrbitRange.Location = new System.Drawing.Point(-593, 178);
             this.input_OrbitRange.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -941,21 +919,11 @@
             this.label1.TabIndex = 35;
             this.label1.Text = "Orbit Trap Menu";
             // 
-            // input_DisableOrbitTrap
-            // 
-            this.input_DisableOrbitTrap.AutoSize = true;
-            this.input_DisableOrbitTrap.Location = new System.Drawing.Point(878, 66);
-            this.input_DisableOrbitTrap.Name = "input_DisableOrbitTrap";
-            this.input_DisableOrbitTrap.Size = new System.Drawing.Size(119, 19);
-            this.input_DisableOrbitTrap.TabIndex = 46;
-            this.input_DisableOrbitTrap.Text = "Disable Orbit Trap";
-            this.input_DisableOrbitTrap.UseVisualStyleBackColor = true;
-            // 
             // label_Texture
             // 
             this.label_Texture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_Texture.AutoSize = true;
-            this.label_Texture.Location = new System.Drawing.Point(878, 44);
+            this.label_Texture.Location = new System.Drawing.Point(4, 213);
             this.label_Texture.Name = "label_Texture";
             this.label_Texture.Size = new System.Drawing.Size(48, 15);
             this.label_Texture.TabIndex = 40;
@@ -965,7 +933,7 @@
             // input_Texture
             // 
             this.input_Texture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_Texture.Location = new System.Drawing.Point(932, 41);
+            this.input_Texture.Location = new System.Drawing.Point(58, 210);
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
@@ -979,29 +947,21 @@
             this.checkBox_LockZoomFactor.TabIndex = 38;
             this.checkBox_LockZoomFactor.Text = "Lock Zoom Factor";
             this.checkBox_LockZoomFactor.UseVisualStyleBackColor = true;
+            this.checkBox_LockZoomFactor.CheckedChanged += new System.EventHandler(this.checkBox_LockZoomFactor_CheckedChanged);
             // 
             // input_ColorCycles
             // 
             this.input_ColorCycles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_ColorCycles.Location = new System.Drawing.Point(990, 128);
+            this.input_ColorCycles.Location = new System.Drawing.Point(69, 77);
             this.input_ColorCycles.Name = "input_ColorCycles";
             this.input_ColorCycles.Size = new System.Drawing.Size(40, 23);
             this.input_ColorCycles.TabIndex = 43;
             this.input_ColorCycles.Text = "0";
             // 
-            // label_ColorCycles
-            // 
-            this.label_ColorCycles.AutoSize = true;
-            this.label_ColorCycles.Location = new System.Drawing.Point(877, 130);
-            this.label_ColorCycles.Name = "label_ColorCycles";
-            this.label_ColorCycles.Size = new System.Drawing.Size(76, 15);
-            this.label_ColorCycles.TabIndex = 42;
-            this.label_ColorCycles.Text = "Color Cycles:";
-            // 
             // input_ColorFactor
             // 
             this.input_ColorFactor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.input_ColorFactor.Location = new System.Drawing.Point(990, 159);
+            this.input_ColorFactor.Location = new System.Drawing.Point(116, 77);
             this.input_ColorFactor.Name = "input_ColorFactor";
             this.input_ColorFactor.Size = new System.Drawing.Size(40, 23);
             this.input_ColorFactor.TabIndex = 45;
@@ -1010,11 +970,11 @@
             // label_ColorFactor
             // 
             this.label_ColorFactor.AutoSize = true;
-            this.label_ColorFactor.Location = new System.Drawing.Point(877, 162);
+            this.label_ColorFactor.Location = new System.Drawing.Point(3, 80);
             this.label_ColorFactor.Name = "label_ColorFactor";
-            this.label_ColorFactor.Size = new System.Drawing.Size(78, 15);
+            this.label_ColorFactor.Size = new System.Drawing.Size(51, 15);
             this.label_ColorFactor.TabIndex = 44;
-            this.label_ColorFactor.Text = "Color Factor: ";
+            this.label_ColorFactor.Text = "Factors: ";
             // 
             // input_Center
             // 
@@ -1040,16 +1000,16 @@
             this.label_Center.Text = "Center:";
             this.label_Center.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label2
+            // label_Zoom
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(204, 346);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 15);
-            this.label2.TabIndex = 58;
-            this.label2.Text = "Zoom: ";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_Zoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_Zoom.AutoSize = true;
+            this.label_Zoom.Location = new System.Drawing.Point(204, 346);
+            this.label_Zoom.Name = "label_Zoom";
+            this.label_Zoom.Size = new System.Drawing.Size(45, 15);
+            this.label_Zoom.TabIndex = 58;
+            this.label_Zoom.Text = "Zoom: ";
+            this.label_Zoom.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // input_Zoom
             // 
@@ -1064,37 +1024,222 @@
             this.input_Zoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_Zoom_Validating);
             this.input_Zoom.Validated += new System.EventHandler(this.input_Zoom_Validated);
             // 
+            // label_TextureBlend
+            // 
+            this.label_TextureBlend.AutoSize = true;
+            this.label_TextureBlend.Location = new System.Drawing.Point(3, 238);
+            this.label_TextureBlend.Name = "label_TextureBlend";
+            this.label_TextureBlend.Size = new System.Drawing.Size(81, 15);
+            this.label_TextureBlend.TabIndex = 59;
+            this.label_TextureBlend.Text = "Texture Blend:";
+            // 
+            // input_TextureBlend
+            // 
+            this.input_TextureBlend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.input_TextureBlend.CausesValidation = false;
+            this.input_TextureBlend.DecimalPlaces = 1;
+            this.input_TextureBlend.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.input_TextureBlend.Location = new System.Drawing.Point(110, 236);
+            this.input_TextureBlend.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.input_TextureBlend.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.input_TextureBlend.Name = "input_TextureBlend";
+            this.input_TextureBlend.Size = new System.Drawing.Size(46, 23);
+            this.input_TextureBlend.TabIndex = 60;
+            this.input_TextureBlend.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            // 
+            // panel_ColorMenu
+            // 
+            this.panel_ColorMenu.Controls.Add(this.textBox1);
+            this.panel_ColorMenu.Controls.Add(this.button_ClearTexture);
+            this.panel_ColorMenu.Controls.Add(this.textBox2);
+            this.panel_ColorMenu.Controls.Add(this.label4);
+            this.panel_ColorMenu.Controls.Add(this.label5);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistanceEstimation);
+            this.panel_ColorMenu.Controls.Add(this.input_TextureBlend);
+            this.panel_ColorMenu.Controls.Add(this.label2);
+            this.panel_ColorMenu.Controls.Add(this.label_ColorMenu);
+            this.panel_ColorMenu.Controls.Add(this.input_Texture);
+            this.panel_ColorMenu.Controls.Add(this.label_TextureBlend);
+            this.panel_ColorMenu.Controls.Add(this.comboBox1);
+            this.panel_ColorMenu.Controls.Add(this.comboBox2);
+            this.panel_ColorMenu.Controls.Add(this.label3);
+            this.panel_ColorMenu.Controls.Add(this.input_ColorCycles);
+            this.panel_ColorMenu.Controls.Add(this.label_ColorFactor);
+            this.panel_ColorMenu.Controls.Add(this.input_ColorFactor);
+            this.panel_ColorMenu.Controls.Add(this.label_Texture);
+            this.panel_ColorMenu.Location = new System.Drawing.Point(683, 24);
+            this.panel_ColorMenu.Name = "panel_ColorMenu";
+            this.panel_ColorMenu.Size = new System.Drawing.Size(159, 276);
+            this.panel_ColorMenu.TabIndex = 61;
+            // 
+            // checkBox_UseDistanceEstimation
+            // 
+            this.checkBox_UseDistanceEstimation.AutoSize = true;
+            this.checkBox_UseDistanceEstimation.Location = new System.Drawing.Point(7, 106);
+            this.checkBox_UseDistanceEstimation.Name = "checkBox_UseDistanceEstimation";
+            this.checkBox_UseDistanceEstimation.Size = new System.Drawing.Size(152, 19);
+            this.checkBox_UseDistanceEstimation.TabIndex = 62;
+            this.checkBox_UseDistanceEstimation.Text = "Use Distance Estimation";
+            this.checkBox_UseDistanceEstimation.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(4, 48);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(56, 15);
+            this.label2.TabIndex = 64;
+            this.label2.Text = "Coloring:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label_ColorMenu
+            // 
+            this.label_ColorMenu.AutoSize = true;
+            this.label_ColorMenu.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_ColorMenu.Location = new System.Drawing.Point(31, 0);
+            this.label_ColorMenu.Name = "label_ColorMenu";
+            this.label_ColorMenu.Size = new System.Drawing.Size(83, 19);
+            this.label_ColorMenu.TabIndex = 62;
+            this.label_ColorMenu.Text = "Color Menu";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox1.CausesValidation = false;
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Black",
+            "White",
+            "Iteration",
+            "Smooth",
+            "Domain 1",
+            "Domain 2",
+            "Domain 3",
+            "Domain 4",
+            "Domain 5",
+            "Domain 6",
+            "Domain 7"});
+            this.comboBox1.Location = new System.Drawing.Point(69, 48);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(87, 23);
+            this.comboBox1.TabIndex = 65;
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox2.CausesValidation = false;
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "Mandelbrot",
+            "Julia",
+            "Julia Mating"});
+            this.comboBox2.Location = new System.Drawing.Point(69, 22);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(87, 23);
+            this.comboBox2.TabIndex = 63;
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(4, 25);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(47, 15);
+            this.label3.TabIndex = 62;
+            this.label3.Text = "Editing:";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(110, 126);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(46, 23);
+            this.textBox1.TabIndex = 66;
+            this.textBox1.Text = "2";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox2.Location = new System.Drawing.Point(110, 152);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(46, 23);
+            this.textBox2.TabIndex = 68;
+            this.textBox2.Text = "1";
+            // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 129);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(84, 15);
+            this.label4.TabIndex = 67;
+            this.label4.Text = "Max Distance: ";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(4, 155);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(106, 15);
+            this.label5.TabIndex = 69;
+            this.label5.Text = "Distance Fineness: ";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // button_ClearTexture
+            // 
+            this.button_ClearTexture.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_ClearTexture.Location = new System.Drawing.Point(31, 181);
+            this.button_ClearTexture.Name = "button_ClearTexture";
+            this.button_ClearTexture.Size = new System.Drawing.Size(108, 25);
+            this.button_ClearTexture.TabIndex = 62;
+            this.button_ClearTexture.Text = "Clear Texture";
+            this.button_ClearTexture.UseVisualStyleBackColor = true;
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1078, 374);
-            this.Controls.Add(this.vScrollBar1);
-            this.Controls.Add(this.input_DisableOrbitTrap);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.glControl);
+            this.Controls.Add(this.label_Zoom);
             this.Controls.Add(this.input_Zoom);
             this.Controls.Add(this.label_Center);
             this.Controls.Add(this.input_Center);
-            this.Controls.Add(this.label_Texture);
-            this.Controls.Add(this.input_ColorFactor);
-            this.Controls.Add(this.label_ColorFactor);
-            this.Controls.Add(this.input_ColorCycles);
             this.Controls.Add(this.checkBox_LockZoomFactor);
-            this.Controls.Add(this.input_Texture);
-            this.Controls.Add(this.label_ColorCycles);
-            this.Controls.Add(this.WinFormsInputRadioButton);
-            this.Controls.Add(this.NativeInputRadioButton);
             this.Controls.Add(this.LogTextBox);
-            this.Controls.Add(this.glControl);
-            this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.panel_FormulaMenu);
-            this.Controls.Add(this.panel_OrbitTrapMenu);
             this.Controls.Add(this.button_Menu1);
             this.Controls.Add(this.button_Menu2);
             this.Controls.Add(this.button_Menu3);
             this.Controls.Add(this.button_Menu4);
             this.Controls.Add(this.button_Left);
             this.Controls.Add(this.button_Right);
+            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.panel_FormulaMenu);
+            this.Controls.Add(this.panel_OrbitTrapMenu);
+            this.Controls.Add(this.panel_ColorMenu);
             this.MinimumSize = new System.Drawing.Size(705, 413);
             this.Name = "MainDlg";
             this.Text = "GLControl Input Test";
@@ -1109,6 +1254,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_EditingBailoutTrap)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_OrbitRange)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).EndInit();
+            this.panel_ColorMenu.ResumeLayout(false);
+            this.panel_ColorMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1147,8 +1295,6 @@
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.Label label_Bailout1X;
         private System.Windows.Forms.TextBox LogTextBox;
-        private System.Windows.Forms.RadioButton NativeInputRadioButton;
-        private System.Windows.Forms.RadioButton WinFormsInputRadioButton;
         private OpenTK.WinForms.GLControl glControl;
         private System.Windows.Forms.Button button_Left;
         private System.Windows.Forms.Button button_Right;
@@ -1182,10 +1328,8 @@
         private System.Windows.Forms.Button button_RemoveBailoutTrap;
         private System.Windows.Forms.Button button_AddBailoutTrap;
         private System.Windows.Forms.TextBox input_ColorCycles;
-        private System.Windows.Forms.Label label_ColorCycles;
         private System.Windows.Forms.TextBox input_ColorFactor;
         private System.Windows.Forms.Label label_ColorFactor;
-        private System.Windows.Forms.CheckBox input_DisableOrbitTrap;
         private System.Windows.Forms.NumericUpDown input_StartOrbit;
         private System.Windows.Forms.NumericUpDown input_EditingBailoutTrap;
         private System.Windows.Forms.NumericUpDown input_OrbitRange;
@@ -1195,9 +1339,22 @@
         private System.Windows.Forms.TextBox input_OrbitTrapFactor2;
         private System.Windows.Forms.TextBox input_Center;
         private System.Windows.Forms.Label label_Center;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label_Zoom;
         private System.Windows.Forms.TextBox input_Zoom;
-        private System.Windows.Forms.VScrollBar vScrollBar1;
+        private System.Windows.Forms.Label label_TextureBlend;
+        private System.Windows.Forms.NumericUpDown input_TextureBlend;
+        private System.Windows.Forms.Panel panel_ColorMenu;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label_ColorMenu;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox checkBox_UseDistanceEstimation;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button_ClearTexture;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }
 

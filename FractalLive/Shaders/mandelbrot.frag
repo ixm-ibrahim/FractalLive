@@ -16,7 +16,8 @@ out vec4 FragColor;
 in vec2 FragPos;
 in vec2 TexCoords;
 
-uniform float zoom;
+//uniform float zoom;
+uniform float lockedZoom;
 
 uniform int maxIterations;
 
@@ -35,8 +36,7 @@ uniform vec4[16] bailoutLines;
 uniform int bailoutLinesCount;
 
 vec3 Mandelbrot();
-vec2 MandelbrotLoop(vec2 c, int maxIteration, inout int iter, inout float trap);
-vec2 MandelbrotDistanceLoop(vec2 c, int maxIteration, inout int iter);
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout float trap);
 
 void main()
 {
@@ -55,7 +55,7 @@ vec3 Mandelbrot()
     float trap = 1e99;
 	vec2 z;
     
-    z = MandelbrotLoop(FragPos, maxIterations, iter, trap);
+    z = MandelbrotLoop(FragPos,iter, trap);
 
 	//if (iter >= maxIterations)
 		//return vec3(1.0);
@@ -70,7 +70,7 @@ vec3 Mandelbrot()
 	return vec3(sqrt(float(iter)/maxIterations));
 }
 
-vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout float trap)
 {
 	vec2 z = vec2(0);
     trap = 1e20;
@@ -82,7 +82,7 @@ vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
         trap = GetOrbitTrap(z, iter, trap);
 	}
     
-    trap = clamp(pow( trap*pow(2,zoom), bailoutFactor1 ), 0.0, 1.0); // control 1
+    trap = clamp(pow( trap*pow(2,lockedZoom), bailoutFactor1 ), 0.0, 1.0); // control 1
     //trap = clamp(pow( trap*zoom, 0.25 ), 0.0, 1.0); // control 1
     //trap = clamp(pow( trap, 0.25 ), 0.0, 1.0)*pow(2,zoom); // control 1
     trap = 1.0 / (1.0 + exp(-bailoutFactor2 * (trap - 0.5)));  // control 2

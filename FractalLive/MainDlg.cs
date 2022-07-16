@@ -152,7 +152,8 @@ namespace FractalLive
             shader.SetMatrix4("model", Matrix4.Identity);
 
             shader.SetBool("is3D", camera.Is3D());
-            shader.SetDouble("zoom", fractalSettings.Zoom.Value);
+            shader.SetDouble("zoom", fractalSettings.Zoom);
+            shader.SetDouble("lockedZoom", fractalSettings.LockedZoom);
             shader.SetFloat("initialRadius", fractalSettings.InitialDisplayRadius.Value);
             shader.SetFloat("normalizedCoordsWidth", (float)glControl.Width / Math.Max(minGLWidth, minGLHeight));
             shader.SetFloat("normalizedCoordsHeight", (float)glControl.Height / Math.Max(minGLWidth, minGLHeight));
@@ -209,14 +210,15 @@ namespace FractalLive
             mandelbrotCamera = new Camera();
 
             // Default values
-            NativeInputRadioButton.Checked = false;
             input_FractalType.SelectedIndex = (int)CurrentSettings.Type;
             input_FractalFormula.SelectedIndex = (int)CurrentSettings.Formula;
             input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
             input_OrbitTrap.SelectedIndex = 0;
-            input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Value;
+            //input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Value;
+            input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Maximum;
             input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;
-            input_OrbitRange.Maximum = input_OrbitRange.Value;
+            input_OrbitRange.Maximum = CurrentSettings.MaxIterations.Maximum;
+            //input_OrbitRange.Maximum = input_OrbitRange.Value;
             input_OrbitTrap_SelectionChangeCommitted(null, null);
 
             // Callbacks
@@ -425,6 +427,7 @@ namespace FractalLive
             }
 
             // update controls
+            Log(CurrentSettings.MaxIterations.Value + " - " + input_MaxIterations.Value);
 
             // update fractal
             Render();
@@ -469,7 +472,7 @@ namespace FractalLive
                 {
                     float rad = MathHelper.DegreesToRadians(CurrentCamera.Roll);
                     float rad90 = rad + MathHelper.Pi / 2;
-                    float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2, CurrentSettings.Zoom.Value);
+                    float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2, CurrentSettings.Zoom);
 
                     CurrentSettings.Center += new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad)) * (float)deltaX * factor;
                     CurrentSettings.Center -= new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90)) * (float)deltaY * factor;
@@ -496,12 +499,15 @@ namespace FractalLive
             Vector2 aspectRatio = new Vector2(glControl.Width, -glControl.Height) / Math.Max(minGLWidth, minGLHeight);
             Vector2 offset = normalizedMousePos * CurrentSettings.InitialDisplayRadius.Value * aspectRatio;
 
-            Vector2 mousePos = CurrentSettings.Center + (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom.Value);
+            Vector2 mousePos = CurrentSettings.Center + (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
             CurrentSettings.Zoom += scrollOffset * CurrentCamera.CurrentZoomSpeed;
-            CurrentSettings.Center = mousePos - (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom.Value);
+            CurrentSettings.Center = mousePos - (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
 
             input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
-            input_Zoom.Text = CurrentSettings.Zoom.Value.ToString();
+            input_Zoom.Text = CurrentSettings.Zoom.ToString();
+
+            if (!checkBox_LockZoomFactor.Checked)
+                CurrentSettings.LockedZoom = CurrentSettings.Zoom;
         }
 
         private void glControl_KeyDown(object? sender, KeyEventArgs e)
@@ -640,14 +646,14 @@ namespace FractalLive
         private void input_MaxIterations_ValueChanged(object sender, EventArgs e)
         {
             CurrentSettings.MaxIterations.SetValue((int)input_MaxIterations.Value);
-
+            /*
             input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Value;
             if (input_StartOrbit.Value > CurrentSettings.MaxIterations.Value)
                 input_StartOrbit.Value = CurrentSettings.MaxIterations.Value;
 
             input_OrbitRange.Maximum = CurrentSettings.MaxIterations.Value;
             if (input_OrbitRange.Value > CurrentSettings.MaxIterations.Value)
-                input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;
+                input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;*/
         }
 
         private void input_StartOrbit_ValueChanged(object sender, EventArgs e)
@@ -831,6 +837,12 @@ namespace FractalLive
             input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
         }
 
+        private void checkBox_LockZoomFactor_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBox_LockZoomFactor.Checked)
+                CurrentSettings.LockedZoom = CurrentSettings.Zoom;
+        }
+
         private void input_Zoom_KeyPress(object sender, KeyPressEventArgs e)
         {
             // only allow numbers, period, negative symbol, and backspace
@@ -848,8 +860,11 @@ namespace FractalLive
         }
         private void input_Zoom_Validated(object sender, EventArgs e)
         {
-            CurrentSettings.Zoom.Value = float.Parse(input_Zoom.Text);
-            input_Zoom.Text = CurrentSettings.Zoom.Value.ToString(); // in case number gets restricted by bounds
+            CurrentSettings.Zoom = float.Parse(input_Zoom.Text);
+            input_Zoom.Text = CurrentSettings.Zoom.ToString(); // in case number gets restricted by bounds
+
+            if (!checkBox_LockZoomFactor.Checked)
+                CurrentSettings.LockedZoom = CurrentSettings.Zoom;
         }
 
         private void input_Bailout_KeyPress(object sender, KeyPressEventArgs e)

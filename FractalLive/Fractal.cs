@@ -27,7 +27,7 @@ namespace FractalLive
 
         public enum Coloring
         {
-            Custom, Black, White, Classic, Smooth, Domain_A, Domain_B, Domain_C, Domain_D, Domain_E, Domain_F, Domain_G, COUNT
+            Custom, Black, White, Classic, Smooth, Domain_1, Domain_2, Domain_3, Domain_4, Domain_5, Domain_6, Domain_7, COUNT
         }
 
         public enum OrbitTrap
@@ -68,7 +68,8 @@ namespace FractalLive
                 MaxOrbitDistance = new FloatBounds(100, 0, (float)maxVal);
                 Power = 2;
                 TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
-                Zoom = new FloatBounds(0, (float)-maxVal, (float)maxVal);
+                Zoom = 0;
+                LockedZoom = 0;
                 Center = new Vector2(0, 0);
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating = new Vector2(0.285f, 0.01f);
@@ -147,7 +148,8 @@ namespace FractalLive
             public FloatBounds MaxOrbitDistance;
             public float Power;
             public FloatBounds TerrainHeight;
-            public FloatBounds Zoom;
+            public float Zoom;
+            public float LockedZoom;
             public Vector2 BailoutRectangle;
             public Vector2 Center;
             public Vector2 Julia;

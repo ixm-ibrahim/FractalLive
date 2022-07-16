@@ -23,3 +23,8 @@ minimize calls to GL.Uniform
 load and save settings
 focus glcontrol after each winforms input
 consolidate input textboxes
+button to cycle colors/orbit traps/etc.
+custom color palette
+buddhabrot menu 1
+lighting menu
+maximum orbit trap distance
