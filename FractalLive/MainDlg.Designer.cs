@@ -32,7 +32,7 @@
             System.Windows.Forms.Label label_StartOrbit;
             System.Windows.Forms.Label label_OrbitRange;
             System.Windows.Forms.Label label_TextureBlend;
-            System.Windows.Forms.Label label_MaxDistance;
+            System.Windows.Forms.Label label_StartDistance;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainDlg));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,7 +95,7 @@
             this.label_OrbitTrapPosition = new System.Windows.Forms.Label();
             this.input_BailoutX = new System.Windows.Forms.TextBox();
             this.panel_OrbitTrapMenu = new System.Windows.Forms.Panel();
-            this.input_MaxDistance = new System.Windows.Forms.TextBox();
+            this.input_StartDistance = new System.Windows.Forms.TextBox();
             this.label_OrbitTrapCalculation = new System.Windows.Forms.Label();
             this.input_OrbitTrapCalculation = new System.Windows.Forms.ComboBox();
             this.label_OrbitTrapFactors = new System.Windows.Forms.Label();
@@ -107,7 +107,7 @@
             this.input_OrbitRange = new System.Windows.Forms.NumericUpDown();
             this.button_RemoveBailoutTrap = new System.Windows.Forms.Button();
             this.button_AddBailoutTrap = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.label_OrbitTrapMenu = new System.Windows.Forms.Label();
             this.label_Texture = new System.Windows.Forms.Label();
             this.input_Texture = new System.Windows.Forms.TextBox();
             this.checkBox_LockZoomFactor = new System.Windows.Forms.CheckBox();
@@ -138,7 +138,7 @@
             this.label_DistanceEstimationFineness = new System.Windows.Forms.Label();
             this.checkBox_UseDistanceEstimation = new System.Windows.Forms.CheckBox();
             this.label_Coloring = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.label_ColorMenu = new System.Windows.Forms.Label();
             this.input_Coloring = new System.Windows.Forms.ComboBox();
             this.input_EditingColor = new System.Windows.Forms.ComboBox();
             this.label_EditingColor = new System.Windows.Forms.Label();
@@ -148,7 +148,7 @@
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
             label_TextureBlend = new System.Windows.Forms.Label();
-            label_MaxDistance = new System.Windows.Forms.Label();
+            label_StartDistance = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).BeginInit();
             this.panel_FormulaMenu.SuspendLayout();
@@ -200,15 +200,15 @@
             label_TextureBlend.Text = "Texture Blend:*";
             label_TextureBlend.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label_MaxDistance
+            // label_StartDistance
             // 
-            label_MaxDistance.AutoSize = true;
-            label_MaxDistance.Location = new System.Drawing.Point(3, 169);
-            label_MaxDistance.Name = "label_MaxDistance";
-            label_MaxDistance.Size = new System.Drawing.Size(86, 15);
-            label_MaxDistance.TabIndex = 57;
-            label_MaxDistance.Text = "Max Distance:*";
-            label_MaxDistance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            label_StartDistance.AutoSize = true;
+            label_StartDistance.Location = new System.Drawing.Point(3, 169);
+            label_StartDistance.Name = "label_StartDistance";
+            label_StartDistance.Size = new System.Drawing.Size(87, 15);
+            label_StartDistance.TabIndex = 57;
+            label_StartDistance.Text = "Start Distance:*";
+            label_StartDistance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // menuStrip1
             // 
@@ -520,7 +520,7 @@
             // label_Formula
             // 
             this.label_Formula.AutoSize = true;
-            this.label_Formula.Location = new System.Drawing.Point(3, 56);
+            this.label_Formula.Location = new System.Drawing.Point(3, 30);
             this.label_Formula.Name = "label_Formula";
             this.label_Formula.Size = new System.Drawing.Size(54, 15);
             this.label_Formula.TabIndex = 20;
@@ -534,7 +534,7 @@
             this.input_BailoutY.Size = new System.Drawing.Size(40, 23);
             this.input_BailoutY.TabIndex = 17;
             this.input_BailoutY.Text = "0";
-            this.input_BailoutY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_BailoutY_KeyDown);
+            this.input_BailoutY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             this.input_BailoutY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_BailoutY_KeyPress);
             this.input_BailoutY.Validating += new System.ComponentModel.CancelEventHandler(this.input_BailoutY_Validating);
             this.input_BailoutY.Validated += new System.EventHandler(this.input_BailoutY_Validated);
@@ -564,9 +564,9 @@
             this.input_FractalFormula.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.input_FractalFormula.FormattingEnabled = true;
             this.input_FractalFormula.Items.AddRange(new object[] {
-            "Classic",
+            "Mandelbrot",
             "Lambda"});
-            this.input_FractalFormula.Location = new System.Drawing.Point(68, 53);
+            this.input_FractalFormula.Location = new System.Drawing.Point(68, 27);
             this.input_FractalFormula.Name = "input_FractalFormula";
             this.input_FractalFormula.Size = new System.Drawing.Size(87, 23);
             this.input_FractalFormula.TabIndex = 21;
@@ -577,10 +577,10 @@
             this.input_FractalType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.input_FractalType.FormattingEnabled = true;
             this.input_FractalType.Items.AddRange(new object[] {
-            "Mandelbrot",
+            "Classic",
             "Julia",
             "Julia Mating"});
-            this.input_FractalType.Location = new System.Drawing.Point(68, 27);
+            this.input_FractalType.Location = new System.Drawing.Point(68, 53);
             this.input_FractalType.Name = "input_FractalType";
             this.input_FractalType.Size = new System.Drawing.Size(87, 23);
             this.input_FractalType.TabIndex = 19;
@@ -592,11 +592,12 @@
             this.input_Power.Size = new System.Drawing.Size(84, 23);
             this.input_Power.TabIndex = 28;
             this.input_Power.Text = "2";
+            this.input_Power.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             // 
             // label_FractalType
             // 
             this.label_FractalType.AutoSize = true;
-            this.label_FractalType.Location = new System.Drawing.Point(3, 30);
+            this.label_FractalType.Location = new System.Drawing.Point(3, 56);
             this.label_FractalType.Name = "label_FractalType";
             this.label_FractalType.Size = new System.Drawing.Size(45, 15);
             this.label_FractalType.TabIndex = 18;
@@ -620,6 +621,7 @@
             this.input_CPower.Size = new System.Drawing.Size(84, 23);
             this.input_CPower.TabIndex = 30;
             this.input_CPower.Text = "1";
+            this.input_CPower.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             // 
             // label_CPower
             // 
@@ -649,6 +651,7 @@
             0,
             0});
             this.input_MaxIterations.ValueChanged += new System.EventHandler(this.input_MaxIterations_ValueChanged);
+            this.input_MaxIterations.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             // 
             // button_Menu1
             // 
@@ -712,7 +715,7 @@
             this.input_Bailout.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout.TabIndex = 36;
             this.input_Bailout.Text = "0";
-            this.input_Bailout.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_Bailout_KeyDown);
+            this.input_Bailout.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             this.input_Bailout.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Bailout_KeyPress);
             this.input_Bailout.Validating += new System.ComponentModel.CancelEventHandler(this.input_Bailout_Validating);
             this.input_Bailout.Validated += new System.EventHandler(this.input_Bailout_Validated);
@@ -806,7 +809,7 @@
             this.input_BailoutX.Size = new System.Drawing.Size(40, 23);
             this.input_BailoutX.TabIndex = 38;
             this.input_BailoutX.Text = "0";
-            this.input_BailoutX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_BailoutX_KeyDown);
+            this.input_BailoutX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             this.input_BailoutX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_BailoutX_KeyPress);
             this.input_BailoutX.Validating += new System.ComponentModel.CancelEventHandler(this.input_BailoutX_Validating);
             this.input_BailoutX.Validated += new System.EventHandler(this.input_BailoutX_Validated);
@@ -816,8 +819,8 @@
             this.panel_OrbitTrapMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_OrbitTrapMenu.AutoScroll = true;
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_MaxDistance);
-            this.panel_OrbitTrapMenu.Controls.Add(label_MaxDistance);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_StartDistance);
+            this.panel_OrbitTrapMenu.Controls.Add(label_StartDistance);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapCalculation);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrapCalculation);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapFactors);
@@ -833,7 +836,7 @@
             this.panel_OrbitTrapMenu.Controls.Add(this.button_AddBailoutTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapPosition);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutX);
-            this.panel_OrbitTrapMenu.Controls.Add(this.label1);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapMenu);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_Bailout);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutY);
@@ -845,13 +848,17 @@
             this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 398);
             this.panel_OrbitTrapMenu.TabIndex = 33;
             // 
-            // input_MaxDistance
+            // input_StartDistance
             // 
-            this.input_MaxDistance.Location = new System.Drawing.Point(92, 166);
-            this.input_MaxDistance.Name = "input_MaxDistance";
-            this.input_MaxDistance.Size = new System.Drawing.Size(64, 23);
-            this.input_MaxDistance.TabIndex = 58;
-            this.input_MaxDistance.Text = "1e20";
+            this.input_StartDistance.Location = new System.Drawing.Point(92, 166);
+            this.input_StartDistance.Name = "input_StartDistance";
+            this.input_StartDistance.Size = new System.Drawing.Size(64, 23);
+            this.input_StartDistance.TabIndex = 58;
+            this.input_StartDistance.Text = "2";
+            this.input_StartDistance.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_StartDistance.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_StartDistance_KeyPress);
+            this.input_StartDistance.Validating += new System.ComponentModel.CancelEventHandler(this.input_StartDistance_Validating);
+            this.input_StartDistance.Validated += new System.EventHandler(this.input_StartDistance_Validated);
             // 
             // label_OrbitTrapCalculation
             // 
@@ -921,6 +928,7 @@
             0,
             0});
             this.input_StartOrbit.ValueChanged += new System.EventHandler(this.input_StartOrbit_ValueChanged);
+            this.input_StartOrbit.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             // 
             // input_OrbitTrapBlendingFactor
             // 
@@ -929,7 +937,7 @@
             this.input_OrbitTrapBlendingFactor.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapBlendingFactor.TabIndex = 53;
             this.input_OrbitTrapBlendingFactor.Text = "0.25";
-            this.input_OrbitTrapBlendingFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_OrbitTrapFactor1_KeyDown);
+            this.input_OrbitTrapBlendingFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             this.input_OrbitTrapBlendingFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_OrbitTrapFactor1_KeyPress);
             this.input_OrbitTrapBlendingFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor1_Validating);
             this.input_OrbitTrapBlendingFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor1_Validated);
@@ -957,6 +965,7 @@
             0,
             0});
             this.input_EditingBailoutTrap.ValueChanged += new System.EventHandler(this.input_EditingBailoutTrap_ValueChanged);
+            this.input_EditingBailoutTrap.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             // 
             // input_OrbitTrapThicknessFactor
             // 
@@ -965,7 +974,7 @@
             this.input_OrbitTrapThicknessFactor.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapThicknessFactor.TabIndex = 52;
             this.input_OrbitTrapThicknessFactor.Text = "7";
-            this.input_OrbitTrapThicknessFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_OrbitTrapFactor2_KeyDown);
+            this.input_OrbitTrapThicknessFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             this.input_OrbitTrapThicknessFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_OrbitTrapFactor2_KeyPress);
             this.input_OrbitTrapThicknessFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor2_Validating);
             this.input_OrbitTrapThicknessFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor2_Validated);
@@ -993,6 +1002,7 @@
             0,
             0});
             this.input_OrbitRange.ValueChanged += new System.EventHandler(this.input_OrbitRange_ValueChanged);
+            this.input_OrbitRange.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             // 
             // button_RemoveBailoutTrap
             // 
@@ -1014,15 +1024,15 @@
             this.button_AddBailoutTrap.UseVisualStyleBackColor = true;
             this.button_AddBailoutTrap.Click += new System.EventHandler(this.button_AddBailoutTrap_Click);
             // 
-            // label1
+            // label_OrbitTrapMenu
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(22, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(113, 19);
-            this.label1.TabIndex = 35;
-            this.label1.Text = "Orbit Trap Menu";
+            this.label_OrbitTrapMenu.AutoSize = true;
+            this.label_OrbitTrapMenu.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_OrbitTrapMenu.Location = new System.Drawing.Point(22, 0);
+            this.label_OrbitTrapMenu.Name = "label_OrbitTrapMenu";
+            this.label_OrbitTrapMenu.Size = new System.Drawing.Size(113, 19);
+            this.label_OrbitTrapMenu.TabIndex = 35;
+            this.label_OrbitTrapMenu.Text = "Orbit Trap Menu";
             // 
             // label_Texture
             // 
@@ -1040,6 +1050,7 @@
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
+            this.input_Texture.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             // 
             // checkBox_LockZoomFactor
             // 
@@ -1060,7 +1071,7 @@
             this.input_ColorCycles.Size = new System.Drawing.Size(40, 23);
             this.input_ColorCycles.TabIndex = 43;
             this.input_ColorCycles.Text = "1";
-            this.input_ColorCycles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_ColorCycles_KeyDown);
+            this.input_ColorCycles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             this.input_ColorCycles.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_ColorCycles_KeyPress);
             this.input_ColorCycles.Validating += new System.ComponentModel.CancelEventHandler(this.input_ColorCycles_Validating);
             this.input_ColorCycles.Validated += new System.EventHandler(this.input_ColorCycles_Validated);
@@ -1081,7 +1092,7 @@
             this.input_ColorFactor.Size = new System.Drawing.Size(40, 23);
             this.input_ColorFactor.TabIndex = 45;
             this.input_ColorFactor.Text = "6";
-            this.input_ColorFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_ColorFactor_KeyDown);
+            this.input_ColorFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             this.input_ColorFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_ColorFactor_KeyPress);
             this.input_ColorFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_ColorFactor_Validating);
             this.input_ColorFactor.Validated += new System.EventHandler(this.input_ColorFactor_Validated);
@@ -1094,7 +1105,7 @@
             this.input_Center.Size = new System.Drawing.Size(141, 23);
             this.input_Center.TabIndex = 55;
             this.input_Center.Text = "0, 0";
-            this.input_Center.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_Center_KeyDown);
+            this.input_Center.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             this.input_Center.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Center_KeyPress);
             this.input_Center.Validating += new System.ComponentModel.CancelEventHandler(this.input_Center_Validating);
             this.input_Center.Validated += new System.EventHandler(this.input_Center_Validated);
@@ -1129,7 +1140,7 @@
             this.input_Zoom.Size = new System.Drawing.Size(52, 23);
             this.input_Zoom.TabIndex = 57;
             this.input_Zoom.Text = "0";
-            this.input_Zoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_Zoom_KeyDown);
+            this.input_Zoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             this.input_Zoom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Zoom_KeyPress);
             this.input_Zoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_Zoom_Validating);
             this.input_Zoom.Validated += new System.EventHandler(this.input_Zoom_Validated);
@@ -1160,7 +1171,7 @@
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistanceEstimation);
             this.panel_ColorMenu.Controls.Add(this.label_Texture);
             this.panel_ColorMenu.Controls.Add(this.label_Coloring);
-            this.panel_ColorMenu.Controls.Add(this.label3);
+            this.panel_ColorMenu.Controls.Add(this.label_ColorMenu);
             this.panel_ColorMenu.Controls.Add(this.input_Texture);
             this.panel_ColorMenu.Controls.Add(this.input_Coloring);
             this.panel_ColorMenu.Controls.Add(this.input_EditingColor);
@@ -1298,7 +1309,7 @@
             this.input_OrbitTrapFactor.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapFactor.TabIndex = 74;
             this.input_OrbitTrapFactor.Text = "10";
-            this.input_OrbitTrapFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_OrbitTrapFactor_KeyDown);
+            this.input_OrbitTrapFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             this.input_OrbitTrapFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_OrbitTrapFactor_KeyPress);
             this.input_OrbitTrapFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor_Validating);
             this.input_OrbitTrapFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor_Validated);
@@ -1331,6 +1342,7 @@
             0,
             0,
             65536});
+            this.input_TextureBlend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             // 
             // button_ClearTexture
             // 
@@ -1349,6 +1361,7 @@
             this.input_MaxDistanceEstimation.Size = new System.Drawing.Size(40, 23);
             this.input_MaxDistanceEstimation.TabIndex = 65;
             this.input_MaxDistanceEstimation.Text = "2";
+            this.input_MaxDistanceEstimation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             // 
             // input_DistanceEstimationFactor
             // 
@@ -1357,6 +1370,7 @@
             this.input_DistanceEstimationFactor.Size = new System.Drawing.Size(40, 23);
             this.input_DistanceEstimationFactor.TabIndex = 67;
             this.input_DistanceEstimationFactor.Text = "1";
+            this.input_DistanceEstimationFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             // 
             // label_DistanceEstimationMax
             // 
@@ -1398,15 +1412,15 @@
             this.label_Coloring.Text = "Coloring:";
             this.label_Coloring.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label3
+            // label_ColorMenu
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(30, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(83, 19);
-            this.label3.TabIndex = 60;
-            this.label3.Text = "Color Menu";
+            this.label_ColorMenu.AutoSize = true;
+            this.label_ColorMenu.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_ColorMenu.Location = new System.Drawing.Point(30, 0);
+            this.label_ColorMenu.Name = "label_ColorMenu";
+            this.label_ColorMenu.Size = new System.Drawing.Size(83, 19);
+            this.label_ColorMenu.TabIndex = 60;
+            this.label_ColorMenu.Text = "Color Menu";
             // 
             // input_Coloring
             // 
@@ -1470,7 +1484,7 @@
             this.input_LockedZoom.Size = new System.Drawing.Size(52, 23);
             this.input_LockedZoom.TabIndex = 60;
             this.input_LockedZoom.Text = "0";
-            this.input_LockedZoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_LockedZoom_KeyDown);
+            this.input_LockedZoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
             this.input_LockedZoom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_LockedZoom_KeyPress);
             this.input_LockedZoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_LockedZoom_Validating);
             this.input_LockedZoom.Validated += new System.EventHandler(this.input_LockedZoom_Validated);
@@ -1579,7 +1593,7 @@
         private System.Windows.Forms.TextBox input_BailoutX;
         private System.Windows.Forms.Label label_OrbitTrapPosition;
         private System.Windows.Forms.Panel panel_OrbitTrapMenu;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label_OrbitTrapMenu;
         private System.Windows.Forms.Label label_Texture;
         private System.Windows.Forms.TextBox input_Texture;
         private System.Windows.Forms.CheckBox checkBox_LockZoomFactor;
@@ -1600,7 +1614,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox input_Zoom;
         private System.Windows.Forms.Panel panel_ColorMenu;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label_ColorMenu;
         private System.Windows.Forms.Label label_Coloring;
         private System.Windows.Forms.ComboBox input_Coloring;
         private System.Windows.Forms.ComboBox input_EditingColor;
@@ -1624,7 +1638,7 @@
         private System.Windows.Forms.Button button_Color2;
         private System.Windows.Forms.Label label_OrbitTrapCalculation;
         private System.Windows.Forms.ComboBox input_OrbitTrapCalculation;
-        private System.Windows.Forms.TextBox input_MaxDistance;
+        private System.Windows.Forms.TextBox input_StartDistance;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox input_DomainOrbit;
         private System.Windows.Forms.Label label_BuddhabrotType;

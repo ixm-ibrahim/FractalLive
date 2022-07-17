@@ -37,15 +37,16 @@ uniform float power;
 
 uniform int orbitTrap;
 uniform float bailout;
-uniform float bailoutFactor1;
-uniform float bailoutFactor2;
-uniform int startOrbit;
-uniform int orbitRange;
 uniform vec2 bailoutRectangle;
 uniform vec2[16] bailoutPoints;
 uniform int bailoutPointsCount;
 uniform vec4[16] bailoutLines;
 uniform int bailoutLinesCount;
+uniform float startOrbitDistance;
+uniform int startOrbit;
+uniform int orbitRange;
+uniform float bailoutFactor1;
+uniform float bailoutFactor2;
 
 uniform bool splitInteriorExterior;
 uniform int coloring;
@@ -105,7 +106,7 @@ vec3 Mandelbrot()
 vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
 {
 	vec2 z = vec2(0);
-    trap = 1e20;
+    trap = startOrbitDistance;
     //trap = length(c);
 	for (iter = 0; iter < maxIterations && IsBounded(z); ++iter)
 	{
@@ -115,10 +116,7 @@ vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
 	}
     
     trap = clamp(pow( trap*pow(2,lockedZoom), bailoutFactor1 ), 0.0, 1.0); // control 1
-    //trap = clamp(pow( trap*zoom, 0.25 ), 0.0, 1.0); // control 1
-    //trap = clamp(pow( trap, 0.25 ), 0.0, 1.0)*pow(2,zoom); // control 1
     trap = sigmoid(trap, bailoutFactor2);  // control 2
-    //trap = bailoutFactor2 / (1.0 + exp(-7 * (trap - 0.5)));  // control 2
 
 	return z;
 }

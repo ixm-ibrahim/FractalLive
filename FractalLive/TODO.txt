@@ -21,14 +21,9 @@ adjustable zoom factor
 minimize calls to GL.Uniform
 load and save settings
 focus glcontrol after each winforms input
-consolidate input textboxes (get rid of keydown)
-locked zoom box
-buddhabrot in menu 1
 lighting menu
-key for cycling orbit traps/colorings
-deal with interior colorings that wont work
 normal maps in lighting menu
-bug where update is called after glcontrol is disposed
+key for cycling orbit traps/colorings (+/- ?)
+deal with interior colorings that wont work
 test max float value
-blend texture with coloring
-enter key press for numericupdowns
+investigate behavior when bailout is between 0 and 1

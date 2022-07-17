@@ -70,7 +70,6 @@ namespace FractalLive
                 FoldAngle = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 FoldCount = new IntBounds(0, 0, 100);
                 MaxIterations = new IntBounds(100, 1, 9999);
-                MaxOrbitDistance = new FloatBounds(100, 0, (float)maxVal);
                 Power = 2;
                 TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 Zoom = 0;
@@ -79,13 +78,9 @@ namespace FractalLive
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating = new Vector2(0.285f, 0.01f);
                 FoldOffset = new Vector4(0,0,0,0);
-                //BailoutLine = new Vector4(-8,-9.5f,-2,-3);
+
                 OrbitTrap = OrbitTrap.Circle;
-                StartOrbit = new IntBounds(1, 1, 9999);
-                OrbitRange = new IntBounds(MaxIterations.Value, 1, 9999);
                 Bailout = 2;
-                BailoutFactor1 = 0.25f;
-                BailoutFactor2 = 7;
                 BailoutRectangle = new Vector2(2,2);
                 BailoutPoints = new Vector2[16];
                 BailoutPoints[0] = Vector2.Zero;
@@ -93,7 +88,13 @@ namespace FractalLive
                 BailoutLines = new Vector4[16];
                 BailoutLines[0] = new Vector4(0,0,0,1);
                 BailoutLines[1] = new Vector4(0,0,1,0);
+                //BailoutLine = new Vector4(-8,-9.5f,-2,-3);
                 BailoutLinesCount = 2;
+                StartOrbitDistance = new FloatBounds(2, 0, (float)maxVal);
+                StartOrbit = new IntBounds(1, 1, 9999);
+                OrbitRange = new IntBounds(MaxIterations.Value, 1, 9999);
+                BailoutFactor1 = 0.25f;
+                BailoutFactor2 = 7;
 
                 EditingColor = Editing.Both;
 
@@ -327,7 +328,7 @@ namespace FractalLive
             public FloatBounds FoldAngle;
             public IntBounds FoldCount;
             public IntBounds MaxIterations;
-            public FloatBounds MaxOrbitDistance;
+            public FloatBounds StartOrbitDistance;
             public float Power;
             public FloatBounds TerrainHeight;
             public float Zoom;

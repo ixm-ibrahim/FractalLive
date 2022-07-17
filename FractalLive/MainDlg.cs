@@ -169,15 +169,16 @@ namespace FractalLive
             shader.SetInt("orbitTrap", (int)fractalSettings.OrbitTrap);
             // min/avg/max/etc.
             shader.SetFloat("bailout", fractalSettings.Bailout);
-            shader.SetFloat("bailoutFactor1", fractalSettings.BailoutFactor1);
-            shader.SetFloat("bailoutFactor2", fractalSettings.BailoutFactor2);
-            shader.SetInt("startOrbit", fractalSettings.StartOrbit.Value);
-            shader.SetInt("orbitRange", fractalSettings.OrbitRange.Value);
             shader.SetVector2("bailoutRectangle", fractalSettings.BailoutRectangle);
             shader.SetVector2Array("bailoutPoints", fractalSettings.BailoutPoints);
             shader.SetInt("bailoutPointsCount", fractalSettings.BailoutPointsCount);
             shader.SetVector4Array("bailoutLines", fractalSettings.BailoutLines);
             shader.SetInt("bailoutLinesCount", fractalSettings.BailoutLinesCount);
+            shader.SetFloat("startOrbitDistance", fractalSettings.StartOrbitDistance.Value);
+            shader.SetInt("startOrbit", fractalSettings.StartOrbit.Value);
+            shader.SetInt("orbitRange", fractalSettings.OrbitRange.Value);
+            shader.SetFloat("bailoutFactor1", fractalSettings.BailoutFactor1);
+            shader.SetFloat("bailoutFactor2", fractalSettings.BailoutFactor2);
 
             // Menu 3
             shader.SetFloat("time", applicationTime.ElapsedMilliseconds / 1000.0f);
@@ -237,7 +238,6 @@ namespace FractalLive
             input_Texture.Enabled = false;
             input_TextureBlend.Enabled = false;
 
-            input_MaxDistance.Enabled = false;
             input_OrbitTrapCalculation.Enabled = false;
 
 
@@ -459,12 +459,17 @@ namespace FractalLive
                         input_BailoutY.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrapIndex].W.ToString(), input_BailoutY.Text, true);
                     }
                 }
-                if (inputState.keysDown[Keys.D6] && input_OrbitTrapBlendingFactor.Enabled)
+                if (inputState.keysDown[Keys.D6] && input_StartDistance.Enabled)
+                {
+                    CurrentSettings.StartOrbitDistance.Value += modifier;
+                    input_StartDistance.Text = CurrentSettings.StartOrbitDistance.Value.ToString();
+                }
+                if (inputState.keysDown[Keys.D7] && input_OrbitTrapBlendingFactor.Enabled)
                 {
                     CurrentSettings.BailoutFactor1 += modifier / 100;
                     input_OrbitTrapBlendingFactor.Text = CurrentSettings.BailoutFactor1.ToString();
                 }
-                if (inputState.keysDown[Keys.D7] && input_OrbitTrapThicknessFactor.Enabled)
+                if (inputState.keysDown[Keys.D8] && input_OrbitTrapThicknessFactor.Enabled)
                 {
                     CurrentSettings.BailoutFactor2 += modifier / 10;
                     input_OrbitTrapThicknessFactor.Text = CurrentSettings.BailoutFactor2.ToString();
@@ -718,11 +723,6 @@ namespace FractalLive
         {
             e.Handled = !IsDecimalChar(e, true);
         }
-        private void input_Center_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
-        }
         private void input_Center_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (!TryParse2DFloat(input_Center.Text))
@@ -738,11 +738,6 @@ namespace FractalLive
         private void input_Zoom_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !IsDecimalChar(e);
-        }
-        private void input_Zoom_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
         }
         private void input_Zoom_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -773,11 +768,6 @@ namespace FractalLive
         private void input_LockedZoom_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !IsDecimalChar(e);
-        }
-        private void input_LockedZoom_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
         }
         private void input_LockedZoom_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -840,6 +830,7 @@ namespace FractalLive
                 button_RemoveBailoutTrap.Enabled = false;
                 input_EditingBailoutTrap.Enabled = false;
 
+                input_StartDistance.Enabled = false;
                 input_StartOrbit.Enabled = false;
                 input_OrbitRange.Enabled = false;
                 input_OrbitTrapBlendingFactor.Enabled = false;
@@ -859,6 +850,7 @@ namespace FractalLive
                 button_RemoveBailoutTrap.Enabled = isPoints;
                 input_EditingBailoutTrap.Enabled = isPoints;
 
+                input_StartDistance.Enabled = isPoints;
                 input_StartOrbit.Enabled = isPoints;
                 input_OrbitRange.Enabled = isPoints;
                 input_OrbitTrapBlendingFactor.Enabled = isPoints;
@@ -889,6 +881,7 @@ namespace FractalLive
                 button_RemoveBailoutTrap.Enabled = true;
                 input_EditingBailoutTrap.Enabled = true;
 
+                input_StartDistance.Enabled = true;
                 input_StartOrbit.Enabled = true;
                 input_OrbitRange.Enabled = true;
                 input_OrbitTrapBlendingFactor.Enabled = true;
@@ -979,11 +972,6 @@ namespace FractalLive
         {
             e.Handled = !IsDecimalChar(e);
         }
-        private void input_Bailout_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
-        }
         private void input_Bailout_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (!TryParse1DFloat(input_Bailout.Text))
@@ -998,11 +986,6 @@ namespace FractalLive
         private void input_BailoutX_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !IsDecimalChar(e, CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines);
-        }
-        private void input_BailoutX_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
         }
         private void input_BailoutX_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -1035,11 +1018,6 @@ namespace FractalLive
         {
             e.Handled = !IsDecimalChar(e, CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines);
         }
-        private void input_BailoutY_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
-        }
         private void input_BailoutY_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if ((CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Lines && !TryParse1DFloat(input_BailoutY.Text)) || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines && !TryParse2DFloat(input_BailoutY.Text)))
@@ -1067,14 +1045,24 @@ namespace FractalLive
             }
         }
 
-        private void input_OrbitTrapFactor1_KeyPress(object sender, KeyPressEventArgs e)
+        private void input_StartDistance_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !IsDecimalChar(e);
         }
-        private void input_OrbitTrapFactor1_KeyDown(object sender, KeyEventArgs e)
+        private void input_StartDistance_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
+            if (!TryParse1DFloat(input_StartDistance.Text))
+                e.Cancel = true;
+        }
+        private void input_StartDistance_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.StartOrbitDistance.Value = float.Parse(input_StartDistance.Text);
+            input_StartDistance.Text = CurrentSettings.StartOrbitDistance.Value.ToString(); // in case number gets restricted by bounds
+        }
+
+        private void input_OrbitTrapFactor1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e);
         }
         private void input_OrbitTrapFactor1_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -1090,11 +1078,6 @@ namespace FractalLive
         private void input_OrbitTrapFactor2_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !IsDecimalChar(e);
-        }
-        private void input_OrbitTrapFactor2_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
         }
         private void input_OrbitTrapFactor2_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -1156,11 +1139,6 @@ namespace FractalLive
         {
             e.Handled = !IsDecimalChar(e);
         }
-        private void input_ColorCycles_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
-        }
         private void input_ColorCycles_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (!TryParse1DFloat(input_ColorCycles.Text))
@@ -1176,11 +1154,6 @@ namespace FractalLive
         {
             e.Handled = !IsDecimalChar(e);
         }
-        private void input_ColorFactor_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
-        }
         private void input_ColorFactor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (!TryParse1DFloat(input_ColorFactor.Text))
@@ -1195,11 +1168,6 @@ namespace FractalLive
         private void input_OrbitTrapFactor_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !IsDecimalChar(e);
-        }
-        private void input_OrbitTrapFactor_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
         }
         private void input_OrbitTrapFactor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -1348,8 +1316,14 @@ namespace FractalLive
 
         internal bool IsDecimalChar(KeyPressEventArgs e, bool allowComma = false)
         {
-            // only allow numbers, period, negative symbol, backspace, and comma (if allowed)
-            return char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (allowComma && e.KeyChar == 44);
+            // only allow numbers, period, negative symbol, backspace, enter, and comma (if allowed)
+            return char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || e.KeyChar == 13 || (allowComma && e.KeyChar == 44);
+        }
+
+        private void textbox_FocusOnEnter(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                glControl.Focus(); // force leave
         }
         #endregion
     }
