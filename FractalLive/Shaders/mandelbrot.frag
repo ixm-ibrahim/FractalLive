@@ -66,8 +66,8 @@ vec2 c_2(vec2 c);
 bool IsBounded(vec2 z);
 bool NeedDistance();
 float GetOrbitTrap(vec2 z, int iter, inout float trap);
-vec3 GetColor(vec2 z, int iter);
-vec3 DomainColoring(int coloring, vec2 z, int iter);
+vec3 GetColor(vec2 z, int iter, float trap);
+vec3 DomainColoring(int coloring, vec2 z, int iter, float trap);
 vec3 ColorFromHSV(vec3 color);
 
 vec3 Mandelbrot()
@@ -84,14 +84,14 @@ vec3 Mandelbrot()
     //if (orbitTrap == TRAP_LINE)
         //return vec3(0);
 
-    if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+    //if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
 	    //return vec3(0.5 + 0.5*(sin(bailout*trap))); // 4.5 is a good value
-	    //return vec3(trap);
-	    return trap * GetColor(z, iter);
+	    //return vec3(7*trap);
+	    //trap = 0;
 
 	//return vec3(sqrt(float(iter)/maxIterations));
 	//return sqrt(float(iter)/maxIterations) *  GetColor(z, iter);
-	return GetColor(z, iter);
+	return GetColor(z, iter, trap);
 }
 
 vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
@@ -110,6 +110,7 @@ vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
     //trap = clamp(pow( trap*zoom, 0.25 ), 0.0, 1.0); // control 1
     //trap = clamp(pow( trap, 0.25 ), 0.0, 1.0)*pow(2,zoom); // control 1
     trap = 1.0 / (1.0 + exp(-bailoutFactor2 * (trap - 0.5)));  // control 2
+    //trap = bailoutFactor2 / (1.0 + exp(-7 * (trap - 0.5)));  // control 2
 
 	return z;
 }
@@ -134,11 +135,6 @@ bool IsBounded(vec2 z)
     }
 
     return false;
-}
-
-float length_squared(vec2 a, vec2 b)
-{
-    return pow(length(b - a), 2);
 }
 
 float DistanceToLine(vec2 p, vec2 a, vec2 b)
@@ -171,13 +167,20 @@ vec2 c_2(vec2 c)
     return vec2(c.x*c.x - c.y*c.y, 2*c.x*c.y);
 }
 
-vec3 GetColor(vec2 z, int iter)
+vec3 Rainbow(float mu)
+{
+    return vec3(sin(7 * (mu + time) / 17) * .5 + .5, sin(11 * (mu + time) / 29) * .5 + .5, sin(13 * (mu + time) / 41) * .5 + .5);
+}
+
+vec3 GetColor(vec2 z, int iter, float trap)
 {
     // Decide the color based on the number of iterations
     vec3 color;
     if (iter >= maxIterations)
     {
-        switch (splitInteriorExterior ? interiorColoring : coloring)
+        int c = splitInteriorExterior ? interiorColoring : coloring;
+        
+        switch (c)
         {
             case COL_CUSTOM:
                 vec3 outerColor1 = vec3(0.13f, 0.94f, 0.13f);
@@ -193,14 +196,18 @@ vec3 GetColor(vec2 z, int iter)
             case COL_WHITE:
                 color = vec3(1);
                 break;
+            case COL_ITERATION:
+            case COL_SMOOTH:
             default:
-                color = DomainColoring(interiorColoring, z, iter);
+                color = DomainColoring(c, z, iter, trap);
                 break;
         }
     }
     else
     {
-        switch (splitInteriorExterior ? exteriorColoring : coloring)
+        int c = splitInteriorExterior ? exteriorColoring : coloring;
+
+        switch (c)
         {
             case COL_CUSTOM:
                 vec3 outerColor1 = vec3(0.13f, 0.94f, 0.13f);
@@ -219,24 +226,28 @@ vec3 GetColor(vec2 z, int iter)
                 color = vec3(1);
                 break;
             case COL_ITERATION:
-                color = vec3(sin(7 * (iter + time) / 17) * .5 + .5, sin(11 * (iter + time) / 29) * .5 + .5, sin(13 * (iter + time) / 41) * .5 + .5);
+                //color = Rainbow(iter * (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? trap : 1));
+                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(15*trap), Rainbow(iter), trap) : Rainbow(iter);
                 break;
             case COL_SMOOTH:
                 float mu;
         
-                mu = iter;
+                //mu = iter;
                 //mu = iter + 1 - (log2(log2(length(z))));
                 //mu = iter - log2(log2(dot(z,z))) + 4.0;
                 //mu = iter - log(log(dot(z,z))/(log(bailout)))/log(power);
                 //mu = iter - (log(log(length(z))/log(bailout.x)) / (sign(power)*log(abs(power))));
-                mu = iter - (log(log(length(z))/log(bailout.x)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
+                mu = iter - (log(log(length(z))/log(bailout)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
                 //mu = iter + 1 - (log(log(length(z))) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
                 //mu = iter - (log(log(length(z))/log(bailout.x)));
 
-                color = vec3(sin(7 * (mu + time) / 17) * .5 + .5, sin(11 * (mu + time) / 29) * .5 + .5, sin(13 * (mu + time) / 41) * .5 + .5);
+                //color = Rainbow(mu + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 10*trap : 1));
+                //color = Rainbow(mu) * (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? Rainbow(trap) : vec3(1));
+                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(15*trap), Rainbow(mu), trap) : Rainbow(mu);
+                //color = 0.5*Rainbow(mu) + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 0.5*Rainbow(10*trap) : 0.5*Rainbow(mu));
                 break;
             default:
-                color = DomainColoring(exteriorColoring, z, iter);
+                color = DomainColoring(c, z, iter, trap);
                 break;
         }
     }
@@ -244,17 +255,22 @@ vec3 GetColor(vec2 z, int iter)
     return color;
 }
 
-vec3 DomainColoring(int coloring, vec2 z, int iter)
+vec3 DomainColoring(int coloring, vec2 z, int iterr, float trap)
 {
+    //float iter = iterr - (log(log(length(z))/log(bailout)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
+    float iter = 0;
+
+    //float t = (time + trap) * 20;
     float t = time * 20;
 
     vec3 color;
 
     if (coloring == COL_ITERATION || coloring == COL_SMOOTH)
         //return ColorFromHSV(vec3(atan(FragPosModel.y, FragPosModel.x) * 180 / M_PI + t, 1, 1));
-        return ColorFromHSV(vec3(atan(FragPos.y, FragPos.x) * 180 / M_PI + t, 1, 1));
+        return (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(15*trap), ColorFromHSV(vec3(atan(FragPos.y, FragPos.x) * 180 / M_PI + t, 1, 1)), trap) : ColorFromHSV(vec3(atan(FragPos.y, FragPos.x) * 180 / M_PI + t, 1, 1));
 
-    float theta = sin(atan(float(z.y), float(z.x))) * 360 + t;
+    //float theta = sin(atan(float(z.y), float(z.x))) * 360 + t;
+    float theta = atan(float(z.y), float(z.x)) * 180/M_PI + t;
 	float r = length(z);
         	
 	if (z.x == 0 && z.y == 0)

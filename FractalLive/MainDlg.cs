@@ -215,6 +215,30 @@ namespace FractalLive
             mandelbrotSettings = new Fractal.Settings(Fractal.Type.Mandelbrot);
             mandelbrotCamera = new Camera();
 
+            // todo
+            checkBox_UseBuddhabrot.Enabled = false;
+            input_BuddhabrotType.Enabled = false;
+
+            checkBox_UseCustomPalette.Enabled = false;  // can we gray out the colors without losing their value? yes by saving them to settings
+            button_Color1.Enabled = false;
+            button_Color2.Enabled = false;
+            button_Color3.Enabled = false;
+            button_Color4.Enabled = false;
+            button_Color5.Enabled = false;
+            button_Color6.Enabled = false;
+            input_OrbitTrapFactor.Enabled = false;
+            input_DomainOrbit.Enabled = false;
+            checkBox_UseDistanceEstimation.Enabled = false;
+            input_MaxDistanceEstimation.Enabled = false;
+            label_DistanceEstimationFineness.Enabled = false;
+            button_ClearTexture.Enabled = false;
+            input_Texture.Enabled = false;
+            input_TextureBlend.Enabled = false;
+
+            input_MaxDistance.Enabled = false;
+            input_OrbitTrapCalculation.Enabled = false;
+
+
             // Default values
             input_FractalType.SelectedIndex = (int)CurrentSettings.Type;
             input_FractalFormula.SelectedIndex = (int)CurrentSettings.Formula;
@@ -429,15 +453,15 @@ namespace FractalLive
                         input_BailoutY.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrapIndex].W.ToString(), input_BailoutY.Text, true);
                     }
                 }
-                if (inputState.keysDown[Keys.D6] && input_OrbitTrapFactor1.Enabled)
+                if (inputState.keysDown[Keys.D6] && input_OrbitTrapBlendingFactor.Enabled)
                 {
                     CurrentSettings.BailoutFactor1 += modifier / 100;
-                    input_OrbitTrapFactor1.Text = CurrentSettings.BailoutFactor1.ToString();
+                    input_OrbitTrapBlendingFactor.Text = CurrentSettings.BailoutFactor1.ToString();
                 }
-                if (inputState.keysDown[Keys.D7] && input_OrbitTrapFactor2.Enabled)
+                if (inputState.keysDown[Keys.D7] && input_OrbitTrapThicknessFactor.Enabled)
                 {
                     CurrentSettings.BailoutFactor2 += modifier / 10;
-                    input_OrbitTrapFactor2.Text = CurrentSettings.BailoutFactor2.ToString();
+                    input_OrbitTrapThicknessFactor.Text = CurrentSettings.BailoutFactor2.ToString();
                 }
             }
 
@@ -710,8 +734,8 @@ namespace FractalLive
 
                 input_StartOrbit.Enabled = false;
                 input_OrbitRange.Enabled = false;
-                input_OrbitTrapFactor1.Enabled = false;
-                input_OrbitTrapFactor2.Enabled = false;
+                input_OrbitTrapBlendingFactor.Enabled = false;
+                input_OrbitTrapThicknessFactor.Enabled = false;
 
                 input_Bailout.Text = CurrentSettings.Bailout.ToString();
             }
@@ -729,8 +753,8 @@ namespace FractalLive
 
                 input_StartOrbit.Enabled = isPoints;
                 input_OrbitRange.Enabled = isPoints;
-                input_OrbitTrapFactor1.Enabled = isPoints;
-                input_OrbitTrapFactor2.Enabled = isPoints;
+                input_OrbitTrapBlendingFactor.Enabled = isPoints;
+                input_OrbitTrapThicknessFactor.Enabled = isPoints;
 
                 if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
                 {
@@ -759,8 +783,8 @@ namespace FractalLive
 
                 input_StartOrbit.Enabled = true;
                 input_OrbitRange.Enabled = true;
-                input_OrbitTrapFactor1.Enabled = true;
-                input_OrbitTrapFactor2.Enabled = true;
+                input_OrbitTrapBlendingFactor.Enabled = true;
+                input_OrbitTrapThicknessFactor.Enabled = true;
 
                 input_EditingBailoutTrap.Maximum = CurrentSettings.BailoutLinesCount;
                 input_EditingBailoutTrap.Value = input_EditingBailoutTrap.Maximum;
@@ -1002,13 +1026,13 @@ namespace FractalLive
         }
         private void input_OrbitTrapFactor1_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!TryParse1DFloat(input_OrbitTrapFactor1.Text))
+            if (!TryParse1DFloat(input_OrbitTrapBlendingFactor.Text))
                 e.Cancel = true;
         }
         private void input_OrbitTrapFactor1_Validated(object sender, EventArgs e)
         {
-            CurrentSettings.BailoutFactor1 = float.Parse(input_OrbitTrapFactor1.Text);
-            input_OrbitTrapFactor1.Text = CurrentSettings.BailoutFactor1.ToString();
+            CurrentSettings.BailoutFactor1 = float.Parse(input_OrbitTrapBlendingFactor.Text);
+            input_OrbitTrapBlendingFactor.Text = CurrentSettings.BailoutFactor1.ToString();
         }
 
         private void input_OrbitTrapFactor2_KeyPress(object sender, KeyPressEventArgs e)
@@ -1023,13 +1047,13 @@ namespace FractalLive
         }
         private void input_OrbitTrapFactor2_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!TryParse1DFloat(input_OrbitTrapFactor2.Text))
+            if (!TryParse1DFloat(input_OrbitTrapThicknessFactor.Text))
                 e.Cancel = true;
         }
         private void input_OrbitTrapFactor2_Validated(object sender, EventArgs e)
         {
-            CurrentSettings.BailoutFactor2 = float.Parse(input_OrbitTrapFactor2.Text);
-            input_OrbitTrapFactor2.Text = CurrentSettings.BailoutFactor2.ToString();
+            CurrentSettings.BailoutFactor2 = float.Parse(input_OrbitTrapThicknessFactor.Text);
+            input_OrbitTrapThicknessFactor.Text = CurrentSettings.BailoutFactor2.ToString();
         }
 
         private void input_EditingColor_SelectionChangeCommitted(object sender, EventArgs e)
@@ -1040,6 +1064,38 @@ namespace FractalLive
         private void input_Coloring_SelectionChangeCommitted(object sender, EventArgs e)
         {
             CurrentSettings.SetColoring((Fractal.Coloring)input_Coloring.SelectedIndex);
+        }
+
+        private void button_Color1_Click(object sender, EventArgs e)
+        {
+            colorDialog1.Color = button_Color1.BackColor;
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+                button_Color1.BackColor = colorDialog1.Color;
+        }
+        private void button_Color2_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+                button_Color2.BackColor = colorDialog1.Color;
+        }
+        private void button_Color3_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+                button_Color3.BackColor = colorDialog1.Color;
+        }
+        private void button_Color4_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+                button_Color4.BackColor = colorDialog1.Color;
+        }
+        private void button_Color5_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+                button_Color5.BackColor = colorDialog1.Color;
+        }
+        private void button_Color6_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+                button_Color6.BackColor = colorDialog1.Color;
         }
 
         #endregion

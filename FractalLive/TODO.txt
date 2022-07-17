@@ -1,4 +1,4 @@
-﻿sjulia centering for lambda
+﻿julia centering for lambda
 setting for inverting camera controls
 remove degreestoradians for RotatePitch/Yaw (and all other imstances where turnSpeed is used)
 test if FromAxisAngle requires a normalized axis
@@ -14,7 +14,6 @@ more functions to break down larger functions
 focus glControl upon application start
 enable copy and paste in textboxes
 undo redo
-interior orbit trap and more options (like skipping n iterations, pausing zoom coloring, min/avg/max/etc)
 left click decides orbit trap point and others
 see if raising zoom to power can be optimized in shaders
 investigate bug where Update is called after exit, and menu disappears
@@ -24,8 +23,11 @@ load and save settings
 focus glcontrol after each winforms input
 consolidate input textboxes
 locked zoom box
-buddhabrot menu 1
+buddhabrot in menu 1
 lighting menu
-maximum orbit trap distance
 key for cycling orbit traps/colorings
 deal with interior colorings that wont work
+normal maps in lighting menu
+bug where update is called after glcontrol is disposed
+test max float value
+blend texture with coloring
