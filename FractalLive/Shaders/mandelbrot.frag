@@ -51,6 +51,9 @@ uniform bool splitInteriorExterior;
 uniform int coloring;
 uniform int interiorColoring;
 uniform int exteriorColoring;
+uniform float colorCycle;
+uniform float colorFactor;
+uniform float orbitTrapFactor;
 
 vec3 Mandelbrot();
 vec2 MandelbrotLoop(vec2 c, int maxIteration, inout int iter, inout float trap);
@@ -62,6 +65,8 @@ void main()
 	FragColor = vec4(Mandelbrot(), 1.0);
 }
 
+float sigmoid(float x, float factor);
+vec3 sigmoid(vec3 v, float factor);
 vec2 c_2(vec2 c);
 bool IsBounded(vec2 z);
 bool NeedDistance();
@@ -92,6 +97,9 @@ vec3 Mandelbrot()
 	//return vec3(sqrt(float(iter)/maxIterations));
 	//return sqrt(float(iter)/maxIterations) *  GetColor(z, iter);
 	return GetColor(z, iter, trap);
+    
+
+	//return 0.5 + 0.5*sin(GetColor(z, iter, trap) * colorCycle);colorFactor;
 }
 
 vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
@@ -109,7 +117,7 @@ vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
     trap = clamp(pow( trap*pow(2,lockedZoom), bailoutFactor1 ), 0.0, 1.0); // control 1
     //trap = clamp(pow( trap*zoom, 0.25 ), 0.0, 1.0); // control 1
     //trap = clamp(pow( trap, 0.25 ), 0.0, 1.0)*pow(2,zoom); // control 1
-    trap = 1.0 / (1.0 + exp(-bailoutFactor2 * (trap - 0.5)));  // control 2
+    trap = sigmoid(trap, bailoutFactor2);  // control 2
     //trap = bailoutFactor2 / (1.0 + exp(-7 * (trap - 0.5)));  // control 2
 
 	return z;
@@ -162,14 +170,9 @@ float GetOrbitTrap(vec2 z, int iter, inout float trap)
     return trap;
 }
 
-vec2 c_2(vec2 c)
-{
-    return vec2(c.x*c.x - c.y*c.y, 2*c.x*c.y);
-}
-
 vec3 Rainbow(float mu)
 {
-    return vec3(sin(7 * (mu + time) / 17) * .5 + .5, sin(11 * (mu + time) / 29) * .5 + .5, sin(13 * (mu + time) / 41) * .5 + .5);
+    return vec3(sin(colorCycle * 7 * (mu + time) / 17) * .5 + .5, sin(colorCycle * 11 * (mu + time) / 29) * .5 + .5, sin(colorCycle * 13 * (mu + time) / 41) * .5 + .5);
 }
 
 vec3 GetColor(vec2 z, int iter, float trap)
@@ -227,7 +230,7 @@ vec3 GetColor(vec2 z, int iter, float trap)
                 break;
             case COL_ITERATION:
                 //color = Rainbow(iter * (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? trap : 1));
-                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(15*trap), Rainbow(iter), trap) : Rainbow(iter);
+                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(orbitTrapFactor*trap), Rainbow(iter), trap) : Rainbow(iter);
                 break;
             case COL_SMOOTH:
                 float mu;
@@ -243,7 +246,7 @@ vec3 GetColor(vec2 z, int iter, float trap)
 
                 //color = Rainbow(mu + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 10*trap : 1));
                 //color = Rainbow(mu) * (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? Rainbow(trap) : vec3(1));
-                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(15*trap), Rainbow(mu), trap) : Rainbow(mu);
+                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(orbitTrapFactor*trap), Rainbow(mu), trap) : Rainbow(mu);
                 //color = 0.5*Rainbow(mu) + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 0.5*Rainbow(10*trap) : 0.5*Rainbow(mu));
                 break;
             default:
@@ -252,7 +255,7 @@ vec3 GetColor(vec2 z, int iter, float trap)
         }
     }
     
-    return color;
+    return sigmoid(color, colorFactor);
 }
 
 vec3 DomainColoring(int coloring, vec2 z, int iterr, float trap)
@@ -265,12 +268,12 @@ vec3 DomainColoring(int coloring, vec2 z, int iterr, float trap)
 
     vec3 color;
 
-    if (coloring == COL_ITERATION || coloring == COL_SMOOTH)
+    //if (coloring == COL_ITERATION || coloring == COL_SMOOTH)
         //return ColorFromHSV(vec3(atan(FragPosModel.y, FragPosModel.x) * 180 / M_PI + t, 1, 1));
-        return (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(15*trap), ColorFromHSV(vec3(atan(FragPos.y, FragPos.x) * 180 / M_PI + t, 1, 1)), trap) : ColorFromHSV(vec3(atan(FragPos.y, FragPos.x) * 180 / M_PI + t, 1, 1));
 
     //float theta = sin(atan(float(z.y), float(z.x))) * 360 + t;
     float theta = atan(float(z.y), float(z.x)) * 180/M_PI + t;
+    theta *= colorCycle;
 	float r = length(z);
         	
 	if (z.x == 0 && z.y == 0)
@@ -313,6 +316,10 @@ vec3 DomainColoring(int coloring, vec2 z, int iterr, float trap)
         default:
             //color = mix(outerColor1, outerColor2, theta);
             color = ColorFromHSV(vec3(theta, 1, 1));
+
+            if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+                color = mix(Rainbow(orbitTrapFactor*trap), color, trap);
+
             break;
     }
     
@@ -342,4 +349,18 @@ vec3 ColorFromHSV(vec3 color)
         return vec3(t, p, v);
 
     return vec3(v, p, q);
+}
+
+vec2 c_2(vec2 c)
+{
+    return vec2(c.x*c.x - c.y*c.y, 2*c.x*c.y);
+}
+
+float sigmoid(float x, float factor)
+{
+    return 1.0 / (1.0 + exp(-factor * (x - 0.5)));
+}
+vec3 sigmoid(vec3 v, float factor)
+{
+    return 1.0 / (1.0 + exp(-factor * (v - 0.5)));
 }

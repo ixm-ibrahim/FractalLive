@@ -69,7 +69,7 @@ namespace FractalLive
                 C_Power = 1;
                 FoldAngle = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 FoldCount = new IntBounds(0, 0, 100);
-                MaxIterations = new IntBounds(100, 0, 9999);
+                MaxIterations = new IntBounds(100, 1, 9999);
                 MaxOrbitDistance = new FloatBounds(100, 0, (float)maxVal);
                 Power = 2;
                 TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
@@ -81,8 +81,8 @@ namespace FractalLive
                 FoldOffset = new Vector4(0,0,0,0);
                 //BailoutLine = new Vector4(-8,-9.5f,-2,-3);
                 OrbitTrap = OrbitTrap.Circle;
-                StartOrbit = 1;
-                OrbitRange = MaxIterations.Value;
+                StartOrbit = new IntBounds(1, 1, 9999);
+                OrbitRange = new IntBounds(MaxIterations.Value, 1, 9999);
                 Bailout = 2;
                 BailoutFactor1 = 0.25f;
                 BailoutFactor2 = 7;
@@ -98,8 +98,9 @@ namespace FractalLive
                 EditingColor = Editing.Both;
 
                 Coloring = Coloring.Smooth;
-                ColorCycle = 1;
-                ColorFactor = 1;
+                ColorCycles = 1;
+                ColorFactor = 6;
+                OrbitTrapFactor = 1;
                 UseDistanceEstimation = false;
                 MaxDistance = 1e20f;
                 DistFineness = 1;
@@ -107,8 +108,9 @@ namespace FractalLive
                 TextureBlend = 0.5f;
 
                 I_Coloring = Coloring.Smooth;
-                I_ColorCycle = 1;
+                I_ColorCycles = 1;
                 I_ColorFactor = 1;
+                I_OrbitTrapFactor = 1;
                 I_UseDistanceEstimation = false;
                 I_MaxDistance = 1e20f;
                 I_DistFineness = 1;
@@ -116,8 +118,9 @@ namespace FractalLive
                 I_TextureBlend = 0.5f;
 
                 E_Coloring = Coloring.Smooth;
-                E_ColorCycle = 1;
+                E_ColorCycles = 1;
                 E_ColorFactor = 1;
+                E_OrbitTrapFactor = 1;
                 E_UseDistanceEstimation = false;
                 E_MaxDistance = 1e20f;
                 E_DistFineness = 1;
@@ -171,6 +174,135 @@ namespace FractalLive
                 }
             }
 
+            public float GetColorCycles()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_ColorCycles;
+                    case Editing.Exterior:
+                        return E_ColorCycles;
+                    default:
+                        return ColorCycles;
+                }
+            }
+            public void SetColorCycles(float colorCycles)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_ColorCycles = colorCycles;
+                        break;
+                    case Editing.Exterior:
+                        E_ColorCycles = colorCycles;
+                        break;
+                    default:
+                        ColorCycles = colorCycles;
+                        break;
+                }
+            }
+            public void AdjustColorCycles(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_ColorCycles += offset;
+                        break;
+                    case Editing.Exterior:
+                        E_ColorCycles += offset;
+                        break;
+                    default:
+                        ColorCycles += offset;
+                        break;
+                }
+            }
+
+            public float GetColorFactor()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_ColorFactor;
+                    case Editing.Exterior:
+                        return E_ColorFactor;
+                    default:
+                        return ColorFactor;
+                }
+            }
+            public void SetColorFactor(float colorFactor)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_ColorFactor = colorFactor;
+                        break;
+                    case Editing.Exterior:
+                        E_ColorFactor = colorFactor;
+                        break;
+                    default:
+                        ColorFactor = colorFactor;
+                        break;
+                }
+            }
+            public void AdjustColorFactor(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_ColorFactor += offset;
+                        break;
+                    case Editing.Exterior:
+                        E_ColorFactor += offset;
+                        break;
+                    default:
+                        ColorFactor += offset;
+                        break;
+                }
+            }
+
+            public float GetOrbitTrapFactor()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_OrbitTrapFactor;
+                    case Editing.Exterior:
+                        return E_OrbitTrapFactor;
+                    default:
+                        return OrbitTrapFactor;
+                }
+            }
+            public void SetOrbitTrapFactor(float orbitTrapFactor)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_OrbitTrapFactor = orbitTrapFactor;
+                        break;
+                    case Editing.Exterior:
+                        E_OrbitTrapFactor = orbitTrapFactor;
+                        break;
+                    default:
+                        OrbitTrapFactor = orbitTrapFactor;
+                        break;
+                }
+            }
+            public void AdjustOrbitTrapFactor(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_OrbitTrapFactor += offset;
+                        break;
+                    case Editing.Exterior:
+                        E_OrbitTrapFactor += offset;
+                        break;
+                    default:
+                        OrbitTrapFactor += offset;
+                        break;
+                }
+            }
+
             public Type Type;
             public Formula Formula;
             public Buddhabrot buddhabrot;
@@ -185,8 +317,8 @@ namespace FractalLive
             public bool UseDistance;
             public bool UseLighting;
             public bool UseTerrainColor;
-            public int StartOrbit;
-            public int OrbitRange;
+            public IntBounds StartOrbit;
+            public IntBounds OrbitRange;
             public float Bailout;
             public float BailoutFactor1;
             public float BailoutFactor2;
@@ -213,8 +345,9 @@ namespace FractalLive
             public Editing EditingColor;
 
             public Coloring Coloring;
-            public float ColorCycle;
+            public float ColorCycles;
             public float ColorFactor;
+            public float OrbitTrapFactor;
             public bool UseDistanceEstimation;
             public float MaxDistance;
             public float DistFineness;
@@ -222,8 +355,9 @@ namespace FractalLive
             public float TextureBlend;
 
             public Coloring I_Coloring;
-            public float I_ColorCycle;
+            public float I_ColorCycles;
             public float I_ColorFactor;
+            public float I_OrbitTrapFactor;
             public bool I_UseDistanceEstimation;
             public float I_MaxDistance;
             public float I_DistFineness;
@@ -231,8 +365,9 @@ namespace FractalLive
             public float I_TextureBlend;
 
             public Coloring E_Coloring;
-            public float E_ColorCycle;
+            public float E_ColorCycles;
             public float E_ColorFactor;
+            public float E_OrbitTrapFactor;
             public bool E_UseDistanceEstimation;
             public float E_MaxDistance;
             public float E_DistFineness;

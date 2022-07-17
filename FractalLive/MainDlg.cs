@@ -171,8 +171,8 @@ namespace FractalLive
             shader.SetFloat("bailout", fractalSettings.Bailout);
             shader.SetFloat("bailoutFactor1", fractalSettings.BailoutFactor1);
             shader.SetFloat("bailoutFactor2", fractalSettings.BailoutFactor2);
-            shader.SetInt("startOrbit", fractalSettings.StartOrbit);
-            shader.SetInt("orbitRange", fractalSettings.OrbitRange);
+            shader.SetInt("startOrbit", fractalSettings.StartOrbit.Value);
+            shader.SetInt("orbitRange", fractalSettings.OrbitRange.Value);
             shader.SetVector2("bailoutRectangle", fractalSettings.BailoutRectangle);
             shader.SetVector2Array("bailoutPoints", fractalSettings.BailoutPoints);
             shader.SetInt("bailoutPointsCount", fractalSettings.BailoutPointsCount);
@@ -183,6 +183,9 @@ namespace FractalLive
             shader.SetFloat("time", applicationTime.ElapsedMilliseconds / 1000.0f);
             shader.SetBool("splitInteriorExterior", fractalSettings.EditingColor != Fractal.Editing.Both);
             shader.SetInt("coloring", (int)fractalSettings.Coloring);
+            shader.SetFloat("colorCycle", fractalSettings.ColorCycles);
+            shader.SetFloat("colorFactor", fractalSettings.ColorFactor);
+            shader.SetFloat("orbitTrapFactor", fractalSettings.OrbitTrapFactor);
 
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
@@ -226,7 +229,6 @@ namespace FractalLive
             button_Color4.Enabled = false;
             button_Color5.Enabled = false;
             button_Color6.Enabled = false;
-            input_OrbitTrapFactor.Enabled = false;
             input_DomainOrbit.Enabled = false;
             checkBox_UseDistanceEstimation.Enabled = false;
             input_MaxDistanceEstimation.Enabled = false;
@@ -295,6 +297,7 @@ namespace FractalLive
             _timer.Tick += (sender, e) =>
             {
                 glControl_Update(glControl, null);
+                Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
             };
             _timer.Interval = 1000 / fps;   // 1000 ms per sec / 16.67 ms per frame = 60 FPS
             _timer.Start();
@@ -354,6 +357,9 @@ namespace FractalLive
         /// <param name="e"></param>
         private void glControl_Update(object sender, PaintEventArgs e)
         {
+            if (glControl.IsDisposed)
+                return;
+
             glControl.MakeCurrent();
 
             float currentFrame = applicationTime.ElapsedMilliseconds;
@@ -372,10 +378,10 @@ namespace FractalLive
             {
                 if (inputState.keysDown[Keys.D1])
                 {
-                    if (CurrentSettings.MaxIterations.Value == CurrentSettings.OrbitRange)
+                    if (CurrentSettings.MaxIterations.Value == CurrentSettings.OrbitRange.Value)
                     {
                         CurrentSettings.OrbitRange += (int)(modifier * 2);
-                        input_OrbitRange.Value = CurrentSettings.OrbitRange;
+                        input_OrbitRange.Value = CurrentSettings.OrbitRange.Value;
                     }
 
                     CurrentSettings.MaxIterations += (int)(modifier * 2);
@@ -383,12 +389,12 @@ namespace FractalLive
                 }
                 if (inputState.keysDown[Keys.D2])
                 {
-                    CurrentSettings.Power += (int)(modifier * 2);
+                    CurrentSettings.Power += modifier * 2;
                     input_Power.Text = CurrentSettings.Power.ToString();
                 }
                 if (inputState.keysDown[Keys.D3])
                 {
-                    CurrentSettings.C_Power += (int)(modifier * 2);
+                    CurrentSettings.C_Power += modifier * 2;
                     input_CPower.Text = CurrentSettings.C_Power.ToString();
                 }
             }
@@ -464,6 +470,24 @@ namespace FractalLive
                     input_OrbitTrapThicknessFactor.Text = CurrentSettings.BailoutFactor2.ToString();
                 }
             }
+            else if (panel_ColorMenu.Enabled)
+            {
+                if (inputState.keysDown[Keys.D1])
+                {
+                    CurrentSettings.AdjustColorCycles(modifier / 100);
+                    input_ColorCycles.Text = CurrentSettings.GetColorCycles().ToString();
+                }
+                if (inputState.keysDown[Keys.D2])
+                {
+                    CurrentSettings.AdjustColorFactor(modifier / 10);
+                    input_ColorFactor.Text = CurrentSettings.GetColorFactor().ToString();
+                }
+                if (inputState.keysDown[Keys.D3])
+                {
+                    CurrentSettings.AdjustOrbitTrapFactor(modifier / 10);
+                    input_OrbitTrapFactor.Text = CurrentSettings.GetOrbitTrapFactor().ToString();
+                }
+            }
 
             // update controls
 
@@ -473,26 +497,7 @@ namespace FractalLive
 
         #endregion
 
-        #region Input
-
-        /// <summary>
-        /// Callback for handling File->Exit
-        /// </summary>
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        /// <summary>
-        /// Callback for handling Help->About
-        /// </summary>
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(this,
-                "FractalLive is a simple fractal explorer that can be navigated and manipulated with mouse and keyboard controls. <github link>",
-                "About FractalLive",
-                MessageBoxButtons.OK);
-        }
+        #region Keyboard and Mouse
 
         private void glControl_MouseMove(object? sender, MouseEventArgs e)
         {
@@ -642,8 +647,28 @@ namespace FractalLive
 
         #endregion
 
-        #region Controls
+        #region MenuStrip
+        /// <summary>
+        /// Callback for handling File->Exit
+        /// </summary>
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
 
+        /// <summary>
+        /// Callback for handling Help->About
+        /// </summary>
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(this,
+                "FractalLive is a simple fractal explorer that can be navigated and manipulated with mouse and keyboard controls. <github link>",
+                "About FractalLive",
+                MessageBoxButtons.OK);
+        }
+        #endregion
+
+        #region MainDlg Controls
         private void button_Menu1_Click(object sender, EventArgs e)
         {
             panel_FormulaMenu.Show();
@@ -689,12 +714,65 @@ namespace FractalLive
 
         }
 
+        private void input_Center_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e, true);
+        }
+        private void input_Center_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                glControl.Focus(); // force leave
+        }
+        private void input_Center_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse2DFloat(input_Center.Text))
+                e.Cancel = true;
+        }
+        private void input_Center_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.Center.X = float.Parse(GetFrom2D(input_Center.Text, true));
+            CurrentSettings.Center.Y = float.Parse(GetFrom2D(input_Center.Text, false));
+            input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
+        }
+
+        private void checkBox_LockZoomFactor_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBox_LockZoomFactor.Checked)
+                CurrentSettings.LockedZoom = CurrentSettings.Zoom;
+        }
+
+        private void input_Zoom_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e);
+        }
+        private void input_Zoom_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                glControl.Focus(); // force leave
+        }
+        private void input_Zoom_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_Zoom.Text))
+                e.Cancel = true;
+        }
+        private void input_Zoom_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.Zoom = float.Parse(input_Zoom.Text);
+            input_Zoom.Text = CurrentSettings.Zoom.ToString(); // in case number gets restricted by bounds
+
+            if (!checkBox_LockZoomFactor.Checked)
+                CurrentSettings.LockedZoom = CurrentSettings.Zoom;
+        }
+
+        #endregion
+
+        #region Menu 1 Controls
         private void input_MaxIterations_ValueChanged(object sender, EventArgs e)
         {
-            if (CurrentSettings.MaxIterations.Value == CurrentSettings.OrbitRange && input_MaxIterations.Value != 0)
+            if (CurrentSettings.MaxIterations.Value == CurrentSettings.OrbitRange.Value && input_MaxIterations.Value != 0)
             {
-                CurrentSettings.OrbitRange = (int)input_MaxIterations.Value;
-                input_OrbitRange.Value = CurrentSettings.OrbitRange;
+                CurrentSettings.OrbitRange.Value = (int)input_MaxIterations.Value;
+                input_OrbitRange.Value = CurrentSettings.OrbitRange.Value;
             }
 
             CurrentSettings.MaxIterations.SetValue((int)input_MaxIterations.Value);
@@ -707,15 +785,17 @@ namespace FractalLive
             if (input_OrbitRange.Value > CurrentSettings.MaxIterations.Value)
                 input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;*/
         }
+        #endregion
 
+        #region Menu 2 Controls
         private void input_StartOrbit_ValueChanged(object sender, EventArgs e)
         {
-            CurrentSettings.StartOrbit = (int)input_StartOrbit.Value;
+            CurrentSettings.StartOrbit.Value = (int)input_StartOrbit.Value;
         }
 
         private void input_OrbitRange_ValueChanged(object sender, EventArgs e)
         {
-            CurrentSettings.OrbitRange = (int)input_OrbitRange.Value;
+            CurrentSettings.OrbitRange.Value = (int)input_OrbitRange.Value;
         }
         
         private void input_OrbitTrap_SelectionChangeCommitted(object sender, EventArgs e)
@@ -867,62 +947,9 @@ namespace FractalLive
             }
         }
 
-        private void input_Center_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            // only allow numbers, period, negative symbol, backspace, and comma
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || e.KeyChar == 44);
-        }
-        private void input_Center_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
-        }
-        private void input_Center_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (!TryParse2DFloat(input_Center.Text))
-                e.Cancel = true;
-        }
-        private void input_Center_Validated(object sender, EventArgs e)
-        {
-            CurrentSettings.Center.X = float.Parse(GetFrom2D(input_Center.Text, true));
-            CurrentSettings.Center.Y = float.Parse(GetFrom2D(input_Center.Text, false));
-            input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
-        }
-
-        private void checkBox_LockZoomFactor_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!checkBox_LockZoomFactor.Checked)
-                CurrentSettings.LockedZoom = CurrentSettings.Zoom;
-        }
-
-        private void input_Zoom_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            // only allow numbers, period, negative symbol, and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
-        }
-        private void input_Zoom_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                glControl.Focus(); // force leave
-        }
-        private void input_Zoom_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (!TryParse1DFloat(input_Zoom.Text))
-                e.Cancel = true;
-        }
-        private void input_Zoom_Validated(object sender, EventArgs e)
-        {
-            CurrentSettings.Zoom = float.Parse(input_Zoom.Text);
-            input_Zoom.Text = CurrentSettings.Zoom.ToString(); // in case number gets restricted by bounds
-
-            if (!checkBox_LockZoomFactor.Checked)
-                CurrentSettings.LockedZoom = CurrentSettings.Zoom;
-        }
-
         private void input_Bailout_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers, period, negative symbol, and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
+            e.Handled = !IsDecimalChar(e);
         }
         private void input_Bailout_KeyDown(object sender, KeyEventArgs e)
         {
@@ -942,8 +969,7 @@ namespace FractalLive
 
         private void input_BailoutX_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers, period, negative symbol, and backspace (and comma, if cross orbit trap)
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines && e.KeyChar == 44));
+            e.Handled = !IsDecimalChar(e, CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines);
         }
         private void input_BailoutX_KeyDown(object sender, KeyEventArgs e)
         {
@@ -979,8 +1005,7 @@ namespace FractalLive
 
         private void input_BailoutY_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers, period, negative symbol, and backspace (and comma, if cross orbit trap)
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines && e.KeyChar == 44));
+            e.Handled = !IsDecimalChar(e, CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines);
         }
         private void input_BailoutY_KeyDown(object sender, KeyEventArgs e)
         {
@@ -1016,8 +1041,7 @@ namespace FractalLive
 
         private void input_OrbitTrapFactor1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers, period, negative symbol, and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
+            e.Handled = !IsDecimalChar(e);
         }
         private void input_OrbitTrapFactor1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -1037,8 +1061,7 @@ namespace FractalLive
 
         private void input_OrbitTrapFactor2_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allow numbers, period, negative symbol, and backspace
-            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8);
+            e.Handled = !IsDecimalChar(e);
         }
         private void input_OrbitTrapFactor2_KeyDown(object sender, KeyEventArgs e)
         {
@@ -1056,6 +1079,9 @@ namespace FractalLive
             input_OrbitTrapThicknessFactor.Text = CurrentSettings.BailoutFactor2.ToString();
         }
 
+        #endregion
+
+        #region Menu 3 Controls
         private void input_EditingColor_SelectionChangeCommitted(object sender, EventArgs e)
         {
             CurrentSettings.EditingColor = (Fractal.Editing)input_EditingColor.SelectedIndex;
@@ -1096,6 +1122,66 @@ namespace FractalLive
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
                 button_Color6.BackColor = colorDialog1.Color;
+        }
+
+        private void input_ColorCycles_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e);
+        }
+        private void input_ColorCycles_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                glControl.Focus(); // force leave
+        }
+        private void input_ColorCycles_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_ColorCycles.Text))
+                e.Cancel = true;
+        }
+        private void input_ColorCycles_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.SetColorCycles(float.Parse(input_ColorCycles.Text));
+            input_ColorCycles.Text = CurrentSettings.GetColorCycles().ToString();
+        }
+
+        private void input_ColorFactor_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e);
+        }
+        private void input_ColorFactor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                glControl.Focus(); // force leave
+        }
+        private void input_ColorFactor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_ColorFactor.Text))
+                e.Cancel = true;
+        }
+        private void input_ColorFactor_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.SetColorFactor(float.Parse(input_ColorFactor.Text));
+            input_ColorFactor.Text = CurrentSettings.GetColorFactor().ToString();
+        }
+
+        private void input_OrbitTrapFactor_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e);
+        }
+        private void input_OrbitTrapFactor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                glControl.Focus(); // force leave
+        }
+        private void input_OrbitTrapFactor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_OrbitTrapFactor.Text))
+                e.Cancel = true;
+        }
+        private void input_OrbitTrapFactor_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.SetOrbitTrapFactor(float.Parse(input_OrbitTrapFactor.Text));
+            input_OrbitTrapFactor.Text = CurrentSettings.GetOrbitTrapFactor().ToString();
         }
 
         #endregion
@@ -1230,6 +1316,12 @@ namespace FractalLive
             string[] values = original.Replace(" ", "").Split(',');
             values[replaceFirst ? 0 : 1] = input;
             return values[0] + ", " + values[1];
+        }
+
+        internal bool IsDecimalChar(KeyPressEventArgs e, bool allowComma = false)
+        {
+            // only allow numbers, period, negative symbol, backspace, and comma (if allowed)
+            return char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || (allowComma && e.KeyChar == 44);
         }
         #endregion
     }

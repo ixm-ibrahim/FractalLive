@@ -92,7 +92,7 @@
             this.label_BuddhabrotType = new System.Windows.Forms.Label();
             this.input_BuddhabrotType = new System.Windows.Forms.ComboBox();
             this.checkBox_UseBuddhabrot = new System.Windows.Forms.CheckBox();
-            this.label_BailoutTrap = new System.Windows.Forms.Label();
+            this.label_OrbitTrapPosition = new System.Windows.Forms.Label();
             this.input_BailoutX = new System.Windows.Forms.TextBox();
             this.panel_OrbitTrapMenu = new System.Windows.Forms.Panel();
             this.input_MaxDistance = new System.Windows.Forms.TextBox();
@@ -788,15 +788,15 @@
             this.checkBox_UseBuddhabrot.Text = "Use Buddhabrot";
             this.checkBox_UseBuddhabrot.UseVisualStyleBackColor = true;
             // 
-            // label_BailoutTrap
+            // label_OrbitTrapPosition
             // 
-            this.label_BailoutTrap.AutoSize = true;
-            this.label_BailoutTrap.Location = new System.Drawing.Point(3, 140);
-            this.label_BailoutTrap.Name = "label_BailoutTrap";
-            this.label_BailoutTrap.Size = new System.Drawing.Size(50, 15);
-            this.label_BailoutTrap.TabIndex = 39;
-            this.label_BailoutTrap.Text = "Bailout: ";
-            this.label_BailoutTrap.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_OrbitTrapPosition.AutoSize = true;
+            this.label_OrbitTrapPosition.Location = new System.Drawing.Point(3, 140);
+            this.label_OrbitTrapPosition.Name = "label_OrbitTrapPosition";
+            this.label_OrbitTrapPosition.Size = new System.Drawing.Size(56, 15);
+            this.label_OrbitTrapPosition.TabIndex = 39;
+            this.label_OrbitTrapPosition.Text = "Position: ";
+            this.label_OrbitTrapPosition.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // input_BailoutX
             // 
@@ -830,7 +830,7 @@
             this.panel_OrbitTrapMenu.Controls.Add(label_OrbitRange);
             this.panel_OrbitTrapMenu.Controls.Add(this.button_RemoveBailoutTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.button_AddBailoutTrap);
-            this.panel_OrbitTrapMenu.Controls.Add(this.label_BailoutTrap);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapPosition);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutX);
             this.panel_OrbitTrapMenu.Controls.Add(this.label1);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrap);
@@ -1059,6 +1059,10 @@
             this.input_ColorCycles.Size = new System.Drawing.Size(40, 23);
             this.input_ColorCycles.TabIndex = 43;
             this.input_ColorCycles.Text = "1";
+            this.input_ColorCycles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_ColorCycles_KeyDown);
+            this.input_ColorCycles.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_ColorCycles_KeyPress);
+            this.input_ColorCycles.Validating += new System.ComponentModel.CancelEventHandler(this.input_ColorCycles_Validating);
+            this.input_ColorCycles.Validated += new System.EventHandler(this.input_ColorCycles_Validated);
             // 
             // label_ColorFactors
             // 
@@ -1075,7 +1079,11 @@
             this.input_ColorFactor.Name = "input_ColorFactor";
             this.input_ColorFactor.Size = new System.Drawing.Size(40, 23);
             this.input_ColorFactor.TabIndex = 45;
-            this.input_ColorFactor.Text = "1";
+            this.input_ColorFactor.Text = "6";
+            this.input_ColorFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_ColorFactor_KeyDown);
+            this.input_ColorFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_ColorFactor_KeyPress);
+            this.input_ColorFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_ColorFactor_Validating);
+            this.input_ColorFactor.Validated += new System.EventHandler(this.input_ColorFactor_Validated);
             // 
             // input_Center
             // 
@@ -1289,6 +1297,10 @@
             this.input_OrbitTrapFactor.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapFactor.TabIndex = 74;
             this.input_OrbitTrapFactor.Text = "10";
+            this.input_OrbitTrapFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_OrbitTrapFactor_KeyDown);
+            this.input_OrbitTrapFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_OrbitTrapFactor_KeyPress);
+            this.input_OrbitTrapFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor_Validating);
+            this.input_OrbitTrapFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor_Validated);
             // 
             // input_TextureBlend
             // 
@@ -1550,7 +1562,7 @@
         private System.Windows.Forms.Button button_Menu4;
         private System.Windows.Forms.Panel panel_FormulaMenu;
         private System.Windows.Forms.TextBox input_BailoutX;
-        private System.Windows.Forms.Label label_BailoutTrap;
+        private System.Windows.Forms.Label label_OrbitTrapPosition;
         private System.Windows.Forms.Panel panel_OrbitTrapMenu;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label_Texture;

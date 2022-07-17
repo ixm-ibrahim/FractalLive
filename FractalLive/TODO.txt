@@ -21,7 +21,7 @@ adjustable zoom factor
 minimize calls to GL.Uniform
 load and save settings
 focus glcontrol after each winforms input
-consolidate input textboxes
+consolidate input textboxes (make functions for key press/down)
 locked zoom box
 buddhabrot in menu 1
 lighting menu
@@ -31,3 +31,4 @@ normal maps in lighting menu
 bug where update is called after glcontrol is disposed
 test max float value
 blend texture with coloring
+enter key press for numericupdowns
