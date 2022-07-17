@@ -133,8 +133,8 @@
             this.input_TextureBlend = new System.Windows.Forms.NumericUpDown();
             this.button_ClearTexture = new System.Windows.Forms.Button();
             this.input_MaxDistanceEstimation = new System.Windows.Forms.TextBox();
-            this.input_DistanceFineness = new System.Windows.Forms.TextBox();
-            this.label_MaxDistanceEstimation = new System.Windows.Forms.Label();
+            this.input_DistanceEstimationFactor = new System.Windows.Forms.TextBox();
+            this.label_DistanceEstimationMax = new System.Windows.Forms.Label();
             this.label_DistanceEstimationFineness = new System.Windows.Forms.Label();
             this.checkBox_UseDistanceEstimation = new System.Windows.Forms.CheckBox();
             this.label_Coloring = new System.Windows.Forms.Label();
@@ -143,6 +143,7 @@
             this.input_EditingColor = new System.Windows.Forms.ComboBox();
             this.label_EditingColor = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.input_LockedZoom = new System.Windows.Forms.TextBox();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -164,9 +165,9 @@
             label_MaxIterations.AutoSize = true;
             label_MaxIterations.Location = new System.Drawing.Point(3, 84);
             label_MaxIterations.Name = "label_MaxIterations";
-            label_MaxIterations.Size = new System.Drawing.Size(85, 15);
+            label_MaxIterations.Size = new System.Drawing.Size(90, 15);
             label_MaxIterations.TabIndex = 6;
-            label_MaxIterations.Text = "Max Iterations:";
+            label_MaxIterations.Text = "Max Iterations:*";
             label_MaxIterations.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label_StartOrbit
@@ -194,9 +195,9 @@
             label_TextureBlend.AutoSize = true;
             label_TextureBlend.Location = new System.Drawing.Point(3, 348);
             label_TextureBlend.Name = "label_TextureBlend";
-            label_TextureBlend.Size = new System.Drawing.Size(81, 15);
+            label_TextureBlend.Size = new System.Drawing.Size(86, 15);
             label_TextureBlend.TabIndex = 70;
-            label_TextureBlend.Text = "Texture Blend:";
+            label_TextureBlend.Text = "Texture Blend:*";
             label_TextureBlend.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label_MaxDistance
@@ -204,9 +205,9 @@
             label_MaxDistance.AutoSize = true;
             label_MaxDistance.Location = new System.Drawing.Point(3, 169);
             label_MaxDistance.Name = "label_MaxDistance";
-            label_MaxDistance.Size = new System.Drawing.Size(84, 15);
+            label_MaxDistance.Size = new System.Drawing.Size(86, 15);
             label_MaxDistance.TabIndex = 57;
-            label_MaxDistance.Text = "Max Distance: ";
+            label_MaxDistance.Text = "Max Distance:*";
             label_MaxDistance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // menuStrip1
@@ -607,9 +608,9 @@
             this.label_Power.AutoSize = true;
             this.label_Power.Location = new System.Drawing.Point(3, 111);
             this.label_Power.Name = "label_Power";
-            this.label_Power.Size = new System.Drawing.Size(46, 15);
+            this.label_Power.Size = new System.Drawing.Size(48, 15);
             this.label_Power.TabIndex = 29;
-            this.label_Power.Text = "Power: ";
+            this.label_Power.Text = "Power:*";
             this.label_Power.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // input_CPower
@@ -625,22 +626,22 @@
             this.label_CPower.AutoSize = true;
             this.label_CPower.Location = new System.Drawing.Point(3, 137);
             this.label_CPower.Name = "label_CPower";
-            this.label_CPower.Size = new System.Drawing.Size(57, 15);
+            this.label_CPower.Size = new System.Drawing.Size(59, 15);
             this.label_CPower.TabIndex = 31;
-            this.label_CPower.Text = "C Power: ";
+            this.label_CPower.Text = "C Power:*";
             this.label_CPower.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // input_MaxIterations
             // 
             this.input_MaxIterations.CausesValidation = false;
-            this.input_MaxIterations.Location = new System.Drawing.Point(89, 82);
+            this.input_MaxIterations.Location = new System.Drawing.Point(99, 81);
             this.input_MaxIterations.Maximum = new decimal(new int[] {
             9999,
             0,
             0,
             0});
             this.input_MaxIterations.Name = "input_MaxIterations";
-            this.input_MaxIterations.Size = new System.Drawing.Size(65, 23);
+            this.input_MaxIterations.Size = new System.Drawing.Size(55, 23);
             this.input_MaxIterations.TabIndex = 8;
             this.input_MaxIterations.Value = new decimal(new int[] {
             100,
@@ -688,9 +689,9 @@
             this.label_Bailout.AutoSize = true;
             this.label_Bailout.Location = new System.Drawing.Point(3, 56);
             this.label_Bailout.Name = "label_Bailout";
-            this.label_Bailout.Size = new System.Drawing.Size(100, 15);
+            this.label_Bailout.Size = new System.Drawing.Size(102, 15);
             this.label_Bailout.TabIndex = 35;
-            this.label_Bailout.Text = "Bailout (general): ";
+            this.label_Bailout.Text = "Bailout (general):*";
             // 
             // button_Menu3
             // 
@@ -793,9 +794,9 @@
             this.label_OrbitTrapPosition.AutoSize = true;
             this.label_OrbitTrapPosition.Location = new System.Drawing.Point(3, 140);
             this.label_OrbitTrapPosition.Name = "label_OrbitTrapPosition";
-            this.label_OrbitTrapPosition.Size = new System.Drawing.Size(56, 15);
+            this.label_OrbitTrapPosition.Size = new System.Drawing.Size(58, 15);
             this.label_OrbitTrapPosition.TabIndex = 39;
-            this.label_OrbitTrapPosition.Text = "Position: ";
+            this.label_OrbitTrapPosition.Text = "Position:*";
             this.label_OrbitTrapPosition.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // input_BailoutX
@@ -883,9 +884,9 @@
             this.label_OrbitTrapFactors.AutoSize = true;
             this.label_OrbitTrapFactors.Location = new System.Drawing.Point(3, 276);
             this.label_OrbitTrapFactors.Name = "label_OrbitTrapFactors";
-            this.label_OrbitTrapFactors.Size = new System.Drawing.Size(51, 15);
+            this.label_OrbitTrapFactors.Size = new System.Drawing.Size(53, 15);
             this.label_OrbitTrapFactors.TabIndex = 54;
-            this.label_OrbitTrapFactors.Text = "Factors: ";
+            this.label_OrbitTrapFactors.Text = "Factors:*";
             this.label_OrbitTrapFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label_EditingOrbitBailout
@@ -1044,7 +1045,7 @@
             // 
             this.checkBox_LockZoomFactor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_LockZoomFactor.AutoSize = true;
-            this.checkBox_LockZoomFactor.Location = new System.Drawing.Point(307, 466);
+            this.checkBox_LockZoomFactor.Location = new System.Drawing.Point(365, 467);
             this.checkBox_LockZoomFactor.Name = "checkBox_LockZoomFactor";
             this.checkBox_LockZoomFactor.Size = new System.Drawing.Size(122, 19);
             this.checkBox_LockZoomFactor.TabIndex = 38;
@@ -1069,9 +1070,9 @@
             this.label_ColorFactors.AutoSize = true;
             this.label_ColorFactors.Location = new System.Drawing.Point(2, 135);
             this.label_ColorFactors.Name = "label_ColorFactors";
-            this.label_ColorFactors.Size = new System.Drawing.Size(48, 15);
+            this.label_ColorFactors.Size = new System.Drawing.Size(53, 15);
             this.label_ColorFactors.TabIndex = 42;
-            this.label_ColorFactors.Text = "Factors:";
+            this.label_ColorFactors.Text = "Factors:*";
             // 
             // input_ColorFactor
             // 
@@ -1153,8 +1154,8 @@
             this.panel_ColorMenu.Controls.Add(label_TextureBlend);
             this.panel_ColorMenu.Controls.Add(this.button_ClearTexture);
             this.panel_ColorMenu.Controls.Add(this.input_MaxDistanceEstimation);
-            this.panel_ColorMenu.Controls.Add(this.input_DistanceFineness);
-            this.panel_ColorMenu.Controls.Add(this.label_MaxDistanceEstimation);
+            this.panel_ColorMenu.Controls.Add(this.input_DistanceEstimationFactor);
+            this.panel_ColorMenu.Controls.Add(this.label_DistanceEstimationMax);
             this.panel_ColorMenu.Controls.Add(this.label_DistanceEstimationFineness);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistanceEstimation);
             this.panel_ColorMenu.Controls.Add(this.label_Texture);
@@ -1286,9 +1287,9 @@
             this.label_OrbitTrapFactor.AutoSize = true;
             this.label_OrbitTrapFactor.Location = new System.Drawing.Point(2, 161);
             this.label_OrbitTrapFactor.Name = "label_OrbitTrapFactor";
-            this.label_OrbitTrapFactor.Size = new System.Drawing.Size(98, 15);
+            this.label_OrbitTrapFactor.Size = new System.Drawing.Size(103, 15);
             this.label_OrbitTrapFactor.TabIndex = 72;
-            this.label_OrbitTrapFactor.Text = "Orbit Trap Factor:";
+            this.label_OrbitTrapFactor.Text = "Orbit Trap Factor:*";
             // 
             // input_OrbitTrapFactor
             // 
@@ -1349,32 +1350,32 @@
             this.input_MaxDistanceEstimation.TabIndex = 65;
             this.input_MaxDistanceEstimation.Text = "2";
             // 
-            // input_DistanceFineness
+            // input_DistanceEstimationFactor
             // 
-            this.input_DistanceFineness.Location = new System.Drawing.Point(115, 262);
-            this.input_DistanceFineness.Name = "input_DistanceFineness";
-            this.input_DistanceFineness.Size = new System.Drawing.Size(40, 23);
-            this.input_DistanceFineness.TabIndex = 67;
-            this.input_DistanceFineness.Text = "1";
+            this.input_DistanceEstimationFactor.Location = new System.Drawing.Point(115, 262);
+            this.input_DistanceEstimationFactor.Name = "input_DistanceEstimationFactor";
+            this.input_DistanceEstimationFactor.Size = new System.Drawing.Size(40, 23);
+            this.input_DistanceEstimationFactor.TabIndex = 67;
+            this.input_DistanceEstimationFactor.Text = "1";
             // 
-            // label_MaxDistanceEstimation
+            // label_DistanceEstimationMax
             // 
-            this.label_MaxDistanceEstimation.AutoSize = true;
-            this.label_MaxDistanceEstimation.Location = new System.Drawing.Point(3, 238);
-            this.label_MaxDistanceEstimation.Name = "label_MaxDistanceEstimation";
-            this.label_MaxDistanceEstimation.Size = new System.Drawing.Size(84, 15);
-            this.label_MaxDistanceEstimation.TabIndex = 66;
-            this.label_MaxDistanceEstimation.Text = "Max Distance: ";
-            this.label_MaxDistanceEstimation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_DistanceEstimationMax.AutoSize = true;
+            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(3, 238);
+            this.label_DistanceEstimationMax.Name = "label_DistanceEstimationMax";
+            this.label_DistanceEstimationMax.Size = new System.Drawing.Size(86, 15);
+            this.label_DistanceEstimationMax.TabIndex = 66;
+            this.label_DistanceEstimationMax.Text = "Max Distance:*";
+            this.label_DistanceEstimationMax.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label_DistanceEstimationFineness
             // 
             this.label_DistanceEstimationFineness.AutoSize = true;
             this.label_DistanceEstimationFineness.Location = new System.Drawing.Point(3, 265);
             this.label_DistanceEstimationFineness.Name = "label_DistanceEstimationFineness";
-            this.label_DistanceEstimationFineness.Size = new System.Drawing.Size(106, 15);
+            this.label_DistanceEstimationFineness.Size = new System.Drawing.Size(96, 15);
             this.label_DistanceEstimationFineness.TabIndex = 68;
-            this.label_DistanceEstimationFineness.Text = "Distance Fineness: ";
+            this.label_DistanceEstimationFineness.Text = "Distance Factor:*";
             this.label_DistanceEstimationFineness.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // checkBox_UseDistanceEstimation
@@ -1461,11 +1462,25 @@
             this.colorDialog1.FullOpen = true;
             this.colorDialog1.ShowHelp = true;
             // 
+            // input_LockedZoom
+            // 
+            this.input_LockedZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.input_LockedZoom.Location = new System.Drawing.Point(307, 464);
+            this.input_LockedZoom.Name = "input_LockedZoom";
+            this.input_LockedZoom.Size = new System.Drawing.Size(52, 23);
+            this.input_LockedZoom.TabIndex = 60;
+            this.input_LockedZoom.Text = "0";
+            this.input_LockedZoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.input_LockedZoom_KeyDown);
+            this.input_LockedZoom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_LockedZoom_KeyPress);
+            this.input_LockedZoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_LockedZoom_Validating);
+            this.input_LockedZoom.Validated += new System.EventHandler(this.input_LockedZoom_Validated);
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1150, 496);
+            this.Controls.Add(this.input_LockedZoom);
             this.Controls.Add(this.panel_ColorMenu);
             this.Controls.Add(this.glControl);
             this.Controls.Add(this.label2);
@@ -1591,8 +1606,8 @@
         private System.Windows.Forms.ComboBox input_EditingColor;
         private System.Windows.Forms.Label label_EditingColor;
         private System.Windows.Forms.TextBox input_MaxDistanceEstimation;
-        private System.Windows.Forms.TextBox input_DistanceFineness;
-        private System.Windows.Forms.Label label_MaxDistanceEstimation;
+        private System.Windows.Forms.TextBox input_DistanceEstimationFactor;
+        private System.Windows.Forms.Label label_DistanceEstimationMax;
         private System.Windows.Forms.Label label_DistanceEstimationFineness;
         private System.Windows.Forms.CheckBox checkBox_UseDistanceEstimation;
         private System.Windows.Forms.Button button_ClearTexture;
@@ -1615,6 +1630,7 @@
         private System.Windows.Forms.Label label_BuddhabrotType;
         private System.Windows.Forms.ComboBox input_BuddhabrotType;
         private System.Windows.Forms.CheckBox checkBox_UseBuddhabrot;
+        private System.Windows.Forms.TextBox input_LockedZoom;
     }
 }
 

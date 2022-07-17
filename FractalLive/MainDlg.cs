@@ -735,12 +735,6 @@ namespace FractalLive
             input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
         }
 
-        private void checkBox_LockZoomFactor_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!checkBox_LockZoomFactor.Checked)
-                CurrentSettings.LockedZoom = CurrentSettings.Zoom;
-        }
-
         private void input_Zoom_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !IsDecimalChar(e);
@@ -761,7 +755,41 @@ namespace FractalLive
             input_Zoom.Text = CurrentSettings.Zoom.ToString(); // in case number gets restricted by bounds
 
             if (!checkBox_LockZoomFactor.Checked)
+            {
                 CurrentSettings.LockedZoom = CurrentSettings.Zoom;
+                input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
+            }
+        }
+
+        private void checkBox_LockZoomFactor_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBox_LockZoomFactor.Checked)
+            {
+                CurrentSettings.LockedZoom = CurrentSettings.Zoom;
+                input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
+            }
+        }
+
+        private void input_LockedZoom_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e);
+        }
+        private void input_LockedZoom_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                glControl.Focus(); // force leave
+        }
+        private void input_LockedZoom_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_LockedZoom.Text))
+                e.Cancel = true;
+        }
+        private void input_LockedZoom_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.LockedZoom = float.Parse(input_LockedZoom.Text);
+            input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString(); // in case number gets restricted by bounds
+
+            checkBox_LockZoomFactor.Checked = true;
         }
 
         #endregion
