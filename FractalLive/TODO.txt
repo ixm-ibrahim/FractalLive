@@ -27,3 +27,8 @@ key for cycling orbit traps/colorings (+/- ?)
 deal with interior colorings that wont work
 test max float value
 investigate behavior when bailout is between 0 and 1
+optimize glsl arithmetic
+complex powers
+snap value
+roll buttons
+zoom scalable inputs

@@ -45,6 +45,9 @@ namespace FractalLive
                 // rolling
                 keysDown[Keys.Q] = false;
                 keysDown[Keys.E] = false;
+                // zooming
+                keysDown[Keys.R] = false;
+                keysDown[Keys.F] = false;
                 // fractal settings
                 keysDown[Keys.D1] = false;          // max iterations
                 keysDown[Keys.D2] = false;          // bailout (general)
@@ -64,6 +67,11 @@ namespace FractalLive
             public bool IsKeyDown(Keys key)
             {
                 return keysDown.GetValueOrDefault(key);
+            }
+
+            public bool IsMovementKeyDown()
+            {
+                return IsKeyDown(Keys.W) || IsKeyDown(Keys.A) || IsKeyDown(Keys.S) || IsKeyDown(Keys.D);
             }
 
             public Dictionary<Keys, bool> keysDown;
@@ -164,7 +172,9 @@ namespace FractalLive
             // Menu 1
             shader.SetInt("maxIterations", fractalSettings.MaxIterations.Value);
             shader.SetInt("minIterations", fractalSettings.MinIterations.Value);
+            shader.SetBool("useConjugate", fractalSettings.IsConjugate);
             shader.SetFloat("power", fractalSettings.Power);
+            shader.SetFloat("c_power", fractalSettings.C_Power);
 
             // Menu 2
             shader.SetInt("orbitTrap", (int)fractalSettings.OrbitTrap);
@@ -375,7 +385,7 @@ namespace FractalLive
             if (inputState.ControlDown)
                 modifier /= 5;
 
-
+            // menu controls
             if (panel_FormulaMenu.Enabled)
             {
                 if (inputState.keysDown[Keys.D1])
@@ -396,12 +406,12 @@ namespace FractalLive
                 }
                 if (inputState.keysDown[Keys.D3])
                 {
-                    CurrentSettings.Power += modifier * 2;
+                    CurrentSettings.Power += modifier / 50;
                     input_Power.Text = CurrentSettings.Power.ToString();
                 }
                 if (inputState.keysDown[Keys.D4])
                 {
-                    CurrentSettings.C_Power += modifier * 2;
+                    CurrentSettings.C_Power += modifier / 50;
                     input_CPower.Text = CurrentSettings.C_Power.ToString();
                 }
             }
@@ -501,8 +511,43 @@ namespace FractalLive
                 }
             }
 
-            // update controls
-            Log(CurrentSettings.MinIterations.Value.ToString());
+            // keyboard controls
+            if (CurrentCamera.CurrentMode == Camera.Mode.FLAT)
+            {
+                if (inputState.IsMovementKeyDown())
+                {
+                    float rad = MathHelper.DegreesToRadians(CurrentCamera.Roll);
+                    float rad90 = rad + MathHelper.Pi / 2;
+                    float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2, CurrentSettings.Zoom);
+
+                    float delta = modifier * 3;
+                    float deltaX = inputState.keysDown[Keys.D] ? delta : (inputState.keysDown[Keys.A] ? -delta : 0);
+                    float deltaY = inputState.keysDown[Keys.W] ? delta : (inputState.keysDown[Keys.S] ? -delta : 0);
+
+                    CurrentSettings.Center += new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad)) * (float)deltaX * factor;
+                    CurrentSettings.Center += new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90)) * (float)deltaY * factor;
+
+                    input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
+                }
+                if (inputState.keysDown[Keys.Q] || inputState.keysDown[Keys.E])
+                {
+                    CurrentCamera.Roll -= modifier / 2 * (inputState.keysDown[Keys.Q] ? 1 : -1);
+                }
+                if (inputState.keysDown[Keys.R] || inputState.keysDown[Keys.F])
+                {
+                    CurrentSettings.Zoom += modifier / 40 * (inputState.keysDown[Keys.R] ? 1 : -1);
+                    input_Zoom.Text = CurrentSettings.Zoom.ToString();
+
+                    if (!checkBox_LockZoomFactor.Checked)
+                    {
+                        CurrentSettings.LockedZoom = CurrentSettings.Zoom;
+                        input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
+                    }
+                }
+            }
+
+                // update controls
+                Log(CurrentSettings.MinIterations.Value.ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal
@@ -572,7 +617,23 @@ namespace FractalLive
 
         private void glControl_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.LControlKey)
+            if (e.KeyCode == Keys.W)
+                inputState.keysDown[Keys.W] = true;
+            else if (e.KeyCode == Keys.A)
+                inputState.keysDown[Keys.A] = true;
+            else if (e.KeyCode == Keys.S)
+                inputState.keysDown[Keys.S] = true;
+            else if (e.KeyCode == Keys.D)
+                inputState.keysDown[Keys.D] = true;
+            else if (e.KeyCode == Keys.Q)
+                inputState.keysDown[Keys.Q] = true;
+            else if (e.KeyCode == Keys.E)
+                inputState.keysDown[Keys.E] = true;
+            else if (e.KeyCode == Keys.R)
+                inputState.keysDown[Keys.R] = true;
+            else if (e.KeyCode == Keys.F)
+                inputState.keysDown[Keys.F] = true;
+            else if (e.KeyCode == Keys.LControlKey)
                 inputState.keysDown[Keys.LControlKey] = true;
             else if (e.KeyCode == Keys.RControlKey)
                 inputState.keysDown[Keys.RControlKey] = true;
@@ -615,7 +676,23 @@ namespace FractalLive
 
         private void glControl_KeyUp(object? sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.LControlKey)
+            if (e.KeyCode == Keys.W)
+                inputState.keysDown[Keys.W] = false;
+            else if (e.KeyCode == Keys.A)
+                inputState.keysDown[Keys.A] = false;
+            else if (e.KeyCode == Keys.S)
+                inputState.keysDown[Keys.S] = false;
+            else if (e.KeyCode == Keys.D)
+                inputState.keysDown[Keys.D] = false;
+            else if (e.KeyCode == Keys.Q)
+                inputState.keysDown[Keys.Q] = false;
+            else if (e.KeyCode == Keys.E)
+                inputState.keysDown[Keys.E] = false;
+            else if (e.KeyCode == Keys.R)
+                inputState.keysDown[Keys.R] = false;
+            else if (e.KeyCode == Keys.F)
+                inputState.keysDown[Keys.F] = false;
+            else if (e.KeyCode == Keys.LControlKey)
                 inputState.keysDown[Keys.LControlKey] = false;
             else if (e.KeyCode == Keys.RControlKey)
                 inputState.keysDown[Keys.RControlKey] = false;
@@ -806,6 +883,10 @@ namespace FractalLive
             }
 
             CurrentSettings.MaxIterations.SetValue((int)input_MaxIterations.Value);
+
+            if (CurrentSettings.MaxIterations.Value < CurrentSettings.MinIterations.Value)
+                input_MinIterations.Value = CurrentSettings.MaxIterations.Value;
+
             /*
             input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Value;
             if (input_StartOrbit.Value > CurrentSettings.MaxIterations.Value)
@@ -824,6 +905,42 @@ namespace FractalLive
                 input_MaxIterations.Value = CurrentSettings.MinIterations.Value;
             
         }
+
+        private void checkBox_UseConjugate_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.IsConjugate = checkBox_UseConjugate.Checked;
+        }
+
+        private void input_Power_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e);
+        }
+        private void input_Power_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_Power.Text))
+                e.Cancel = true;
+        }
+        private void input_Power_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.Power = float.Parse(input_Power.Text);
+            input_Power.Text = CurrentSettings.Power.ToString();
+        }
+
+        private void input_CPower_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e);
+        }
+        private void input_CPower_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_CPower.Text))
+                e.Cancel = true;
+        }
+        private void input_CPower_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.C_Power = float.Parse(input_CPower.Text);
+            input_CPower.Text = CurrentSettings.C_Power.ToString();
+        }
+
         #endregion
 
         #region Menu 2 Controls

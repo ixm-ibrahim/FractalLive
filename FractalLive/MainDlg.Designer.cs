@@ -146,6 +146,7 @@
             this.label_EditingColor = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.input_LockedZoom = new System.Windows.Forms.TextBox();
+            this.checkBox_UseConjugate = new System.Windows.Forms.CheckBox();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -601,12 +602,15 @@
             // 
             // input_Power
             // 
-            this.input_Power.Location = new System.Drawing.Point(71, 140);
+            this.input_Power.Location = new System.Drawing.Point(70, 158);
             this.input_Power.Name = "input_Power";
             this.input_Power.Size = new System.Drawing.Size(84, 23);
             this.input_Power.TabIndex = 28;
             this.input_Power.Text = "2";
             this.input_Power.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_Power.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Power_KeyPress);
+            this.input_Power.Validating += new System.ComponentModel.CancelEventHandler(this.input_Power_Validating);
+            this.input_Power.Validated += new System.EventHandler(this.input_Power_Validated);
             // 
             // label_FractalType
             // 
@@ -621,7 +625,7 @@
             // label_Power
             // 
             this.label_Power.AutoSize = true;
-            this.label_Power.Location = new System.Drawing.Point(4, 143);
+            this.label_Power.Location = new System.Drawing.Point(3, 161);
             this.label_Power.Name = "label_Power";
             this.label_Power.Size = new System.Drawing.Size(48, 15);
             this.label_Power.TabIndex = 29;
@@ -630,17 +634,20 @@
             // 
             // input_CPower
             // 
-            this.input_CPower.Location = new System.Drawing.Point(71, 166);
+            this.input_CPower.Location = new System.Drawing.Point(70, 184);
             this.input_CPower.Name = "input_CPower";
             this.input_CPower.Size = new System.Drawing.Size(84, 23);
             this.input_CPower.TabIndex = 30;
             this.input_CPower.Text = "1";
             this.input_CPower.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_CPower.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_CPower_KeyPress);
+            this.input_CPower.Validating += new System.ComponentModel.CancelEventHandler(this.input_CPower_Validating);
+            this.input_CPower.Validated += new System.EventHandler(this.input_CPower_Validated);
             // 
             // label_CPower
             // 
             this.label_CPower.AutoSize = true;
-            this.label_CPower.Location = new System.Drawing.Point(4, 169);
+            this.label_CPower.Location = new System.Drawing.Point(3, 187);
             this.label_CPower.Name = "label_CPower";
             this.label_CPower.Size = new System.Drawing.Size(59, 15);
             this.label_CPower.TabIndex = 31;
@@ -752,6 +759,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_FormulaMenu.AutoScroll = true;
             this.panel_FormulaMenu.CausesValidation = false;
+            this.panel_FormulaMenu.Controls.Add(this.checkBox_UseConjugate);
             this.panel_FormulaMenu.Controls.Add(this.input_MinIterations);
             this.panel_FormulaMenu.Controls.Add(label_MinIterations);
             this.panel_FormulaMenu.Controls.Add(this.label_BuddhabrotType);
@@ -797,7 +805,7 @@
             // label_BuddhabrotType
             // 
             this.label_BuddhabrotType.AutoSize = true;
-            this.label_BuddhabrotType.Location = new System.Drawing.Point(5, 221);
+            this.label_BuddhabrotType.Location = new System.Drawing.Point(4, 239);
             this.label_BuddhabrotType.Name = "label_BuddhabrotType";
             this.label_BuddhabrotType.Size = new System.Drawing.Size(34, 15);
             this.label_BuddhabrotType.TabIndex = 83;
@@ -813,7 +821,7 @@
             "Normal",
             "Inverse",
             "Nebulabrot"});
-            this.input_BuddhabrotType.Location = new System.Drawing.Point(71, 218);
+            this.input_BuddhabrotType.Location = new System.Drawing.Point(70, 236);
             this.input_BuddhabrotType.Name = "input_BuddhabrotType";
             this.input_BuddhabrotType.Size = new System.Drawing.Size(86, 23);
             this.input_BuddhabrotType.TabIndex = 84;
@@ -821,7 +829,7 @@
             // checkBox_UseBuddhabrot
             // 
             this.checkBox_UseBuddhabrot.AutoSize = true;
-            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(6, 199);
+            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(5, 217);
             this.checkBox_UseBuddhabrot.Name = "checkBox_UseBuddhabrot";
             this.checkBox_UseBuddhabrot.Size = new System.Drawing.Size(111, 19);
             this.checkBox_UseBuddhabrot.TabIndex = 65;
@@ -1527,6 +1535,17 @@
             this.input_LockedZoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_LockedZoom_Validating);
             this.input_LockedZoom.Validated += new System.EventHandler(this.input_LockedZoom_Validated);
             // 
+            // checkBox_UseConjugate
+            // 
+            this.checkBox_UseConjugate.AutoSize = true;
+            this.checkBox_UseConjugate.Location = new System.Drawing.Point(5, 133);
+            this.checkBox_UseConjugate.Name = "checkBox_UseConjugate";
+            this.checkBox_UseConjugate.Size = new System.Drawing.Size(103, 19);
+            this.checkBox_UseConjugate.TabIndex = 87;
+            this.checkBox_UseConjugate.Text = "Use Conjugate";
+            this.checkBox_UseConjugate.UseVisualStyleBackColor = true;
+            this.checkBox_UseConjugate.CheckedChanged += new System.EventHandler(this.checkBox_UseConjugate_CheckedChanged);
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1685,6 +1704,7 @@
         private System.Windows.Forms.CheckBox checkBox_UseBuddhabrot;
         private System.Windows.Forms.TextBox input_LockedZoom;
         private System.Windows.Forms.NumericUpDown input_MinIterations;
+        private System.Windows.Forms.CheckBox checkBox_UseConjugate;
     }
 }
 

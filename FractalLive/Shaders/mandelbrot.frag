@@ -41,7 +41,9 @@ uniform float lockedZoom;
 
 uniform int maxIterations;
 uniform int minIterations;
+uniform bool useConjugate;
 uniform float power;
+uniform float c_power;
 
 uniform int orbitTrap;
 uniform float bailout;
@@ -78,8 +80,12 @@ vec2 MandelbrotLoop(vec2 c, int maxIteration, inout int iter, inout float trap, 
 vec2 MandelbrotDistanceLoop(vec2 c, int maxIteration, inout int iter);
 float sigmoid(float x, float factor);
 vec3 sigmoid(vec3 v, float factor);
+vec2 c_conj(vec2 c);
 vec2 c_2(vec2 c);
-vec2 invert_c(vec2 c);
+vec2 c_mul(vec2 a, vec2 b);
+vec2 c_div(vec2 a, vec2 b);
+vec2 c_pow(vec2 c, float p);
+vec2 c_invert(vec2 c);
 vec2 Fix(vec2 z);
 float GetSmoothIter(float iter, vec2 z);
 float CalculateOrbitTrap(float trap, float newDist, int iter);
@@ -139,7 +145,10 @@ vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap,
 	for (iter = 0; iter < maxIterations && IsBounded(iter, z); ++iter)
 	//IsBounded(z);for (iter = 0; iter < maxIterations; ++iter)
 	{
-		z = c_2(z) + c;
+        if (useConjugate)
+            z = c_conj(z);
+        
+		z = c_pow(z, power) + c_pow(c, c_power);
 
         z = Fix(z);
 
@@ -337,8 +346,8 @@ vec3 DomainColoring(int coloring, vec2 z, int iter, float trap)
         //return ColorFromHSV(vec3(atan(FragPosModel.y, FragPosModel.x) * 180 / M_PI + t, 1, 1));
 
     //float theta = sin(atan(float(z.y), float(z.x))) * 360 * colorCycle + t;
-    //float theta = (atan(float(z.y), float(z.x)) * 180/M_PI) * colorCycle + t;
-    float theta = (atan(float(z.y), float(z.x)) * 180/M_PI) * colorCycle;
+    float theta = (atan(float(z.y), float(z.x)) * 180/M_PI) * colorCycle + t;
+    //float theta = (atan(float(z.y), float(z.x)) * 180/M_PI) * colorCycle;
 	float r = length(z);
 	//float r = length(z) / iter;
 	//float r = length(z) / 100;
@@ -382,7 +391,7 @@ vec3 DomainColoring(int coloring, vec2 z, int iter, float trap)
             break;
         default:
             //color = mix(outerColor1, outerColor2, theta);
-            //float test = log(length(invert_c(z)));
+            //float test = log(length(c_invert(z)));
             color = ColorFromHSV(vec3(theta, 1, 1));
             break;
     }
@@ -422,12 +431,52 @@ vec3 ColorFromHSV(vec3 color)
     return vec3(v, p, q);
 }
 
+vec2 c_mul(vec2 a, vec2 b)
+{
+    return vec2(a.x*b.x - a.y*b.y, a.x*b.y + a.y*b.x);
+}
+vec2 c_div(vec2 a, vec2 b)
+{
+    float x = dot(b,b);
+    return vec2((a.x*b.x + a.y*b.y) / x, (a.y*b.x - a.x*b.y) / x);
+}
+vec2 c_conj(vec2 c)
+{
+    return vec2(c.x, -c.y);
+}
 vec2 c_2(vec2 c)
 {
     return vec2(c.x*c.x - c.y*c.y, 2*c.x*c.y);
 }
+vec2 c_pow(vec2 c, float a)
+{
+    if (c.x == 0 && c.y == 0)
+        return c;
+	if (a == 1)
+        return c;
+	if (a == 2)
+        return c_2(c);
+    else if (int(a) == a)
+    {
+        vec2 original = c;
+        float p = abs(a);
 
-vec2 invert_c(vec2 c)
+        for (p; p - 1 > 0; p--)
+            c = c_mul(c, original);
+
+        if (a < 0)
+            return c_div(vec2(1,0), c);
+        
+        return c;
+    }
+    
+    float r = length(c);
+    float theta = atan(c.y, c.x);   
+    return isnan(r) || isnan(theta) ? c : pow(r, a) * vec2(cos(theta * a), sin(theta * a));
+}
+
+
+vec2 c_invert(vec2 c)
 {
     float l = pow(length(c),2);
     return vec2(c.x / l, -c.y / l);
@@ -446,13 +495,13 @@ float GetSmoothIter(float iter, vec2 z)
 {
     if (coloring == COL_SMOOTH)
         //mu = iter;
-        return iter + 1 - (log2(log2(length(z))));
+        //return iter + 1 - (log2(log2(length(z))));
         //return iter - log2(log2(dot(z,z))) + 4.0;
         //return iter - log(log(dot(z,z))/(log(bailout)))/log(power);
         //return iter - (log(log(length(z))/log(bailout)) / (sign(power)*log(abs(power))));
-        //return iter - (log(log(length(z))/log(bailout)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
+        return iter - (log(log(length(z))/log(bailout)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
         //return iter + 1 - (log(log(length(z))) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
         //return iter - (log(log(length(z))/log(bailout)));
-    power;
+    
     return iter;
 }
