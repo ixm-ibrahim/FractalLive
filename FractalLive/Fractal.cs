@@ -45,6 +45,11 @@ namespace FractalLive
             Both, Interior, Exterior
         }
 
+        public enum Calculation
+        {
+            Custom = -1, Minimum = 0, Maximum = 1, Average = 2, First = 3, Last = 4
+        }
+
         #endregion
 
         #region Structures
@@ -90,6 +95,7 @@ namespace FractalLive
                 BailoutLines[1] = new Vector4(0,0,1,0);
                 //BailoutLine = new Vector4(-8,-9.5f,-2,-3);
                 BailoutLinesCount = 2;
+                OrbitTrapCalculation = Calculation.Minimum;
                 StartOrbitDistance = new FloatBounds(2, 0, (float)maxVal);
                 StartOrbit = new IntBounds(1, 1, 9999);
                 OrbitRange = new IntBounds(MaxIterations.Value, 1, 9999);
@@ -318,6 +324,7 @@ namespace FractalLive
             public bool UseDistance;
             public bool UseLighting;
             public bool UseTerrainColor;
+            public Calculation OrbitTrapCalculation;
             public IntBounds StartOrbit;
             public IntBounds OrbitRange;
             public float Bailout;

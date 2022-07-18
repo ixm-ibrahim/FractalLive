@@ -24,6 +24,12 @@
 #define COL_DOMAIN_DARK_RINGS           9
 #define COL_DOMAIN_BRIGHT_DARK_SMOOTH   10
 
+#define CALC_MIN                        0
+#define CALC_MAX                        1
+#define CALC_AVG                        2
+#define CALC_FIRST                      3
+#define CALC_LAST                       4
+
 out vec4 FragColor;
 
 in vec2 FragPos;
@@ -42,6 +48,7 @@ uniform vec2[16] bailoutPoints;
 uniform int bailoutPointsCount;
 uniform vec4[16] bailoutLines;
 uniform int bailoutLinesCount;
+uniform int orbitTrapCalculation;
 uniform float startOrbitDistance;
 uniform int startOrbit;
 uniform int orbitRange;
@@ -69,6 +76,8 @@ void main()
 float sigmoid(float x, float factor);
 vec3 sigmoid(vec3 v, float factor);
 vec2 c_2(vec2 c);
+float GetSmoothIter(int iter, vec2 z);
+float CalculateOrbitTrap(float trap, float newDist, int iter);
 bool IsBounded(vec2 z);
 bool NeedDistance();
 float GetOrbitTrap(vec2 z, int iter, inout float trap);
@@ -148,6 +157,25 @@ float DistanceToLine(vec2 p, vec2 a, vec2 b)
     return abs((b.x-a.x)*(a.y-p.y) - (a.x-p.x)*(b.y-a.y)) / sqrt(pow(b.x-a.x,2) + pow(b.y-a.y,2));
 }
 
+float CalculateOrbitTrap(float trap, float newDist, int iter)
+{
+    switch (orbitTrapCalculation)
+    {
+        case CALC_MIN:
+            return min(trap, newDist);
+        case CALC_MAX:
+            return max(trap, newDist);
+        case CALC_AVG:
+            return (trap + newDist) / 2;
+        case CALC_FIRST:
+            return (iter+1 == startOrbit) ? newDist : trap;
+        case CALC_LAST:
+            return newDist;
+        default:
+            return 0;
+    }
+}
+
 float GetOrbitTrap(vec2 z, int iter, inout float trap)
 {
     if (iter+1 >= startOrbit && iter+1 <= startOrbit + orbitRange - 1)
@@ -155,11 +183,11 @@ float GetOrbitTrap(vec2 z, int iter, inout float trap)
         {
             case TRAP_POINTS:
                 for (int i = 0; i < bailoutPointsCount; i++)
-                    trap = min(trap,dot(z-bailoutPoints[i],z-bailoutPoints[i]));
+                    trap = CalculateOrbitTrap(trap, dot(z-bailoutPoints[i],z-bailoutPoints[i]), iter);
                 break;
             case TRAP_LINES:
                 for (int i = 0; i < bailoutLinesCount; i++)
-                    trap = min(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw));
+                    trap = CalculateOrbitTrap(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw), iter);
                 break;
             default:
                 trap = 0;
@@ -233,14 +261,7 @@ vec3 GetColor(vec2 z, int iter, float trap)
             case COL_SMOOTH:
                 float mu;
         
-                //mu = iter;
-                //mu = iter + 1 - (log2(log2(length(z))));
-                //mu = iter - log2(log2(dot(z,z))) + 4.0;
-                //mu = iter - log(log(dot(z,z))/(log(bailout)))/log(power);
-                //mu = iter - (log(log(length(z))/log(bailout.x)) / (sign(power)*log(abs(power))));
-                mu = iter - (log(log(length(z))/log(bailout)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
-                //mu = iter + 1 - (log(log(length(z))) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
-                //mu = iter - (log(log(length(z))/log(bailout.x)));
+                mu = GetSmoothIter(iter, z);
 
                 //color = Rainbow(mu + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 10*trap : 1));
                 //color = Rainbow(mu) * (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? Rainbow(trap) : vec3(1));
@@ -361,4 +382,19 @@ float sigmoid(float x, float factor)
 vec3 sigmoid(vec3 v, float factor)
 {
     return 1.0 / (1.0 + exp(-factor * (v - 0.5)));
+}
+
+float GetSmoothIter(int iter, vec2 z)
+{
+    if (coloring == COL_SMOOTH)
+        //mu = iter;
+        //mu = iter + 1 - (log2(log2(length(z))));
+        //mu = iter - log2(log2(dot(z,z))) + 4.0;
+        //mu = iter - log(log(dot(z,z))/(log(bailout)))/log(power);
+        //mu = iter - (log(log(length(z))/log(bailout.x)) / (sign(power)*log(abs(power))));
+        return iter - (log(log(length(z))/log(bailout)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
+        //mu = iter + 1 - (log(log(length(z))) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
+        //mu = iter - (log(log(length(z))/log(bailout.x)));
+
+    return iter;
 }

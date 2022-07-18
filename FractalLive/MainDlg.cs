@@ -174,6 +174,7 @@ namespace FractalLive
             shader.SetInt("bailoutPointsCount", fractalSettings.BailoutPointsCount);
             shader.SetVector4Array("bailoutLines", fractalSettings.BailoutLines);
             shader.SetInt("bailoutLinesCount", fractalSettings.BailoutLinesCount);
+            shader.SetInt("orbitTrapCalculation", (int)fractalSettings.OrbitTrapCalculation);
             shader.SetFloat("startOrbitDistance", fractalSettings.StartOrbitDistance.Value);
             shader.SetInt("startOrbit", fractalSettings.StartOrbit.Value);
             shader.SetInt("orbitRange", fractalSettings.OrbitRange.Value);
@@ -181,7 +182,7 @@ namespace FractalLive
             shader.SetFloat("bailoutFactor2", fractalSettings.BailoutFactor2);
 
             // Menu 3
-            shader.SetFloat("time", applicationTime.ElapsedMilliseconds / 1000.0f);
+            shader.SetFloat("time", applicationTime.ElapsedMilliseconds / 1000.0f + 150);
             shader.SetBool("splitInteriorExterior", fractalSettings.EditingColor != Fractal.Editing.Both);
             shader.SetInt("coloring", (int)fractalSettings.Coloring);
             shader.SetFloat("colorCycle", fractalSettings.ColorCycles);
@@ -201,7 +202,7 @@ namespace FractalLive
         }
         #endregion
 
-        #region Callbacks
+        #region MainDlg Callbacks
 
         /// <summary>
         /// Callback when form is loaded
@@ -238,8 +239,6 @@ namespace FractalLive
             input_Texture.Enabled = false;
             input_TextureBlend.Enabled = false;
 
-            input_OrbitTrapCalculation.Enabled = false;
-
 
             // Default values
             input_FractalType.SelectedIndex = (int)CurrentSettings.Type;
@@ -247,6 +246,7 @@ namespace FractalLive
             input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
 
             input_OrbitTrap.SelectedIndex = 0;
+            input_OrbitTrapCalculation.SelectedIndex = 0;
             input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Maximum;
             input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;
             input_OrbitRange.Maximum = CurrentSettings.MaxIterations.Maximum;
@@ -555,7 +555,10 @@ namespace FractalLive
             input_Zoom.Text = CurrentSettings.Zoom.ToString();
 
             if (!checkBox_LockZoomFactor.Checked)
+            {
                 CurrentSettings.LockedZoom = CurrentSettings.Zoom;
+                input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
+            }
         }
 
         private void glControl_KeyDown(object? sender, KeyEventArgs e)
@@ -830,6 +833,7 @@ namespace FractalLive
                 button_RemoveBailoutTrap.Enabled = false;
                 input_EditingBailoutTrap.Enabled = false;
 
+                input_OrbitTrapCalculation.Enabled = false;
                 input_StartDistance.Enabled = false;
                 input_StartOrbit.Enabled = false;
                 input_OrbitRange.Enabled = false;
@@ -850,6 +854,7 @@ namespace FractalLive
                 button_RemoveBailoutTrap.Enabled = isPoints;
                 input_EditingBailoutTrap.Enabled = isPoints;
 
+                input_OrbitTrapCalculation.Enabled = isPoints;
                 input_StartDistance.Enabled = isPoints;
                 input_StartOrbit.Enabled = isPoints;
                 input_OrbitRange.Enabled = isPoints;
@@ -881,6 +886,7 @@ namespace FractalLive
                 button_RemoveBailoutTrap.Enabled = true;
                 input_EditingBailoutTrap.Enabled = true;
 
+                input_OrbitTrapCalculation.Enabled = true;
                 input_StartDistance.Enabled = true;
                 input_StartOrbit.Enabled = true;
                 input_OrbitRange.Enabled = true;
@@ -1043,6 +1049,11 @@ namespace FractalLive
                 CurrentSettings.BailoutLines[editingBailoutTrap].W = float.Parse(GetFrom2D(input_BailoutY.Text, false));
                 input_BailoutY.Text = Make2D(CurrentSettings.BailoutLines[editingBailoutTrap].Z, CurrentSettings.BailoutLines[editingBailoutTrap].W);
             }
+        }
+
+        private void input_OrbitTrapCalculation_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            CurrentSettings.OrbitTrapCalculation = (Fractal.Calculation)input_OrbitTrapCalculation.SelectedIndex;
         }
 
         private void input_StartDistance_KeyPress(object sender, KeyPressEventArgs e)

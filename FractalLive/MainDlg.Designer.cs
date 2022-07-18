@@ -885,6 +885,7 @@
             this.input_OrbitTrapCalculation.Name = "input_OrbitTrapCalculation";
             this.input_OrbitTrapCalculation.Size = new System.Drawing.Size(74, 23);
             this.input_OrbitTrapCalculation.TabIndex = 56;
+            this.input_OrbitTrapCalculation.SelectionChangeCommitted += new System.EventHandler(this.input_OrbitTrapCalculation_SelectionChangeCommitted);
             // 
             // label_OrbitTrapFactors
             // 
@@ -1514,7 +1515,7 @@
             this.Controls.Add(this.panel_OrbitTrapMenu);
             this.MinimumSize = new System.Drawing.Size(705, 413);
             this.Name = "MainDlg";
-            this.Text = "GLControl Input Test";
+            this.Text = "FractalLive";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainDlg_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
