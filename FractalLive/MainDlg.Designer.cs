@@ -33,6 +33,7 @@
             System.Windows.Forms.Label label_OrbitRange;
             System.Windows.Forms.Label label_TextureBlend;
             System.Windows.Forms.Label label_StartDistance;
+            System.Windows.Forms.Label label_MinIterations;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainDlg));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,6 +90,7 @@
             this.input_Bailout = new System.Windows.Forms.TextBox();
             this.button_Menu4 = new System.Windows.Forms.Button();
             this.panel_FormulaMenu = new System.Windows.Forms.Panel();
+            this.input_MinIterations = new System.Windows.Forms.NumericUpDown();
             this.label_BuddhabrotType = new System.Windows.Forms.Label();
             this.input_BuddhabrotType = new System.Windows.Forms.ComboBox();
             this.checkBox_UseBuddhabrot = new System.Windows.Forms.CheckBox();
@@ -149,9 +151,11 @@
             label_OrbitRange = new System.Windows.Forms.Label();
             label_TextureBlend = new System.Windows.Forms.Label();
             label_StartDistance = new System.Windows.Forms.Label();
+            label_MinIterations = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).BeginInit();
             this.panel_FormulaMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_MinIterations)).BeginInit();
             this.panel_OrbitTrapMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_EditingBailoutTrap)).BeginInit();
@@ -209,6 +213,16 @@
             label_StartDistance.TabIndex = 57;
             label_StartDistance.Text = "Start Distance:*";
             label_StartDistance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label_MinIterations
+            // 
+            label_MinIterations.AutoSize = true;
+            label_MinIterations.Location = new System.Drawing.Point(3, 110);
+            label_MinIterations.Name = "label_MinIterations";
+            label_MinIterations.Size = new System.Drawing.Size(93, 15);
+            label_MinIterations.TabIndex = 85;
+            label_MinIterations.Text = "Min Iterations:*?";
+            label_MinIterations.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // menuStrip1
             // 
@@ -534,7 +548,7 @@
             this.input_BailoutY.Size = new System.Drawing.Size(40, 23);
             this.input_BailoutY.TabIndex = 17;
             this.input_BailoutY.Text = "0";
-            this.input_BailoutY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_BailoutY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_BailoutY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_BailoutY_KeyPress);
             this.input_BailoutY.Validating += new System.ComponentModel.CancelEventHandler(this.input_BailoutY_Validating);
             this.input_BailoutY.Validated += new System.EventHandler(this.input_BailoutY_Validated);
@@ -587,12 +601,12 @@
             // 
             // input_Power
             // 
-            this.input_Power.Location = new System.Drawing.Point(70, 108);
+            this.input_Power.Location = new System.Drawing.Point(71, 140);
             this.input_Power.Name = "input_Power";
             this.input_Power.Size = new System.Drawing.Size(84, 23);
             this.input_Power.TabIndex = 28;
             this.input_Power.Text = "2";
-            this.input_Power.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_Power.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // label_FractalType
             // 
@@ -607,7 +621,7 @@
             // label_Power
             // 
             this.label_Power.AutoSize = true;
-            this.label_Power.Location = new System.Drawing.Point(3, 111);
+            this.label_Power.Location = new System.Drawing.Point(4, 143);
             this.label_Power.Name = "label_Power";
             this.label_Power.Size = new System.Drawing.Size(48, 15);
             this.label_Power.TabIndex = 29;
@@ -616,17 +630,17 @@
             // 
             // input_CPower
             // 
-            this.input_CPower.Location = new System.Drawing.Point(70, 134);
+            this.input_CPower.Location = new System.Drawing.Point(71, 166);
             this.input_CPower.Name = "input_CPower";
             this.input_CPower.Size = new System.Drawing.Size(84, 23);
             this.input_CPower.TabIndex = 30;
             this.input_CPower.Text = "1";
-            this.input_CPower.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_CPower.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // label_CPower
             // 
             this.label_CPower.AutoSize = true;
-            this.label_CPower.Location = new System.Drawing.Point(3, 137);
+            this.label_CPower.Location = new System.Drawing.Point(4, 169);
             this.label_CPower.Name = "label_CPower";
             this.label_CPower.Size = new System.Drawing.Size(59, 15);
             this.label_CPower.TabIndex = 31;
@@ -651,7 +665,7 @@
             0,
             0});
             this.input_MaxIterations.ValueChanged += new System.EventHandler(this.input_MaxIterations_ValueChanged);
-            this.input_MaxIterations.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_MaxIterations.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // button_Menu1
             // 
@@ -715,7 +729,7 @@
             this.input_Bailout.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout.TabIndex = 36;
             this.input_Bailout.Text = "0";
-            this.input_Bailout.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_Bailout.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_Bailout.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Bailout_KeyPress);
             this.input_Bailout.Validating += new System.ComponentModel.CancelEventHandler(this.input_Bailout_Validating);
             this.input_Bailout.Validated += new System.EventHandler(this.input_Bailout_Validated);
@@ -738,6 +752,8 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_FormulaMenu.AutoScroll = true;
             this.panel_FormulaMenu.CausesValidation = false;
+            this.panel_FormulaMenu.Controls.Add(this.input_MinIterations);
+            this.panel_FormulaMenu.Controls.Add(label_MinIterations);
             this.panel_FormulaMenu.Controls.Add(this.label_BuddhabrotType);
             this.panel_FormulaMenu.Controls.Add(this.input_BuddhabrotType);
             this.panel_FormulaMenu.Controls.Add(this.checkBox_UseBuddhabrot);
@@ -758,10 +774,30 @@
             this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 398);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
+            // input_MinIterations
+            // 
+            this.input_MinIterations.CausesValidation = false;
+            this.input_MinIterations.Location = new System.Drawing.Point(99, 107);
+            this.input_MinIterations.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.input_MinIterations.Name = "input_MinIterations";
+            this.input_MinIterations.Size = new System.Drawing.Size(55, 23);
+            this.input_MinIterations.TabIndex = 86;
+            this.input_MinIterations.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.input_MinIterations.ValueChanged += new System.EventHandler(this.input_MinIterations_ValueChanged);
+            this.input_MinIterations.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            // 
             // label_BuddhabrotType
             // 
             this.label_BuddhabrotType.AutoSize = true;
-            this.label_BuddhabrotType.Location = new System.Drawing.Point(4, 189);
+            this.label_BuddhabrotType.Location = new System.Drawing.Point(5, 221);
             this.label_BuddhabrotType.Name = "label_BuddhabrotType";
             this.label_BuddhabrotType.Size = new System.Drawing.Size(34, 15);
             this.label_BuddhabrotType.TabIndex = 83;
@@ -777,7 +813,7 @@
             "Normal",
             "Inverse",
             "Nebulabrot"});
-            this.input_BuddhabrotType.Location = new System.Drawing.Point(70, 186);
+            this.input_BuddhabrotType.Location = new System.Drawing.Point(71, 218);
             this.input_BuddhabrotType.Name = "input_BuddhabrotType";
             this.input_BuddhabrotType.Size = new System.Drawing.Size(86, 23);
             this.input_BuddhabrotType.TabIndex = 84;
@@ -785,7 +821,7 @@
             // checkBox_UseBuddhabrot
             // 
             this.checkBox_UseBuddhabrot.AutoSize = true;
-            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(5, 167);
+            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(6, 199);
             this.checkBox_UseBuddhabrot.Name = "checkBox_UseBuddhabrot";
             this.checkBox_UseBuddhabrot.Size = new System.Drawing.Size(111, 19);
             this.checkBox_UseBuddhabrot.TabIndex = 65;
@@ -809,7 +845,7 @@
             this.input_BailoutX.Size = new System.Drawing.Size(40, 23);
             this.input_BailoutX.TabIndex = 38;
             this.input_BailoutX.Text = "0";
-            this.input_BailoutX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_BailoutX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_BailoutX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_BailoutX_KeyPress);
             this.input_BailoutX.Validating += new System.ComponentModel.CancelEventHandler(this.input_BailoutX_Validating);
             this.input_BailoutX.Validated += new System.EventHandler(this.input_BailoutX_Validated);
@@ -855,7 +891,7 @@
             this.input_StartDistance.Size = new System.Drawing.Size(64, 23);
             this.input_StartDistance.TabIndex = 58;
             this.input_StartDistance.Text = "2";
-            this.input_StartDistance.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_StartDistance.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_StartDistance.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_StartDistance_KeyPress);
             this.input_StartDistance.Validating += new System.ComponentModel.CancelEventHandler(this.input_StartDistance_Validating);
             this.input_StartDistance.Validated += new System.EventHandler(this.input_StartDistance_Validated);
@@ -929,7 +965,7 @@
             0,
             0});
             this.input_StartOrbit.ValueChanged += new System.EventHandler(this.input_StartOrbit_ValueChanged);
-            this.input_StartOrbit.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_StartOrbit.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // input_OrbitTrapBlendingFactor
             // 
@@ -938,7 +974,7 @@
             this.input_OrbitTrapBlendingFactor.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapBlendingFactor.TabIndex = 53;
             this.input_OrbitTrapBlendingFactor.Text = "0.25";
-            this.input_OrbitTrapBlendingFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_OrbitTrapBlendingFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_OrbitTrapBlendingFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_OrbitTrapFactor1_KeyPress);
             this.input_OrbitTrapBlendingFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor1_Validating);
             this.input_OrbitTrapBlendingFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor1_Validated);
@@ -966,7 +1002,7 @@
             0,
             0});
             this.input_EditingBailoutTrap.ValueChanged += new System.EventHandler(this.input_EditingBailoutTrap_ValueChanged);
-            this.input_EditingBailoutTrap.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_EditingBailoutTrap.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // input_OrbitTrapThicknessFactor
             // 
@@ -975,7 +1011,7 @@
             this.input_OrbitTrapThicknessFactor.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapThicknessFactor.TabIndex = 52;
             this.input_OrbitTrapThicknessFactor.Text = "7";
-            this.input_OrbitTrapThicknessFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_OrbitTrapThicknessFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_OrbitTrapThicknessFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_OrbitTrapFactor2_KeyPress);
             this.input_OrbitTrapThicknessFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor2_Validating);
             this.input_OrbitTrapThicknessFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor2_Validated);
@@ -1003,7 +1039,7 @@
             0,
             0});
             this.input_OrbitRange.ValueChanged += new System.EventHandler(this.input_OrbitRange_ValueChanged);
-            this.input_OrbitRange.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_OrbitRange.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // button_RemoveBailoutTrap
             // 
@@ -1051,7 +1087,7 @@
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
-            this.input_Texture.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_Texture.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // checkBox_LockZoomFactor
             // 
@@ -1072,7 +1108,7 @@
             this.input_ColorCycles.Size = new System.Drawing.Size(40, 23);
             this.input_ColorCycles.TabIndex = 43;
             this.input_ColorCycles.Text = "1";
-            this.input_ColorCycles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_ColorCycles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_ColorCycles.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_ColorCycles_KeyPress);
             this.input_ColorCycles.Validating += new System.ComponentModel.CancelEventHandler(this.input_ColorCycles_Validating);
             this.input_ColorCycles.Validated += new System.EventHandler(this.input_ColorCycles_Validated);
@@ -1093,7 +1129,7 @@
             this.input_ColorFactor.Size = new System.Drawing.Size(40, 23);
             this.input_ColorFactor.TabIndex = 45;
             this.input_ColorFactor.Text = "6";
-            this.input_ColorFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_ColorFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_ColorFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_ColorFactor_KeyPress);
             this.input_ColorFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_ColorFactor_Validating);
             this.input_ColorFactor.Validated += new System.EventHandler(this.input_ColorFactor_Validated);
@@ -1106,7 +1142,7 @@
             this.input_Center.Size = new System.Drawing.Size(141, 23);
             this.input_Center.TabIndex = 55;
             this.input_Center.Text = "0, 0";
-            this.input_Center.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_Center.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_Center.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Center_KeyPress);
             this.input_Center.Validating += new System.ComponentModel.CancelEventHandler(this.input_Center_Validating);
             this.input_Center.Validated += new System.EventHandler(this.input_Center_Validated);
@@ -1141,7 +1177,7 @@
             this.input_Zoom.Size = new System.Drawing.Size(52, 23);
             this.input_Zoom.TabIndex = 57;
             this.input_Zoom.Text = "0";
-            this.input_Zoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_Zoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_Zoom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Zoom_KeyPress);
             this.input_Zoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_Zoom_Validating);
             this.input_Zoom.Validated += new System.EventHandler(this.input_Zoom_Validated);
@@ -1310,7 +1346,7 @@
             this.input_OrbitTrapFactor.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapFactor.TabIndex = 74;
             this.input_OrbitTrapFactor.Text = "10";
-            this.input_OrbitTrapFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_OrbitTrapFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_OrbitTrapFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_OrbitTrapFactor_KeyPress);
             this.input_OrbitTrapFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor_Validating);
             this.input_OrbitTrapFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor_Validated);
@@ -1343,7 +1379,7 @@
             0,
             0,
             65536});
-            this.input_TextureBlend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_TextureBlend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // button_ClearTexture
             // 
@@ -1362,7 +1398,7 @@
             this.input_MaxDistanceEstimation.Size = new System.Drawing.Size(40, 23);
             this.input_MaxDistanceEstimation.TabIndex = 65;
             this.input_MaxDistanceEstimation.Text = "2";
-            this.input_MaxDistanceEstimation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_MaxDistanceEstimation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // input_DistanceEstimationFactor
             // 
@@ -1371,7 +1407,7 @@
             this.input_DistanceEstimationFactor.Size = new System.Drawing.Size(40, 23);
             this.input_DistanceEstimationFactor.TabIndex = 67;
             this.input_DistanceEstimationFactor.Text = "1";
-            this.input_DistanceEstimationFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_DistanceEstimationFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // label_DistanceEstimationMax
             // 
@@ -1485,7 +1521,7 @@
             this.input_LockedZoom.Size = new System.Drawing.Size(52, 23);
             this.input_LockedZoom.TabIndex = 60;
             this.input_LockedZoom.Text = "0";
-            this.input_LockedZoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textbox_FocusOnEnter);
+            this.input_LockedZoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_LockedZoom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_LockedZoom_KeyPress);
             this.input_LockedZoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_LockedZoom_Validating);
             this.input_LockedZoom.Validated += new System.EventHandler(this.input_LockedZoom_Validated);
@@ -1522,6 +1558,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).EndInit();
             this.panel_FormulaMenu.ResumeLayout(false);
             this.panel_FormulaMenu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_MinIterations)).EndInit();
             this.panel_OrbitTrapMenu.ResumeLayout(false);
             this.panel_OrbitTrapMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).EndInit();
@@ -1646,6 +1683,7 @@
         private System.Windows.Forms.ComboBox input_BuddhabrotType;
         private System.Windows.Forms.CheckBox checkBox_UseBuddhabrot;
         private System.Windows.Forms.TextBox input_LockedZoom;
+        private System.Windows.Forms.NumericUpDown input_MinIterations;
     }
 }
 

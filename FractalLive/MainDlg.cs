@@ -163,6 +163,7 @@ namespace FractalLive
 
             // Menu 1
             shader.SetInt("maxIterations", fractalSettings.MaxIterations.Value);
+            shader.SetInt("minIterations", fractalSettings.MinIterations.Value);
             shader.SetFloat("power", fractalSettings.Power);
 
             // Menu 2
@@ -297,7 +298,6 @@ namespace FractalLive
             _timer.Tick += (sender, e) =>
             {
                 glControl_Update(glControl, null);
-                Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
             };
             _timer.Interval = 1000 / fps;   // 1000 ms per sec / 16.67 ms per frame = 60 FPS
             _timer.Start();
@@ -389,10 +389,15 @@ namespace FractalLive
                 }
                 if (inputState.keysDown[Keys.D2])
                 {
+                    CurrentSettings.MinIterations += (int)(modifier * 2);
+                    input_MinIterations.Value = CurrentSettings.MinIterations.Value;
+                }
+                if (inputState.keysDown[Keys.D3])
+                {
                     CurrentSettings.Power += modifier * 2;
                     input_Power.Text = CurrentSettings.Power.ToString();
                 }
-                if (inputState.keysDown[Keys.D3])
+                if (inputState.keysDown[Keys.D4])
                 {
                     CurrentSettings.C_Power += modifier * 2;
                     input_CPower.Text = CurrentSettings.C_Power.ToString();
@@ -495,6 +500,8 @@ namespace FractalLive
             }
 
             // update controls
+            Log(CurrentSettings.MinIterations.Value.ToString());
+            //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal
             Render();
@@ -805,6 +812,11 @@ namespace FractalLive
             input_OrbitRange.Maximum = CurrentSettings.MaxIterations.Value;
             if (input_OrbitRange.Value > CurrentSettings.MaxIterations.Value)
                 input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;*/
+        }
+
+        private void input_MinIterations_ValueChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.MinIterations.SetValue((int)input_MinIterations.Value);
         }
         #endregion
 
@@ -1331,7 +1343,7 @@ namespace FractalLive
             return char.IsDigit(e.KeyChar) || e.KeyChar == 45 || e.KeyChar == 46 || e.KeyChar == 8 || e.KeyChar == 13 || (allowComma && e.KeyChar == 44);
         }
 
-        private void textbox_FocusOnEnter(object sender, KeyEventArgs e)
+        private void control_FocusOnEnter(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
                 glControl.Focus(); // force leave

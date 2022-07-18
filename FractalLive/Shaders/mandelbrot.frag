@@ -1,6 +1,7 @@
 ﻿#version 450 core
 
-#define M_PI 3.1415926535897932384626433832795
+#define M_PI            3.1415926535897932384626433832795
+#define MAX_LENGTH      1e15
 
 #define TRAP_CUSTOM						-1
 #define TRAP_CIRCLE						0
@@ -39,6 +40,7 @@ uniform float time;
 uniform float lockedZoom;
 
 uniform int maxIterations;
+uniform int minIterations;
 uniform float power;
 
 uniform int orbitTrap;
@@ -76,9 +78,10 @@ void main()
 float sigmoid(float x, float factor);
 vec3 sigmoid(vec3 v, float factor);
 vec2 c_2(vec2 c);
+vec2 Fix(vec2 z);
 float GetSmoothIter(int iter, vec2 z);
 float CalculateOrbitTrap(float trap, float newDist, int iter);
-bool IsBounded(vec2 z);
+bool IsBounded(int iter, vec2 z);
 bool NeedDistance();
 float GetOrbitTrap(vec2 z, int iter, inout float trap);
 vec3 GetColor(vec2 z, int iter, float trap);
@@ -99,7 +102,7 @@ vec3 Mandelbrot()
     //if (orbitTrap == TRAP_LINE)
         //return vec3(0);
 
-    //if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+    //if (orbitTrap != TRAP_POINTS && orbitTrap != TRAP_LINES)
 	    //return vec3(0.5 + 0.5*(sin(bailout*trap))); // 4.5 is a good value
 	    //return vec3(7*trap);
 	    //trap = 0;
@@ -112,14 +115,28 @@ vec3 Mandelbrot()
 	//return 0.5 + 0.5*sin(GetColor(z, iter, trap) * colorCycle);colorFactor;
 }
 
+vec2 Fix(vec2 z)
+{
+//    if (isnan(z.x))
+//        z.x = 0;
+//    if (isnan(z.y))
+//        z.y = 0;
+//    if (length(z) > MAX_LENGTH)
+//        z = MAX_LENGTH * normalize(z);
+
+    return z;
+}
+
 vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
 {
 	vec2 z = vec2(0);
     trap = startOrbitDistance;
-    //trap = length(c);
-	for (iter = 0; iter < maxIterations && IsBounded(z); ++iter)
+	for (iter = 0; iter < maxIterations && IsBounded(iter, z); ++iter)
+	//IsBounded(z);for (iter = 0; iter < maxIterations; ++iter)
 	{
 		z = c_2(z) + c;
+
+        z = Fix(z);
 
         trap = GetOrbitTrap(z, iter, trap);
 	}
@@ -130,8 +147,11 @@ vec2 MandelbrotLoop(vec2 c, int maxIterations, inout int iter, inout float trap)
 	return z;
 }
 
-bool IsBounded(vec2 z)
+bool IsBounded(int iter, vec2 z)
 {
+    if (iter < minIterations)
+        return true;
+
     switch (orbitTrap)
     {
         case TRAP_CUSTOM:
@@ -290,10 +310,11 @@ vec3 DomainColoring(int coloring, vec2 z, int iterr, float trap)
     //if (coloring == COL_ITERATION || coloring == COL_SMOOTH)
         //return ColorFromHSV(vec3(atan(FragPosModel.y, FragPosModel.x) * 180 / M_PI + t, 1, 1));
 
-    //float theta = sin(atan(float(z.y), float(z.x))) * 360 + t;
-    float theta = atan(float(z.y), float(z.x)) * 180/M_PI + t;
-    theta *= colorCycle;
+    //float theta = sin(atan(float(z.y), float(z.x))) * 360 * colorCycle + t;
+    float theta = (atan(float(z.y), float(z.x)) * 180/M_PI) * colorCycle + t;
 	float r = length(z);
+	//float r = length(z) / iter;
+	//float r = length(z) / 100;
         	
 	if (z.x == 0 && z.y == 0)
 	{
@@ -335,12 +356,15 @@ vec3 DomainColoring(int coloring, vec2 z, int iterr, float trap)
         default:
             //color = mix(outerColor1, outerColor2, theta);
             color = ColorFromHSV(vec3(theta, 1, 1));
-
-            if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
-                color = mix(Rainbow(orbitTrapFactor*trap), color, trap);
-
             break;
     }
+
+    if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+        if (coloring <= COL_SMOOTH)
+            color = mix(Rainbow(orbitTrapFactor*trap), color, trap);
+        else
+            color = mix(color, color*sigmoid(trap,orbitTrapFactor), trap);
+            //color = mix(color, vec3(0), trap);
     
     return color;
 }

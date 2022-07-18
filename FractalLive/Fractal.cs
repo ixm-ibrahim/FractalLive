@@ -75,6 +75,7 @@ namespace FractalLive
                 FoldAngle = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 FoldCount = new IntBounds(0, 0, 100);
                 MaxIterations = new IntBounds(100, 1, 9999);
+                MinIterations = new IntBounds(1, 1, 9999);
                 Power = 2;
                 TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 Zoom = 0;
@@ -335,6 +336,7 @@ namespace FractalLive
             public FloatBounds FoldAngle;
             public IntBounds FoldCount;
             public IntBounds MaxIterations;
+            public IntBounds MinIterations;
             public FloatBounds StartOrbitDistance;
             public float Power;
             public FloatBounds TerrainHeight;
