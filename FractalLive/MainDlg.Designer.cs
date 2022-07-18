@@ -121,8 +121,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
             this.panel_ColorMenu = new System.Windows.Forms.Panel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.input_DomainOrbit = new System.Windows.Forms.ComboBox();
+            this.label_DomainCalculation = new System.Windows.Forms.Label();
+            this.input_DomainCalculation = new System.Windows.Forms.ComboBox();
             this.button_Color6 = new System.Windows.Forms.Button();
             this.button_Color5 = new System.Windows.Forms.Button();
             this.button_Color4 = new System.Windows.Forms.Button();
@@ -1187,8 +1187,8 @@
             this.panel_ColorMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_ColorMenu.AutoScroll = true;
-            this.panel_ColorMenu.Controls.Add(this.label4);
-            this.panel_ColorMenu.Controls.Add(this.input_DomainOrbit);
+            this.panel_ColorMenu.Controls.Add(this.label_DomainCalculation);
+            this.panel_ColorMenu.Controls.Add(this.input_DomainCalculation);
             this.panel_ColorMenu.Controls.Add(this.button_Color6);
             this.panel_ColorMenu.Controls.Add(this.button_Color5);
             this.panel_ColorMenu.Controls.Add(this.button_Color4);
@@ -1222,31 +1222,32 @@
             this.panel_ColorMenu.Size = new System.Drawing.Size(177, 398);
             this.panel_ColorMenu.TabIndex = 59;
             // 
-            // label4
+            // label_DomainCalculation
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(2, 190);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(82, 15);
-            this.label4.TabIndex = 81;
-            this.label4.Text = "Domain Orbit:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_DomainCalculation.AutoSize = true;
+            this.label_DomainCalculation.Location = new System.Drawing.Point(2, 190);
+            this.label_DomainCalculation.Name = "label_DomainCalculation";
+            this.label_DomainCalculation.Size = new System.Drawing.Size(82, 15);
+            this.label_DomainCalculation.TabIndex = 81;
+            this.label_DomainCalculation.Text = "Domain Orbit:";
+            this.label_DomainCalculation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // input_DomainOrbit
+            // input_DomainCalculation
             // 
-            this.input_DomainOrbit.CausesValidation = false;
-            this.input_DomainOrbit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.input_DomainOrbit.FormattingEnabled = true;
-            this.input_DomainOrbit.Items.AddRange(new object[] {
+            this.input_DomainCalculation.CausesValidation = false;
+            this.input_DomainCalculation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.input_DomainCalculation.FormattingEnabled = true;
+            this.input_DomainCalculation.Items.AddRange(new object[] {
             "Minimum",
             "Maximum",
             "Average",
             "First",
             "Last"});
-            this.input_DomainOrbit.Location = new System.Drawing.Point(90, 187);
-            this.input_DomainOrbit.Name = "input_DomainOrbit";
-            this.input_DomainOrbit.Size = new System.Drawing.Size(64, 23);
-            this.input_DomainOrbit.TabIndex = 82;
+            this.input_DomainCalculation.Location = new System.Drawing.Point(90, 187);
+            this.input_DomainCalculation.Name = "input_DomainCalculation";
+            this.input_DomainCalculation.Size = new System.Drawing.Size(64, 23);
+            this.input_DomainCalculation.TabIndex = 82;
+            this.input_DomainCalculation.SelectionChangeCommitted += new System.EventHandler(this.input_DomainCalculation_SelectionChangeCommitted);
             // 
             // button_Color6
             // 
@@ -1677,8 +1678,8 @@
         private System.Windows.Forms.Label label_OrbitTrapCalculation;
         private System.Windows.Forms.ComboBox input_OrbitTrapCalculation;
         private System.Windows.Forms.TextBox input_StartDistance;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox input_DomainOrbit;
+        private System.Windows.Forms.Label label_DomainCalculation;
+        private System.Windows.Forms.ComboBox input_DomainCalculation;
         private System.Windows.Forms.Label label_BuddhabrotType;
         private System.Windows.Forms.ComboBox input_BuddhabrotType;
         private System.Windows.Forms.CheckBox checkBox_UseBuddhabrot;

@@ -109,6 +109,7 @@ namespace FractalLive
                 ColorCycles = 1;
                 ColorFactor = 6;
                 OrbitTrapFactor = 1;
+                DomainCalculation = Calculation.Last;
                 UseDistanceEstimation = false;
                 MaxDistance = 1e20f;
                 DistFineness = 1;
@@ -119,6 +120,7 @@ namespace FractalLive
                 I_ColorCycles = 1;
                 I_ColorFactor = 1;
                 I_OrbitTrapFactor = 1;
+                I_DomainCalculation = Calculation.Last;
                 I_UseDistanceEstimation = false;
                 I_MaxDistance = 1e20f;
                 I_DistFineness = 1;
@@ -129,11 +131,13 @@ namespace FractalLive
                 E_ColorCycles = 1;
                 E_ColorFactor = 1;
                 E_OrbitTrapFactor = 1;
+                E_DomainCalculation = Calculation.Last;
                 E_UseDistanceEstimation = false;
                 E_MaxDistance = 1e20f;
                 E_DistFineness = 1;
                 E_Texture = "";
                 E_TextureBlend = 0.5f;
+
         }
 
             public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
@@ -166,6 +170,21 @@ namespace FractalLive
                 BailoutLinesCount--;
             }
 
+            public Coloring GetColoring()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_Coloring;
+                        break;
+                    case Editing.Exterior:
+                        return E_Coloring;
+                        break;
+                    default:
+                        return Coloring;
+                        break;
+                }
+            }
             public void SetColoring(Coloring coloring)
             {
                 switch (EditingColor)
@@ -311,6 +330,22 @@ namespace FractalLive
                 }
             }
 
+            public void SetDomainCalculation(Calculation domainCalculation)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_DomainCalculation = domainCalculation;
+                        break;
+                    case Editing.Exterior:
+                        E_DomainCalculation = domainCalculation;
+                        break;
+                    default:
+                        DomainCalculation = domainCalculation;
+                        break;
+                }
+            }
+
             public Type Type;
             public Formula Formula;
             public Buddhabrot buddhabrot;
@@ -358,6 +393,7 @@ namespace FractalLive
             public float ColorCycles;
             public float ColorFactor;
             public float OrbitTrapFactor;
+            public Calculation DomainCalculation;
             public bool UseDistanceEstimation;
             public float MaxDistance;
             public float DistFineness;
@@ -368,6 +404,7 @@ namespace FractalLive
             public float I_ColorCycles;
             public float I_ColorFactor;
             public float I_OrbitTrapFactor;
+            public Calculation I_DomainCalculation;
             public bool I_UseDistanceEstimation;
             public float I_MaxDistance;
             public float I_DistFineness;
@@ -378,11 +415,13 @@ namespace FractalLive
             public float E_ColorCycles;
             public float E_ColorFactor;
             public float E_OrbitTrapFactor;
+            public Calculation E_DomainCalculation;
             public bool E_UseDistanceEstimation;
             public float E_MaxDistance;
             public float E_DistFineness;
             public string E_Texture;
             public float E_TextureBlend;
+
         }
         #endregion
 

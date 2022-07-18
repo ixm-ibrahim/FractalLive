@@ -184,11 +184,13 @@ namespace FractalLive
 
             // Menu 3
             shader.SetFloat("time", applicationTime.ElapsedMilliseconds / 1000.0f + 150);
+
             shader.SetBool("splitInteriorExterior", fractalSettings.EditingColor != Fractal.Editing.Both);
             shader.SetInt("coloring", (int)fractalSettings.Coloring);
             shader.SetFloat("colorCycle", fractalSettings.ColorCycles);
             shader.SetFloat("colorFactor", fractalSettings.ColorFactor);
             shader.SetFloat("orbitTrapFactor", fractalSettings.OrbitTrapFactor);
+            shader.SetInt("domainCalculation", (int)fractalSettings.DomainCalculation);
 
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
@@ -232,10 +234,9 @@ namespace FractalLive
             button_Color4.Enabled = false;
             button_Color5.Enabled = false;
             button_Color6.Enabled = false;
-            input_DomainOrbit.Enabled = false;
             checkBox_UseDistanceEstimation.Enabled = false;
             input_MaxDistanceEstimation.Enabled = false;
-            label_DistanceEstimationFineness.Enabled = false;
+            input_DistanceEstimationFactor.Enabled = false;
             button_ClearTexture.Enabled = false;
             input_Texture.Enabled = false;
             input_TextureBlend.Enabled = false;
@@ -255,6 +256,7 @@ namespace FractalLive
 
             input_EditingColor.SelectedIndex = 0;
             input_Coloring.SelectedIndex = 3;
+            input_DomainCalculation.SelectedIndex = 4;
 
 
             // Callbacks
@@ -817,6 +819,10 @@ namespace FractalLive
         private void input_MinIterations_ValueChanged(object sender, EventArgs e)
         {
             CurrentSettings.MinIterations.SetValue((int)input_MinIterations.Value);
+
+            if (CurrentSettings.MinIterations.Value > CurrentSettings.MaxIterations.Value)
+                input_MaxIterations.Value = CurrentSettings.MinIterations.Value;
+            
         }
         #endregion
 
@@ -1124,6 +1130,11 @@ namespace FractalLive
         private void input_Coloring_SelectionChangeCommitted(object sender, EventArgs e)
         {
             CurrentSettings.SetColoring((Fractal.Coloring)input_Coloring.SelectedIndex);
+            /*
+            if (CurrentSettings.GetColoring() >= Fractal.Coloring.Domain_1)
+                input_DomainCalculation.Enabled = true;
+            else
+                input_DomainCalculation.Enabled = false;*/
         }
 
         private void button_Color1_Click(object sender, EventArgs e)
@@ -1201,6 +1212,11 @@ namespace FractalLive
         {
             CurrentSettings.SetOrbitTrapFactor(float.Parse(input_OrbitTrapFactor.Text));
             input_OrbitTrapFactor.Text = CurrentSettings.GetOrbitTrapFactor().ToString();
+        }
+
+        private void input_DomainCalculation_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            CurrentSettings.SetDomainCalculation((Fractal.Calculation)input_DomainCalculation.SelectedIndex);
         }
 
         #endregion
