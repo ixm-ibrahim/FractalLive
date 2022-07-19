@@ -110,6 +110,7 @@ namespace FractalLive
                 ColorFactor = 6;
                 OrbitTrapFactor = 1;
                 DomainCalculation = Calculation.Last;
+                UseDomainIteration = true;
                 UseDistanceEstimation = false;
                 MaxDistance = 1e20f;
                 DistFineness = 1;
@@ -121,6 +122,7 @@ namespace FractalLive
                 I_ColorFactor = 1;
                 I_OrbitTrapFactor = 1;
                 I_DomainCalculation = Calculation.Last;
+                I_UseDomainIteration = true;
                 I_UseDistanceEstimation = false;
                 I_MaxDistance = 1e20f;
                 I_DistFineness = 1;
@@ -132,6 +134,7 @@ namespace FractalLive
                 E_ColorFactor = 1;
                 E_OrbitTrapFactor = 1;
                 E_DomainCalculation = Calculation.Last;
+                E_UseDomainIteration = true;
                 E_UseDistanceEstimation = false;
                 E_MaxDistance = 1e20f;
                 E_DistFineness = 1;
@@ -345,6 +348,22 @@ namespace FractalLive
                         break;
                 }
             }
+            
+            public void SetUseDomainIteration(bool useDomainIteration)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_UseDomainIteration = useDomainIteration;
+                        break;
+                    case Editing.Exterior:
+                        E_UseDomainIteration = useDomainIteration;
+                        break;
+                    default:
+                        UseDomainIteration = useDomainIteration;
+                        break;
+                }
+            }
 
             public Type Type;
             public Formula Formula;
@@ -394,6 +413,7 @@ namespace FractalLive
             public float ColorFactor;
             public float OrbitTrapFactor;
             public Calculation DomainCalculation;
+            public bool UseDomainIteration;
             public bool UseDistanceEstimation;
             public float MaxDistance;
             public float DistFineness;
@@ -405,6 +425,7 @@ namespace FractalLive
             public float I_ColorFactor;
             public float I_OrbitTrapFactor;
             public Calculation I_DomainCalculation;
+            public bool I_UseDomainIteration;
             public bool I_UseDistanceEstimation;
             public float I_MaxDistance;
             public float I_DistFineness;
@@ -416,6 +437,7 @@ namespace FractalLive
             public float E_ColorFactor;
             public float E_OrbitTrapFactor;
             public Calculation E_DomainCalculation;
+            public bool E_UseDomainIteration;
             public bool E_UseDistanceEstimation;
             public float E_MaxDistance;
             public float E_DistFineness;

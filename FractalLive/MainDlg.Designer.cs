@@ -90,6 +90,7 @@
             this.input_Bailout = new System.Windows.Forms.TextBox();
             this.button_Menu4 = new System.Windows.Forms.Button();
             this.panel_FormulaMenu = new System.Windows.Forms.Panel();
+            this.checkBox_UseConjugate = new System.Windows.Forms.CheckBox();
             this.input_MinIterations = new System.Windows.Forms.NumericUpDown();
             this.label_BuddhabrotType = new System.Windows.Forms.Label();
             this.input_BuddhabrotType = new System.Windows.Forms.ComboBox();
@@ -121,6 +122,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
             this.panel_ColorMenu = new System.Windows.Forms.Panel();
+            this.checkBox_UseDomainIteration = new System.Windows.Forms.CheckBox();
             this.label_DomainCalculation = new System.Windows.Forms.Label();
             this.input_DomainCalculation = new System.Windows.Forms.ComboBox();
             this.button_Color6 = new System.Windows.Forms.Button();
@@ -146,7 +148,6 @@
             this.label_EditingColor = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.input_LockedZoom = new System.Windows.Forms.TextBox();
-            this.checkBox_UseConjugate = new System.Windows.Forms.CheckBox();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -198,7 +199,7 @@
             // label_TextureBlend
             // 
             label_TextureBlend.AutoSize = true;
-            label_TextureBlend.Location = new System.Drawing.Point(3, 348);
+            label_TextureBlend.Location = new System.Drawing.Point(3, 365);
             label_TextureBlend.Name = "label_TextureBlend";
             label_TextureBlend.Size = new System.Drawing.Size(86, 15);
             label_TextureBlend.TabIndex = 70;
@@ -782,6 +783,17 @@
             this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 398);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
+            // checkBox_UseConjugate
+            // 
+            this.checkBox_UseConjugate.AutoSize = true;
+            this.checkBox_UseConjugate.Location = new System.Drawing.Point(5, 133);
+            this.checkBox_UseConjugate.Name = "checkBox_UseConjugate";
+            this.checkBox_UseConjugate.Size = new System.Drawing.Size(103, 19);
+            this.checkBox_UseConjugate.TabIndex = 87;
+            this.checkBox_UseConjugate.Text = "Use Conjugate";
+            this.checkBox_UseConjugate.UseVisualStyleBackColor = true;
+            this.checkBox_UseConjugate.CheckedChanged += new System.EventHandler(this.checkBox_UseConjugate_CheckedChanged);
+            // 
             // input_MinIterations
             // 
             this.input_MinIterations.CausesValidation = false;
@@ -1082,7 +1094,7 @@
             // label_Texture
             // 
             this.label_Texture.AutoSize = true;
-            this.label_Texture.Location = new System.Drawing.Point(3, 323);
+            this.label_Texture.Location = new System.Drawing.Point(3, 340);
             this.label_Texture.Name = "label_Texture";
             this.label_Texture.Size = new System.Drawing.Size(48, 15);
             this.label_Texture.TabIndex = 40;
@@ -1091,7 +1103,7 @@
             // 
             // input_Texture
             // 
-            this.input_Texture.Location = new System.Drawing.Point(57, 320);
+            this.input_Texture.Location = new System.Drawing.Point(57, 337);
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
@@ -1195,6 +1207,7 @@
             this.panel_ColorMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_ColorMenu.AutoScroll = true;
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseDomainIteration);
             this.panel_ColorMenu.Controls.Add(this.label_DomainCalculation);
             this.panel_ColorMenu.Controls.Add(this.input_DomainCalculation);
             this.panel_ColorMenu.Controls.Add(this.button_Color6);
@@ -1229,6 +1242,17 @@
             this.panel_ColorMenu.Name = "panel_ColorMenu";
             this.panel_ColorMenu.Size = new System.Drawing.Size(177, 398);
             this.panel_ColorMenu.TabIndex = 59;
+            // 
+            // checkBox_UseDomainIteration
+            // 
+            this.checkBox_UseDomainIteration.AutoSize = true;
+            this.checkBox_UseDomainIteration.Location = new System.Drawing.Point(8, 212);
+            this.checkBox_UseDomainIteration.Name = "checkBox_UseDomainIteration";
+            this.checkBox_UseDomainIteration.Size = new System.Drawing.Size(137, 19);
+            this.checkBox_UseDomainIteration.TabIndex = 83;
+            this.checkBox_UseDomainIteration.Text = "Use Domain Iteration";
+            this.checkBox_UseDomainIteration.UseVisualStyleBackColor = true;
+            this.checkBox_UseDomainIteration.CheckedChanged += new System.EventHandler(this.checkBox_UseDomainIteration_CheckedChanged);
             // 
             // label_DomainCalculation
             // 
@@ -1369,7 +1393,7 @@
             0,
             0,
             65536});
-            this.input_TextureBlend.Location = new System.Drawing.Point(99, 346);
+            this.input_TextureBlend.Location = new System.Drawing.Point(99, 363);
             this.input_TextureBlend.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1393,7 +1417,7 @@
             // button_ClearTexture
             // 
             this.button_ClearTexture.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_ClearTexture.Location = new System.Drawing.Point(31, 292);
+            this.button_ClearTexture.Location = new System.Drawing.Point(31, 309);
             this.button_ClearTexture.Name = "button_ClearTexture";
             this.button_ClearTexture.Size = new System.Drawing.Size(96, 25);
             this.button_ClearTexture.TabIndex = 69;
@@ -1402,7 +1426,7 @@
             // 
             // input_MaxDistanceEstimation
             // 
-            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(115, 236);
+            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(115, 253);
             this.input_MaxDistanceEstimation.Name = "input_MaxDistanceEstimation";
             this.input_MaxDistanceEstimation.Size = new System.Drawing.Size(40, 23);
             this.input_MaxDistanceEstimation.TabIndex = 65;
@@ -1411,7 +1435,7 @@
             // 
             // input_DistanceEstimationFactor
             // 
-            this.input_DistanceEstimationFactor.Location = new System.Drawing.Point(115, 262);
+            this.input_DistanceEstimationFactor.Location = new System.Drawing.Point(115, 279);
             this.input_DistanceEstimationFactor.Name = "input_DistanceEstimationFactor";
             this.input_DistanceEstimationFactor.Size = new System.Drawing.Size(40, 23);
             this.input_DistanceEstimationFactor.TabIndex = 67;
@@ -1421,7 +1445,7 @@
             // label_DistanceEstimationMax
             // 
             this.label_DistanceEstimationMax.AutoSize = true;
-            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(3, 238);
+            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(3, 255);
             this.label_DistanceEstimationMax.Name = "label_DistanceEstimationMax";
             this.label_DistanceEstimationMax.Size = new System.Drawing.Size(86, 15);
             this.label_DistanceEstimationMax.TabIndex = 66;
@@ -1431,7 +1455,7 @@
             // label_DistanceEstimationFineness
             // 
             this.label_DistanceEstimationFineness.AutoSize = true;
-            this.label_DistanceEstimationFineness.Location = new System.Drawing.Point(3, 265);
+            this.label_DistanceEstimationFineness.Location = new System.Drawing.Point(3, 282);
             this.label_DistanceEstimationFineness.Name = "label_DistanceEstimationFineness";
             this.label_DistanceEstimationFineness.Size = new System.Drawing.Size(96, 15);
             this.label_DistanceEstimationFineness.TabIndex = 68;
@@ -1441,7 +1465,7 @@
             // checkBox_UseDistanceEstimation
             // 
             this.checkBox_UseDistanceEstimation.AutoSize = true;
-            this.checkBox_UseDistanceEstimation.Location = new System.Drawing.Point(8, 216);
+            this.checkBox_UseDistanceEstimation.Location = new System.Drawing.Point(8, 233);
             this.checkBox_UseDistanceEstimation.Name = "checkBox_UseDistanceEstimation";
             this.checkBox_UseDistanceEstimation.Size = new System.Drawing.Size(152, 19);
             this.checkBox_UseDistanceEstimation.TabIndex = 64;
@@ -1534,17 +1558,6 @@
             this.input_LockedZoom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_LockedZoom_KeyPress);
             this.input_LockedZoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_LockedZoom_Validating);
             this.input_LockedZoom.Validated += new System.EventHandler(this.input_LockedZoom_Validated);
-            // 
-            // checkBox_UseConjugate
-            // 
-            this.checkBox_UseConjugate.AutoSize = true;
-            this.checkBox_UseConjugate.Location = new System.Drawing.Point(5, 133);
-            this.checkBox_UseConjugate.Name = "checkBox_UseConjugate";
-            this.checkBox_UseConjugate.Size = new System.Drawing.Size(103, 19);
-            this.checkBox_UseConjugate.TabIndex = 87;
-            this.checkBox_UseConjugate.Text = "Use Conjugate";
-            this.checkBox_UseConjugate.UseVisualStyleBackColor = true;
-            this.checkBox_UseConjugate.CheckedChanged += new System.EventHandler(this.checkBox_UseConjugate_CheckedChanged);
             // 
             // MainDlg
             // 
@@ -1705,6 +1718,7 @@
         private System.Windows.Forms.TextBox input_LockedZoom;
         private System.Windows.Forms.NumericUpDown input_MinIterations;
         private System.Windows.Forms.CheckBox checkBox_UseConjugate;
+        private System.Windows.Forms.CheckBox checkBox_UseDomainIteration;
     }
 }
 

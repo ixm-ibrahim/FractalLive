@@ -30,5 +30,4 @@ investigate behavior when bailout is between 0 and 1
 optimize glsl arithmetic
 complex powers
 snap value
-roll buttons
-zoom scalable inputs
+distance estimation, textures, custom palette, split exterior interior colors

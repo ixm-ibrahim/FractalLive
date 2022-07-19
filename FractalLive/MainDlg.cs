@@ -201,6 +201,7 @@ namespace FractalLive
             shader.SetFloat("colorFactor", fractalSettings.ColorFactor);
             shader.SetFloat("orbitTrapFactor", fractalSettings.OrbitTrapFactor);
             shader.SetInt("domainCalculation", (int)fractalSettings.DomainCalculation);
+            shader.SetBool("useDomainIteration", fractalSettings.UseDomainIteration);
 
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
@@ -384,6 +385,7 @@ namespace FractalLive
                 modifier *= 5;
             if (inputState.ControlDown)
                 modifier /= 5;
+            float zoomedModifier = modifier * (float)Math.Pow(2, -Math.Max(0, CurrentSettings.Zoom));
 
             // menu controls
             if (panel_FormulaMenu.Enabled)
@@ -406,12 +408,12 @@ namespace FractalLive
                 }
                 if (inputState.keysDown[Keys.D3])
                 {
-                    CurrentSettings.Power += modifier / 50;
+                    CurrentSettings.Power += zoomedModifier / 50;
                     input_Power.Text = CurrentSettings.Power.ToString();
                 }
                 if (inputState.keysDown[Keys.D4])
                 {
-                    CurrentSettings.C_Power += modifier / 50;
+                    CurrentSettings.C_Power += zoomedModifier / 50;
                     input_CPower.Text = CurrentSettings.C_Power.ToString();
                 }
             }
@@ -546,8 +548,8 @@ namespace FractalLive
                 }
             }
 
-                // update controls
-                Log(CurrentSettings.MinIterations.Value.ToString());
+            // update controls
+            Log(CurrentSettings.UseDomainIteration.ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal
@@ -1334,6 +1336,11 @@ namespace FractalLive
         private void input_DomainCalculation_SelectionChangeCommitted(object sender, EventArgs e)
         {
             CurrentSettings.SetDomainCalculation((Fractal.Calculation)input_DomainCalculation.SelectedIndex);
+        }
+
+        private void checkBox_UseDomainIteration_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.SetUseDomainIteration(checkBox_UseDomainIteration.Checked);
         }
 
         #endregion
