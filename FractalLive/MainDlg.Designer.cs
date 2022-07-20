@@ -126,6 +126,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
             this.panel_ColorMenu = new System.Windows.Forms.Panel();
+            this.input_SecondDomainValueFactor2 = new System.Windows.Forms.TextBox();
+            this.label_SecondDomainValueFactors = new System.Windows.Forms.Label();
+            this.input_SecondDomainValueFactor1 = new System.Windows.Forms.TextBox();
             this.checkBox_MatchOrbitTrap = new System.Windows.Forms.CheckBox();
             this.checkBox_UseSecondDomainValue = new System.Windows.Forms.CheckBox();
             this.checkBox_UseDomainIteration = new System.Windows.Forms.CheckBox();
@@ -154,9 +157,6 @@
             this.label_EditingColor = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.input_LockedZoom = new System.Windows.Forms.TextBox();
-            this.input_SecondDomainValueFactor2 = new System.Windows.Forms.TextBox();
-            this.label_SecondDomainValueFactors = new System.Windows.Forms.Label();
-            this.input_SecondDomainValueFactor1 = new System.Windows.Forms.TextBox();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -917,10 +917,10 @@
             this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 454);
             this.panel_OrbitTrapMenu.TabIndex = 33;
             // 
-            // input_SecondColorFactor2
+            // input_SecondValueFactor2
             // 
             this.input_SecondValueFactor2.Location = new System.Drawing.Point(116, 317);
-            this.input_SecondValueFactor2.Name = "input_SecondColorFactor2";
+            this.input_SecondValueFactor2.Name = "input_SecondValueFactor2";
             this.input_SecondValueFactor2.Size = new System.Drawing.Size(40, 23);
             this.input_SecondValueFactor2.TabIndex = 87;
             this.input_SecondValueFactor2.Text = "20";
@@ -939,10 +939,10 @@
             this.label_SecondValueFactors.Text = "Factors:*";
             this.label_SecondValueFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // input_SecondColorFactor1
+            // input_SecondValueFactor1
             // 
             this.input_SecondValueFactor1.Location = new System.Drawing.Point(72, 317);
-            this.input_SecondValueFactor1.Name = "input_SecondColorFactor1";
+            this.input_SecondValueFactor1.Name = "input_SecondValueFactor1";
             this.input_SecondValueFactor1.Size = new System.Drawing.Size(40, 23);
             this.input_SecondValueFactor1.TabIndex = 85;
             this.input_SecondValueFactor1.Text = "4";
@@ -1306,6 +1306,40 @@
             this.panel_ColorMenu.Size = new System.Drawing.Size(177, 454);
             this.panel_ColorMenu.TabIndex = 59;
             // 
+            // input_SecondDomainValueFactor2
+            // 
+            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(114, 230);
+            this.input_SecondDomainValueFactor2.Name = "input_SecondDomainValueFactor2";
+            this.input_SecondDomainValueFactor2.Size = new System.Drawing.Size(40, 23);
+            this.input_SecondDomainValueFactor2.TabIndex = 90;
+            this.input_SecondDomainValueFactor2.Text = "7";
+            this.input_SecondDomainValueFactor2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_SecondDomainValueFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_SecondDomainValueFactor2_KeyPress);
+            this.input_SecondDomainValueFactor2.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondDomainValueFactor2_Validating);
+            this.input_SecondDomainValueFactor2.Validated += new System.EventHandler(this.input_SecondDomainValueFactor2_Validated);
+            // 
+            // label_SecondDomainValueFactors
+            // 
+            this.label_SecondDomainValueFactors.AutoSize = true;
+            this.label_SecondDomainValueFactors.Location = new System.Drawing.Point(3, 233);
+            this.label_SecondDomainValueFactors.Name = "label_SecondDomainValueFactors";
+            this.label_SecondDomainValueFactors.Size = new System.Drawing.Size(53, 15);
+            this.label_SecondDomainValueFactors.TabIndex = 89;
+            this.label_SecondDomainValueFactors.Text = "Factors:*";
+            this.label_SecondDomainValueFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_SecondDomainValueFactor1
+            // 
+            this.input_SecondDomainValueFactor1.Location = new System.Drawing.Point(66, 230);
+            this.input_SecondDomainValueFactor1.Name = "input_SecondDomainValueFactor1";
+            this.input_SecondDomainValueFactor1.Size = new System.Drawing.Size(40, 23);
+            this.input_SecondDomainValueFactor1.TabIndex = 88;
+            this.input_SecondDomainValueFactor1.Text = "10";
+            this.input_SecondDomainValueFactor1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_SecondDomainValueFactor1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_SecondDomainValueFactor1_KeyPress);
+            this.input_SecondDomainValueFactor1.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondDomainValueFactor1_Validating);
+            this.input_SecondDomainValueFactor1.Validated += new System.EventHandler(this.input_SecondDomainValueFactor1_Validated);
+            // 
             // checkBox_MatchOrbitTrap
             // 
             this.checkBox_MatchOrbitTrap.AutoSize = true;
@@ -1643,32 +1677,6 @@
             this.input_LockedZoom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_LockedZoom_KeyPress);
             this.input_LockedZoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_LockedZoom_Validating);
             this.input_LockedZoom.Validated += new System.EventHandler(this.input_LockedZoom_Validated);
-            // 
-            // input_SecondDomainValueFactor2
-            // 
-            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(114, 230);
-            this.input_SecondDomainValueFactor2.Name = "input_SecondDomainValueFactor2";
-            this.input_SecondDomainValueFactor2.Size = new System.Drawing.Size(40, 23);
-            this.input_SecondDomainValueFactor2.TabIndex = 90;
-            this.input_SecondDomainValueFactor2.Text = "20";
-            // 
-            // label_SecondDomainValueFactors
-            // 
-            this.label_SecondDomainValueFactors.AutoSize = true;
-            this.label_SecondDomainValueFactors.Location = new System.Drawing.Point(3, 233);
-            this.label_SecondDomainValueFactors.Name = "label_SecondDomainValueFactors";
-            this.label_SecondDomainValueFactors.Size = new System.Drawing.Size(53, 15);
-            this.label_SecondDomainValueFactors.TabIndex = 89;
-            this.label_SecondDomainValueFactors.Text = "Factors:*";
-            this.label_SecondDomainValueFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // input_SecondDomainValueFactor1
-            // 
-            this.input_SecondDomainValueFactor1.Location = new System.Drawing.Point(66, 230);
-            this.input_SecondDomainValueFactor1.Name = "input_SecondDomainValueFactor1";
-            this.input_SecondDomainValueFactor1.Size = new System.Drawing.Size(40, 23);
-            this.input_SecondDomainValueFactor1.TabIndex = 88;
-            this.input_SecondDomainValueFactor1.Text = "4";
             // 
             // MainDlg
             // 
