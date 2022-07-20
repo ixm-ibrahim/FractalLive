@@ -53,11 +53,14 @@ uniform int bailoutPointsCount;
 uniform vec4[16] bailoutLines;
 uniform int bailoutLinesCount;
 uniform int orbitTrapCalculation;
+uniform bool useSecondValue;
 uniform float startOrbitDistance;
 uniform int startOrbit;
 uniform int orbitRange;
 uniform float bailoutFactor1;
 uniform float bailoutFactor2;
+uniform float secondValueFactor1;
+uniform float secondValueFactor2;
 
 uniform bool splitInteriorExterior;
 uniform int coloring;
@@ -77,18 +80,20 @@ void main()
 	FragColor = vec4(Mandelbrot(), 1.0);
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout float trap, out vec2 domainZ, out int domainIter);
-vec2 MandelbrotDistanceLoop(vec2 c, int maxIteration, inout int iter);
-vec3 GetColor(vec2 z, int iter, float trap, vec2 domainZ, int domainIter);
-vec3 DomainColoring(int coloring, vec2 z, int iter, float trap);
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec2 domainZ, out int domainIter);
+vec3 GetColor(vec2 z, int iter, vec2 trap, vec2 domainZ, int domainIter);
+vec3 DomainColoring(int coloring, vec2 z, int iter, vec2 trap);
 bool IsBounded(int iter, vec2 z);
-float GetOrbitTrap(vec2 z, int iter, inout float trap);
-float CalculateOrbitTrap(float trap, float newDist, int iter);
+bool IsWithinIteration(int iter);
+vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap);
+vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter);
 vec2 CalculateDomainZ(vec2 domainZ, vec2 newZ, int iter, inout int domainIter);
 float GetSmoothIter(float iter, vec2 z);
 vec2 Fix(vec2 z);
 vec3 ColorFromHSV(vec3 color);
 vec3 Rainbow(float mu);
+float DistanceToPoint(vec2 z, vec2 p);
+float DistanceToLine(vec2 p, vec2 a, vec2 b);
 float sigmoid(float x, float factor);
 vec3 sigmoid(vec3 v, float factor);
 vec2 c_conj(vec2 c);
@@ -98,12 +103,11 @@ vec2 c_div(vec2 a, vec2 b);
 vec2 c_pow(vec2 c, float p);
 vec2 c_invert(vec2 c);
 vec3 ColorFromHSV(vec3 color);
-float DistanceToLine(vec2 p, vec2 a, vec2 b);
 
 vec3 Mandelbrot()
 {
 	int iter = 0;
-    float trap = 1e99;
+    vec2 trap = vec2(startOrbitDistance);
 	vec2 z;
 	vec2 domainZ;
     int domainIter;
@@ -117,7 +121,7 @@ vec3 Mandelbrot()
         //return vec3(0);
 
     //if (orbitTrap != TRAP_POINTS && orbitTrap != TRAP_LINES)
-	    //return vec3(0.5 + 0.5*(sin(bailout*trap))); // 4.5 is a good value
+	    //return vec3(0.5 + 0.5*(sin(bailout*trap.x))); // 4.5 is a good value
 	    //return vec3(7*trap);
 	    //trap = 0;
 
@@ -129,13 +133,12 @@ vec3 Mandelbrot()
 	//return 0.5 + 0.5*sin(GetColor(z, iter, trap) * colorCycle);colorFactor;
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout float trap, out vec2 domainZ, out int domainIter)
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec2 domainZ, out int domainIter)
 {
 	vec2 z = vec2(0);
     domainZ = c;
-    trap = startOrbitDistance;
+    trap = vec2(startOrbitDistance);
 	for (iter = 0; iter < maxIterations && IsBounded(iter, z); ++iter)
-	//IsBounded(z);for (iter = 0; iter < maxIterations; ++iter)
 	{
         if (useConjugate)
             z = c_conj(z);
@@ -149,13 +152,24 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout float trap, out vec2 domainZ, 
         trap = GetOrbitTrap(z, iter, trap);
 	}
     
-    trap = clamp(pow( trap*pow(2,lockedZoom), bailoutFactor1 ), 0.0, 1.0); // control 1
-    trap = sigmoid(trap, bailoutFactor2);  // control 2
+
+
+    if (useSecondValue)
+    {
+        if (trap.y > trap.x)
+            trap.x /= trap.y;
+        else
+            trap.x = trap.y / trap.x;
+
+        trap.x = pow(sigmoid(trap.x, secondValueFactor1), secondValueFactor2);
+    }
+
+    trap.x = sigmoid(pow( trap.x*pow(2,lockedZoom), bailoutFactor1 ), bailoutFactor2);
 
 	return z;
 }
 
-vec3 GetColor(vec2 z, int iter, float trap, vec2 domainZ, int domainIter)
+vec3 GetColor(vec2 z, int iter, vec2 trap, vec2 domainZ, int domainIter)
 {
     // Decide the color based on the number of iterations
     vec3 color;
@@ -210,7 +224,7 @@ vec3 GetColor(vec2 z, int iter, float trap, vec2 domainZ, int domainIter)
                 break;
             case COL_ITERATION:
                 //color = Rainbow(iter * (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? trap : 1));
-                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(orbitTrapFactor*trap), Rainbow(iter), trap) : Rainbow(iter);
+                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(orbitTrapFactor*trap.x), Rainbow(iter), trap.x) : Rainbow(iter);
                 break;
             case COL_SMOOTH:
                 float mu;
@@ -219,7 +233,7 @@ vec3 GetColor(vec2 z, int iter, float trap, vec2 domainZ, int domainIter)
 
                 //color = Rainbow(mu + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 10*trap : 1));
                 //color = Rainbow(mu) * (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? Rainbow(trap) : vec3(1));
-                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(orbitTrapFactor*trap), Rainbow(mu), trap) : Rainbow(mu);
+                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(orbitTrapFactor*trap.x), Rainbow(mu), trap.x) : Rainbow(mu);
                 //color = 0.5*Rainbow(mu) + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 0.5*Rainbow(10*trap) : 0.5*Rainbow(mu));
                 break;
             default:
@@ -231,7 +245,7 @@ vec3 GetColor(vec2 z, int iter, float trap, vec2 domainZ, int domainIter)
     return sigmoid(color, colorFactor);
 }
 
-vec3 DomainColoring(int coloring, vec2 z, int iter, float trap)
+vec3 DomainColoring(int coloring, vec2 z, int iter, vec2 trap)
 {
     //float t = (time + trap) * 20;
     float t = time * 20;
@@ -287,19 +301,21 @@ vec3 DomainColoring(int coloring, vec2 z, int iter, float trap)
 
     if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
         if (coloring <= COL_SMOOTH)
-            color = mix(Rainbow(orbitTrapFactor*trap * (useDomainIteration ? iter : 1)), color, trap);
+            color = mix(Rainbow(orbitTrapFactor*trap.x), color, trap.x);
         else
-            color = mix(color, color*sigmoid(trap,orbitTrapFactor), trap) * (useDomainIteration ? Rainbow(iter) : vec3(1));
+            color = mix(color, color*sigmoid(trap.x,orbitTrapFactor), trap.x);
             //color = mix(color, vec3(0), trap);
-    else if (useDomainIteration)
-        color *= Rainbow(iter);
+
+    if (useDomainIteration)
+        //color *= mix(color, Rainbow(iter), iter/maxIterations);
+        color = Rainbow(iter);
 
     return color;
 }
 
 bool IsBounded(int iter, vec2 z)
 {
-    if (iter < minIterations)
+    if (!IsWithinIteration(iter))
         return true;
 
     switch (orbitTrap)
@@ -322,47 +338,82 @@ bool IsBounded(int iter, vec2 z)
     return false;
 }
 
-float GetOrbitTrap(vec2 z, int iter, inout float trap)
+bool IsWithinIteration(int iter)
 {
-    if (iter+1 >= startOrbit && iter+1 <= startOrbit + orbitRange - 1)
+    return iter+1 >= startOrbit && iter+1 <= startOrbit + orbitRange - 1 && iter > minIterations;
+}
+
+vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap)
+{
+    if (IsWithinIteration(iter))
         switch (orbitTrap)
         {
             case TRAP_POINTS:
                 for (int i = 0; i < bailoutPointsCount; i++)
-                    trap = CalculateOrbitTrap(trap, dot(z-bailoutPoints[i],z-bailoutPoints[i]), iter);
+                    trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z, bailoutPoints[i]), iter); 
                 break;
             case TRAP_LINES:
                 for (int i = 0; i < bailoutLinesCount; i++)
-                    trap = CalculateOrbitTrap(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw), iter);
+                    trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw), iter);
                 break;
             default:
-                trap = 0;
+                trap.x = 0;
         }
 
     return trap;
 }
 
-float CalculateOrbitTrap(float trap, float newDist, int iter)
+vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter)
 {
+    if (!IsWithinIteration(iter))
+        return trap;
+
     switch (orbitTrapCalculation)
     {
         case CALC_MIN:
-            return min(trap, newDist);
+            if (newDist < trap.x)
+                return vec2(newDist, trap.x);
+            else if (newDist < trap.y)
+                return vec2(trap.x, newDist);
+
+            return trap;
         case CALC_MAX:
-            return max(trap, newDist);
+            if (newDist > trap.x)
+                return vec2(newDist, trap.x);
+
+            return trap;
         case CALC_AVG:
-            return (trap + newDist) / 2;
+            return vec2((trap.x + newDist) / 2, trap.x);
         case CALC_FIRST:
-            return (iter+1 == startOrbit) ? newDist : trap;
+            int start = (minIterations > startOrbit) ? minIterations : startOrbit;
+
+            // first
+            if (iter+1 == start)
+                return vec2(newDist, trap.x);
+            // second
+            if (iter+1 == start+1)
+                vec2(trap.x, newDist);
+
+            return trap;
         case CALC_LAST:
-            return newDist;
+            // last
+            if (iter+1 == maxIterations)
+                return vec2(newDist, trap.x);
+            // second-to-last
+            if (iter+1 == maxIterations-1)
+                vec2(trap.x, newDist);
+
+            return trap;
         default:
-            return 0;
+            return vec2(0);
     }
 }
 
 vec2 CalculateDomainZ(vec2 domainZ, vec2 newZ, int iter, inout int domainIter)
 {
+    if (!IsWithinIteration(iter))
+        return domainZ;
+
     float ldz = length(domainZ);
     float lz = length(newZ);
 
@@ -462,6 +513,24 @@ vec3 Rainbow(float mu)
     return vec3(sin(colorCycle * 7 * (mu + time) / 17) * .5 + .5, sin(colorCycle * 11 * (mu + time) / 29) * .5 + .5, sin(colorCycle * 13 * (mu + time) / 41) * .5 + .5);
 }
 
+float DistanceToPoint(vec2 z, vec2 p)
+{
+    return length(z - p);
+}
+float DistanceToLine(vec2 p, vec2 a, vec2 b)
+{
+    return abs((b.x-a.x)*(a.y-p.y) - (a.x-p.x)*(b.y-a.y)) / sqrt(pow(b.x-a.x,2) + pow(b.y-a.y,2));
+}
+
+float sigmoid(float x, float factor)
+{
+    return 1.0 / (1.0 + exp(-factor * (x - 0.5)));
+}
+vec3 sigmoid(vec3 v, float factor)
+{
+    return 1.0 / (1.0 + exp(-factor * (v - 0.5)));
+}
+
 vec2 c_mul(vec2 a, vec2 b)
 {
     return vec2(a.x*b.x - a.y*b.y, a.x*b.y + a.y*b.x);
@@ -509,18 +578,4 @@ vec2 c_pow(vec2 c, float a)
     float r = length(c);
     float theta = atan(c.y, c.x);   
     return isnan(r) || isnan(theta) ? c : pow(r, a) * vec2(cos(theta * a), sin(theta * a));
-}
-
-float sigmoid(float x, float factor)
-{
-    return 1.0 / (1.0 + exp(-factor * (x - 0.5)));
-}
-vec3 sigmoid(vec3 v, float factor)
-{
-    return 1.0 / (1.0 + exp(-factor * (v - 0.5)));
-}
-
-float DistanceToLine(vec2 p, vec2 a, vec2 b)
-{
-    return abs((b.x-a.x)*(a.y-p.y) - (a.x-p.x)*(b.y-a.y)) / sqrt(pow(b.x-a.x,2) + pow(b.y-a.y,2));
 }

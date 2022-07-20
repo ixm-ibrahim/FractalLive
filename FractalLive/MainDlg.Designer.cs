@@ -98,6 +98,10 @@
             this.label_OrbitTrapPosition = new System.Windows.Forms.Label();
             this.input_BailoutX = new System.Windows.Forms.TextBox();
             this.panel_OrbitTrapMenu = new System.Windows.Forms.Panel();
+            this.input_SecondValueFactor2 = new System.Windows.Forms.TextBox();
+            this.label_SecondValueFactors = new System.Windows.Forms.Label();
+            this.input_SecondValueFactor1 = new System.Windows.Forms.TextBox();
+            this.checkBox_UseSecondValue = new System.Windows.Forms.CheckBox();
             this.input_StartDistance = new System.Windows.Forms.TextBox();
             this.label_OrbitTrapCalculation = new System.Windows.Forms.Label();
             this.input_OrbitTrapCalculation = new System.Windows.Forms.ComboBox();
@@ -122,6 +126,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
             this.panel_ColorMenu = new System.Windows.Forms.Panel();
+            this.checkBox_MatchOrbitTrap = new System.Windows.Forms.CheckBox();
+            this.checkBox_UseSecondDomainValue = new System.Windows.Forms.CheckBox();
             this.checkBox_UseDomainIteration = new System.Windows.Forms.CheckBox();
             this.label_DomainCalculation = new System.Windows.Forms.Label();
             this.input_DomainCalculation = new System.Windows.Forms.ComboBox();
@@ -148,6 +154,9 @@
             this.label_EditingColor = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.input_LockedZoom = new System.Windows.Forms.TextBox();
+            this.input_SecondDomainValueFactor2 = new System.Windows.Forms.TextBox();
+            this.label_SecondDomainValueFactors = new System.Windows.Forms.Label();
+            this.input_SecondDomainValueFactor1 = new System.Windows.Forms.TextBox();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -179,7 +188,7 @@
             // label_StartOrbit
             // 
             label_StartOrbit.AutoSize = true;
-            label_StartOrbit.Location = new System.Drawing.Point(3, 223);
+            label_StartOrbit.Location = new System.Drawing.Point(3, 221);
             label_StartOrbit.Name = "label_StartOrbit";
             label_StartOrbit.Size = new System.Drawing.Size(67, 15);
             label_StartOrbit.TabIndex = 47;
@@ -189,7 +198,7 @@
             // label_OrbitRange
             // 
             label_OrbitRange.AutoSize = true;
-            label_OrbitRange.Location = new System.Drawing.Point(3, 249);
+            label_OrbitRange.Location = new System.Drawing.Point(3, 247);
             label_OrbitRange.Name = "label_OrbitRange";
             label_OrbitRange.Size = new System.Drawing.Size(76, 15);
             label_OrbitRange.TabIndex = 49;
@@ -199,7 +208,7 @@
             // label_TextureBlend
             // 
             label_TextureBlend.AutoSize = true;
-            label_TextureBlend.Location = new System.Drawing.Point(3, 365);
+            label_TextureBlend.Location = new System.Drawing.Point(3, 427);
             label_TextureBlend.Name = "label_TextureBlend";
             label_TextureBlend.Size = new System.Drawing.Size(86, 15);
             label_TextureBlend.TabIndex = 70;
@@ -479,7 +488,7 @@
             this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(683, 428);
+            this.LogTextBox.Location = new System.Drawing.Point(683, 484);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
@@ -497,7 +506,7 @@
             this.glControl.Location = new System.Drawing.Point(12, 24);
             this.glControl.Name = "glControl";
             this.glControl.Profile = OpenTK.Windowing.Common.ContextProfile.Compatability;
-            this.glControl.Size = new System.Drawing.Size(500, 431);
+            this.glControl.Size = new System.Drawing.Size(500, 487);
             this.glControl.TabIndex = 2;
             this.glControl.Text = "glControl1";
             // 
@@ -505,7 +514,7 @@
             // 
             this.button_Left.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Left.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Left.Location = new System.Drawing.Point(521, 462);
+            this.button_Left.Location = new System.Drawing.Point(521, 518);
             this.button_Left.Name = "button_Left";
             this.button_Left.Size = new System.Drawing.Size(50, 25);
             this.button_Left.TabIndex = 33;
@@ -516,7 +525,7 @@
             // 
             this.button_Right.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Right.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Right.Location = new System.Drawing.Point(623, 462);
+            this.button_Right.Location = new System.Drawing.Point(623, 518);
             this.button_Right.Name = "button_Right";
             this.button_Right.Size = new System.Drawing.Size(50, 25);
             this.button_Right.TabIndex = 22;
@@ -679,7 +688,7 @@
             // 
             this.button_Menu1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Menu1.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu1.Location = new System.Drawing.Point(521, 430);
+            this.button_Menu1.Location = new System.Drawing.Point(521, 486);
             this.button_Menu1.Name = "button_Menu1";
             this.button_Menu1.Size = new System.Drawing.Size(35, 25);
             this.button_Menu1.TabIndex = 34;
@@ -701,7 +710,7 @@
             // 
             this.button_Menu2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Menu2.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu2.Location = new System.Drawing.Point(560, 430);
+            this.button_Menu2.Location = new System.Drawing.Point(560, 486);
             this.button_Menu2.Name = "button_Menu2";
             this.button_Menu2.Size = new System.Drawing.Size(35, 25);
             this.button_Menu2.TabIndex = 35;
@@ -722,7 +731,7 @@
             // 
             this.button_Menu3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Menu3.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu3.Location = new System.Drawing.Point(599, 430);
+            this.button_Menu3.Location = new System.Drawing.Point(599, 486);
             this.button_Menu3.Name = "button_Menu3";
             this.button_Menu3.Size = new System.Drawing.Size(35, 25);
             this.button_Menu3.TabIndex = 36;
@@ -746,7 +755,7 @@
             // 
             this.button_Menu4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Menu4.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu4.Location = new System.Drawing.Point(639, 430);
+            this.button_Menu4.Location = new System.Drawing.Point(639, 486);
             this.button_Menu4.Name = "button_Menu4";
             this.button_Menu4.Size = new System.Drawing.Size(35, 25);
             this.button_Menu4.TabIndex = 37;
@@ -780,7 +789,7 @@
             this.panel_FormulaMenu.Location = new System.Drawing.Point(518, 24);
             this.panel_FormulaMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_FormulaMenu.Name = "panel_FormulaMenu";
-            this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 398);
+            this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 454);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
             // checkBox_UseConjugate
@@ -875,6 +884,10 @@
             this.panel_OrbitTrapMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_OrbitTrapMenu.AutoScroll = true;
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_SecondValueFactor2);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_SecondValueFactors);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_SecondValueFactor1);
+            this.panel_OrbitTrapMenu.Controls.Add(this.checkBox_UseSecondValue);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_StartDistance);
             this.panel_OrbitTrapMenu.Controls.Add(label_StartDistance);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapCalculation);
@@ -901,8 +914,53 @@
             this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(920, 24);
             this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
-            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 398);
+            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 454);
             this.panel_OrbitTrapMenu.TabIndex = 33;
+            // 
+            // input_SecondColorFactor2
+            // 
+            this.input_SecondValueFactor2.Location = new System.Drawing.Point(116, 317);
+            this.input_SecondValueFactor2.Name = "input_SecondColorFactor2";
+            this.input_SecondValueFactor2.Size = new System.Drawing.Size(40, 23);
+            this.input_SecondValueFactor2.TabIndex = 87;
+            this.input_SecondValueFactor2.Text = "20";
+            this.input_SecondValueFactor2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_SecondValueFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_SecondValueFactor2_KeyPress);
+            this.input_SecondValueFactor2.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondValueFactor2_Validating);
+            this.input_SecondValueFactor2.Validated += new System.EventHandler(this.input_SecondValueFactor2_Validated);
+            // 
+            // label_SecondValueFactors
+            // 
+            this.label_SecondValueFactors.AutoSize = true;
+            this.label_SecondValueFactors.Location = new System.Drawing.Point(3, 320);
+            this.label_SecondValueFactors.Name = "label_SecondValueFactors";
+            this.label_SecondValueFactors.Size = new System.Drawing.Size(53, 15);
+            this.label_SecondValueFactors.TabIndex = 86;
+            this.label_SecondValueFactors.Text = "Factors:*";
+            this.label_SecondValueFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_SecondColorFactor1
+            // 
+            this.input_SecondValueFactor1.Location = new System.Drawing.Point(72, 317);
+            this.input_SecondValueFactor1.Name = "input_SecondColorFactor1";
+            this.input_SecondValueFactor1.Size = new System.Drawing.Size(40, 23);
+            this.input_SecondValueFactor1.TabIndex = 85;
+            this.input_SecondValueFactor1.Text = "4";
+            this.input_SecondValueFactor1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_SecondValueFactor1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_SecondValueFactor1_KeyPress);
+            this.input_SecondValueFactor1.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondValueFactor1_Validating);
+            this.input_SecondValueFactor1.Validated += new System.EventHandler(this.input_SecondValueFactor1_Validated);
+            // 
+            // checkBox_UseSecondValue
+            // 
+            this.checkBox_UseSecondValue.AutoSize = true;
+            this.checkBox_UseSecondValue.Location = new System.Drawing.Point(8, 298);
+            this.checkBox_UseSecondValue.Name = "checkBox_UseSecondValue";
+            this.checkBox_UseSecondValue.Size = new System.Drawing.Size(118, 19);
+            this.checkBox_UseSecondValue.TabIndex = 84;
+            this.checkBox_UseSecondValue.Text = "Use Second Value";
+            this.checkBox_UseSecondValue.UseVisualStyleBackColor = true;
+            this.checkBox_UseSecondValue.CheckedChanged += new System.EventHandler(this.checkBox_UseSecondValue_CheckedChanged);
             // 
             // input_StartDistance
             // 
@@ -946,7 +1004,7 @@
             // label_OrbitTrapFactors
             // 
             this.label_OrbitTrapFactors.AutoSize = true;
-            this.label_OrbitTrapFactors.Location = new System.Drawing.Point(3, 276);
+            this.label_OrbitTrapFactors.Location = new System.Drawing.Point(3, 274);
             this.label_OrbitTrapFactors.Name = "label_OrbitTrapFactors";
             this.label_OrbitTrapFactors.Size = new System.Drawing.Size(53, 15);
             this.label_OrbitTrapFactors.TabIndex = 54;
@@ -965,7 +1023,7 @@
             // input_StartOrbit
             // 
             this.input_StartOrbit.CausesValidation = false;
-            this.input_StartOrbit.Location = new System.Drawing.Point(91, 221);
+            this.input_StartOrbit.Location = new System.Drawing.Point(91, 219);
             this.input_StartOrbit.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -989,7 +1047,7 @@
             // 
             // input_OrbitTrapBlendingFactor
             // 
-            this.input_OrbitTrapBlendingFactor.Location = new System.Drawing.Point(72, 273);
+            this.input_OrbitTrapBlendingFactor.Location = new System.Drawing.Point(72, 271);
             this.input_OrbitTrapBlendingFactor.Name = "input_OrbitTrapBlendingFactor";
             this.input_OrbitTrapBlendingFactor.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapBlendingFactor.TabIndex = 53;
@@ -1026,7 +1084,7 @@
             // 
             // input_OrbitTrapThicknessFactor
             // 
-            this.input_OrbitTrapThicknessFactor.Location = new System.Drawing.Point(116, 273);
+            this.input_OrbitTrapThicknessFactor.Location = new System.Drawing.Point(116, 271);
             this.input_OrbitTrapThicknessFactor.Name = "input_OrbitTrapThicknessFactor";
             this.input_OrbitTrapThicknessFactor.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapThicknessFactor.TabIndex = 52;
@@ -1039,7 +1097,7 @@
             // input_OrbitRange
             // 
             this.input_OrbitRange.CausesValidation = false;
-            this.input_OrbitRange.Location = new System.Drawing.Point(91, 247);
+            this.input_OrbitRange.Location = new System.Drawing.Point(91, 245);
             this.input_OrbitRange.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -1094,7 +1152,7 @@
             // label_Texture
             // 
             this.label_Texture.AutoSize = true;
-            this.label_Texture.Location = new System.Drawing.Point(3, 340);
+            this.label_Texture.Location = new System.Drawing.Point(3, 402);
             this.label_Texture.Name = "label_Texture";
             this.label_Texture.Size = new System.Drawing.Size(48, 15);
             this.label_Texture.TabIndex = 40;
@@ -1103,7 +1161,7 @@
             // 
             // input_Texture
             // 
-            this.input_Texture.Location = new System.Drawing.Point(57, 337);
+            this.input_Texture.Location = new System.Drawing.Point(57, 399);
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
@@ -1113,7 +1171,7 @@
             // 
             this.checkBox_LockZoomFactor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_LockZoomFactor.AutoSize = true;
-            this.checkBox_LockZoomFactor.Location = new System.Drawing.Point(365, 467);
+            this.checkBox_LockZoomFactor.Location = new System.Drawing.Point(365, 523);
             this.checkBox_LockZoomFactor.Name = "checkBox_LockZoomFactor";
             this.checkBox_LockZoomFactor.Size = new System.Drawing.Size(122, 19);
             this.checkBox_LockZoomFactor.TabIndex = 38;
@@ -1157,7 +1215,7 @@
             // input_Center
             // 
             this.input_Center.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_Center.Location = new System.Drawing.Point(57, 464);
+            this.input_Center.Location = new System.Drawing.Point(57, 520);
             this.input_Center.Name = "input_Center";
             this.input_Center.Size = new System.Drawing.Size(141, 23);
             this.input_Center.TabIndex = 55;
@@ -1171,7 +1229,7 @@
             // 
             this.label_Center.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_Center.AutoSize = true;
-            this.label_Center.Location = new System.Drawing.Point(12, 468);
+            this.label_Center.Location = new System.Drawing.Point(12, 524);
             this.label_Center.Name = "label_Center";
             this.label_Center.Size = new System.Drawing.Size(45, 15);
             this.label_Center.TabIndex = 56;
@@ -1182,7 +1240,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(204, 468);
+            this.label2.Location = new System.Drawing.Point(204, 524);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(45, 15);
             this.label2.TabIndex = 58;
@@ -1192,7 +1250,7 @@
             // input_Zoom
             // 
             this.input_Zoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_Zoom.Location = new System.Drawing.Point(249, 464);
+            this.input_Zoom.Location = new System.Drawing.Point(249, 520);
             this.input_Zoom.Name = "input_Zoom";
             this.input_Zoom.Size = new System.Drawing.Size(52, 23);
             this.input_Zoom.TabIndex = 57;
@@ -1207,6 +1265,11 @@
             this.panel_ColorMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_ColorMenu.AutoScroll = true;
+            this.panel_ColorMenu.Controls.Add(this.input_SecondDomainValueFactor2);
+            this.panel_ColorMenu.Controls.Add(this.label_SecondDomainValueFactors);
+            this.panel_ColorMenu.Controls.Add(this.input_SecondDomainValueFactor1);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_MatchOrbitTrap);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseSecondDomainValue);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseDomainIteration);
             this.panel_ColorMenu.Controls.Add(this.label_DomainCalculation);
             this.panel_ColorMenu.Controls.Add(this.input_DomainCalculation);
@@ -1240,13 +1303,35 @@
             this.panel_ColorMenu.Location = new System.Drawing.Point(716, 24);
             this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_ColorMenu.Name = "panel_ColorMenu";
-            this.panel_ColorMenu.Size = new System.Drawing.Size(177, 398);
+            this.panel_ColorMenu.Size = new System.Drawing.Size(177, 454);
             this.panel_ColorMenu.TabIndex = 59;
+            // 
+            // checkBox_MatchOrbitTrap
+            // 
+            this.checkBox_MatchOrbitTrap.AutoSize = true;
+            this.checkBox_MatchOrbitTrap.Location = new System.Drawing.Point(8, 255);
+            this.checkBox_MatchOrbitTrap.Name = "checkBox_MatchOrbitTrap";
+            this.checkBox_MatchOrbitTrap.Size = new System.Drawing.Size(115, 19);
+            this.checkBox_MatchOrbitTrap.TabIndex = 85;
+            this.checkBox_MatchOrbitTrap.Text = "Match Orbit Trap";
+            this.checkBox_MatchOrbitTrap.UseVisualStyleBackColor = true;
+            this.checkBox_MatchOrbitTrap.CheckedChanged += new System.EventHandler(this.checkBox_MatchOrbitTrap_CheckedChanged);
+            // 
+            // checkBox_UseSecondDomainValue
+            // 
+            this.checkBox_UseSecondDomainValue.AutoSize = true;
+            this.checkBox_UseSecondDomainValue.Location = new System.Drawing.Point(8, 211);
+            this.checkBox_UseSecondDomainValue.Name = "checkBox_UseSecondDomainValue";
+            this.checkBox_UseSecondDomainValue.Size = new System.Drawing.Size(118, 19);
+            this.checkBox_UseSecondDomainValue.TabIndex = 84;
+            this.checkBox_UseSecondDomainValue.Text = "Use Second Value";
+            this.checkBox_UseSecondDomainValue.UseVisualStyleBackColor = true;
+            this.checkBox_UseSecondDomainValue.CheckedChanged += new System.EventHandler(this.checkBox_UseSecondDomainValue_CheckedChanged);
             // 
             // checkBox_UseDomainIteration
             // 
             this.checkBox_UseDomainIteration.AutoSize = true;
-            this.checkBox_UseDomainIteration.Location = new System.Drawing.Point(8, 212);
+            this.checkBox_UseDomainIteration.Location = new System.Drawing.Point(8, 275);
             this.checkBox_UseDomainIteration.Name = "checkBox_UseDomainIteration";
             this.checkBox_UseDomainIteration.Size = new System.Drawing.Size(137, 19);
             this.checkBox_UseDomainIteration.TabIndex = 83;
@@ -1393,7 +1478,7 @@
             0,
             0,
             65536});
-            this.input_TextureBlend.Location = new System.Drawing.Point(99, 363);
+            this.input_TextureBlend.Location = new System.Drawing.Point(99, 425);
             this.input_TextureBlend.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1417,7 +1502,7 @@
             // button_ClearTexture
             // 
             this.button_ClearTexture.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_ClearTexture.Location = new System.Drawing.Point(31, 309);
+            this.button_ClearTexture.Location = new System.Drawing.Point(31, 371);
             this.button_ClearTexture.Name = "button_ClearTexture";
             this.button_ClearTexture.Size = new System.Drawing.Size(96, 25);
             this.button_ClearTexture.TabIndex = 69;
@@ -1426,7 +1511,7 @@
             // 
             // input_MaxDistanceEstimation
             // 
-            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(115, 253);
+            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(115, 315);
             this.input_MaxDistanceEstimation.Name = "input_MaxDistanceEstimation";
             this.input_MaxDistanceEstimation.Size = new System.Drawing.Size(40, 23);
             this.input_MaxDistanceEstimation.TabIndex = 65;
@@ -1435,7 +1520,7 @@
             // 
             // input_DistanceEstimationFactor
             // 
-            this.input_DistanceEstimationFactor.Location = new System.Drawing.Point(115, 279);
+            this.input_DistanceEstimationFactor.Location = new System.Drawing.Point(115, 341);
             this.input_DistanceEstimationFactor.Name = "input_DistanceEstimationFactor";
             this.input_DistanceEstimationFactor.Size = new System.Drawing.Size(40, 23);
             this.input_DistanceEstimationFactor.TabIndex = 67;
@@ -1445,7 +1530,7 @@
             // label_DistanceEstimationMax
             // 
             this.label_DistanceEstimationMax.AutoSize = true;
-            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(3, 255);
+            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(3, 317);
             this.label_DistanceEstimationMax.Name = "label_DistanceEstimationMax";
             this.label_DistanceEstimationMax.Size = new System.Drawing.Size(86, 15);
             this.label_DistanceEstimationMax.TabIndex = 66;
@@ -1455,7 +1540,7 @@
             // label_DistanceEstimationFineness
             // 
             this.label_DistanceEstimationFineness.AutoSize = true;
-            this.label_DistanceEstimationFineness.Location = new System.Drawing.Point(3, 282);
+            this.label_DistanceEstimationFineness.Location = new System.Drawing.Point(3, 344);
             this.label_DistanceEstimationFineness.Name = "label_DistanceEstimationFineness";
             this.label_DistanceEstimationFineness.Size = new System.Drawing.Size(96, 15);
             this.label_DistanceEstimationFineness.TabIndex = 68;
@@ -1465,7 +1550,7 @@
             // checkBox_UseDistanceEstimation
             // 
             this.checkBox_UseDistanceEstimation.AutoSize = true;
-            this.checkBox_UseDistanceEstimation.Location = new System.Drawing.Point(8, 233);
+            this.checkBox_UseDistanceEstimation.Location = new System.Drawing.Point(8, 295);
             this.checkBox_UseDistanceEstimation.Name = "checkBox_UseDistanceEstimation";
             this.checkBox_UseDistanceEstimation.Size = new System.Drawing.Size(152, 19);
             this.checkBox_UseDistanceEstimation.TabIndex = 64;
@@ -1549,7 +1634,7 @@
             // input_LockedZoom
             // 
             this.input_LockedZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_LockedZoom.Location = new System.Drawing.Point(307, 464);
+            this.input_LockedZoom.Location = new System.Drawing.Point(307, 520);
             this.input_LockedZoom.Name = "input_LockedZoom";
             this.input_LockedZoom.Size = new System.Drawing.Size(52, 23);
             this.input_LockedZoom.TabIndex = 60;
@@ -1559,11 +1644,37 @@
             this.input_LockedZoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_LockedZoom_Validating);
             this.input_LockedZoom.Validated += new System.EventHandler(this.input_LockedZoom_Validated);
             // 
+            // input_SecondDomainValueFactor2
+            // 
+            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(114, 230);
+            this.input_SecondDomainValueFactor2.Name = "input_SecondDomainValueFactor2";
+            this.input_SecondDomainValueFactor2.Size = new System.Drawing.Size(40, 23);
+            this.input_SecondDomainValueFactor2.TabIndex = 90;
+            this.input_SecondDomainValueFactor2.Text = "20";
+            // 
+            // label_SecondDomainValueFactors
+            // 
+            this.label_SecondDomainValueFactors.AutoSize = true;
+            this.label_SecondDomainValueFactors.Location = new System.Drawing.Point(3, 233);
+            this.label_SecondDomainValueFactors.Name = "label_SecondDomainValueFactors";
+            this.label_SecondDomainValueFactors.Size = new System.Drawing.Size(53, 15);
+            this.label_SecondDomainValueFactors.TabIndex = 89;
+            this.label_SecondDomainValueFactors.Text = "Factors:*";
+            this.label_SecondDomainValueFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_SecondDomainValueFactor1
+            // 
+            this.input_SecondDomainValueFactor1.Location = new System.Drawing.Point(66, 230);
+            this.input_SecondDomainValueFactor1.Name = "input_SecondDomainValueFactor1";
+            this.input_SecondDomainValueFactor1.Size = new System.Drawing.Size(40, 23);
+            this.input_SecondDomainValueFactor1.TabIndex = 88;
+            this.input_SecondDomainValueFactor1.Text = "4";
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1150, 496);
+            this.ClientSize = new System.Drawing.Size(1150, 552);
             this.Controls.Add(this.input_LockedZoom);
             this.Controls.Add(this.panel_ColorMenu);
             this.Controls.Add(this.glControl);
@@ -1719,6 +1830,15 @@
         private System.Windows.Forms.NumericUpDown input_MinIterations;
         private System.Windows.Forms.CheckBox checkBox_UseConjugate;
         private System.Windows.Forms.CheckBox checkBox_UseDomainIteration;
+        private System.Windows.Forms.CheckBox checkBox_UseSecondValue;
+        private System.Windows.Forms.CheckBox checkBox_MatchOrbitTrap;
+        private System.Windows.Forms.CheckBox checkBox_UseSecondDomainValue;
+        private System.Windows.Forms.Label label_SecondValueFactors;
+        private System.Windows.Forms.TextBox input_SecondValueFactor1;
+        private System.Windows.Forms.TextBox input_SecondValueFactor2;
+        private System.Windows.Forms.TextBox input_SecondDomainValueFactor2;
+        private System.Windows.Forms.Label label_SecondDomainValueFactors;
+        private System.Windows.Forms.TextBox input_SecondDomainValueFactor1;
     }
 }
 

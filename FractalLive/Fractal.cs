@@ -57,36 +57,32 @@ namespace FractalLive
         {
             public Settings(Type type = Type.Mandelbrot, Formula formula = Formula.Classic)
             {
-                Type = type;
-                Formula = formula;
-                buddhabrot = Buddhabrot.Normal;
-                ExteriorColoring = Coloring.White;
-                InteriorColoring = Coloring.Black;
-                Projection = Projection.Normal;
-                IsBuddhabrot = false;
-                IsConjugate = false;
-                IsJulia = false;
-                IsJuliaCentered = false;
-                UseDistance = false;
-                UseLighting = false;
-                UseTerrainColor = false;
-                InitialDisplayRadius = new FloatBounds(2, .01f, 100);
-                C_Power = 1;
-                FoldAngle = new FloatBounds(0, (float)-maxVal, (float)maxVal);
-                FoldCount = new IntBounds(0, 0, 100);
-                MaxIterations = new IntBounds(100, 1, 9999);
-                MinIterations = new IntBounds(1, 1, 9999);
-                Power = 2;
-                TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
                 Zoom = 0;
                 LockedZoom = 0;
                 Center = new Vector2(0, 0);
+
+                Type = type;
+                Formula = formula;
+                InitialDisplayRadius = new FloatBounds(2, .01f, 100);
+                Projection = Projection.Normal;
+                IsJulia = false;
+                IsJuliaCentered = false;
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating = new Vector2(0.285f, 0.01f);
+                IsConjugate = false;
+                IsBuddhabrot = false;
+                buddhabrot = Buddhabrot.Normal;
+                MaxIterations = new IntBounds(100, 1, 9999);
+                MinIterations = new IntBounds(1, 1, 9999);
+                C_Power = 1;
+                Power = 2;
+                FoldAngle = new FloatBounds(0, (float)-maxVal, (float)maxVal);
+                FoldCount = new IntBounds(0, 0, 100);
                 FoldOffset = new Vector4(0,0,0,0);
 
                 OrbitTrap = OrbitTrap.Circle;
                 Bailout = 2;
+                OrbitTrapCalculation = Calculation.Minimum;
                 BailoutRectangle = new Vector2(2,2);
                 BailoutPoints = new Vector2[16];
                 BailoutPoints[0] = Vector2.Zero;
@@ -96,21 +92,28 @@ namespace FractalLive
                 BailoutLines[1] = new Vector4(0,0,1,0);
                 //BailoutLine = new Vector4(-8,-9.5f,-2,-3);
                 BailoutLinesCount = 2;
-                OrbitTrapCalculation = Calculation.Minimum;
+                BailoutFactor1 = 0.25f;
+                BailoutFactor2 = 7;
+                UseSecondValue = false;
+                SecondValueFactor1 = 4;
+                SecondValueFactor2 = 20;
+                
                 StartOrbitDistance = new FloatBounds(2, 0, (float)maxVal);
                 StartOrbit = new IntBounds(1, 1, 9999);
                 OrbitRange = new IntBounds(MaxIterations.Value, 1, 9999);
-                BailoutFactor1 = 0.25f;
-                BailoutFactor2 = 7;
 
                 EditingColor = Editing.Both;
 
                 Coloring = Coloring.Smooth;
                 ColorCycles = 1;
                 ColorFactor = 6;
-                OrbitTrapFactor = 1;
+                OrbitTrapFactor = 10;
                 DomainCalculation = Calculation.Last;
-                UseDomainIteration = true;
+                UseSecondDomainValue = true;
+                SecondDomainValueFactor1 = 1;
+                SecondDomainValueFactor2 = 1;
+                MatchOrbitTrap = false;
+                UseDomainIteration = false;
                 UseDistanceEstimation = false;
                 MaxDistance = 1e20f;
                 DistFineness = 1;
@@ -122,7 +125,11 @@ namespace FractalLive
                 I_ColorFactor = 1;
                 I_OrbitTrapFactor = 1;
                 I_DomainCalculation = Calculation.Last;
-                I_UseDomainIteration = true;
+                I_UseSecondDomainValue = true;
+                I_SecondDomainValueFactor1 = 1;
+                I_SecondDomainValueFactor2 = 1;
+                I_MatchOrbitTrap = false;
+                I_UseDomainIteration = false;
                 I_UseDistanceEstimation = false;
                 I_MaxDistance = 1e20f;
                 I_DistFineness = 1;
@@ -134,13 +141,20 @@ namespace FractalLive
                 E_ColorFactor = 1;
                 E_OrbitTrapFactor = 1;
                 E_DomainCalculation = Calculation.Last;
-                E_UseDomainIteration = true;
+                E_UseSecondDomainValue = true;
+                E_SecondDomainValueFactor1 = 1;
+                E_SecondDomainValueFactor2 = 1;
+                E_MatchOrbitTrap = false;
+                E_UseDomainIteration = false;
                 E_UseDistanceEstimation = false;
                 E_MaxDistance = 1e20f;
                 E_DistFineness = 1;
                 E_Texture = "";
                 E_TextureBlend = 0.5f;
 
+                UseLighting = false;
+                UseTerrainColor = false;
+                TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
         }
 
             public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
@@ -364,47 +378,78 @@ namespace FractalLive
                         break;
                 }
             }
+            
+            public void SetUseSecondDomainValue(bool useSecondDomainValue)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_UseSecondDomainValue = useSecondDomainValue;
+                        break;
+                    case Editing.Exterior:
+                        E_UseSecondDomainValue = useSecondDomainValue;
+                        break;
+                    default:
+                        UseSecondDomainValue = useSecondDomainValue;
+                        break;
+                }
+            }
+            
+            public void SetMatchOrbitTrap(bool matchOrbitTrap)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_MatchOrbitTrap = matchOrbitTrap;
+                        break;
+                    case Editing.Exterior:
+                        E_MatchOrbitTrap = matchOrbitTrap;
+                        break;
+                    default:
+                        MatchOrbitTrap = matchOrbitTrap;
+                        break;
+                }
+            }
+
+            public Vector2 Center;
+            public float Zoom;
+            public float LockedZoom;
 
             public Type Type;
             public Formula Formula;
-            public Buddhabrot buddhabrot;
-            public Coloring ExteriorColoring;
-            public Coloring InteriorColoring;
-            public OrbitTrap OrbitTrap;
-            public Projection Projection;
-            public bool IsBuddhabrot;
-            public bool IsConjugate;
+            public FloatBounds InitialDisplayRadius;
             public bool IsJulia;
             public bool IsJuliaCentered;
-            public bool UseDistance;
-            public bool UseLighting;
-            public bool UseTerrainColor;
+            public Vector2 Julia;
+            public Vector2 JuliaMating;
+            public bool IsConjugate;
+            public bool IsBuddhabrot;
+            public Buddhabrot buddhabrot;
+            public IntBounds MaxIterations;
+            public IntBounds MinIterations;
+            public float Power;
+            public float C_Power;
+            public FloatBounds FoldAngle;
+            public IntBounds FoldCount;
+            public Vector4 FoldOffset;
+
+            public OrbitTrap OrbitTrap;
+            public Projection Projection;
             public Calculation OrbitTrapCalculation;
             public IntBounds StartOrbit;
             public IntBounds OrbitRange;
             public float Bailout;
-            public float BailoutFactor1;
-            public float BailoutFactor2;
-            public FloatBounds InitialDisplayRadius;
-            public float C_Power;
-            public FloatBounds FoldAngle;
-            public IntBounds FoldCount;
-            public IntBounds MaxIterations;
-            public IntBounds MinIterations;
             public FloatBounds StartOrbitDistance;
-            public float Power;
-            public FloatBounds TerrainHeight;
-            public float Zoom;
-            public float LockedZoom;
             public Vector2 BailoutRectangle;
-            public Vector2 Center;
-            public Vector2 Julia;
-            public Vector2 JuliaMating;
             public Vector2[] BailoutPoints;
             public int BailoutPointsCount;
             public Vector4[] BailoutLines;
             public int BailoutLinesCount;
-            public Vector4 FoldOffset;
+            public float BailoutFactor1;
+            public float BailoutFactor2;
+            public bool UseSecondValue;
+            public float SecondValueFactor1;
+            public float SecondValueFactor2;
 
             public Editing EditingColor;
 
@@ -413,6 +458,10 @@ namespace FractalLive
             public float ColorFactor;
             public float OrbitTrapFactor;
             public Calculation DomainCalculation;
+            public bool UseSecondDomainValue;
+            public float SecondDomainValueFactor1;
+            public float SecondDomainValueFactor2;
+            public bool MatchOrbitTrap;
             public bool UseDomainIteration;
             public bool UseDistanceEstimation;
             public float MaxDistance;
@@ -425,6 +474,10 @@ namespace FractalLive
             public float I_ColorFactor;
             public float I_OrbitTrapFactor;
             public Calculation I_DomainCalculation;
+            public bool I_UseSecondDomainValue;
+            public float I_SecondDomainValueFactor1;
+            public float I_SecondDomainValueFactor2;
+            public bool I_MatchOrbitTrap;
             public bool I_UseDomainIteration;
             public bool I_UseDistanceEstimation;
             public float I_MaxDistance;
@@ -437,12 +490,20 @@ namespace FractalLive
             public float E_ColorFactor;
             public float E_OrbitTrapFactor;
             public Calculation E_DomainCalculation;
+            public bool E_UseSecondDomainValue;
+            public float E_SecondDomainValueFactor1;
+            public float E_SecondDomainValueFactor2;
+            public bool E_MatchOrbitTrap;
             public bool E_UseDomainIteration;
             public bool E_UseDistanceEstimation;
             public float E_MaxDistance;
             public float E_DistFineness;
             public string E_Texture;
             public float E_TextureBlend;
+
+            public bool UseLighting;
+            public bool UseTerrainColor;
+            public FloatBounds TerrainHeight;
 
         }
         #endregion

@@ -186,11 +186,14 @@ namespace FractalLive
             shader.SetVector4Array("bailoutLines", fractalSettings.BailoutLines);
             shader.SetInt("bailoutLinesCount", fractalSettings.BailoutLinesCount);
             shader.SetInt("orbitTrapCalculation", (int)fractalSettings.OrbitTrapCalculation);
+            shader.SetBool("useSecondValue", fractalSettings.UseSecondValue);
             shader.SetFloat("startOrbitDistance", fractalSettings.StartOrbitDistance.Value);
             shader.SetInt("startOrbit", fractalSettings.StartOrbit.Value);
             shader.SetInt("orbitRange", fractalSettings.OrbitRange.Value);
             shader.SetFloat("bailoutFactor1", fractalSettings.BailoutFactor1);
             shader.SetFloat("bailoutFactor2", fractalSettings.BailoutFactor2);
+            shader.SetFloat("secondValueFactor1", fractalSettings.SecondValueFactor1);
+            shader.SetFloat("secondValueFactor2", fractalSettings.SecondValueFactor2);
 
             // Menu 3
             shader.SetFloat("time", applicationTime.ElapsedMilliseconds / 1000.0f + 150);
@@ -267,6 +270,7 @@ namespace FractalLive
 
             input_EditingColor.SelectedIndex = 0;
             input_Coloring.SelectedIndex = 3;
+            input_DomainCalculation.SelectedIndex = 4;
             input_DomainCalculation.SelectedIndex = 4;
 
 
@@ -492,6 +496,16 @@ namespace FractalLive
                 {
                     CurrentSettings.BailoutFactor2 += modifier / 10;
                     input_OrbitTrapThicknessFactor.Text = CurrentSettings.BailoutFactor2.ToString();
+                }
+                if (inputState.keysDown[Keys.D9] && input_SecondValueFactor1.Enabled)
+                {
+                    CurrentSettings.SecondValueFactor1 += modifier / 10;
+                    input_SecondValueFactor1.Text = CurrentSettings.SecondValueFactor1.ToString();
+                }
+                if (inputState.keysDown[Keys.D0] && input_SecondValueFactor2.Enabled)
+                {
+                    CurrentSettings.SecondValueFactor2 += modifier / 10;
+                    input_SecondValueFactor2.Text = CurrentSettings.SecondValueFactor2.ToString();
                 }
             }
             else if (panel_ColorMenu.Enabled)
@@ -971,6 +985,9 @@ namespace FractalLive
                 input_EditingBailoutTrap.Enabled = false;
 
                 input_OrbitTrapCalculation.Enabled = false;
+                checkBox_UseSecondValue.Enabled = false;
+                input_SecondValueFactor1.Enabled = false;
+                input_SecondValueFactor2.Enabled = false;
                 input_StartDistance.Enabled = false;
                 input_StartOrbit.Enabled = false;
                 input_OrbitRange.Enabled = false;
@@ -992,6 +1009,9 @@ namespace FractalLive
                 input_EditingBailoutTrap.Enabled = isPoints;
 
                 input_OrbitTrapCalculation.Enabled = isPoints;
+                checkBox_UseSecondValue.Enabled = isPoints;
+                input_SecondValueFactor1.Enabled = isPoints && checkBox_UseSecondValue.Checked;
+                input_SecondValueFactor2.Enabled = isPoints && checkBox_UseSecondValue.Checked;
                 input_StartDistance.Enabled = isPoints;
                 input_StartOrbit.Enabled = isPoints;
                 input_OrbitRange.Enabled = isPoints;
@@ -1024,6 +1044,9 @@ namespace FractalLive
                 input_EditingBailoutTrap.Enabled = true;
 
                 input_OrbitTrapCalculation.Enabled = true;
+                checkBox_UseSecondValue.Enabled = true;
+                input_SecondValueFactor1.Enabled = checkBox_UseSecondValue.Checked;
+                input_SecondValueFactor2.Enabled = checkBox_UseSecondValue.Checked;
                 input_StartDistance.Enabled = true;
                 input_StartOrbit.Enabled = true;
                 input_OrbitRange.Enabled = true;
@@ -1238,6 +1261,52 @@ namespace FractalLive
             input_OrbitTrapThicknessFactor.Text = CurrentSettings.BailoutFactor2.ToString();
         }
 
+        private void checkBox_UseSecondValue_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.UseSecondValue = checkBox_UseSecondValue.Checked;
+
+            if (checkBox_UseSecondValue.Checked)
+            {
+                input_SecondValueFactor1.Enabled = true;
+                input_SecondValueFactor2.Enabled = true;
+            }
+            else
+            {
+                input_SecondValueFactor1.Enabled = false;
+                input_SecondValueFactor2.Enabled = false;
+            }
+        }
+
+        private void input_SecondValueFactor1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e);
+        }
+        private void input_SecondValueFactor1_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_SecondValueFactor1.Text))
+                e.Cancel = true;
+        }
+        private void input_SecondValueFactor1_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.SecondValueFactor1 = float.Parse(input_SecondValueFactor1.Text);
+            input_SecondValueFactor1.Text = CurrentSettings.SecondValueFactor1.ToString();
+        }
+
+        private void input_SecondValueFactor2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e);
+        }
+        private void input_SecondValueFactor2_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_SecondValueFactor2.Text))
+                e.Cancel = true;
+        }
+        private void input_SecondValueFactor2_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.SecondValueFactor2 = float.Parse(input_SecondValueFactor2.Text);
+            input_SecondValueFactor2.Text = CurrentSettings.SecondValueFactor2.ToString();
+        }
+
         #endregion
 
         #region Menu 3 Controls
@@ -1341,6 +1410,27 @@ namespace FractalLive
         private void checkBox_UseDomainIteration_CheckedChanged(object sender, EventArgs e)
         {
             CurrentSettings.SetUseDomainIteration(checkBox_UseDomainIteration.Checked);
+        }
+
+        private void checkBox_UseSecondDomainValue_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.SetUseSecondDomainValue(checkBox_UseSecondDomainValue.Checked);
+
+            if (checkBox_UseSecondDomainValue.Checked)
+            {
+                input_SecondDomainValueFactor1.Enabled = true;
+                input_SecondDomainValueFactor2.Enabled = true;
+            }
+            else
+            {
+                input_SecondDomainValueFactor1.Enabled = false;
+                input_SecondDomainValueFactor2.Enabled = false;
+            }
+        }
+
+        private void checkBox_MatchOrbitTrap_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.SetMatchOrbitTrap(checkBox_MatchOrbitTrap.Checked);
         }
 
         #endregion
