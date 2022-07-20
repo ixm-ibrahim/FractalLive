@@ -178,7 +178,6 @@ namespace FractalLive
 
             // Menu 2
             shader.SetInt("orbitTrap", (int)fractalSettings.OrbitTrap);
-            // min/avg/max/etc.
             shader.SetFloat("bailout", fractalSettings.Bailout);
             shader.SetVector2("bailoutRectangle", fractalSettings.BailoutRectangle);
             shader.SetVector2Array("bailoutPoints", fractalSettings.BailoutPoints);
@@ -204,6 +203,9 @@ namespace FractalLive
             shader.SetFloat("colorFactor", fractalSettings.ColorFactor);
             shader.SetFloat("orbitTrapFactor", fractalSettings.OrbitTrapFactor);
             shader.SetInt("domainCalculation", (int)fractalSettings.DomainCalculation);
+            shader.SetBool("useDomainSecondValue", fractalSettings.UseSecondDomainValue);
+            shader.SetFloat("secondDomainValueFactor1", fractalSettings.SecondDomainValueFactor1);
+            shader.SetFloat("secondDomainValueFactor2", fractalSettings.SecondDomainValueFactor2);
             shader.SetBool("useDomainIteration", fractalSettings.UseDomainIteration);
 
             if (currentFractal == Fractal.Type.Mandelbrot)
@@ -524,6 +526,16 @@ namespace FractalLive
                 {
                     CurrentSettings.AdjustOrbitTrapFactor(modifier / 10);
                     input_OrbitTrapFactor.Text = CurrentSettings.GetOrbitTrapFactor().ToString();
+                }
+                if (inputState.keysDown[Keys.D4] && input_SecondDomainValueFactor1.Enabled)
+                {
+                    CurrentSettings.AdjustSecondDomainValueFactor1(modifier / 10);
+                    input_SecondDomainValueFactor1.Text = CurrentSettings.GetSecondDomainValueFactor1().ToString();
+                }
+                if (inputState.keysDown[Keys.D5] && input_SecondDomainValueFactor2.Enabled)
+                {
+                    CurrentSettings.AdjustSecondDomainValueFactor2(modifier / 20);
+                    input_SecondDomainValueFactor2.Text = CurrentSettings.GetSecondDomainValueFactor2().ToString();
                 }
             }
 

@@ -70,6 +70,9 @@ uniform float colorCycle;
 uniform float colorFactor;
 uniform float orbitTrapFactor;
 uniform int domainCalculation;
+uniform bool useDomainSecondValue;
+uniform float secondDomainValueFactor1;
+uniform float secondDomainValueFactor2;
 uniform bool useDomainIteration;
 
 vec3 Mandelbrot();
@@ -80,14 +83,14 @@ void main()
 	FragColor = vec4(Mandelbrot(), 1.0);
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec2 domainZ, out int domainIter);
-vec3 GetColor(vec2 z, int iter, vec2 trap, vec2 domainZ, int domainIter);
-vec3 DomainColoring(int coloring, vec2 z, int iter, vec2 trap);
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter);
+vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter);
+vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 bool IsBounded(int iter, vec2 z);
 bool IsWithinIteration(int iter);
 vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap);
 vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter);
-vec2 CalculateDomainZ(vec2 domainZ, vec2 newZ, int iter, inout int domainIter);
+vec4 CalculateDomainZ(vec4 domainZ, vec2 newZ, int iter, inout ivec2 domainIter);
 float GetSmoothIter(float iter, vec2 z);
 vec2 Fix(vec2 z);
 vec3 ColorFromHSV(vec3 color);
@@ -109,8 +112,8 @@ vec3 Mandelbrot()
 	int iter = 0;
     vec2 trap = vec2(startOrbitDistance);
 	vec2 z;
-	vec2 domainZ;
-    int domainIter;
+	vec4 domainZ;
+    ivec2 domainIter;
     
     z = MandelbrotLoop(FragPos, iter, trap, domainZ, domainIter);
 
@@ -133,10 +136,10 @@ vec3 Mandelbrot()
 	//return 0.5 + 0.5*sin(GetColor(z, iter, trap) * colorCycle);colorFactor;
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec2 domainZ, out int domainIter)
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter)
 {
 	vec2 z = vec2(0);
-    domainZ = c;
+    domainZ = vec4(c,c);
     trap = vec2(startOrbitDistance);
 	for (iter = 0; iter < maxIterations && IsBounded(iter, z); ++iter)
 	{
@@ -169,7 +172,7 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec2 domainZ, o
 	return z;
 }
 
-vec3 GetColor(vec2 z, int iter, vec2 trap, vec2 domainZ, int domainIter)
+vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter)
 {
     // Decide the color based on the number of iterations
     vec3 color;
@@ -245,16 +248,33 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec2 domainZ, int domainIter)
     return sigmoid(color, colorFactor);
 }
 
-vec3 DomainColoring(int coloring, vec2 z, int iter, vec2 trap)
+vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
 {
     //float t = (time + trap) * 20;
     float t = time * 20;
+    
+    secondDomainValueFactor1;
+    secondDomainValueFactor2;
 
     vec3 color;
 
-    float theta = atan(z.y, z.x) * 180/M_PI * colorCycle + t;
-	float r = length(z);
-        	
+    float theta = atan(z.y, z.x) / (2*M_PI) + M_PI;
+	float r = length(z.xy);
+
+    if (useDomainSecondValue)
+    {
+        float r2 = length(z.zw);
+        
+        if (r2 > r)
+            r /= r2;
+        else
+            r = r2 / r;
+
+        theta *= r;
+    }
+    
+    theta = theta * 360 * colorCycle + t;
+
 	if (z.x == 0 && z.y == 0)
 	{
 		theta = 0;
@@ -262,7 +282,7 @@ vec3 DomainColoring(int coloring, vec2 z, int iter, vec2 trap)
 	}
 	else if (isnan(z.x) || isnan(z.y))
 	{
-		z = vec2(0);
+		z = vec4(0);
 		theta = 0;
 		r = 0;
 	}
@@ -299,16 +319,23 @@ vec3 DomainColoring(int coloring, vec2 z, int iter, vec2 trap)
             break;
     }
 
+    if (useDomainIteration)
+    {
+        color *= Rainbow(iter.x);
+        //color = mix(color, Rainbow(iter.x), float(iter.x)/maxIterations);
+        
+        if (useDomainSecondValue)
+            color = mix(Rainbow(iter.x), vec3(r), r);
+        else
+            color = Rainbow(iter.x);
+    }
+
     if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
         if (coloring <= COL_SMOOTH)
             color = mix(Rainbow(orbitTrapFactor*trap.x), color, trap.x);
         else
             color = mix(color, color*sigmoid(trap.x,orbitTrapFactor), trap.x);
             //color = mix(color, vec3(0), trap);
-
-    if (useDomainIteration)
-        //color *= mix(color, Rainbow(iter), iter/maxIterations);
-        color = Rainbow(iter);
 
     return color;
 }
@@ -396,25 +423,19 @@ vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter)
 
             return trap;
         case CALC_LAST:
-            // last
-            if (iter+1 == maxIterations)
-                return vec2(newDist, trap.x);
-            // second-to-last
-            if (iter+1 == maxIterations-1)
-                vec2(trap.x, newDist);
-
-            return trap;
+            return vec2(newDist, trap.x);
         default:
             return vec2(0);
     }
 }
 
-vec2 CalculateDomainZ(vec2 domainZ, vec2 newZ, int iter, inout int domainIter)
+vec4 CalculateDomainZ(vec4 domainZ, vec2 newZ, int iter, inout ivec2 domainIter)
 {
     if (!IsWithinIteration(iter))
         return domainZ;
-
-    float ldz = length(domainZ);
+        
+    float ldz = length(domainZ.xy);
+    float ldz2 = length(domainZ.zw);
     float lz = length(newZ);
 
     float ldtheta = atan(float(domainZ.y), float(domainZ.x));
@@ -425,32 +446,53 @@ vec2 CalculateDomainZ(vec2 domainZ, vec2 newZ, int iter, inout int domainIter)
         case CALC_MIN:
             if (lz < ldz)
             {
-                domainIter = iter;
-                return newZ;
+                domainIter.x = iter;
+                return vec4(newZ,domainZ.xy);
+            }
+            else if (lz < ldz2)
+            {
+                domainIter.y = iter;
+                return vec4(domainZ.xy,newZ);
             }
             return domainZ;
         case CALC_MAX:
             if (lz > ldz)
             {
-                domainIter = iter;
-                return newZ;
+                domainIter.x = iter;
+                return vec4(newZ,domainZ.xy);
+            }
+            else if (lz > ldz2)
+            {
+                domainIter.y = iter;
+                return vec4(domainZ.xy,newZ);
             }
             return domainZ;
         case CALC_AVG:
-            domainIter = iter;
-            return (domainZ + newZ) / 2;
+            domainIter.x = iter;
+            domainIter.x = iter-1;
+            return vec4((domainZ.xy + newZ) / 2, domainZ.xy);
         case CALC_FIRST:
-            if (iter+1 == startOrbit)
+            int start = (minIterations > startOrbit) ? minIterations : startOrbit;
+
+            // first
+            if (iter+1 == start)
             {
-                domainIter = iter;
-                return newZ;
+                domainIter.x = iter;
+                return vec4(newZ,domainZ.xy);
             }
+            // second
+            if (iter+1 == start+1)
+            {
+                domainIter.y = iter;
+                return vec4(domainZ.xy,newZ);
+            }
+
             return domainZ;
          case CALC_LAST:
-            domainIter = iter;
-            return newZ;
+            domainIter.x = iter;
+            domainIter.y = iter-1;
+            return vec4(newZ, domainZ.xy);
         default:
-            domainIter = iter;
             return domainZ;
     }
 }

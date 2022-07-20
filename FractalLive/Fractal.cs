@@ -109,7 +109,7 @@ namespace FractalLive
                 ColorFactor = 6;
                 OrbitTrapFactor = 10;
                 DomainCalculation = Calculation.Last;
-                UseSecondDomainValue = true;
+                UseSecondDomainValue = false;
                 SecondDomainValueFactor1 = 1;
                 SecondDomainValueFactor2 = 1;
                 MatchOrbitTrap = false;
@@ -125,7 +125,7 @@ namespace FractalLive
                 I_ColorFactor = 1;
                 I_OrbitTrapFactor = 1;
                 I_DomainCalculation = Calculation.Last;
-                I_UseSecondDomainValue = true;
+                I_UseSecondDomainValue = false;
                 I_SecondDomainValueFactor1 = 1;
                 I_SecondDomainValueFactor2 = 1;
                 I_MatchOrbitTrap = false;
@@ -141,7 +141,7 @@ namespace FractalLive
                 E_ColorFactor = 1;
                 E_OrbitTrapFactor = 1;
                 E_DomainCalculation = Calculation.Last;
-                E_UseSecondDomainValue = true;
+                E_UseSecondDomainValue = false;
                 E_SecondDomainValueFactor1 = 1;
                 E_SecondDomainValueFactor2 = 1;
                 E_MatchOrbitTrap = false;
@@ -394,7 +394,93 @@ namespace FractalLive
                         break;
                 }
             }
-            
+
+            public float GetSecondDomainValueFactor1()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_SecondDomainValueFactor1;
+                    case Editing.Exterior:
+                        return E_SecondDomainValueFactor1;
+                    default:
+                        return SecondDomainValueFactor1;
+                }
+            }
+            public void SetSecondDomainValueFactor1(float secondDomainValueFactor1)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_SecondDomainValueFactor1 = secondDomainValueFactor1;
+                        break;
+                    case Editing.Exterior:
+                        E_SecondDomainValueFactor1 = secondDomainValueFactor1;
+                        break;
+                    default:
+                        SecondDomainValueFactor1 = secondDomainValueFactor1;
+                        break;
+                }
+            }
+            public void AdjustSecondDomainValueFactor1(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_SecondDomainValueFactor1 += offset;
+                        break;
+                    case Editing.Exterior:
+                        E_SecondDomainValueFactor1 += offset;
+                        break;
+                    default:
+                        SecondDomainValueFactor1 += offset;
+                        break;
+                }
+            }
+
+            public float GetSecondDomainValueFactor2()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_SecondDomainValueFactor2;
+                    case Editing.Exterior:
+                        return E_SecondDomainValueFactor2;
+                    default:
+                        return SecondDomainValueFactor2;
+                }
+            }
+            public void SetSecondDomainValueFactor2(float secondDomainValueFactor2)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_SecondDomainValueFactor2 = secondDomainValueFactor2;
+                        break;
+                    case Editing.Exterior:
+                        E_SecondDomainValueFactor2 = secondDomainValueFactor2;
+                        break;
+                    default:
+                        SecondDomainValueFactor2 = secondDomainValueFactor2;
+                        break;
+                }
+            }
+            public void AdjustSecondDomainValueFactor2(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_SecondDomainValueFactor2 += offset;
+                        break;
+                    case Editing.Exterior:
+                        E_SecondDomainValueFactor2 += offset;
+                        break;
+                    default:
+                        SecondDomainValueFactor2 += offset;
+                        break;
+                }
+            }
+
             public void SetMatchOrbitTrap(bool matchOrbitTrap)
             {
                 switch (EditingColor)

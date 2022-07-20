@@ -31,3 +31,5 @@ optimize glsl arithmetic
 complex powers
 snap value
 distance estimation, textures, custom palette, split exterior interior colors
+minIterations with first orbit trap not working
+optimize main cardioid and other areas - as long as color calculation doesn't require the right iteration
