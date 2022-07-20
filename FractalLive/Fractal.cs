@@ -110,8 +110,8 @@ namespace FractalLive
                 OrbitTrapFactor = 10;
                 DomainCalculation = Calculation.Last;
                 UseSecondDomainValue = false;
-                SecondDomainValueFactor1 = 1;
-                SecondDomainValueFactor2 = 1;
+                SecondDomainValueFactor1 = 10;
+                SecondDomainValueFactor2 = 7;
                 MatchOrbitTrap = false;
                 UseDomainIteration = false;
                 UseDistanceEstimation = false;
@@ -126,8 +126,8 @@ namespace FractalLive
                 I_OrbitTrapFactor = 1;
                 I_DomainCalculation = Calculation.Last;
                 I_UseSecondDomainValue = false;
-                I_SecondDomainValueFactor1 = 1;
-                I_SecondDomainValueFactor2 = 1;
+                I_SecondDomainValueFactor1 = 10;
+                I_SecondDomainValueFactor2 = 7;
                 I_MatchOrbitTrap = false;
                 I_UseDomainIteration = false;
                 I_UseDistanceEstimation = false;
@@ -142,8 +142,8 @@ namespace FractalLive
                 E_OrbitTrapFactor = 1;
                 E_DomainCalculation = Calculation.Last;
                 E_UseSecondDomainValue = false;
-                E_SecondDomainValueFactor1 = 1;
-                E_SecondDomainValueFactor2 = 1;
+                E_SecondDomainValueFactor1 = 10;
+                E_SecondDomainValueFactor2 = 7;
                 E_MatchOrbitTrap = false;
                 E_UseDomainIteration = false;
                 E_UseDistanceEstimation = false;

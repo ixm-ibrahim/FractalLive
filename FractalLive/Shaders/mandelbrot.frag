@@ -165,6 +165,7 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
             trap.x = trap.y / trap.x;
 
         trap.x = pow(sigmoid(trap.x, secondValueFactor1), secondValueFactor2);
+        //trap.x = sigmoid(trap.x, secondValueFactor1) * pow(trap.x, secondValueFactor2);
     }
 
     trap.x = sigmoid(pow( trap.x*pow(2,lockedZoom), bailoutFactor1 ), bailoutFactor2);
@@ -269,6 +270,15 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
             r /= r2;
         else
             r = r2 / r;
+
+        //r = pow(sigmoid(r, secondDomainValueFactor1), secondDomainValueFactor2);
+        //r = r * secondDomainValueFactor1;
+        //r = sin(r * secondDomainValueFactor1);
+        //r = pow(r, secondDomainValueFactor1) / secondDomainValueFactor2;
+        r = pow(r, secondDomainValueFactor1) * sigmoid(r, secondDomainValueFactor2);
+        //r = sigmoid(r, secondDomainValueFactor2);
+        //r = sigmoid(pow(r, secondDomainValueFactor1), secondDomainValueFactor2);
+        //r = sigmoid(r * secondDomainValueFactor1, secondDomainValueFactor2);
 
         theta *= r;
     }
