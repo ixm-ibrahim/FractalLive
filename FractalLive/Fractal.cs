@@ -155,7 +155,7 @@ namespace FractalLive
                 UseLighting = false;
                 UseTerrainColor = false;
                 TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
-        }
+            }
 
             public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
             public bool Is2DBailout => OrbitTrap >= OrbitTrap.Rectangle && OrbitTrap <= OrbitTrap.Points;

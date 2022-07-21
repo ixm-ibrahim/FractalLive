@@ -203,6 +203,7 @@ namespace FractalLive
             shader.SetFloat("colorFactor", fractalSettings.ColorFactor);
             shader.SetFloat("orbitTrapFactor", fractalSettings.OrbitTrapFactor);
             shader.SetInt("domainCalculation", (int)fractalSettings.DomainCalculation);
+            shader.SetBool("matchOrbitTrap", fractalSettings.MatchOrbitTrap && fractalSettings.OrbitTrap >= Fractal.OrbitTrap.Points);
             shader.SetBool("useDomainSecondValue", fractalSettings.UseSecondDomainValue);
             shader.SetFloat("secondDomainValueFactor1", fractalSettings.SecondDomainValueFactor1);
             shader.SetFloat("secondDomainValueFactor2", fractalSettings.SecondDomainValueFactor2);
@@ -646,7 +647,61 @@ namespace FractalLive
 
         private void glControl_KeyDown(object? sender, KeyEventArgs e)
         {
-
+            if (e.KeyCode == Keys.W)
+                inputState.keysDown[Keys.W] = true;
+            else if (e.KeyCode == Keys.A)
+                inputState.keysDown[Keys.A] = true;
+            else if (e.KeyCode == Keys.S)
+                inputState.keysDown[Keys.S] = true;
+            else if (e.KeyCode == Keys.D)
+                inputState.keysDown[Keys.D] = true;
+            else if (e.KeyCode == Keys.Q)
+                inputState.keysDown[Keys.Q] = true;
+            else if (e.KeyCode == Keys.E)
+                inputState.keysDown[Keys.E] = true;
+            else if (e.KeyCode == Keys.R)
+                inputState.keysDown[Keys.R] = true;
+            else if (e.KeyCode == Keys.F)
+                inputState.keysDown[Keys.F] = true;
+            else if (e.KeyCode == Keys.LControlKey)
+                inputState.keysDown[Keys.LControlKey] = true;
+            else if (e.KeyCode == Keys.RControlKey)
+                inputState.keysDown[Keys.RControlKey] = true;
+            else if (e.KeyCode == Keys.ControlKey)
+                inputState.keysDown[Keys.ControlKey] = true;
+            else if (e.KeyCode == Keys.ShiftKey)
+                inputState.keysDown[Keys.ShiftKey] = true;
+            else if (e.KeyCode == Keys.LShiftKey)
+                inputState.keysDown[Keys.LShiftKey] = true;
+            else if (e.KeyCode == Keys.RShiftKey)
+                inputState.keysDown[Keys.RShiftKey] = true;
+            else if (e.KeyCode == Keys.Oemtilde)
+                inputState.keysDown[Keys.Oemtilde] = true;
+            else if (e.KeyCode == Keys.Alt)
+            {
+                inputState.keysDown[Keys.Alt] = true;
+                inputState.keysDown[Keys.Alt] = true;
+            }
+            else if (e.KeyCode == Keys.D1)
+                inputState.keysDown[Keys.D1] = true;
+            else if (e.KeyCode == Keys.D2)
+                inputState.keysDown[Keys.D2] = true;
+            else if (e.KeyCode == Keys.D3)
+                inputState.keysDown[Keys.D3] = true;
+            else if (e.KeyCode == Keys.D4)
+                inputState.keysDown[Keys.D4] = true;
+            else if (e.KeyCode == Keys.D5)
+                inputState.keysDown[Keys.D5] = true;
+            else if (e.KeyCode == Keys.D6)
+                inputState.keysDown[Keys.D6] = true;
+            else if (e.KeyCode == Keys.D7)
+                inputState.keysDown[Keys.D7] = true;
+            else if (e.KeyCode == Keys.D8)
+                inputState.keysDown[Keys.D8] = true;
+            else if (e.KeyCode == Keys.D9)
+                inputState.keysDown[Keys.D9] = true;
+            else if (e.KeyCode == Keys.D0)
+                inputState.keysDown[Keys.D0] = true;
         }
 
         private void glControl_KeyUp(object? sender, KeyEventArgs e)
@@ -1420,6 +1475,8 @@ namespace FractalLive
         private void checkBox_MatchOrbitTrap_CheckedChanged(object sender, EventArgs e)
         {
             CurrentSettings.SetMatchOrbitTrap(checkBox_MatchOrbitTrap.Checked);
+
+            input_DomainCalculation.Enabled = !checkBox_MatchOrbitTrap.Checked;
         }
 
         #endregion

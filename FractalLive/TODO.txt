@@ -28,9 +28,12 @@ deal with interior colorings that wont work
 test max float value
 investigate behavior when bailout is between 0 and 1
 optimize glsl arithmetic
-complex powers
-snap value
-distance estimation, textures, custom palette, split exterior interior colors
+complex powers for power and c_power
+snap values textbox
 minIterations with first orbit trap not working
 optimize main cardioid and other areas - as long as color calculation doesn't require the right iteration
 consolidate keypress as most of them only look for a single value
+consolidate IsWithinOrbitTrap
+match orbit trap exposed bug in middle of cardioid
+
+distance estimation, textures, custom palette, split exterior interior colors

@@ -70,6 +70,7 @@ uniform float colorCycle;
 uniform float colorFactor;
 uniform float orbitTrapFactor;
 uniform int domainCalculation;
+uniform bool matchOrbitTrap;
 uniform bool useDomainSecondValue;
 uniform float secondDomainValueFactor1;
 uniform float secondDomainValueFactor2;
@@ -88,8 +89,8 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 bool IsBounded(int iter, vec2 z);
 bool IsWithinIteration(int iter);
-vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap);
-vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter);
+vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout ivec2 domainIter);
+vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, inout vec4 domainZ, inout ivec2 domainIter);
 vec4 CalculateDomainZ(vec4 domainZ, vec2 newZ, int iter, inout ivec2 domainIter);
 float GetSmoothIter(float iter, vec2 z);
 vec2 Fix(vec2 z);
@@ -147,12 +148,9 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
             z = c_conj(z);
         
 		z = c_pow(z, power) + c_pow(c, c_power);
-
         z = Fix(z);
 
-        domainZ = CalculateDomainZ(domainZ, z, iter, domainIter);
-
-        trap = GetOrbitTrap(z, iter, trap);
+        trap = GetOrbitTrap(z, iter, trap, domainZ, domainIter);
 	}
     
 
@@ -266,19 +264,46 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
     {
         float r2 = length(z.zw);
         
+        if (matchOrbitTrap)
+        {
+            vec4 dummyDomainZ;
+            ivec2 dummyDomainIter;
+            vec2 trap;
+            switch (orbitTrap)
+            {
+                case TRAP_POINTS:
+                    trap.x = DistanceToPoint(z.xy, bailoutPoints[0]);
+                    for (int i = 1; i < bailoutPointsCount; i++)
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.xy, bailoutPoints[i]), iter.x, z.xy, dummyDomainZ, dummyDomainIter);
+                    r = trap.x;
+
+                    trap.x = DistanceToPoint(z.zw, bailoutPoints[0]);
+                    for (int i = 1; i < bailoutPointsCount; i++)
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.zw, bailoutPoints[i]), iter.x, z.zw, dummyDomainZ, dummyDomainIter); 
+                    r2 = trap.x;
+
+                    break;
+                case TRAP_LINES:
+                    trap.x = DistanceToLine(z.xy, bailoutLines[0].xy, bailoutLines[0].zw);
+                    for (int i = 1; i < bailoutLinesCount; i++)
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.xy, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.xy, dummyDomainZ, dummyDomainIter);
+                    r = trap.x;
+
+                    trap.x = DistanceToLine(z.zw, bailoutLines[0].xy, bailoutLines[0].zw);
+                    for (int i = 1; i < bailoutLinesCount; i++)
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.zw, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.zw, dummyDomainZ, dummyDomainIter); 
+                    r2 = trap.x;
+
+                    break;
+            }
+        }
+
         if (r2 > r)
             r /= r2;
         else
             r = r2 / r;
 
-        //r = pow(sigmoid(r, secondDomainValueFactor1), secondDomainValueFactor2);
-        //r = r * secondDomainValueFactor1;
-        //r = sin(r * secondDomainValueFactor1);
-        //r = pow(r, secondDomainValueFactor1) / secondDomainValueFactor2;
         r = pow(r, secondDomainValueFactor1) * sigmoid(r, secondDomainValueFactor2);
-        //r = sigmoid(r, secondDomainValueFactor2);
-        //r = sigmoid(pow(r, secondDomainValueFactor1), secondDomainValueFactor2);
-        //r = sigmoid(r * secondDomainValueFactor1, secondDomainValueFactor2);
 
         theta *= r;
     }
@@ -380,18 +405,18 @@ bool IsWithinIteration(int iter)
     return iter+1 >= startOrbit && iter+1 <= startOrbit + orbitRange - 1 && iter > minIterations;
 }
 
-vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap)
+vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout ivec2 domainIter)
 {
     if (IsWithinIteration(iter))
         switch (orbitTrap)
         {
             case TRAP_POINTS:
                 for (int i = 0; i < bailoutPointsCount; i++)
-                    trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z, bailoutPoints[i]), iter); 
+                    trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z, bailoutPoints[i]), iter, z, domainZ, domainIter); 
                 break;
             case TRAP_LINES:
                 for (int i = 0; i < bailoutLinesCount; i++)
-                    trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw), iter);
+                    trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw), iter, z, domainZ, domainIter);
                 break;
             default:
                 trap.x = 0;
@@ -400,43 +425,124 @@ vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap)
     return trap;
 }
 
-vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter)
+vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, inout vec4 domainZ, inout ivec2 domainIter)
 {
     if (!IsWithinIteration(iter))
         return trap;
 
-    switch (orbitTrapCalculation)
+    if (matchOrbitTrap)
     {
-        case CALC_MIN:
-            if (newDist < trap.x)
+        switch (orbitTrapCalculation)
+        {
+            case CALC_MIN:
+                if (newDist < trap.x)
+                {
+                    domainIter.x = iter;
+                    domainZ = vec4(newZ,domainZ.xy);
+
+                    return vec2(newDist, trap.x);
+                }
+                else if (newDist < trap.y)
+                {
+                    domainIter.y = iter;
+                    domainZ = vec4(domainZ.xy,newZ);
+
+                    return vec2(trap.x, newDist);
+                }
+
+                return trap;
+            case CALC_MAX:
+                if (newDist > trap.x)
+                {
+                    domainIter.x = iter;
+                    domainZ = vec4(newZ,domainZ.xy);
+
+                    return vec2(newDist, trap.x);
+                }
+                else if (newDist > trap.y)
+                {
+                    domainIter.y = iter;
+                    domainZ = vec4(domainZ.xy,newZ);
+                    
+                    return vec2(trap.x, newDist);
+                }
+
+                return trap;
+            case CALC_AVG:
+                domainIter.x = iter;
+                domainIter.x = iter-1;
+                domainZ = vec4((domainZ.xy + newZ) / 2, domainZ.xy);
+
+                return vec2((trap.x + newDist) / 2, trap.x);
+            case CALC_FIRST:
+                int start = (minIterations > startOrbit) ? minIterations : startOrbit;
+
+                // first
+                if (iter+1 == start)
+                {
+                    domainIter.x = iter;
+                    domainZ = vec4(newZ,domainZ.xy);
+                    
+                    return vec2(newDist, trap.x);
+                }
+                // second
+                if (iter+1 == start+1)
+                {
+                    domainIter.y = iter;
+                    domainZ = vec4(domainZ.xy,newZ);
+                    
+                    vec2(trap.x, newDist);
+                }
+
+                return trap;
+            case CALC_LAST:
+                domainIter.x = iter;
+                domainIter.y = iter-1;
+                domainZ = vec4(newZ, domainZ.xy);
+
                 return vec2(newDist, trap.x);
-            else if (newDist < trap.y)
-                return vec2(trap.x, newDist);
-
-            return trap;
-        case CALC_MAX:
-            if (newDist > trap.x)
-                return vec2(newDist, trap.x);
-
-            return trap;
-        case CALC_AVG:
-            return vec2((trap.x + newDist) / 2, trap.x);
-        case CALC_FIRST:
-            int start = (minIterations > startOrbit) ? minIterations : startOrbit;
-
-            // first
-            if (iter+1 == start)
-                return vec2(newDist, trap.x);
-            // second
-            if (iter+1 == start+1)
-                vec2(trap.x, newDist);
-
-            return trap;
-        case CALC_LAST:
-            return vec2(newDist, trap.x);
-        default:
-            return vec2(0);
+            default:
+                return vec2(0);
+        }
     }
+    else
+    {
+        domainZ = CalculateDomainZ(domainZ, newZ, iter, domainIter);
+
+        switch (orbitTrapCalculation)
+        {
+            case CALC_MIN:
+                if (newDist < trap.x)
+                    return vec2(newDist, trap.x);
+                else if (newDist < trap.y)
+                    return vec2(trap.x, newDist);
+
+                return trap;
+            case CALC_MAX:
+                if (newDist > trap.x)
+                    return vec2(newDist, trap.x);
+
+                return trap;
+            case CALC_AVG:
+                return vec2((trap.x + newDist) / 2, trap.x);
+            case CALC_FIRST:
+                int start = (minIterations > startOrbit) ? minIterations : startOrbit;
+
+                // first
+                if (iter+1 == start)
+                    return vec2(newDist, trap.x);
+                // second
+                if (iter+1 == start+1)
+                    vec2(trap.x, newDist);
+
+                return trap;
+            case CALC_LAST:
+                return vec2(newDist, trap.x);
+            default:
+                return vec2(0);
+        }
+    }
+    
 }
 
 vec4 CalculateDomainZ(vec4 domainZ, vec2 newZ, int iter, inout ivec2 domainIter)
@@ -447,9 +553,6 @@ vec4 CalculateDomainZ(vec4 domainZ, vec2 newZ, int iter, inout ivec2 domainIter)
     float ldz = length(domainZ.xy);
     float ldz2 = length(domainZ.zw);
     float lz = length(newZ);
-
-    float ldtheta = atan(float(domainZ.y), float(domainZ.x));
-    float ltheta = atan(float(domainZ.y), float(domainZ.x));
 
     switch (domainCalculation)
     {

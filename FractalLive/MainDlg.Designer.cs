@@ -208,7 +208,7 @@
             // label_TextureBlend
             // 
             label_TextureBlend.AutoSize = true;
-            label_TextureBlend.Location = new System.Drawing.Point(3, 427);
+            label_TextureBlend.Location = new System.Drawing.Point(4, 430);
             label_TextureBlend.Name = "label_TextureBlend";
             label_TextureBlend.Size = new System.Drawing.Size(86, 15);
             label_TextureBlend.TabIndex = 70;
@@ -488,7 +488,7 @@
             this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(683, 484);
+            this.LogTextBox.Location = new System.Drawing.Point(683, 694);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
@@ -506,7 +506,7 @@
             this.glControl.Location = new System.Drawing.Point(12, 24);
             this.glControl.Name = "glControl";
             this.glControl.Profile = OpenTK.Windowing.Common.ContextProfile.Compatability;
-            this.glControl.Size = new System.Drawing.Size(500, 487);
+            this.glControl.Size = new System.Drawing.Size(500, 697);
             this.glControl.TabIndex = 2;
             this.glControl.Text = "glControl1";
             // 
@@ -514,7 +514,7 @@
             // 
             this.button_Left.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Left.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Left.Location = new System.Drawing.Point(521, 518);
+            this.button_Left.Location = new System.Drawing.Point(521, 728);
             this.button_Left.Name = "button_Left";
             this.button_Left.Size = new System.Drawing.Size(50, 25);
             this.button_Left.TabIndex = 33;
@@ -525,7 +525,7 @@
             // 
             this.button_Right.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Right.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Right.Location = new System.Drawing.Point(623, 518);
+            this.button_Right.Location = new System.Drawing.Point(623, 728);
             this.button_Right.Name = "button_Right";
             this.button_Right.Size = new System.Drawing.Size(50, 25);
             this.button_Right.TabIndex = 22;
@@ -688,7 +688,7 @@
             // 
             this.button_Menu1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Menu1.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu1.Location = new System.Drawing.Point(521, 486);
+            this.button_Menu1.Location = new System.Drawing.Point(521, 696);
             this.button_Menu1.Name = "button_Menu1";
             this.button_Menu1.Size = new System.Drawing.Size(35, 25);
             this.button_Menu1.TabIndex = 34;
@@ -710,7 +710,7 @@
             // 
             this.button_Menu2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Menu2.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu2.Location = new System.Drawing.Point(560, 486);
+            this.button_Menu2.Location = new System.Drawing.Point(560, 696);
             this.button_Menu2.Name = "button_Menu2";
             this.button_Menu2.Size = new System.Drawing.Size(35, 25);
             this.button_Menu2.TabIndex = 35;
@@ -731,7 +731,7 @@
             // 
             this.button_Menu3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Menu3.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu3.Location = new System.Drawing.Point(599, 486);
+            this.button_Menu3.Location = new System.Drawing.Point(599, 696);
             this.button_Menu3.Name = "button_Menu3";
             this.button_Menu3.Size = new System.Drawing.Size(35, 25);
             this.button_Menu3.TabIndex = 36;
@@ -755,7 +755,7 @@
             // 
             this.button_Menu4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button_Menu4.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu4.Location = new System.Drawing.Point(639, 486);
+            this.button_Menu4.Location = new System.Drawing.Point(639, 696);
             this.button_Menu4.Name = "button_Menu4";
             this.button_Menu4.Size = new System.Drawing.Size(35, 25);
             this.button_Menu4.TabIndex = 37;
@@ -789,7 +789,7 @@
             this.panel_FormulaMenu.Location = new System.Drawing.Point(518, 24);
             this.panel_FormulaMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_FormulaMenu.Name = "panel_FormulaMenu";
-            this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 454);
+            this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 664);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
             // checkBox_UseConjugate
@@ -914,7 +914,7 @@
             this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(920, 24);
             this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
-            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 454);
+            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 664);
             this.panel_OrbitTrapMenu.TabIndex = 33;
             // 
             // input_SecondValueFactor2
@@ -1152,7 +1152,7 @@
             // label_Texture
             // 
             this.label_Texture.AutoSize = true;
-            this.label_Texture.Location = new System.Drawing.Point(3, 402);
+            this.label_Texture.Location = new System.Drawing.Point(4, 405);
             this.label_Texture.Name = "label_Texture";
             this.label_Texture.Size = new System.Drawing.Size(48, 15);
             this.label_Texture.TabIndex = 40;
@@ -1161,7 +1161,7 @@
             // 
             // input_Texture
             // 
-            this.input_Texture.Location = new System.Drawing.Point(57, 399);
+            this.input_Texture.Location = new System.Drawing.Point(58, 402);
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
@@ -1171,7 +1171,7 @@
             // 
             this.checkBox_LockZoomFactor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_LockZoomFactor.AutoSize = true;
-            this.checkBox_LockZoomFactor.Location = new System.Drawing.Point(365, 523);
+            this.checkBox_LockZoomFactor.Location = new System.Drawing.Point(365, 733);
             this.checkBox_LockZoomFactor.Name = "checkBox_LockZoomFactor";
             this.checkBox_LockZoomFactor.Size = new System.Drawing.Size(122, 19);
             this.checkBox_LockZoomFactor.TabIndex = 38;
@@ -1215,7 +1215,7 @@
             // input_Center
             // 
             this.input_Center.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_Center.Location = new System.Drawing.Point(57, 520);
+            this.input_Center.Location = new System.Drawing.Point(57, 730);
             this.input_Center.Name = "input_Center";
             this.input_Center.Size = new System.Drawing.Size(141, 23);
             this.input_Center.TabIndex = 55;
@@ -1229,7 +1229,7 @@
             // 
             this.label_Center.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_Center.AutoSize = true;
-            this.label_Center.Location = new System.Drawing.Point(12, 524);
+            this.label_Center.Location = new System.Drawing.Point(12, 734);
             this.label_Center.Name = "label_Center";
             this.label_Center.Size = new System.Drawing.Size(45, 15);
             this.label_Center.TabIndex = 56;
@@ -1240,7 +1240,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(204, 524);
+            this.label2.Location = new System.Drawing.Point(204, 734);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(45, 15);
             this.label2.TabIndex = 58;
@@ -1250,7 +1250,7 @@
             // input_Zoom
             // 
             this.input_Zoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_Zoom.Location = new System.Drawing.Point(249, 520);
+            this.input_Zoom.Location = new System.Drawing.Point(249, 730);
             this.input_Zoom.Name = "input_Zoom";
             this.input_Zoom.Size = new System.Drawing.Size(52, 23);
             this.input_Zoom.TabIndex = 57;
@@ -1303,12 +1303,12 @@
             this.panel_ColorMenu.Location = new System.Drawing.Point(716, 24);
             this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_ColorMenu.Name = "panel_ColorMenu";
-            this.panel_ColorMenu.Size = new System.Drawing.Size(177, 454);
+            this.panel_ColorMenu.Size = new System.Drawing.Size(177, 664);
             this.panel_ColorMenu.TabIndex = 59;
             // 
             // input_SecondDomainValueFactor2
             // 
-            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(114, 230);
+            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(114, 271);
             this.input_SecondDomainValueFactor2.Name = "input_SecondDomainValueFactor2";
             this.input_SecondDomainValueFactor2.Size = new System.Drawing.Size(40, 23);
             this.input_SecondDomainValueFactor2.TabIndex = 90;
@@ -1321,7 +1321,7 @@
             // label_SecondDomainValueFactors
             // 
             this.label_SecondDomainValueFactors.AutoSize = true;
-            this.label_SecondDomainValueFactors.Location = new System.Drawing.Point(3, 233);
+            this.label_SecondDomainValueFactors.Location = new System.Drawing.Point(3, 274);
             this.label_SecondDomainValueFactors.Name = "label_SecondDomainValueFactors";
             this.label_SecondDomainValueFactors.Size = new System.Drawing.Size(53, 15);
             this.label_SecondDomainValueFactors.TabIndex = 89;
@@ -1330,7 +1330,7 @@
             // 
             // input_SecondDomainValueFactor1
             // 
-            this.input_SecondDomainValueFactor1.Location = new System.Drawing.Point(66, 230);
+            this.input_SecondDomainValueFactor1.Location = new System.Drawing.Point(66, 271);
             this.input_SecondDomainValueFactor1.Name = "input_SecondDomainValueFactor1";
             this.input_SecondDomainValueFactor1.Size = new System.Drawing.Size(40, 23);
             this.input_SecondDomainValueFactor1.TabIndex = 88;
@@ -1343,7 +1343,7 @@
             // checkBox_MatchOrbitTrap
             // 
             this.checkBox_MatchOrbitTrap.AutoSize = true;
-            this.checkBox_MatchOrbitTrap.Location = new System.Drawing.Point(8, 255);
+            this.checkBox_MatchOrbitTrap.Location = new System.Drawing.Point(8, 186);
             this.checkBox_MatchOrbitTrap.Name = "checkBox_MatchOrbitTrap";
             this.checkBox_MatchOrbitTrap.Size = new System.Drawing.Size(115, 19);
             this.checkBox_MatchOrbitTrap.TabIndex = 85;
@@ -1354,7 +1354,7 @@
             // checkBox_UseSecondDomainValue
             // 
             this.checkBox_UseSecondDomainValue.AutoSize = true;
-            this.checkBox_UseSecondDomainValue.Location = new System.Drawing.Point(8, 211);
+            this.checkBox_UseSecondDomainValue.Location = new System.Drawing.Point(8, 252);
             this.checkBox_UseSecondDomainValue.Name = "checkBox_UseSecondDomainValue";
             this.checkBox_UseSecondDomainValue.Size = new System.Drawing.Size(118, 19);
             this.checkBox_UseSecondDomainValue.TabIndex = 84;
@@ -1365,7 +1365,7 @@
             // checkBox_UseDomainIteration
             // 
             this.checkBox_UseDomainIteration.AutoSize = true;
-            this.checkBox_UseDomainIteration.Location = new System.Drawing.Point(8, 275);
+            this.checkBox_UseDomainIteration.Location = new System.Drawing.Point(8, 232);
             this.checkBox_UseDomainIteration.Name = "checkBox_UseDomainIteration";
             this.checkBox_UseDomainIteration.Size = new System.Drawing.Size(137, 19);
             this.checkBox_UseDomainIteration.TabIndex = 83;
@@ -1376,7 +1376,7 @@
             // label_DomainCalculation
             // 
             this.label_DomainCalculation.AutoSize = true;
-            this.label_DomainCalculation.Location = new System.Drawing.Point(2, 190);
+            this.label_DomainCalculation.Location = new System.Drawing.Point(3, 209);
             this.label_DomainCalculation.Name = "label_DomainCalculation";
             this.label_DomainCalculation.Size = new System.Drawing.Size(82, 15);
             this.label_DomainCalculation.TabIndex = 81;
@@ -1394,9 +1394,9 @@
             "Average",
             "First",
             "Last"});
-            this.input_DomainCalculation.Location = new System.Drawing.Point(90, 187);
+            this.input_DomainCalculation.Location = new System.Drawing.Point(89, 206);
             this.input_DomainCalculation.Name = "input_DomainCalculation";
-            this.input_DomainCalculation.Size = new System.Drawing.Size(64, 23);
+            this.input_DomainCalculation.Size = new System.Drawing.Size(67, 23);
             this.input_DomainCalculation.TabIndex = 82;
             this.input_DomainCalculation.SelectionChangeCommitted += new System.EventHandler(this.input_DomainCalculation_SelectionChangeCommitted);
             // 
@@ -1512,7 +1512,7 @@
             0,
             0,
             65536});
-            this.input_TextureBlend.Location = new System.Drawing.Point(99, 425);
+            this.input_TextureBlend.Location = new System.Drawing.Point(100, 428);
             this.input_TextureBlend.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1536,7 +1536,7 @@
             // button_ClearTexture
             // 
             this.button_ClearTexture.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_ClearTexture.Location = new System.Drawing.Point(31, 371);
+            this.button_ClearTexture.Location = new System.Drawing.Point(32, 374);
             this.button_ClearTexture.Name = "button_ClearTexture";
             this.button_ClearTexture.Size = new System.Drawing.Size(96, 25);
             this.button_ClearTexture.TabIndex = 69;
@@ -1545,7 +1545,7 @@
             // 
             // input_MaxDistanceEstimation
             // 
-            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(115, 315);
+            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(116, 318);
             this.input_MaxDistanceEstimation.Name = "input_MaxDistanceEstimation";
             this.input_MaxDistanceEstimation.Size = new System.Drawing.Size(40, 23);
             this.input_MaxDistanceEstimation.TabIndex = 65;
@@ -1554,7 +1554,7 @@
             // 
             // input_DistanceEstimationFactor
             // 
-            this.input_DistanceEstimationFactor.Location = new System.Drawing.Point(115, 341);
+            this.input_DistanceEstimationFactor.Location = new System.Drawing.Point(116, 344);
             this.input_DistanceEstimationFactor.Name = "input_DistanceEstimationFactor";
             this.input_DistanceEstimationFactor.Size = new System.Drawing.Size(40, 23);
             this.input_DistanceEstimationFactor.TabIndex = 67;
@@ -1564,7 +1564,7 @@
             // label_DistanceEstimationMax
             // 
             this.label_DistanceEstimationMax.AutoSize = true;
-            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(3, 317);
+            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(4, 320);
             this.label_DistanceEstimationMax.Name = "label_DistanceEstimationMax";
             this.label_DistanceEstimationMax.Size = new System.Drawing.Size(86, 15);
             this.label_DistanceEstimationMax.TabIndex = 66;
@@ -1574,7 +1574,7 @@
             // label_DistanceEstimationFineness
             // 
             this.label_DistanceEstimationFineness.AutoSize = true;
-            this.label_DistanceEstimationFineness.Location = new System.Drawing.Point(3, 344);
+            this.label_DistanceEstimationFineness.Location = new System.Drawing.Point(4, 347);
             this.label_DistanceEstimationFineness.Name = "label_DistanceEstimationFineness";
             this.label_DistanceEstimationFineness.Size = new System.Drawing.Size(96, 15);
             this.label_DistanceEstimationFineness.TabIndex = 68;
@@ -1584,7 +1584,7 @@
             // checkBox_UseDistanceEstimation
             // 
             this.checkBox_UseDistanceEstimation.AutoSize = true;
-            this.checkBox_UseDistanceEstimation.Location = new System.Drawing.Point(8, 295);
+            this.checkBox_UseDistanceEstimation.Location = new System.Drawing.Point(9, 298);
             this.checkBox_UseDistanceEstimation.Name = "checkBox_UseDistanceEstimation";
             this.checkBox_UseDistanceEstimation.Size = new System.Drawing.Size(152, 19);
             this.checkBox_UseDistanceEstimation.TabIndex = 64;
@@ -1668,7 +1668,7 @@
             // input_LockedZoom
             // 
             this.input_LockedZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_LockedZoom.Location = new System.Drawing.Point(307, 520);
+            this.input_LockedZoom.Location = new System.Drawing.Point(307, 730);
             this.input_LockedZoom.Name = "input_LockedZoom";
             this.input_LockedZoom.Size = new System.Drawing.Size(52, 23);
             this.input_LockedZoom.TabIndex = 60;
@@ -1682,7 +1682,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1150, 552);
+            this.ClientSize = new System.Drawing.Size(1150, 762);
             this.Controls.Add(this.input_LockedZoom);
             this.Controls.Add(this.panel_ColorMenu);
             this.Controls.Add(this.glControl);
