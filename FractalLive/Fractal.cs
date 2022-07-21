@@ -115,8 +115,8 @@ namespace FractalLive
                 MatchOrbitTrap = false;
                 UseDomainIteration = false;
                 UseDistanceEstimation = false;
-                MaxDistance = 1e20f;
-                DistFineness = 1;
+                MaxDistanceEstimation = 100;
+                DistanceEstimationFactor = 10;
                 Texture = "";
                 TextureBlend = 0.5f;
 
@@ -131,8 +131,8 @@ namespace FractalLive
                 I_MatchOrbitTrap = false;
                 I_UseDomainIteration = false;
                 I_UseDistanceEstimation = false;
-                I_MaxDistance = 1e20f;
-                I_DistFineness = 1;
+                I_MaxDistanceEstimation = 100;
+                I_DistanceEstimationFactor = 10;
                 I_Texture = "";
                 I_TextureBlend = 0.5f;
 
@@ -147,8 +147,8 @@ namespace FractalLive
                 E_MatchOrbitTrap = false;
                 E_UseDomainIteration = false;
                 E_UseDistanceEstimation = false;
-                E_MaxDistance = 1e20f;
-                E_DistFineness = 1;
+                E_MaxDistanceEstimation = 100;
+                E_DistanceEstimationFactor = 10;
                 E_Texture = "";
                 E_TextureBlend = 0.5f;
 
@@ -496,6 +496,22 @@ namespace FractalLive
                         break;
                 }
             }
+            
+            public void SetUseDistanceEstimation(bool useDistanceEstimation)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_UseDistanceEstimation = useDistanceEstimation;
+                        break;
+                    case Editing.Exterior:
+                        E_UseDistanceEstimation = useDistanceEstimation;
+                        break;
+                    default:
+                        UseDistanceEstimation = useDistanceEstimation;
+                        break;
+                }
+            }
 
             public Vector2 Center;
             public float Zoom;
@@ -550,8 +566,8 @@ namespace FractalLive
             public bool MatchOrbitTrap;
             public bool UseDomainIteration;
             public bool UseDistanceEstimation;
-            public float MaxDistance;
-            public float DistFineness;
+            public float MaxDistanceEstimation;
+            public float DistanceEstimationFactor;
             public string Texture;
             public float TextureBlend;
 
@@ -566,8 +582,8 @@ namespace FractalLive
             public bool I_MatchOrbitTrap;
             public bool I_UseDomainIteration;
             public bool I_UseDistanceEstimation;
-            public float I_MaxDistance;
-            public float I_DistFineness;
+            public float I_MaxDistanceEstimation;
+            public float I_DistanceEstimationFactor;
             public string I_Texture;
             public float I_TextureBlend;
 
@@ -582,8 +598,8 @@ namespace FractalLive
             public bool E_MatchOrbitTrap;
             public bool E_UseDomainIteration;
             public bool E_UseDistanceEstimation;
-            public float E_MaxDistance;
-            public float E_DistFineness;
+            public float E_MaxDistanceEstimation;
+            public float E_DistanceEstimationFactor;
             public string E_Texture;
             public float E_TextureBlend;
 

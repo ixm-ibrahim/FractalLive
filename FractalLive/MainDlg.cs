@@ -208,6 +208,9 @@ namespace FractalLive
             shader.SetFloat("secondDomainValueFactor1", fractalSettings.SecondDomainValueFactor1);
             shader.SetFloat("secondDomainValueFactor2", fractalSettings.SecondDomainValueFactor2);
             shader.SetBool("useDomainIteration", fractalSettings.UseDomainIteration);
+            shader.SetBool("useDistanceEstimation", fractalSettings.UseDistanceEstimation);
+            shader.SetFloat("maxDistanceEstimation", fractalSettings.MaxDistanceEstimation);
+            shader.SetFloat("distanceEstimationFactor", fractalSettings.DistanceEstimationFactor);
 
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
@@ -251,9 +254,6 @@ namespace FractalLive
             button_Color4.Enabled = false;
             button_Color5.Enabled = false;
             button_Color6.Enabled = false;
-            checkBox_UseDistanceEstimation.Enabled = false;
-            input_MaxDistanceEstimation.Enabled = false;
-            input_DistanceEstimationFactor.Enabled = false;
             button_ClearTexture.Enabled = false;
             input_Texture.Enabled = false;
             input_TextureBlend.Enabled = false;
@@ -276,6 +276,8 @@ namespace FractalLive
             input_DomainCalculation.SelectedIndex = 4;
             input_SecondDomainValueFactor1.Enabled = false;
             input_SecondDomainValueFactor2.Enabled = false;
+            input_MaxDistanceEstimation.Enabled = false;
+            input_DistanceEstimationFactor.Enabled = false;
 
 
             // Callbacks
@@ -1477,6 +1479,14 @@ namespace FractalLive
             CurrentSettings.SetMatchOrbitTrap(checkBox_MatchOrbitTrap.Checked);
 
             input_DomainCalculation.Enabled = !checkBox_MatchOrbitTrap.Checked;
+        }
+
+        private void checkBox_UseDistanceEstimation_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.SetUseDistanceEstimation(checkBox_UseDistanceEstimation.Checked);
+
+            input_MaxDistanceEstimation.Enabled = checkBox_UseDistanceEstimation.Checked;
+            input_DistanceEstimationFactor.Enabled = checkBox_UseDistanceEstimation.Checked;
         }
 
         #endregion

@@ -37,6 +37,7 @@ in vec2 FragPos;
 in vec2 TexCoords;
 
 uniform float time;
+uniform float zoom;
 uniform float lockedZoom;
 
 uniform int maxIterations;
@@ -75,6 +76,9 @@ uniform bool useDomainSecondValue;
 uniform float secondDomainValueFactor1;
 uniform float secondDomainValueFactor2;
 uniform bool useDomainIteration;
+uniform bool useDistanceEstimation;
+uniform float maxDistanceEstimation;
+uniform float distanceEstimationFactor;
 
 vec3 Mandelbrot();
 
@@ -85,7 +89,8 @@ void main()
 }
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter);
-vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter);
+vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, out float distanceEstimation);
+vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 bool IsBounded(int iter, vec2 z);
 bool IsWithinIteration(int iter);
@@ -115,8 +120,12 @@ vec3 Mandelbrot()
 	vec2 z;
 	vec4 domainZ;
     ivec2 domainIter;
+    float distanceEstimation;
     
-    z = MandelbrotLoop(FragPos, iter, trap, domainZ, domainIter);
+    if (useDistanceEstimation)
+        z = MandelbrotDistanceLoop(FragPos, iter, trap, domainZ, domainIter, distanceEstimation);
+    else
+        z = MandelbrotLoop(FragPos, iter, trap, domainZ, domainIter);
 
 	//if (iter >= maxIterations)
 		//return vec3(1.0);
@@ -131,7 +140,7 @@ vec3 Mandelbrot()
 
 	//return vec3(sqrt(float(iter)/maxIterations));
 	//return sqrt(float(iter)/maxIterations) *  GetColor(z, iter);
-	return GetColor(z, iter, trap, domainZ, domainIter);
+	return GetColor(z, iter, trap, domainZ, domainIter, distanceEstimation);
     
 
 	//return 0.5 + 0.5*sin(GetColor(z, iter, trap) * colorCycle);colorFactor;
@@ -170,8 +179,61 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
 
 	return z;
 }
+vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, out float distanceEstimation)
+{
+	vec2 z = c;
+    domainZ = vec4(c,c);
+    trap = vec2(startOrbitDistance);
 
-vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter)
+    vec2 dz = vec2(1.0,0.0);
+    float m2 = dot(z,z);
+    float di =  1.0;
+
+	for (iter = 0; iter < maxIterations && IsBounded(iter, z); ++iter)
+	{
+        dz = 2 * c_mul(z,dz) + vec2(1.0,0.0);
+        
+        if (useConjugate)
+            z = c_conj(z);
+        
+		z = c_pow(z, power) + c_pow(c, c_power);
+        z = Fix(z);
+
+        trap = GetOrbitTrap(z, iter, trap, domainZ, domainIter);
+        
+        m2 = dot(z,z);
+        
+        if(m2 > maxDistanceEstimation)
+        {
+            di = 0;
+            break;
+        }
+	}
+    
+    if (useSecondValue)
+    {
+        if (trap.y > trap.x)
+            trap.x /= trap.y;
+        else
+            trap.x = trap.y / trap.x;
+
+        trap.x = pow(sigmoid(trap.x, secondValueFactor1), secondValueFactor2);
+        //trap.x = sigmoid(trap.x, secondValueFactor1) * pow(trap.x, secondValueFactor2);
+    }
+
+    trap.x = sigmoid(pow( trap.x*pow(2,lockedZoom), bailoutFactor1 ), bailoutFactor2);
+    
+    float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
+    if(di > 0.5)
+        d=0.0;
+    //distanceEstimation = sqrt(clamp(d * pow(fineness, 2) * zoom / riemannAdjustment, 0, 1));
+    //distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * zoom, 0, 1));
+    distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,zoom), 0, 1));
+
+	return z;
+}
+
+vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation)
 {
     // Decide the color based on the number of iterations
     vec3 color;
@@ -243,8 +305,14 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter)
                 break;
         }
     }
-    
-    return sigmoid(color, colorFactor);
+
+    color = sigmoid(color, colorFactor);
+
+    if (useDistanceEstimation && coloring < COL_DOMAIN_SIMPLE)
+        //color = pow( vec3(dist), vec3(0.9,1.1,1.4) );
+        color *= pow(distanceEstimation,1);
+
+    return color;
 }
 
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
@@ -252,9 +320,6 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
     //float t = (time + trap) * 20;
     float t = time * 20;
     
-    secondDomainValueFactor1;
-    secondDomainValueFactor2;
-
     vec3 color;
 
     float theta = atan(z.y, z.x) / (2*M_PI) + M_PI;

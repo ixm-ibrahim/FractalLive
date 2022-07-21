@@ -1590,6 +1590,7 @@
             this.checkBox_UseDistanceEstimation.TabIndex = 64;
             this.checkBox_UseDistanceEstimation.Text = "Use Distance Estimation";
             this.checkBox_UseDistanceEstimation.UseVisualStyleBackColor = true;
+            this.checkBox_UseDistanceEstimation.CheckedChanged += new System.EventHandler(this.checkBox_UseDistanceEstimation_CheckedChanged);
             // 
             // label_Coloring
             // 
