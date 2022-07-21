@@ -244,7 +244,7 @@ namespace FractalLive
             }
 
             GL.UseProgram(Handle);
-            GL.Uniform2(_uniformLocations[name + "[0]"], data.Length*2, tmp);
+            GL.Uniform2(_uniformLocations[name + "[0]"], data.Length, tmp);
         }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace FractalLive
             }
 
             GL.UseProgram(Handle);
-            GL.Uniform4(_uniformLocations[name + "[0]"], data.Length * 4, tmp);
+            GL.Uniform4(_uniformLocations[name + "[0]"], data.Length, tmp);
         }
 
         #region Properties

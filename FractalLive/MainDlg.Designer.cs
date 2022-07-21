@@ -618,7 +618,7 @@
             this.input_Power.TabIndex = 28;
             this.input_Power.Text = "2";
             this.input_Power.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_Power.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Power_KeyPress);
+            this.input_Power.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_Power.Validating += new System.ComponentModel.CancelEventHandler(this.input_Power_Validating);
             this.input_Power.Validated += new System.EventHandler(this.input_Power_Validated);
             // 
@@ -650,7 +650,7 @@
             this.input_CPower.TabIndex = 30;
             this.input_CPower.Text = "1";
             this.input_CPower.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_CPower.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_CPower_KeyPress);
+            this.input_CPower.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_CPower.Validating += new System.ComponentModel.CancelEventHandler(this.input_CPower_Validating);
             this.input_CPower.Validated += new System.EventHandler(this.input_CPower_Validated);
             // 
@@ -747,7 +747,7 @@
             this.input_Bailout.TabIndex = 36;
             this.input_Bailout.Text = "0";
             this.input_Bailout.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_Bailout.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Bailout_KeyPress);
+            this.input_Bailout.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_Bailout.Validating += new System.ComponentModel.CancelEventHandler(this.input_Bailout_Validating);
             this.input_Bailout.Validated += new System.EventHandler(this.input_Bailout_Validated);
             // 
@@ -925,7 +925,7 @@
             this.input_SecondValueFactor2.TabIndex = 87;
             this.input_SecondValueFactor2.Text = "20";
             this.input_SecondValueFactor2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_SecondValueFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_SecondValueFactor2_KeyPress);
+            this.input_SecondValueFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_SecondValueFactor2.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondValueFactor2_Validating);
             this.input_SecondValueFactor2.Validated += new System.EventHandler(this.input_SecondValueFactor2_Validated);
             // 
@@ -947,7 +947,7 @@
             this.input_SecondValueFactor1.TabIndex = 85;
             this.input_SecondValueFactor1.Text = "4";
             this.input_SecondValueFactor1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_SecondValueFactor1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_SecondValueFactor1_KeyPress);
+            this.input_SecondValueFactor1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_SecondValueFactor1.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondValueFactor1_Validating);
             this.input_SecondValueFactor1.Validated += new System.EventHandler(this.input_SecondValueFactor1_Validated);
             // 
@@ -970,7 +970,7 @@
             this.input_StartDistance.TabIndex = 58;
             this.input_StartDistance.Text = "2";
             this.input_StartDistance.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_StartDistance.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_StartDistance_KeyPress);
+            this.input_StartDistance.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_StartDistance.Validating += new System.ComponentModel.CancelEventHandler(this.input_StartDistance_Validating);
             this.input_StartDistance.Validated += new System.EventHandler(this.input_StartDistance_Validated);
             // 
@@ -1053,7 +1053,7 @@
             this.input_OrbitTrapBlendingFactor.TabIndex = 53;
             this.input_OrbitTrapBlendingFactor.Text = "0.25";
             this.input_OrbitTrapBlendingFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_OrbitTrapBlendingFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_OrbitTrapFactor1_KeyPress);
+            this.input_OrbitTrapBlendingFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_OrbitTrapBlendingFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor1_Validating);
             this.input_OrbitTrapBlendingFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor1_Validated);
             // 
@@ -1090,7 +1090,7 @@
             this.input_OrbitTrapThicknessFactor.TabIndex = 52;
             this.input_OrbitTrapThicknessFactor.Text = "7";
             this.input_OrbitTrapThicknessFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_OrbitTrapThicknessFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_OrbitTrapFactor2_KeyPress);
+            this.input_OrbitTrapThicknessFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_OrbitTrapThicknessFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor2_Validating);
             this.input_OrbitTrapThicknessFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor2_Validated);
             // 
@@ -1187,7 +1187,7 @@
             this.input_ColorCycles.TabIndex = 43;
             this.input_ColorCycles.Text = "1";
             this.input_ColorCycles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_ColorCycles.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_ColorCycles_KeyPress);
+            this.input_ColorCycles.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_ColorCycles.Validating += new System.ComponentModel.CancelEventHandler(this.input_ColorCycles_Validating);
             this.input_ColorCycles.Validated += new System.EventHandler(this.input_ColorCycles_Validated);
             // 
@@ -1208,7 +1208,7 @@
             this.input_ColorFactor.TabIndex = 45;
             this.input_ColorFactor.Text = "6";
             this.input_ColorFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_ColorFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_ColorFactor_KeyPress);
+            this.input_ColorFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_ColorFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_ColorFactor_Validating);
             this.input_ColorFactor.Validated += new System.EventHandler(this.input_ColorFactor_Validated);
             // 
@@ -1221,7 +1221,7 @@
             this.input_Center.TabIndex = 55;
             this.input_Center.Text = "0, 0";
             this.input_Center.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_Center.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Center_KeyPress);
+            this.input_Center.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_Validate2DDecimalChar);
             this.input_Center.Validating += new System.ComponentModel.CancelEventHandler(this.input_Center_Validating);
             this.input_Center.Validated += new System.EventHandler(this.input_Center_Validated);
             // 
@@ -1256,7 +1256,7 @@
             this.input_Zoom.TabIndex = 57;
             this.input_Zoom.Text = "0";
             this.input_Zoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_Zoom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_Zoom_KeyPress);
+            this.input_Zoom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_Zoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_Zoom_Validating);
             this.input_Zoom.Validated += new System.EventHandler(this.input_Zoom_Validated);
             // 
@@ -1314,7 +1314,7 @@
             this.input_SecondDomainValueFactor2.TabIndex = 90;
             this.input_SecondDomainValueFactor2.Text = "7";
             this.input_SecondDomainValueFactor2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_SecondDomainValueFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_SecondDomainValueFactor2_KeyPress);
+            this.input_SecondDomainValueFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_SecondDomainValueFactor2.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondDomainValueFactor2_Validating);
             this.input_SecondDomainValueFactor2.Validated += new System.EventHandler(this.input_SecondDomainValueFactor2_Validated);
             // 
@@ -1336,7 +1336,7 @@
             this.input_SecondDomainValueFactor1.TabIndex = 88;
             this.input_SecondDomainValueFactor1.Text = "10";
             this.input_SecondDomainValueFactor1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_SecondDomainValueFactor1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_SecondDomainValueFactor1_KeyPress);
+            this.input_SecondDomainValueFactor1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_SecondDomainValueFactor1.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondDomainValueFactor1_Validating);
             this.input_SecondDomainValueFactor1.Validated += new System.EventHandler(this.input_SecondDomainValueFactor1_Validated);
             // 
@@ -1499,7 +1499,7 @@
             this.input_OrbitTrapFactor.TabIndex = 74;
             this.input_OrbitTrapFactor.Text = "10";
             this.input_OrbitTrapFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_OrbitTrapFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_OrbitTrapFactor_KeyPress);
+            this.input_OrbitTrapFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_OrbitTrapFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor_Validating);
             this.input_OrbitTrapFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor_Validated);
             // 
@@ -1549,8 +1549,10 @@
             this.input_MaxDistanceEstimation.Name = "input_MaxDistanceEstimation";
             this.input_MaxDistanceEstimation.Size = new System.Drawing.Size(40, 23);
             this.input_MaxDistanceEstimation.TabIndex = 65;
-            this.input_MaxDistanceEstimation.Text = "2";
+            this.input_MaxDistanceEstimation.Text = "100";
             this.input_MaxDistanceEstimation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_MaxDistanceEstimation.Validating += new System.ComponentModel.CancelEventHandler(this.input_MaxDistanceEstimation_Validating);
+            this.input_MaxDistanceEstimation.Validated += new System.EventHandler(this.input_MaxDistanceEstimation_Validated);
             // 
             // input_DistanceEstimationFactor
             // 
@@ -1558,8 +1560,10 @@
             this.input_DistanceEstimationFactor.Name = "input_DistanceEstimationFactor";
             this.input_DistanceEstimationFactor.Size = new System.Drawing.Size(40, 23);
             this.input_DistanceEstimationFactor.TabIndex = 67;
-            this.input_DistanceEstimationFactor.Text = "1";
+            this.input_DistanceEstimationFactor.Text = "10";
             this.input_DistanceEstimationFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_DistanceEstimationFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_DistanceEstimationFactor_Validating);
+            this.input_DistanceEstimationFactor.Validated += new System.EventHandler(this.input_DistanceEstimationFactor_Validated);
             // 
             // label_DistanceEstimationMax
             // 
@@ -1675,7 +1679,7 @@
             this.input_LockedZoom.TabIndex = 60;
             this.input_LockedZoom.Text = "0";
             this.input_LockedZoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_LockedZoom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_LockedZoom_KeyPress);
+            this.input_LockedZoom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_LockedZoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_LockedZoom_Validating);
             this.input_LockedZoom.Validated += new System.EventHandler(this.input_LockedZoom_Validated);
             // 

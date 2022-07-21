@@ -185,14 +185,13 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
     domainZ = vec4(c,c);
     trap = vec2(startOrbitDistance);
 
-    distanceEstimation = 0;
     vec2 dz = vec2(1.0,0.0);
     float m2 = dot(z,z);
-    bool escapedDistance = false;
+    bool withinDistance = true;
 
 	for (iter = 0; iter < maxIterations && IsBounded(iter, z); ++iter)
 	{
-        dz = 2 * c_mul(z,dz) + vec2(1.0,0.0);
+        if (withinDistance) dz = 2 * c_mul(z,dz) + vec2(1.0,0.0);
         
         if (useConjugate)
             z = c_conj(z);
@@ -202,14 +201,12 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
 
         trap = GetOrbitTrap(z, iter, trap, domainZ, domainIter);
         
-        m2 = dot(z,z);
-        
-        if (m2 > maxDistanceEstimation && !escapedDistance)
+        if (withinDistance)
         {
-            float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
-            distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,zoom), 0, 1));
+            m2 = dot(z,z);
 
-            escapedDistance = true;
+            if (m2 > maxDistanceEstimation)
+                withinDistance = false;
         }
 	}
     
@@ -225,6 +222,10 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
     }
 
     trap.x = sigmoid(pow( trap.x*pow(2,lockedZoom), bailoutFactor1 ), bailoutFactor2);
+    
+    float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
+    //distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,zoom) / riemannAdjustment, 0, 1));
+    distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,lockedZoom), 0, 1));
 
 	return z;
 }
@@ -304,7 +305,7 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
 
     color = sigmoid(color, colorFactor);
 
-    if (useDistanceEstimation && coloring < COL_DOMAIN_SIMPLE)
+    if (useDistanceEstimation && iter < maxIterations)
         //color = pow( vec3(dist), vec3(0.9,1.1,1.4) );
         color *= pow(distanceEstimation,1);
 
