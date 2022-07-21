@@ -36,4 +36,4 @@ consolidate keypress as most of them only look for a single value
 consolidate IsWithinOrbitTrap
 match orbit trap exposed bug in middle of cardioid
 
-distance estimation, textures, custom palette, split exterior interior colors, different formulas, julia set (different shader), different projections (including flat riemann) and camera, julia set matings (different shader), custom
+distance estimation, textures, custom palette, split exterior interior colors, different formulas, julia set (different shader), different projections (including flat riemann) and camera, julia set matings (different shader), distance estimation for lambda, custom

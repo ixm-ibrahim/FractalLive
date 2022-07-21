@@ -89,7 +89,7 @@ void main()
 }
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter);
-vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, out float distanceEstimation);
+vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation);
 vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 bool IsBounded(int iter, vec2 z);
@@ -137,7 +137,7 @@ vec3 Mandelbrot()
 	    //return vec3(0.5 + 0.5*(sin(bailout*trap.x))); // 4.5 is a good value
 	    //return vec3(7*trap);
 	    //trap = 0;
-
+    
 	//return vec3(sqrt(float(iter)/maxIterations));
 	//return sqrt(float(iter)/maxIterations) *  GetColor(z, iter);
 	return GetColor(z, iter, trap, domainZ, domainIter, distanceEstimation);
@@ -179,15 +179,16 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
 
 	return z;
 }
-vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, out float distanceEstimation)
+vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation)
 {
-	vec2 z = c;
+	vec2 z = vec2(0);
     domainZ = vec4(c,c);
     trap = vec2(startOrbitDistance);
 
+    distanceEstimation = 0;
     vec2 dz = vec2(1.0,0.0);
     float m2 = dot(z,z);
-    float di =  1.0;
+    bool escapedDistance = false;
 
 	for (iter = 0; iter < maxIterations && IsBounded(iter, z); ++iter)
 	{
@@ -203,10 +204,12 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
         
         m2 = dot(z,z);
         
-        if(m2 > maxDistanceEstimation)
+        if (m2 > maxDistanceEstimation && !escapedDistance)
         {
-            di = 0;
-            break;
+            float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
+            distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,zoom), 0, 1));
+
+            escapedDistance = true;
         }
 	}
     
@@ -222,13 +225,6 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
     }
 
     trap.x = sigmoid(pow( trap.x*pow(2,lockedZoom), bailoutFactor1 ), bailoutFactor2);
-    
-    float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
-    if(di > 0.5)
-        d=0.0;
-    //distanceEstimation = sqrt(clamp(d * pow(fineness, 2) * zoom / riemannAdjustment, 0, 1));
-    //distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * zoom, 0, 1));
-    distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,zoom), 0, 1));
 
 	return z;
 }

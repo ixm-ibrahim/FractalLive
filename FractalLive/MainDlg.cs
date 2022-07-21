@@ -538,8 +538,18 @@ namespace FractalLive
                 }
                 if (inputState.keysDown[Keys.D5] && input_SecondDomainValueFactor2.Enabled)
                 {
-                    CurrentSettings.AdjustSecondDomainValueFactor2(modifier / 20);
+                    CurrentSettings.AdjustSecondDomainValueFactor2(modifier / 10);
                     input_SecondDomainValueFactor2.Text = CurrentSettings.GetSecondDomainValueFactor2().ToString();
+                }
+                if (inputState.keysDown[Keys.D6] && input_MaxDistanceEstimation.Enabled)
+                {
+                    CurrentSettings.AdjustMaxDistanceEstimation(modifier / 10);
+                    input_MaxDistanceEstimation.Text = CurrentSettings.GetMaxDistanceEstimation().ToString();
+                }
+                if (inputState.keysDown[Keys.D7] && input_DistanceEstimationFactor.Enabled)
+                {
+                    CurrentSettings.AdjustDistanceEstimationFactor(modifier / 10);
+                    input_DistanceEstimationFactor.Text = CurrentSettings.GetDistanceEstimationFactor().ToString();
                 }
             }
 
@@ -579,7 +589,7 @@ namespace FractalLive
             }
 
             // update controls
-            Log(CurrentSettings.UseDomainIteration.ToString());
+            Log(CurrentSettings.UseDistanceEstimation.ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal

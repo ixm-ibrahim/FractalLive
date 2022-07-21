@@ -513,6 +513,92 @@ namespace FractalLive
                 }
             }
 
+            public float GetMaxDistanceEstimation()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_MaxDistanceEstimation;
+                    case Editing.Exterior:
+                        return E_MaxDistanceEstimation;
+                    default:
+                        return MaxDistanceEstimation;
+                }
+            }
+            public void SetMaxDistanceEstimation(float maxDistanceEstimation)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_MaxDistanceEstimation = maxDistanceEstimation;
+                        break;
+                    case Editing.Exterior:
+                        E_MaxDistanceEstimation = maxDistanceEstimation;
+                        break;
+                    default:
+                        MaxDistanceEstimation = maxDistanceEstimation;
+                        break;
+                }
+            }
+            public void AdjustMaxDistanceEstimation(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_MaxDistanceEstimation += offset;
+                        break;
+                    case Editing.Exterior:
+                        E_MaxDistanceEstimation += offset;
+                        break;
+                    default:
+                        MaxDistanceEstimation += offset;
+                        break;
+                }
+            }
+            
+            public float GetDistanceEstimationFactor()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_DistanceEstimationFactor;
+                    case Editing.Exterior:
+                        return E_DistanceEstimationFactor;
+                    default:
+                        return DistanceEstimationFactor;
+                }
+            }
+            public void SetDistanceEstimationFactor(float distanceEstimationFactor)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_DistanceEstimationFactor = distanceEstimationFactor;
+                        break;
+                    case Editing.Exterior:
+                        E_DistanceEstimationFactor = distanceEstimationFactor;
+                        break;
+                    default:
+                        DistanceEstimationFactor = distanceEstimationFactor;
+                        break;
+                }
+            }
+            public void AdjustDistanceEstimationFactor(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_DistanceEstimationFactor += offset;
+                        break;
+                    case Editing.Exterior:
+                        E_DistanceEstimationFactor += offset;
+                        break;
+                    default:
+                        DistanceEstimationFactor += offset;
+                        break;
+                }
+            }
+
             public Vector2 Center;
             public float Zoom;
             public float LockedZoom;
