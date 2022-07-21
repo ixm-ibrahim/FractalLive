@@ -159,6 +159,9 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
 		z = c_pow(z, power) + c_pow(c, c_power);
         z = Fix(z);
 
+        if (!matchOrbitTrap)
+            domainZ = CalculateDomainZ(domainZ, z, iter, domainIter);
+
         trap = GetOrbitTrap(z, iter, trap, domainZ, domainIter);
 	}
     
@@ -198,6 +201,9 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
         
 		z = c_pow(z, power) + c_pow(c, c_power);
         z = Fix(z);
+        
+        if (!matchOrbitTrap)
+            domainZ = CalculateDomainZ(domainZ, z, iter, domainIter);
 
         trap = GetOrbitTrap(z, iter, trap, domainZ, domainIter);
         
@@ -569,8 +575,6 @@ vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, i
     }
     else
     {
-        domainZ = CalculateDomainZ(domainZ, newZ, iter, domainIter);
-
         switch (orbitTrapCalculation)
         {
             case CALC_MIN:

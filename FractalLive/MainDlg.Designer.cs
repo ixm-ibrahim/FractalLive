@@ -244,7 +244,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1150, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(984, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1687,7 +1687,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1150, 762);
+            this.ClientSize = new System.Drawing.Size(984, 762);
             this.Controls.Add(this.input_LockedZoom);
             this.Controls.Add(this.panel_ColorMenu);
             this.Controls.Add(this.glControl);
@@ -1706,7 +1706,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.panel_FormulaMenu);
             this.Controls.Add(this.panel_OrbitTrapMenu);
-            this.MinimumSize = new System.Drawing.Size(710, 413);
+            this.MinimumSize = new System.Drawing.Size(712, 413);
             this.Name = "MainDlg";
             this.Text = "FractalLive";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainDlg_FormClosing);
