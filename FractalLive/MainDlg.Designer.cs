@@ -911,7 +911,7 @@
             this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutY);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_Bailout);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrap);
-            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(920, 24);
+            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(518, 24);
             this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
             this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 664);
@@ -1706,7 +1706,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.panel_FormulaMenu);
             this.Controls.Add(this.panel_OrbitTrapMenu);
-            this.MinimumSize = new System.Drawing.Size(705, 413);
+            this.MinimumSize = new System.Drawing.Size(710, 413);
             this.Name = "MainDlg";
             this.Text = "FractalLive";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainDlg_FormClosing);
