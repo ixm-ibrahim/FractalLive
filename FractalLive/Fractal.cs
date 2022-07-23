@@ -169,15 +169,10 @@ namespace FractalLive
                 E_ColorCycles = 1;
                 E_ColorFactor = 6;
                 E_OrbitTrapFactor = 10;
-                E_DomainCalculation = Calculation.Last;
                 E_UseSecondDomainValue = false;
                 E_SecondDomainValueFactor1 = 10;
                 E_SecondDomainValueFactor2 = 7;
-                E_MatchOrbitTrap = false;
                 E_UseDomainIteration = false;
-                E_UseDistanceEstimation = false;
-                E_MaxDistanceEstimation = 100;
-                E_DistanceEstimationFactor = 10;
                 E_Texture = "";
                 E_TextureBlend = 0.5f;
                 E_TextureScaleX = 1;
@@ -438,7 +433,7 @@ namespace FractalLive
                     case Editing.Interior:
                         return I_DomainCalculation;
                     case Editing.Exterior:
-                        return E_DomainCalculation;
+                        return I_DomainCalculation;
                     default:
                         return DomainCalculation;
                 }
@@ -451,7 +446,7 @@ namespace FractalLive
                         I_DomainCalculation = domainCalculation;
                         break;
                     case Editing.Exterior:
-                        E_DomainCalculation = domainCalculation;
+                        I_DomainCalculation = domainCalculation;
                         break;
                     default:
                         DomainCalculation = domainCalculation;
@@ -608,7 +603,7 @@ namespace FractalLive
                     case Editing.Interior:
                         return I_MatchOrbitTrap;
                     case Editing.Exterior:
-                        return E_MatchOrbitTrap;
+                        return I_MatchOrbitTrap;
                     default:
                         return MatchOrbitTrap;
                 }
@@ -621,7 +616,7 @@ namespace FractalLive
                         I_MatchOrbitTrap = matchOrbitTrap;
                         break;
                     case Editing.Exterior:
-                        E_MatchOrbitTrap = matchOrbitTrap;
+                        I_MatchOrbitTrap = matchOrbitTrap;
                         break;
                     default:
                         MatchOrbitTrap = matchOrbitTrap;
@@ -636,7 +631,7 @@ namespace FractalLive
                     case Editing.Interior:
                         return I_UseDistanceEstimation;
                     case Editing.Exterior:
-                        return E_UseDistanceEstimation;
+                        return I_UseDistanceEstimation;
                     default:
                         return UseDistanceEstimation;
                 }
@@ -649,7 +644,7 @@ namespace FractalLive
                         I_UseDistanceEstimation = useDistanceEstimation;
                         break;
                     case Editing.Exterior:
-                        E_UseDistanceEstimation = useDistanceEstimation;
+                        I_UseDistanceEstimation = useDistanceEstimation;
                         break;
                     default:
                         UseDistanceEstimation = useDistanceEstimation;
@@ -664,7 +659,7 @@ namespace FractalLive
                     case Editing.Interior:
                         return I_MaxDistanceEstimation;
                     case Editing.Exterior:
-                        return E_MaxDistanceEstimation;
+                        return I_MaxDistanceEstimation;
                     default:
                         return MaxDistanceEstimation;
                 }
@@ -677,7 +672,7 @@ namespace FractalLive
                         I_MaxDistanceEstimation = maxDistanceEstimation;
                         break;
                     case Editing.Exterior:
-                        E_MaxDistanceEstimation = maxDistanceEstimation;
+                        I_MaxDistanceEstimation = maxDistanceEstimation;
                         break;
                     default:
                         MaxDistanceEstimation = maxDistanceEstimation;
@@ -692,7 +687,7 @@ namespace FractalLive
                         I_MaxDistanceEstimation += offset;
                         break;
                     case Editing.Exterior:
-                        E_MaxDistanceEstimation += offset;
+                        I_MaxDistanceEstimation += offset;
                         break;
                     default:
                         MaxDistanceEstimation += offset;
@@ -707,7 +702,7 @@ namespace FractalLive
                     case Editing.Interior:
                         return I_DistanceEstimationFactor;
                     case Editing.Exterior:
-                        return E_DistanceEstimationFactor;
+                        return I_DistanceEstimationFactor;
                     default:
                         return DistanceEstimationFactor;
                 }
@@ -720,7 +715,7 @@ namespace FractalLive
                         I_DistanceEstimationFactor = distanceEstimationFactor;
                         break;
                     case Editing.Exterior:
-                        E_DistanceEstimationFactor = distanceEstimationFactor;
+                        I_DistanceEstimationFactor = distanceEstimationFactor;
                         break;
                     default:
                         DistanceEstimationFactor = distanceEstimationFactor;
@@ -735,7 +730,7 @@ namespace FractalLive
                         I_DistanceEstimationFactor += offset;
                         break;
                     case Editing.Exterior:
-                        E_DistanceEstimationFactor += offset;
+                        I_DistanceEstimationFactor += offset;
                         break;
                     default:
                         DistanceEstimationFactor += offset;
@@ -991,15 +986,15 @@ namespace FractalLive
             public float E_ColorCycles;
             public float E_ColorFactor;
             public float E_OrbitTrapFactor;
-            public Calculation E_DomainCalculation;
+            //public Calculation E_DomainCalculation;
             public bool E_UseSecondDomainValue;
             public float E_SecondDomainValueFactor1;
             public float E_SecondDomainValueFactor2;
-            public bool E_MatchOrbitTrap;
+            //public bool I_MatchOrbitTrap;
             public bool E_UseDomainIteration;
-            public bool E_UseDistanceEstimation;
-            public float E_MaxDistanceEstimation;
-            public float E_DistanceEstimationFactor;
+            //public bool I_UseDistanceEstimation;
+            //public float I_MaxDistanceEstimation;
+            //public float I_DistanceEstimationFactor;
             public string E_Texture;
             public float E_TextureBlend;
             public float E_TextureScaleX;

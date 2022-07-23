@@ -64,9 +64,8 @@ uniform float secondValueFactor1;
 uniform float secondValueFactor2;
 
 uniform bool splitInteriorExterior;
+
 uniform int coloring;
-uniform int interiorColoring;
-uniform int exteriorColoring;
 uniform bool useCustomPalette;
 uniform vec4[6] customPalette;
 uniform float colorCycles;
@@ -87,6 +86,23 @@ uniform float textureBlend;
 uniform float textureScaleX;
 uniform float textureScaleY;
 
+uniform int i_coloring;
+uniform bool i_useCustomPalette;
+uniform vec4[6] i_customPalette;
+uniform float i_colorCycles;
+uniform float i_colorFactor;
+uniform float i_orbitTrapFactor;
+uniform bool i_matchOrbitTrap;
+uniform bool i_useDomainSecondValue;
+uniform float i_secondDomainValueFactor1;
+uniform float i_secondDomainValueFactor2;
+uniform bool i_useDomainIteration;
+uniform bool i_useTexture;
+uniform sampler2D texture1;
+uniform float i_textureBlend;
+uniform float i_textureScaleX;
+uniform float i_textureScaleY;
+
 vec3 Mandelbrot();
 
 void main()
@@ -99,17 +115,18 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
 vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation);
 vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
+vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 bool IsBounded(int iter, vec2 z);
 bool IsWithinIteration(int iter);
 vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout ivec2 domainIter);
-vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, inout vec4 domainZ, inout ivec2 domainIter);
+vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, bool matchOrbitTrap, inout vec4 domainZ, inout ivec2 domainIter);
 vec4 CalculateDomainZ(vec4 domainZ, vec2 newZ, int iter, inout ivec2 domainIter);
 float GetSmoothIter(float iter, vec2 z);
 vec2 Fix(vec2 z);
 vec3 HSVtoRGB(vec3 color);
 vec3 RGBtoHSV(vec3 color);
-vec3 Rainbow(float mu);
-vec3 CustomPalette(float ratio);
+vec3 Rainbow(float mu, float colorCycles);
+vec3 ColorPalette(vec4[6] customPalette, float ratio);
 float DistanceToPoint(vec2 z, vec2 p);
 float DistanceToLine(vec2 p, vec2 a, vec2 b);
 vec3 lerp(vec3 a, vec3 b, float ratio);
@@ -254,7 +271,7 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
     vec3 color;
     if (iter >= maxIterations)
     {
-        int c = splitInteriorExterior ? interiorColoring : coloring;
+        int c = splitInteriorExterior ? i_coloring : coloring;
         
         switch (c)
         {
@@ -275,7 +292,7 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
             case COL_ITERATION:
             case COL_SMOOTH:
             default:
-                color = DomainColoring(c, domainZ, domainIter, trap);
+                color = splitInteriorExterior ? I_DomainColoring(c, domainZ, domainIter, trap) : DomainColoring(c, domainZ, domainIter, trap);
                 break;
         }
     }
@@ -284,8 +301,8 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
         //int c = splitInteriorExterior ? exteriorColoring : coloring;
         int c = coloring;
 
-        vec3 iterColor = useCustomPalette ? CustomPalette(iter/31) : Rainbow(iter);
-        vec3 orbitColor = useCustomPalette ? CustomPalette(orbitTrapFactor*trap.x/31) : Rainbow(orbitTrapFactor*trap.x);
+        vec3 iterColor = useCustomPalette ? ColorPalette(customPalette, iter/31) : Rainbow(iter, colorCycles);
+        vec3 orbitColor = useCustomPalette ? ColorPalette(customPalette, orbitTrapFactor*trap.x/31) : Rainbow(orbitTrapFactor*trap.x, colorCycles);
 
         switch (c)
         {
@@ -314,7 +331,7 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
         
                 mu = GetSmoothIter(iter, z);
 
-                vec3 muColor = useCustomPalette ? CustomPalette(mu/31) : Rainbow(mu);
+                vec3 muColor = useCustomPalette ? ColorPalette(customPalette, mu/31) : Rainbow(mu, colorCycles);
 
                 //color = Rainbow(mu + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 10*trap : 1));
                 //color = Rainbow(mu) * (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? Rainbow(trap) : vec3(1));
@@ -327,13 +344,22 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
         }
     }
     
-    color = sigmoid(color, colorFactor);
+    if (splitInteriorExterior && iter >= maxIterations)
+        color = sigmoid(color, i_colorFactor);
+    else
+        color = sigmoid(color, colorFactor);
     
     if (useDistanceEstimation && iter < maxIterations)
         //color = pow( vec3(dist), vec3(0.9,1.1,1.4) );
         color *= pow(distanceEstimation,1);
 
-    if (useTexture)
+    if (splitInteriorExterior && iter >= maxIterations && i_useTexture)
+    {
+        vec2 tex = vec2(pow(atan(FragPos.y, FragPos.x),2), GetSmoothIter(iter, z));
+
+        color = mix(color, texture(texture1, tex * vec2(i_textureScaleX, i_textureScaleY)).xyz, i_textureBlend);
+    }
+    else if (useTexture)
     {
         //vec2 tex = TexCoords;
         //vec2 tex = z;
@@ -373,24 +399,24 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
                 case TRAP_POINTS:
                     trap.x = DistanceToPoint(z.xy, bailoutPoints[0]);
                     for (int i = 1; i < bailoutPointsCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.xy, bailoutPoints[i]), iter.x, z.xy, dummyDomainZ, dummyDomainIter);
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.xy, bailoutPoints[i]), iter.x, z.xy, matchOrbitTrap, dummyDomainZ, dummyDomainIter);
                     r = trap.x;
 
                     trap.x = DistanceToPoint(z.zw, bailoutPoints[0]);
                     for (int i = 1; i < bailoutPointsCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.zw, bailoutPoints[i]), iter.x, z.zw, dummyDomainZ, dummyDomainIter); 
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.zw, bailoutPoints[i]), iter.x, z.zw, matchOrbitTrap, dummyDomainZ, dummyDomainIter); 
                     r2 = trap.x;
 
                     break;
                 case TRAP_LINES:
                     trap.x = DistanceToLine(z.xy, bailoutLines[0].xy, bailoutLines[0].zw);
                     for (int i = 1; i < bailoutLinesCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.xy, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.xy, dummyDomainZ, dummyDomainIter);
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.xy, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.xy, matchOrbitTrap, dummyDomainZ, dummyDomainIter);
                     r = trap.x;
 
                     trap.x = DistanceToLine(z.zw, bailoutLines[0].xy, bailoutLines[0].zw);
                     for (int i = 1; i < bailoutLinesCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.zw, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.zw, dummyDomainZ, dummyDomainIter); 
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.zw, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.zw, matchOrbitTrap, dummyDomainZ, dummyDomainIter); 
                     r2 = trap.x;
 
                     break;
@@ -411,7 +437,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
     theta = theta * 360 * (useCustomPalette ? 1 : colorCycles) + (useCustomPalette ? 0 : t);
     
     if (useCustomPalette)
-        theta = RGBtoHSV(CustomPalette(mod(theta, 360)/360)).x;
+        theta = RGBtoHSV(ColorPalette(customPalette, mod(theta, 360)/360)).x;
 
 	if (z.x == 0 && z.y == 0)
 	{
@@ -460,7 +486,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
 
     if (useDomainIteration)
     {
-        vec3 c = useCustomPalette ? CustomPalette(iter.x*1.05) : Rainbow(iter.x);
+        vec3 c = useCustomPalette ? ColorPalette(customPalette, iter.x*1.05) : Rainbow(iter.x, colorCycles);
 
         color *= c;
         //color = mix(color, Rainbow(iter.x), float(iter.x)/maxIterations);
@@ -473,9 +499,141 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
 
     if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
         if (coloring <= COL_SMOOTH)
-            color = mix(Rainbow(orbitTrapFactor*trap.x), color, trap.x);
+            color = mix(Rainbow(orbitTrapFactor*trap.x, colorCycles), color, trap.x);
         else
             color = mix(color, color*sigmoid(trap.x,orbitTrapFactor), trap.x);
+            //color = mix(color, vec3(0), trap);
+
+    return color;
+}
+
+vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
+{
+    //float t = (time + trap) * 20;
+    float t = time * 20;
+    
+    vec3 color;
+
+    float theta = (atan(z.y, z.x) + M_PI) / (2*M_PI);
+	float r = length(z.xy);
+
+    if (i_useDomainSecondValue)
+    {
+        float r2 = length(z.zw);
+        
+        if (i_matchOrbitTrap)
+        {
+            vec4 dummyDomainZ;
+            ivec2 dummyDomainIter;
+            vec2 trap;
+            switch (orbitTrap)
+            {
+                case TRAP_POINTS:
+                    trap.x = DistanceToPoint(z.xy, bailoutPoints[0]);
+                    for (int i = 1; i < bailoutPointsCount; i++)
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.xy, bailoutPoints[i]), iter.x, z.xy, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter);
+                    r = trap.x;
+
+                    trap.x = DistanceToPoint(z.zw, bailoutPoints[0]);
+                    for (int i = 1; i < bailoutPointsCount; i++)
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.zw, bailoutPoints[i]), iter.x, z.zw, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter); 
+                    r2 = trap.x;
+
+                    break;
+                case TRAP_LINES:
+                    trap.x = DistanceToLine(z.xy, bailoutLines[0].xy, bailoutLines[0].zw);
+                    for (int i = 1; i < bailoutLinesCount; i++)
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.xy, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.xy, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter);
+                    r = trap.x;
+
+                    trap.x = DistanceToLine(z.zw, bailoutLines[0].xy, bailoutLines[0].zw);
+                    for (int i = 1; i < bailoutLinesCount; i++)
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.zw, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.zw, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter); 
+                    r2 = trap.x;
+
+                    break;
+            }
+        }
+
+        if (r2 > r)
+            r /= r2;
+        else
+            r = r2 / r;
+
+        r = pow(r, i_secondDomainValueFactor1) * sigmoid(r, i_secondDomainValueFactor2);
+
+        theta *= r;
+    }
+    
+
+    theta = theta * 360 * (i_useCustomPalette ? 1 : i_colorCycles) + (i_useCustomPalette ? 0 : t);
+    
+    if (useCustomPalette)
+        theta = RGBtoHSV(ColorPalette(i_customPalette, mod(theta, 360)/360)).x;
+
+	if (z.x == 0 && z.y == 0)
+	{
+		theta = 0;
+		r = 0;
+	}
+	else if (isnan(z.x) || isnan(z.y))
+	{
+		z = vec4(0);
+		theta = 0;
+		r = 0;
+	}
+
+    float twoPI = 2 * M_PI;
+    float s = abs(sin(mod(r * twoPI, twoPI)));
+	float b = sqrt(sqrt(abs(sin(mod(z.y * twoPI, twoPI)) * sin(mod(z.x * twoPI, twoPI)))));
+	float b2 = .5 * ((1 - s) + b + sqrt(pow(1 - s - b, 2) + 0.01));
+
+
+    switch (i_coloring)
+    {
+        case COL_DOMAIN_NORMAL:
+            color = HSVtoRGB(vec3(theta, s, b2 > 1 ? 1 : b2));
+            break;
+        case COL_DOMAIN_BRIGHTNESS:
+            color = HSVtoRGB(vec3(theta, 1, b2 > 1 ? 1 : b2));
+            break;
+        case COL_DOMAIN_BRIGHT_RINGS:
+            color = HSVtoRGB(vec3(theta, s, 1));
+            break;
+        case COL_DOMAIN_BRIGHT_RINGS_SMOOTH:
+            color = HSVtoRGB(vec3(theta, mod(r,1), 1));
+            break;
+        case COL_DOMAIN_DARK_RINGS:
+            color = HSVtoRGB(vec3(theta, 1, s));
+            break;
+        case COL_DOMAIN_BRIGHT_DARK_SMOOTH:
+            color = HSVtoRGB(vec3(theta, 1, mod(r,1)));
+            break;
+        default:
+            //color = mix(outerColor1, outerColor2, theta);
+            //float test = log(length(c_invert(z)));
+            color = HSVtoRGB(vec3(theta, 1, 1));
+            break;
+    }
+
+    if (i_useDomainIteration)
+    {
+        vec3 c = i_useCustomPalette ? ColorPalette(i_customPalette, iter.x*1.05) : Rainbow(iter.x, i_colorCycles);
+
+        color *= c;
+        //color = mix(color, Rainbow(iter.x), float(iter.x)/maxIterations);
+        
+        if (i_useDomainSecondValue)
+            color = mix(c, vec3(r), r);
+        else
+            color = c;
+    }
+
+    if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+        if (i_coloring <= COL_SMOOTH)
+            color = mix(Rainbow(i_orbitTrapFactor*trap.x, i_colorCycles), color, trap.x);
+        else
+            color = mix(color, color*sigmoid(trap.x,i_orbitTrapFactor), trap.x);
             //color = mix(color, vec3(0), trap);
 
     return color;
@@ -518,11 +676,11 @@ vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout i
         {
             case TRAP_POINTS:
                 for (int i = 0; i < bailoutPointsCount; i++)
-                    trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z, bailoutPoints[i]), iter, z, domainZ, domainIter); 
+                    trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z, bailoutPoints[i]), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter); 
                 break;
             case TRAP_LINES:
                 for (int i = 0; i < bailoutLinesCount; i++)
-                    trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw), iter, z, domainZ, domainIter);
+                    trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
                 break;
             default:
                 trap.x = 0;
@@ -531,7 +689,7 @@ vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout i
     return trap;
 }
 
-vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, inout vec4 domainZ, inout ivec2 domainIter)
+vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, bool matchOrbitTrap, inout vec4 domainZ, inout ivec2 domainIter)
 {
     if (!IsWithinIteration(iter))
         return trap;
@@ -782,12 +940,12 @@ vec3 HSVtoRGB(vec3 color)
     return color.z * mix(K.xxx, clamp(pp - K.xxx, 0.0, 1.0), color.y) * 360;
 }
 
-vec3 Rainbow(float mu)
+vec3 Rainbow(float mu, float colorCycles)
 {
     return vec3(sin(colorCycles * 7 * (mu + time) / 17) * .5 + .5, sin(colorCycles * 11 * (mu + time) / 29) * .5 + .5, sin(colorCycles * 13 * (mu + time) / 41) * .5 + .5);
 }
 
-vec3 CustomPalette(float ratio)
+vec3 ColorPalette(vec4[6] colorPalette, float ratio)
 {
     ratio = mod(ratio*colorCycles*6 + time/4, 6);
     //ratio = mod(ratio, 1);
@@ -798,23 +956,23 @@ vec3 CustomPalette(float ratio)
     //return vec3(t,t,t);
     
     if (ratio < 1)
-        //return customPalette[0].xyz;
-        return mix(customPalette[0].xyz, customPalette[1].xyz, ratio);
+        //return colorPalette[0].xyz;
+        return mix(colorPalette[0].xyz, colorPalette[1].xyz, ratio);
     if (ratio < 2)
-        //return customPalette[1].xyz;
-        return mix(customPalette[1].xyz, customPalette[2].xyz, ratio-1);
+        //return colorPalette[1].xyz;
+        return mix(colorPalette[1].xyz, colorPalette[2].xyz, ratio-1);
     if (ratio < 3)
-        //return customPalette[2].xyz;
-        return mix(customPalette[2].xyz, customPalette[3].xyz, ratio-2);
+        //return colorPalette[2].xyz;
+        return mix(colorPalette[2].xyz, colorPalette[3].xyz, ratio-2);
     if (ratio < 4)
-        //return customPalette[3].xyz;
-        return mix(customPalette[3].xyz, customPalette[4].xyz, ratio-3);
+        //return colorPalette[3].xyz;
+        return mix(colorPalette[3].xyz, colorPalette[4].xyz, ratio-3);
     if (ratio < 5)
-        //return customPalette[4].xyz;
-        return mix(customPalette[4].xyz, customPalette[5].xyz, ratio-4);
+        //return colorPalette[4].xyz;
+        return mix(colorPalette[4].xyz, colorPalette[5].xyz, ratio-4);
     //if (ratio < 6)
-        //return customPalette[5].xyz;
-        return mix(customPalette[5].xyz, customPalette[0].xyz, ratio-5);
+        //return colorPalette[5].xyz;
+        return mix(colorPalette[5].xyz, colorPalette[0].xyz, ratio-5);
 }
 
 float DistanceToPoint(vec2 z, vec2 p)
