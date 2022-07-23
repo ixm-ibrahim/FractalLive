@@ -3,6 +3,10 @@
 #define M_PI            3.1415926535897932384626433832795
 #define MAX_LENGTH      1e15
 
+#define FRAC_CUSTOM						-1
+#define FRAC_MANDELBROT					0
+#define FRAC_LAMBDA						1
+
 #define TRAP_CUSTOM						-1
 #define TRAP_CIRCLE						0
 #define TRAP_SQUARE						1
@@ -40,6 +44,8 @@ uniform float time;
 uniform float zoom;
 uniform float lockedZoom;
 
+
+uniform int formula;
 uniform int maxIterations;
 uniform int minIterations;
 uniform bool useConjugate;
@@ -113,6 +119,8 @@ void main()
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter);
 vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation);
+vec2 ComputeFractal(vec2 z, vec2 c);
+vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz);
 vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
@@ -177,24 +185,19 @@ vec3 Mandelbrot()
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter)
 {
-	vec2 z = vec2(0);
+	vec2 z = (formula == FRAC_LAMBDA) ? vec2(1.0/power,0) : vec2(0);
     domainZ = vec4(c,c);
     trap = vec2(startOrbitDistance);
+
 	for (iter = 0; iter < maxIterations && IsBounded(iter, z); ++iter)
 	{
-        if (useConjugate)
-            z = c_conj(z);
-        
-		z = c_pow(z, power) + c_pow(c, c_power);
-        z = Fix(z);
+        z = ComputeFractal(z, c);
 
         if (!matchOrbitTrap)
             domainZ = CalculateDomainZ(domainZ, z, iter, domainIter);
 
         trap = GetOrbitTrap(z, iter, trap, domainZ, domainIter);
 	}
-    
-
 
     if (useSecondValue)
     {
@@ -213,7 +216,7 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
 }
 vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation)
 {
-	vec2 z = vec2(0);
+	vec2 z = (formula == FRAC_LAMBDA) ? vec2(1.0/power,0) : vec2(0);
     domainZ = vec4(c,c);
     trap = vec2(startOrbitDistance);
 
@@ -225,11 +228,7 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
 	{
         if (withinDistance) dz = 2 * c_mul(z,dz) + vec2(1.0,0.0);
         
-        if (useConjugate)
-            z = c_conj(z);
-        
-		z = c_pow(z, power) + c_pow(c, c_power);
-        z = Fix(z);
+        z = ComputeFractal(z, c);
         
         if (!matchOrbitTrap)
             domainZ = CalculateDomainZ(domainZ, z, iter, domainIter);
@@ -263,6 +262,54 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
     distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,lockedZoom), 0, 1));
     
 	return z;
+}
+
+vec2 ComputeFractal(vec2 z, vec2 c)
+{
+    vec2 new_z;
+
+    if (useConjugate)
+        z.y = -z.y;
+
+    switch (formula)
+    {
+        case FRAC_MANDELBROT:
+            new_z = c_pow(z, power) + c_pow(c, c_power);
+            break;
+        case FRAC_LAMBDA:
+            //z = c_pow(z, power);
+            //new_z = c_mul(c_pow(c, c_power), c_mul(z, vec2(1,0) - z));
+            new_z = c_mul(c_pow(c, c_power), z - c_pow(z, power));
+            break;
+        default:
+            
+            new_z = c_pow(z, power) - z - 1 + c_pow(c, c_power);
+            break;
+    }
+
+    return Fix(new_z);
+}
+
+vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz)
+{
+    vec2 new_z;
+
+    if (useConjugate)
+        z.y = -z.y;
+    if (withinDistance) 
+        switch (formula)
+        {
+            case FRAC_MANDELBROT:
+                dz = power * c_mul(z,dz) + vec2(c_power,0.0);
+                break;
+            case FRAC_LAMBDA:   // c^cp * (z - z^p)
+                dz = c_mul(vec2(c_power,0.0), dz - power * c_mul(z,dz));
+                break;
+            default:
+                break;
+        }
+
+    return ComputeFractal(z,c);
 }
 
 vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation)

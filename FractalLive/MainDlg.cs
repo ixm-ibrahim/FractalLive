@@ -171,6 +171,7 @@ namespace FractalLive
             shader.SetFloat("rollAngle", camera.Roll);
 
             // Menu 1
+            shader.SetInt("formula", (int)fractalSettings.Formula);
             shader.SetInt("maxIterations", fractalSettings.MaxIterations.Value);
             shader.SetInt("minIterations", fractalSettings.MinIterations.Value);
             shader.SetBool("useConjugate", fractalSettings.IsConjugate);
@@ -623,7 +624,7 @@ namespace FractalLive
             }
 
             // update controls
-            Log((CurrentSettings.EditingColor != Fractal.Editing.Both).ToString());
+            Log(((int)CurrentSettings.Formula).ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal
@@ -938,6 +939,12 @@ namespace FractalLive
         #endregion
 
         #region Menu 1 Controls
+
+        private void input_FractalFormula_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            CurrentSettings.Formula = (Fractal.Formula)input_FractalFormula.SelectedIndex;
+        }
+
         private void input_MaxIterations_ValueChanged(object sender, EventArgs e)
         {
             if (CurrentSettings.MaxIterations.Value == CurrentSettings.OrbitRange.Value && input_MaxIterations.Value != 0)

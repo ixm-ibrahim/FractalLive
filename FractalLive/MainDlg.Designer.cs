@@ -599,6 +599,7 @@
             this.input_FractalFormula.Name = "input_FractalFormula";
             this.input_FractalFormula.Size = new System.Drawing.Size(87, 23);
             this.input_FractalFormula.TabIndex = 21;
+            this.input_FractalFormula.SelectionChangeCommitted += new System.EventHandler(this.input_FractalFormula_SelectionChangeCommitted);
             // 
             // input_FractalType
             // 
