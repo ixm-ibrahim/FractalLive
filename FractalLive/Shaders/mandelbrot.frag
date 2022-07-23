@@ -292,19 +292,17 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
             case COL_ITERATION:
             case COL_SMOOTH:
             default:
-                color = splitInteriorExterior ? I_DomainColoring(c, domainZ, domainIter, trap) : DomainColoring(c, domainZ, domainIter, trap);
+                color = splitInteriorExterior ? I_DomainColoring(i_coloring, domainZ, domainIter, trap) : DomainColoring(coloring, domainZ, domainIter, trap);
                 break;
         }
     }
     else
     {
         //int c = splitInteriorExterior ? exteriorColoring : coloring;
-        int c = coloring;
-
         vec3 iterColor = useCustomPalette ? ColorPalette(customPalette, iter/31) : Rainbow(iter, colorCycles);
         vec3 orbitColor = useCustomPalette ? ColorPalette(customPalette, orbitTrapFactor*trap.x/31) : Rainbow(orbitTrapFactor*trap.x, colorCycles);
 
-        switch (c)
+        switch (coloring)
         {
             case COL_CUSTOM:
                 vec3 outerColor1 = vec3(0.13f, 0.94f, 0.13f);
@@ -339,7 +337,7 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
                 //color = 0.5*Rainbow(mu) + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 0.5*Rainbow(10*trap) : 0.5*Rainbow(mu));
                 break;
             default:
-                color = DomainColoring(c, domainZ, domainIter, trap);
+                color = DomainColoring(coloring, domainZ, domainIter, trap);
                 break;
         }
     }

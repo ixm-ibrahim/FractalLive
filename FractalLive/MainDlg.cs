@@ -197,45 +197,45 @@ namespace FractalLive
 
             // Menu 3
             shader.SetFloat("time", applicationTime.ElapsedMilliseconds / 1000.0f + 150);
-            shader.SetBool("splitInteriorExterior", fractalSettings.EditingColor != Fractal.Editing.Both);
-            bool exterior = fractalSettings.EditingColor == Fractal.Editing.Exterior;
+            bool split = fractalSettings.EditingColor != Fractal.Editing.Both;
+            shader.SetBool("splitInteriorExterior", split);
 
-            shader.SetBool("useCustomPalette", exterior ? CurrentSettings.E_UseCustomPalette : CurrentSettings.UseCustomPalette);
-            shader.SetVector4Array("customPalette", exterior ? CurrentSettings.E_CustomPalette : CurrentSettings.CustomPalette);
-            shader.SetInt("coloring", (int)(exterior ? CurrentSettings.E_Coloring : fractalSettings.Coloring));
-            shader.SetFloat("colorCycles", exterior ? CurrentSettings.E_ColorCycles : fractalSettings.ColorCycles);
-            shader.SetFloat("colorFactor", exterior ? CurrentSettings.E_ColorFactor : fractalSettings.ColorFactor);
-            shader.SetFloat("orbitTrapFactor", exterior ? CurrentSettings.E_OrbitTrapFactor : fractalSettings.OrbitTrapFactor);
-            shader.SetInt("domainCalculation", (int)(exterior ? CurrentSettings.I_DomainCalculation : fractalSettings.DomainCalculation));
-            shader.SetBool("matchOrbitTrap", (exterior ? CurrentSettings.I_MatchOrbitTrap : fractalSettings.MatchOrbitTrap) && fractalSettings.OrbitTrap >= Fractal.OrbitTrap.Points);
-            shader.SetBool("useDomainSecondValue", exterior ? CurrentSettings.E_UseSecondDomainValue : fractalSettings.UseSecondDomainValue);
-            shader.SetFloat("secondDomainValueFactor1", exterior ? CurrentSettings.E_SecondDomainValueFactor1 : fractalSettings.SecondDomainValueFactor1);
-            shader.SetFloat("secondDomainValueFactor2", exterior ? CurrentSettings.E_SecondDomainValueFactor2 : fractalSettings.SecondDomainValueFactor2);
-            shader.SetBool("useDomainIteration", exterior ? CurrentSettings.E_UseDomainIteration : fractalSettings.UseDomainIteration);
-            shader.SetBool("useDistanceEstimation", exterior ? CurrentSettings.I_UseDistanceEstimation : fractalSettings.UseDistanceEstimation);
-            shader.SetFloat("maxDistanceEstimation", exterior ? CurrentSettings.I_MaxDistanceEstimation : fractalSettings.MaxDistanceEstimation);
-            shader.SetFloat("distanceEstimationFactor", exterior ? CurrentSettings.I_DistanceEstimationFactor : fractalSettings.DistanceEstimationFactor);
-            shader.SetBool("useTexture", (exterior ? CurrentSettings.E_Texture : fractalSettings.Texture) != "");
+            shader.SetBool("useCustomPalette", split ? fractalSettings.E_UseCustomPalette : fractalSettings.UseCustomPalette);
+            shader.SetVector4Array("customPalette", split ? fractalSettings.E_CustomPalette : fractalSettings.CustomPalette);
+            shader.SetInt("coloring", (int)(split ? fractalSettings.E_Coloring : fractalSettings.Coloring));
+            shader.SetFloat("colorCycles", split ? fractalSettings.E_ColorCycles : fractalSettings.ColorCycles);
+            shader.SetFloat("colorFactor", split ? fractalSettings.E_ColorFactor : fractalSettings.ColorFactor);
+            shader.SetFloat("orbitTrapFactor", split ? fractalSettings.E_OrbitTrapFactor : fractalSettings.OrbitTrapFactor);
+            shader.SetInt("domainCalculation", (int)(split ? fractalSettings.I_DomainCalculation : fractalSettings.DomainCalculation));
+            shader.SetBool("matchOrbitTrap", (split ? fractalSettings.I_MatchOrbitTrap : fractalSettings.MatchOrbitTrap) && fractalSettings.OrbitTrap >= Fractal.OrbitTrap.Points);
+            shader.SetBool("useDomainSecondValue", split ? fractalSettings.E_UseSecondDomainValue : fractalSettings.UseSecondDomainValue);
+            shader.SetFloat("secondDomainValueFactor1", split ? fractalSettings.E_SecondDomainValueFactor1 : fractalSettings.SecondDomainValueFactor1);
+            shader.SetFloat("secondDomainValueFactor2", split ? fractalSettings.E_SecondDomainValueFactor2 : fractalSettings.SecondDomainValueFactor2);
+            shader.SetBool("useDomainIteration", split ? fractalSettings.E_UseDomainIteration : fractalSettings.UseDomainIteration);
+            shader.SetBool("useDistanceEstimation", split ? fractalSettings.I_UseDistanceEstimation : fractalSettings.UseDistanceEstimation);
+            shader.SetFloat("maxDistanceEstimation", split ? fractalSettings.I_MaxDistanceEstimation : fractalSettings.MaxDistanceEstimation);
+            shader.SetFloat("distanceEstimationFactor", split ? fractalSettings.I_DistanceEstimationFactor : fractalSettings.DistanceEstimationFactor);
+            shader.SetBool("useTexture", (split ? fractalSettings.E_Texture : fractalSettings.Texture) != "");
             shader.SetInt("texture0", 0);
-            shader.SetFloat("textureBlend", exterior ? CurrentSettings.E_TextureBlend : fractalSettings.TextureBlend);
-            shader.SetFloat("textureScaleX", exterior ? CurrentSettings.E_TextureScaleX : fractalSettings.TextureScaleX);
-            shader.SetFloat("textureScaleY", exterior ? CurrentSettings.E_TextureScaleY : fractalSettings.TextureScaleY);
+            shader.SetFloat("textureBlend", split ? fractalSettings.E_TextureBlend : fractalSettings.TextureBlend);
+            shader.SetFloat("textureScaleX", split ? fractalSettings.E_TextureScaleX : fractalSettings.TextureScaleX);
+            shader.SetFloat("textureScaleY", split ? fractalSettings.E_TextureScaleY : fractalSettings.TextureScaleY);
 
-            shader.SetInt("i_coloring", (int)(exterior ? CurrentSettings.E_Coloring : fractalSettings.Coloring));
-            shader.SetBool("i_useCustomPalette", exterior ? CurrentSettings.E_UseCustomPalette : CurrentSettings.UseCustomPalette);
-            shader.SetVector4Array("i_customPalette", exterior ? CurrentSettings.E_CustomPalette : CurrentSettings.CustomPalette);
-            shader.SetFloat("i_colorCycles", exterior ? CurrentSettings.E_ColorCycles : fractalSettings.ColorCycles);
-            shader.SetFloat("i_colorFactor", exterior ? CurrentSettings.E_ColorFactor : fractalSettings.ColorFactor);
-            shader.SetFloat("i_orbitTrapFactor", exterior ? CurrentSettings.E_OrbitTrapFactor : fractalSettings.OrbitTrapFactor);
-            shader.SetBool("i_useDomainSecondValue", exterior ? CurrentSettings.E_UseSecondDomainValue : fractalSettings.UseSecondDomainValue);
-            shader.SetFloat("i_secondDomainValueFactor1", exterior ? CurrentSettings.E_SecondDomainValueFactor1 : fractalSettings.SecondDomainValueFactor1);
-            shader.SetFloat("i_secondDomainValueFactor2", exterior ? CurrentSettings.E_SecondDomainValueFactor2 : fractalSettings.SecondDomainValueFactor2);
-            shader.SetBool("i_useDomainIteration", exterior ? CurrentSettings.E_UseDomainIteration : fractalSettings.UseDomainIteration);
-            shader.SetBool("i_useTexture", (exterior ? CurrentSettings.E_Texture : fractalSettings.Texture) != "");
+            shader.SetInt("i_coloring", (int)fractalSettings.I_Coloring);
+            shader.SetBool("i_useCustomPalette", fractalSettings.I_UseCustomPalette);
+            shader.SetVector4Array("i_customPalette", fractalSettings.I_CustomPalette);
+            shader.SetFloat("i_colorCycles", fractalSettings.I_ColorCycles);
+            shader.SetFloat("i_colorFactor", fractalSettings.I_ColorFactor);
+            shader.SetFloat("i_orbitTrapFactor", fractalSettings.I_OrbitTrapFactor);
+            shader.SetBool("i_useDomainSecondValue", fractalSettings.I_UseSecondDomainValue);
+            shader.SetFloat("i_secondDomainValueFactor1", fractalSettings.I_SecondDomainValueFactor1);
+            shader.SetFloat("i_secondDomainValueFactor2", fractalSettings.I_SecondDomainValueFactor2);
+            shader.SetBool("i_useDomainIteration", fractalSettings.I_UseDomainIteration);
+            shader.SetBool("i_useTexture", fractalSettings.I_Texture != "");
             shader.SetInt("texture1", 1);
-            shader.SetFloat("i_textureBlend", exterior ? CurrentSettings.E_TextureBlend : fractalSettings.TextureBlend);
-            shader.SetFloat("i_textureScaleX", exterior ? CurrentSettings.E_TextureScaleX : fractalSettings.TextureScaleX);
-            shader.SetFloat("i_textureScaleY", exterior ? CurrentSettings.E_TextureScaleY : fractalSettings.TextureScaleY);
+            shader.SetFloat("i_textureBlend", fractalSettings.I_TextureBlend);
+            shader.SetFloat("i_textureScaleX", fractalSettings.I_TextureScaleX);
+            shader.SetFloat("i_textureScaleY", fractalSettings.I_TextureScaleY);
 
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
@@ -623,7 +623,7 @@ namespace FractalLive
             }
 
             // update controls
-            Log(CurrentSettings.UseDistanceEstimation.ToString());
+            Log((CurrentSettings.EditingColor != Fractal.Editing.Both).ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal
@@ -1334,14 +1334,16 @@ namespace FractalLive
             input_ColorCycles.Text = CurrentSettings.GetColorCycles().ToString();
             input_ColorFactor.Text = CurrentSettings.GetColorFactor().ToString();
             input_OrbitTrapFactor.Text = CurrentSettings.GetOrbitTrapFactor().ToString();
+            //checkBox_MatchOrbitTrap.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
             checkBox_MatchOrbitTrap.Checked = CurrentSettings.GetMatchOrbitTrap();
-            input_DomainCalculation.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
+            //input_DomainCalculation.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
             input_DomainCalculation.SelectedIndex = (int)CurrentSettings.GetDomainCalculation();
             checkBox_UseDomainIteration.Checked = CurrentSettings.GetUseDomainIteration();
             checkBox_UseSecondDomainValue.Checked = CurrentSettings.GetUseSecondDomainValue();
             input_SecondDomainValueFactor1.Text = CurrentSettings.GetSecondDomainValueFactor1().ToString();
             input_SecondDomainValueFactor2.Text = CurrentSettings.GetSecondDomainValueFactor2().ToString();
-            checkBox_UseDistanceEstimation.Checked = CurrentSettings.GetUseDistanceEstimation() && CurrentSettings.EditingColor != Fractal.Editing.Interior;
+            //checkBox_UseDistanceEstimation.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
+            checkBox_UseDistanceEstimation.Checked = CurrentSettings.GetUseDistanceEstimation();
             input_MaxDistanceEstimation.Text = CurrentSettings.GetMaxDistanceEstimation().ToString();
             input_DistanceEstimationFactor.Text = CurrentSettings.GetDistanceEstimationFactor().ToString();
             input_Texture.Text = CurrentSettings.GetTexture();
