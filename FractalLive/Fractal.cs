@@ -38,7 +38,7 @@ namespace FractalLive
 
         public enum Projection
         {
-            Normal, Inverse, Riemann_Sphere
+            Normal, Riemann_Flat, Riemann_Sphere
         }
 
         public enum Editing
@@ -77,9 +77,9 @@ namespace FractalLive
                 MinIterations = new IntBounds(1, 1, 9999);
                 C_Power = 1;
                 Power = 2;
-                FoldAngle = new FloatBounds(0, (float)-maxVal, (float)maxVal);
-                FoldCount = new IntBounds(0, 0, 100);
-                FoldOffset = new Vector4(0,0,0,0);
+                FoldCount = 0;
+                FoldAngle = 0;
+                FoldOffset = new Vector2(0,0);
 
                 OrbitTrap = OrbitTrap.Circle;
                 Bailout = 2;
@@ -916,9 +916,9 @@ namespace FractalLive
             public IntBounds MinIterations;
             public float Power;
             public float C_Power;
-            public FloatBounds FoldAngle;
-            public IntBounds FoldCount;
-            public Vector4 FoldOffset;
+            public float FoldCount;
+            public float FoldAngle;
+            public Vector2 FoldOffset;
 
             public OrbitTrap OrbitTrap;
             public Projection Projection;

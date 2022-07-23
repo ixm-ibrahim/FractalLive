@@ -51,6 +51,9 @@ uniform int minIterations;
 uniform bool useConjugate;
 uniform float power;
 uniform float c_power;
+uniform float foldCount;
+uniform float foldAngle;
+uniform vec2 foldOffset;
 
 uniform int orbitTrap;
 uniform float bailout;
@@ -121,6 +124,7 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
 vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation);
 vec2 ComputeFractal(vec2 z, vec2 c);
 vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz);
+vec2 FoldZ(vec2 z);
 vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
@@ -137,9 +141,6 @@ vec3 Rainbow(float mu, float colorCycles);
 vec3 ColorPalette(vec4[6] customPalette, float ratio);
 float DistanceToPoint(vec2 z, vec2 p);
 float DistanceToLine(vec2 p, vec2 a, vec2 b);
-vec3 lerp(vec3 a, vec3 b, float ratio);
-vec2 lerp(vec2 a, vec2 b, float ratio);
-float lerp(float a, float b, float ratio);
 float sigmoid(float x, float factor);
 vec3 sigmoid(vec3 v, float factor);
 vec2 c_conj(vec2 c);
@@ -148,7 +149,7 @@ vec2 c_mul(vec2 a, vec2 b);
 vec2 c_div(vec2 a, vec2 b);
 vec2 c_pow(vec2 c, float p);
 vec2 c_invert(vec2 c);
-vec3 HSVtoRGB(vec3 color);
+vec2 c_rotate(vec2 c, float a);
 
 vec3 Mandelbrot()
 {
@@ -271,6 +272,8 @@ vec2 ComputeFractal(vec2 z, vec2 c)
     if (useConjugate)
         z.y = -z.y;
 
+    z = FoldZ(z);
+
     switch (formula)
     {
         case FRAC_MANDELBROT:
@@ -292,10 +295,6 @@ vec2 ComputeFractal(vec2 z, vec2 c)
 
 vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz)
 {
-    vec2 new_z;
-
-    if (useConjugate)
-        z.y = -z.y;
     if (withinDistance) 
         switch (formula)
         {
@@ -310,6 +309,81 @@ vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz)
         }
 
     return ComputeFractal(z,c);
+}
+
+vec2 FoldZ(vec2 z)
+{
+    if (foldCount == 0)
+        return z;
+    
+    vec2 new_z = z;
+    // 1
+    /*
+    new_z = RotateZ(new_z, foldAngle);
+    new_z.y = abs(new_z.y);
+    new_z = RotateZ(new_z, -foldAngle);
+    */
+    
+    // 2
+    /*
+    new_z = RotateZ(new_z, foldAngle);
+
+    new_z.y = abs(new_z.y);
+    new_z = RotateZ(new_z, -M_PI / 2);
+    new_z.y = abs(new_z.y);
+    new_z = RotateZ(new_z, M_PI / 2);
+
+    new_z = RotateZ(new_z, -foldAngle);
+    */
+    
+    // 3
+    /*
+    new_z = RotateZ(new_z, foldAngle);
+
+    new_z.y = abs(new_z.y);
+    new_z = RotateZ(new_z, -M_PI / 3);
+    new_z.y = abs(new_z.y);
+    new_z = RotateZ(new_z, -M_PI / 3);
+    new_z.y = abs(new_z.y);
+    new_z = RotateZ(new_z, 2*M_PI / 3);
+
+    new_z = RotateZ(new_z, -foldAngle);
+    */
+    
+    // N
+    // Rotate
+    new_z = c_rotate(new_z, foldAngle);
+    // Translate
+    new_z += foldOffset;
+    
+    // Burning Ships
+    bool even = mod(abs(foldCount), 2) < 1;
+    float count = even ? abs(foldCount) - 1 : abs(foldCount);
+    float a = abs(foldCount) < 1 ? abs(foldCount) : 1;
+    
+    if (foldCount < 1)
+    {
+        new_z.y = abs(new_z.y)*a + new_z.y*(1-a);
+
+        new_z = c_rotate(new_z, M_PI * a);
+        //new_z = c_rotate(new_z, -M_PI / foldCount);
+    }
+    
+    if (even && foldCount >= 1)
+        new_z.y = abs(new_z.y);
+
+    for (int i = 0; i < count; i++)
+    {
+        new_z = c_rotate(new_z, M_PI / foldCount);
+        new_z.y = abs(new_z.y);
+    }
+
+    // Untranslate
+    new_z -= foldOffset;
+    // Unrotate
+    new_z = c_rotate(new_z, -foldAngle);
+
+    return new_z;
 }
 
 vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation)
@@ -1029,19 +1103,6 @@ float DistanceToLine(vec2 p, vec2 a, vec2 b)
     return abs((b.x-a.x)*(a.y-p.y) - (a.x-p.x)*(b.y-a.y)) / sqrt(pow(b.x-a.x,2) + pow(b.y-a.y,2));
 }
 
-vec3 lerp(vec3 a, vec3 b, float ratio)
-{
-    return vec3(lerp(a.x,b.x, ratio), lerp(a.y,b.y, ratio), lerp(a.z,b.z, ratio));
-}
-vec2 lerp(vec2 a, vec2 b, float ratio)
-{
-    return vec2(lerp(a.x,b.x, ratio), lerp(a.y,b.y, ratio));
-}
-float lerp(float a, float b, float ratio)
-{
-    return a + ratio * (b - a);
-}
-
 float sigmoid(float x, float factor)
 {
     return 1.0 / (1.0 + exp(-factor * (x - 0.5)));
@@ -1098,4 +1159,9 @@ vec2 c_pow(vec2 c, float a)
     float r = length(c);
     float theta = atan(c.y, c.x);   
     return isnan(r) || isnan(theta) ? c : pow(r, a) * vec2(cos(theta * a), sin(theta * a));
+}
+
+vec2 c_rotate(vec2 c, float a)
+{
+   return c_mul(c, vec2(cos(a), sin(a)));
 }

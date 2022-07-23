@@ -38,6 +38,7 @@ match orbit trap exposed bug in middle of cardioid
 separate smooth setting
 fix min iterations bug
 lambda distance estimation bug
+popup if user inputed high value which may slow down machine (get rid of unnecessary <type>bounds)
+showcase how fold offset shows more detail without zooming
 
-
-julia set (different shader), different projections (including flat riemann) and camera, julia set matings (different shader), stripe average coloring, folds, textures, lighting (different shader?) and menu, custom, julia minimap, load save settings, complex power
+folds, textures, adjustable time with arrow keys, different projections (including flat riemann) and camera, stripe average coloring, custom, julia set (different shader), julia set matings (different shader), lighting (different shader?) and menu, julia minimap, load save settings, complex power

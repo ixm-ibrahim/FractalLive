@@ -34,6 +34,7 @@
             System.Windows.Forms.Label label_TextureBlend;
             System.Windows.Forms.Label label_StartDistance;
             System.Windows.Forms.Label label_MinIterations;
+            System.Windows.Forms.Label label_FoldCount;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainDlg));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,6 +91,12 @@
             this.input_Bailout = new System.Windows.Forms.TextBox();
             this.button_Menu4 = new System.Windows.Forms.Button();
             this.panel_FormulaMenu = new System.Windows.Forms.Panel();
+            this.input_FoldCount = new System.Windows.Forms.TextBox();
+            this.input_FoldOffsetY = new System.Windows.Forms.TextBox();
+            this.label_FoldOffset = new System.Windows.Forms.Label();
+            this.input_FoldOffsetX = new System.Windows.Forms.TextBox();
+            this.input_FoldAngle = new System.Windows.Forms.TextBox();
+            this.label_FoldAngle = new System.Windows.Forms.Label();
             this.checkBox_UseConjugate = new System.Windows.Forms.CheckBox();
             this.input_MinIterations = new System.Windows.Forms.NumericUpDown();
             this.label_BuddhabrotType = new System.Windows.Forms.Label();
@@ -167,6 +174,7 @@
             label_TextureBlend = new System.Windows.Forms.Label();
             label_StartDistance = new System.Windows.Forms.Label();
             label_MinIterations = new System.Windows.Forms.Label();
+            label_FoldCount = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).BeginInit();
             this.panel_FormulaMenu.SuspendLayout();
@@ -238,6 +246,16 @@
             label_MinIterations.TabIndex = 85;
             label_MinIterations.Text = "Min Iterations:*?";
             label_MinIterations.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label_FoldCount
+            // 
+            label_FoldCount.AutoSize = true;
+            label_FoldCount.Location = new System.Drawing.Point(3, 214);
+            label_FoldCount.Name = "label_FoldCount";
+            label_FoldCount.Size = new System.Drawing.Size(74, 15);
+            label_FoldCount.TabIndex = 88;
+            label_FoldCount.Text = "Fold Count:*";
+            label_FoldCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // menuStrip1
             // 
@@ -617,7 +635,7 @@
             // 
             // input_Power
             // 
-            this.input_Power.Location = new System.Drawing.Point(70, 158);
+            this.input_Power.Location = new System.Drawing.Point(71, 158);
             this.input_Power.Name = "input_Power";
             this.input_Power.Size = new System.Drawing.Size(84, 23);
             this.input_Power.TabIndex = 28;
@@ -649,7 +667,7 @@
             // 
             // input_CPower
             // 
-            this.input_CPower.Location = new System.Drawing.Point(70, 184);
+            this.input_CPower.Location = new System.Drawing.Point(71, 184);
             this.input_CPower.Name = "input_CPower";
             this.input_CPower.Size = new System.Drawing.Size(84, 23);
             this.input_CPower.TabIndex = 30;
@@ -672,7 +690,7 @@
             // input_MaxIterations
             // 
             this.input_MaxIterations.CausesValidation = false;
-            this.input_MaxIterations.Location = new System.Drawing.Point(99, 81);
+            this.input_MaxIterations.Location = new System.Drawing.Point(100, 81);
             this.input_MaxIterations.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -774,6 +792,13 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_FormulaMenu.AutoScroll = true;
             this.panel_FormulaMenu.CausesValidation = false;
+            this.panel_FormulaMenu.Controls.Add(this.input_FoldCount);
+            this.panel_FormulaMenu.Controls.Add(this.input_FoldOffsetY);
+            this.panel_FormulaMenu.Controls.Add(this.label_FoldOffset);
+            this.panel_FormulaMenu.Controls.Add(this.input_FoldOffsetX);
+            this.panel_FormulaMenu.Controls.Add(this.input_FoldAngle);
+            this.panel_FormulaMenu.Controls.Add(this.label_FoldAngle);
+            this.panel_FormulaMenu.Controls.Add(label_FoldCount);
             this.panel_FormulaMenu.Controls.Add(this.checkBox_UseConjugate);
             this.panel_FormulaMenu.Controls.Add(this.input_MinIterations);
             this.panel_FormulaMenu.Controls.Add(label_MinIterations);
@@ -797,6 +822,74 @@
             this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 664);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
+            // input_FoldCount
+            // 
+            this.input_FoldCount.Location = new System.Drawing.Point(99, 211);
+            this.input_FoldCount.Name = "input_FoldCount";
+            this.input_FoldCount.Size = new System.Drawing.Size(56, 23);
+            this.input_FoldCount.TabIndex = 95;
+            this.input_FoldCount.Text = "0";
+            this.input_FoldCount.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_FoldCount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_FoldCount.Validating += new System.ComponentModel.CancelEventHandler(this.input_FoldCount_Validating);
+            this.input_FoldCount.Validated += new System.EventHandler(this.input_FoldCount_Validated);
+            // 
+            // input_FoldOffsetY
+            // 
+            this.input_FoldOffsetY.Location = new System.Drawing.Point(117, 265);
+            this.input_FoldOffsetY.Name = "input_FoldOffsetY";
+            this.input_FoldOffsetY.Size = new System.Drawing.Size(38, 23);
+            this.input_FoldOffsetY.TabIndex = 93;
+            this.input_FoldOffsetY.Text = "0";
+            this.input_FoldOffsetY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_FoldOffsetY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_FoldOffsetY.Validating += new System.ComponentModel.CancelEventHandler(this.input_FoldOffsetY_Validating);
+            this.input_FoldOffsetY.Validated += new System.EventHandler(this.input_FoldOffsetY_Validated);
+            // 
+            // label_FoldOffset
+            // 
+            this.label_FoldOffset.AutoSize = true;
+            this.label_FoldOffset.Location = new System.Drawing.Point(3, 268);
+            this.label_FoldOffset.Name = "label_FoldOffset";
+            this.label_FoldOffset.Size = new System.Drawing.Size(73, 15);
+            this.label_FoldOffset.TabIndex = 94;
+            this.label_FoldOffset.Text = "Fold Offset:*";
+            this.label_FoldOffset.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_FoldOffsetX
+            // 
+            this.input_FoldOffsetX.Location = new System.Drawing.Point(76, 265);
+            this.input_FoldOffsetX.Name = "input_FoldOffsetX";
+            this.input_FoldOffsetX.Size = new System.Drawing.Size(38, 23);
+            this.input_FoldOffsetX.TabIndex = 92;
+            this.input_FoldOffsetX.Text = "0";
+            this.input_FoldOffsetX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_FoldOffsetX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_FoldOffsetX.Validating += new System.ComponentModel.CancelEventHandler(this.input_FoldOffsetX_Validating);
+            this.input_FoldOffsetX.Validated += new System.EventHandler(this.input_FoldOffsetX_Validated);
+            // 
+            // input_FoldAngle
+            // 
+            this.input_FoldAngle.Location = new System.Drawing.Point(99, 238);
+            this.input_FoldAngle.Name = "input_FoldAngle";
+            this.input_FoldAngle.Size = new System.Drawing.Size(56, 23);
+            this.input_FoldAngle.TabIndex = 90;
+            this.input_FoldAngle.Text = "0";
+            this.input_FoldAngle.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_FoldAngle.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_FoldAngle.Validating += new System.ComponentModel.CancelEventHandler(this.input_FoldAngle_Validating);
+            this.input_FoldAngle.Validated += new System.EventHandler(this.input_FoldAngle_Validated);
+            // 
+            // label_FoldAngle
+            // 
+            this.label_FoldAngle.AutoSize = true;
+            this.label_FoldAngle.Location = new System.Drawing.Point(3, 241);
+            this.label_FoldAngle.Name = "label_FoldAngle";
+            this.label_FoldAngle.Size = new System.Drawing.Size(72, 15);
+            this.label_FoldAngle.TabIndex = 91;
+            this.label_FoldAngle.Text = "Fold Angle:*";
+            this.label_FoldAngle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // checkBox_UseConjugate
             // 
             this.checkBox_UseConjugate.AutoSize = true;
@@ -811,7 +904,7 @@
             // input_MinIterations
             // 
             this.input_MinIterations.CausesValidation = false;
-            this.input_MinIterations.Location = new System.Drawing.Point(99, 107);
+            this.input_MinIterations.Location = new System.Drawing.Point(100, 108);
             this.input_MinIterations.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -831,7 +924,7 @@
             // label_BuddhabrotType
             // 
             this.label_BuddhabrotType.AutoSize = true;
-            this.label_BuddhabrotType.Location = new System.Drawing.Point(4, 239);
+            this.label_BuddhabrotType.Location = new System.Drawing.Point(3, 344);
             this.label_BuddhabrotType.Name = "label_BuddhabrotType";
             this.label_BuddhabrotType.Size = new System.Drawing.Size(34, 15);
             this.label_BuddhabrotType.TabIndex = 83;
@@ -847,7 +940,7 @@
             "Normal",
             "Inverse",
             "Nebulabrot"});
-            this.input_BuddhabrotType.Location = new System.Drawing.Point(70, 236);
+            this.input_BuddhabrotType.Location = new System.Drawing.Point(69, 341);
             this.input_BuddhabrotType.Name = "input_BuddhabrotType";
             this.input_BuddhabrotType.Size = new System.Drawing.Size(86, 23);
             this.input_BuddhabrotType.TabIndex = 84;
@@ -855,7 +948,7 @@
             // checkBox_UseBuddhabrot
             // 
             this.checkBox_UseBuddhabrot.AutoSize = true;
-            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(5, 217);
+            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(4, 322);
             this.checkBox_UseBuddhabrot.Name = "checkBox_UseBuddhabrot";
             this.checkBox_UseBuddhabrot.Size = new System.Drawing.Size(111, 19);
             this.checkBox_UseBuddhabrot.TabIndex = 65;
@@ -1615,7 +1708,7 @@
             // label_DistanceEstimationMax
             // 
             this.label_DistanceEstimationMax.AutoSize = true;
-            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(3, 321);
+            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(3, 320);
             this.label_DistanceEstimationMax.Name = "label_DistanceEstimationMax";
             this.label_DistanceEstimationMax.Size = new System.Drawing.Size(86, 15);
             this.label_DistanceEstimationMax.TabIndex = 66;
@@ -1908,6 +2001,12 @@
         private System.Windows.Forms.TextBox input_TextureScaleY;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox input_TextureScaleX;
+        private System.Windows.Forms.Label label_FoldOffset;
+        private System.Windows.Forms.TextBox input_FoldOffsetY;
+        private System.Windows.Forms.TextBox input_FoldOffsetX;
+        private System.Windows.Forms.TextBox input_FoldAngle;
+        private System.Windows.Forms.Label label_FoldAngle;
+        private System.Windows.Forms.TextBox input_FoldCount;
     }
 }
 
