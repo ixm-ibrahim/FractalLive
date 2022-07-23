@@ -459,13 +459,15 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
 
     if (useDomainIteration)
     {
-        color *= Rainbow(iter.x);
+        vec3 c = useCustomPalette ? CustomPalette(iter.x*1.05) : Rainbow(iter.x);
+
+        color *= c;
         //color = mix(color, Rainbow(iter.x), float(iter.x)/maxIterations);
         
         if (useDomainSecondValue)
-            color = mix(Rainbow(iter.x), vec3(r), r);
+            color = mix(c, vec3(r), r);
         else
-            color = Rainbow(iter.x);
+            color = c;
     }
 
     if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
