@@ -1170,6 +1170,7 @@
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
             this.input_Texture.Click += new System.EventHandler(this.input_Texture_Click);
+            this.input_Texture.TextChanged += new System.EventHandler(this.input_Texture_TextChanged);
             this.input_Texture.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // checkBox_LockZoomFactor
@@ -1331,9 +1332,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 457);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 15);
+            this.label1.Size = new System.Drawing.Size(42, 15);
             this.label1.TabIndex = 92;
-            this.label1.Text = "Factors:*";
+            this.label1.Text = "Scale:*";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // input_TextureScaleX

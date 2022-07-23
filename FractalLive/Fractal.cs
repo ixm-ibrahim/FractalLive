@@ -106,9 +106,8 @@ namespace FractalLive
                 EditingColor = Editing.Both;
 
                 Coloring = Coloring.Smooth;
-                
-                CustomPalette = new Color[6];
                 UseCustomPalette = false;
+                CustomPalette = new Color[6];
                 CustomPalette[0] = Color.Red;
                 CustomPalette[1] = Color.Orange;
                 CustomPalette[2] = Color.Yellow;
@@ -142,8 +141,8 @@ namespace FractalLive
                 I_CustomPalette[4] = Color.Blue;
                 I_CustomPalette[5] = Color.Purple;
                 I_ColorCycles = 1;
-                I_ColorFactor = 1;
-                I_OrbitTrapFactor = 1;
+                I_ColorFactor = 6;
+                I_OrbitTrapFactor = 10;
                 I_DomainCalculation = Calculation.Last;
                 I_UseSecondDomainValue = false;
                 I_SecondDomainValueFactor1 = 10;
@@ -168,8 +167,8 @@ namespace FractalLive
                 E_CustomPalette[4] = Color.Blue;
                 E_CustomPalette[5] = Color.Purple;
                 E_ColorCycles = 1;
-                E_ColorFactor = 1;
-                E_OrbitTrapFactor = 1;
+                E_ColorFactor = 6;
+                E_OrbitTrapFactor = 10;
                 E_DomainCalculation = Calculation.Last;
                 E_UseSecondDomainValue = false;
                 E_SecondDomainValueFactor1 = 10;
@@ -247,6 +246,18 @@ namespace FractalLive
                 }
             }
 
+            public bool GetUseCustomPalette()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_UseCustomPalette;
+                    case Editing.Exterior:
+                        return E_UseCustomPalette;
+                    default:
+                        return UseCustomPalette;
+                }
+            }
             public void SetUseCustomPalette(bool useCustomPalette)
             {
                 switch (EditingColor)
@@ -448,6 +459,18 @@ namespace FractalLive
                 }
             }
             
+            public bool GetUseDomainIteration()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_UseDomainIteration;
+                    case Editing.Exterior:
+                        return E_UseDomainIteration;
+                    default:
+                        return UseDomainIteration;
+                }
+            }
             public void SetUseDomainIteration(bool useDomainIteration)
             {
                 switch (EditingColor)
@@ -578,6 +601,18 @@ namespace FractalLive
                 }
             }
 
+            public bool GetMatchOrbitTrap()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_MatchOrbitTrap;
+                    case Editing.Exterior:
+                        return E_MatchOrbitTrap;
+                    default:
+                        return MatchOrbitTrap;
+                }
+            }
             public void SetMatchOrbitTrap(bool matchOrbitTrap)
             {
                 switch (EditingColor)

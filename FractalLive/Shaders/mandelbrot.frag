@@ -281,7 +281,8 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
     }
     else
     {
-        int c = splitInteriorExterior ? exteriorColoring : coloring;
+        //int c = splitInteriorExterior ? exteriorColoring : coloring;
+        int c = coloring;
 
         vec3 iterColor = useCustomPalette ? CustomPalette(iter/31) : Rainbow(iter);
         vec3 orbitColor = useCustomPalette ? CustomPalette(orbitTrapFactor*trap.x/31) : Rainbow(orbitTrapFactor*trap.x);
