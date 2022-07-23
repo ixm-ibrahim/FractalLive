@@ -203,7 +203,7 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
     vec2 dz = vec2(1.0,0.0);
     float m2 = dot(z,z);
     bool withinDistance = true;
-
+    
 	for (iter = 0; iter < maxIterations && IsBounded(iter, z); ++iter)
 	{
         if (withinDistance) dz = 2 * c_mul(z,dz) + vec2(1.0,0.0);
@@ -244,7 +244,7 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
     float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
     //distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,zoom) / riemannAdjustment, 0, 1));
     distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,lockedZoom), 0, 1));
-
+    
 	return z;
 }
 
@@ -325,9 +325,9 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
                 break;
         }
     }
-    return color;
+    
     color = sigmoid(color, colorFactor);
-
+    
     if (useDistanceEstimation && iter < maxIterations)
         //color = pow( vec3(dist), vec3(0.9,1.1,1.4) );
         color *= pow(distanceEstimation,1);

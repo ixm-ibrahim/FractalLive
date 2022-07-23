@@ -106,7 +106,9 @@ namespace FractalLive
                 EditingColor = Editing.Both;
 
                 Coloring = Coloring.Smooth;
+                
                 CustomPalette = new Color[6];
+                UseCustomPalette = false;
                 CustomPalette[0] = Color.Red;
                 CustomPalette[1] = Color.Orange;
                 CustomPalette[2] = Color.Yellow;
@@ -131,6 +133,7 @@ namespace FractalLive
                 TextureScaleY = 1;
 
                 I_Coloring = Coloring.Smooth;
+                I_UseCustomPalette = false;
                 I_CustomPalette = new Color[6];
                 I_CustomPalette[0] = Color.Red;
                 I_CustomPalette[1] = Color.Orange;
@@ -156,6 +159,7 @@ namespace FractalLive
                 I_TextureScaleY = 1;
 
                 E_Coloring = Coloring.Smooth;
+                E_UseCustomPalette = false;
                 E_CustomPalette = new Color[6];
                 E_CustomPalette[0] = Color.Red;
                 E_CustomPalette[1] = Color.Orange;
@@ -239,6 +243,22 @@ namespace FractalLive
                         break;
                     default:
                         Coloring = coloring;
+                        break;
+                }
+            }
+
+            public void SetUseCustomPalette(bool useCustomPalette)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_UseCustomPalette = useCustomPalette;
+                        break;
+                    case Editing.Exterior:
+                        E_UseCustomPalette = useCustomPalette;
+                        break;
+                    default:
+                        UseCustomPalette = useCustomPalette;
                         break;
                 }
             }
@@ -855,6 +875,7 @@ namespace FractalLive
             public Editing EditingColor;
 
             public Coloring Coloring;
+            public bool UseCustomPalette;
             public Color[] CustomPalette;
             public float ColorCycles;
             public float ColorFactor;
@@ -874,6 +895,7 @@ namespace FractalLive
             public float TextureScaleY;
 
             public Coloring I_Coloring;
+            public bool I_UseCustomPalette;
             public Color[] I_CustomPalette;
             public float I_ColorCycles;
             public float I_ColorFactor;
@@ -893,6 +915,7 @@ namespace FractalLive
             public float I_TextureScaleY;
 
             public Coloring E_Coloring;
+            public bool E_UseCustomPalette;
             public Color[] E_CustomPalette;
             public float E_ColorCycles;
             public float E_ColorFactor;

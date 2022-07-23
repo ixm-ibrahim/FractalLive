@@ -197,7 +197,7 @@ namespace FractalLive
 
             // Menu 3
             shader.SetFloat("time", applicationTime.ElapsedMilliseconds / 1000.0f + 150);
-            shader.SetBool("useCustomPalette", checkBox_UseCustomPalette.Checked);
+            shader.SetBool("useCustomPalette", CurrentSettings.UseCustomPalette);
             shader.SetVector4Array("customPalette", CurrentSettings.CustomPalette);
             shader.SetBool("splitInteriorExterior", fractalSettings.EditingColor != Fractal.Editing.Both);
             shader.SetInt("coloring", (int)fractalSettings.Coloring);
@@ -602,7 +602,7 @@ namespace FractalLive
             }
 
             // update controls
-            Log((CurrentSettings.Texture != "").ToString());
+            Log(CurrentSettings.UseDistanceEstimation.ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal
@@ -1308,6 +1308,8 @@ namespace FractalLive
         private void input_EditingColor_SelectionChangeCommitted(object sender, EventArgs e)
         {
             CurrentSettings.EditingColor = (Fractal.Editing)input_EditingColor.SelectedIndex;
+
+
         }
 
         private void input_Coloring_SelectionChangeCommitted(object sender, EventArgs e)
@@ -1322,6 +1324,8 @@ namespace FractalLive
 
         private void checkBox_UseCustomPalette_CheckedChanged(object sender, EventArgs e)
         {
+            CurrentSettings.SetUseCustomPalette(checkBox_UseCustomPalette.Checked);
+
             if (checkBox_UseCustomPalette.Checked)
             {
                 button_Color1.Enabled = true;
