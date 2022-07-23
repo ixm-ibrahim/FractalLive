@@ -420,6 +420,18 @@ namespace FractalLive
                 }
             }
 
+            public Calculation GetDomainCalculation()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_DomainCalculation;
+                    case Editing.Exterior:
+                        return E_DomainCalculation;
+                    default:
+                        return DomainCalculation;
+                }
+            }
             public void SetDomainCalculation(Calculation domainCalculation)
             {
                 switch (EditingColor)
@@ -451,7 +463,19 @@ namespace FractalLive
                         break;
                 }
             }
-            
+
+            public bool GetUseSecondDomainValue()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_UseSecondDomainValue;
+                    case Editing.Exterior:
+                        return E_UseSecondDomainValue;
+                    default:
+                        return UseSecondDomainValue;
+                }
+            }
             public void SetUseSecondDomainValue(bool useSecondDomainValue)
             {
                 switch (EditingColor)
@@ -570,6 +594,18 @@ namespace FractalLive
                 }
             }
             
+            public bool GetUseDistanceEstimation()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_UseDistanceEstimation;
+                    case Editing.Exterior:
+                        return E_UseDistanceEstimation;
+                    default:
+                        return UseDistanceEstimation;
+                }
+            }
             public void SetUseDistanceEstimation(bool useDistanceEstimation)
             {
                 switch (EditingColor)

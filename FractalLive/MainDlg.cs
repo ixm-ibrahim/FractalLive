@@ -1309,7 +1309,15 @@ namespace FractalLive
         {
             CurrentSettings.EditingColor = (Fractal.Editing)input_EditingColor.SelectedIndex;
 
-
+            input_EditingColor.SelectedIndex = 0;
+            input_Coloring.SelectedIndex = (int)CurrentSettings.GetColoring();
+            input_DomainCalculation.SelectedIndex = (int)CurrentSettings.GetDomainCalculation();
+            input_SecondDomainValueFactor1.Enabled = CurrentSettings.GetUseSecondDomainValue();
+            input_SecondDomainValueFactor2.Enabled = CurrentSettings.GetUseSecondDomainValue();
+            input_MaxDistanceEstimation.Enabled = CurrentSettings.GetUseDistanceEstimation();
+            input_DistanceEstimationFactor.Enabled = CurrentSettings.GetUseDistanceEstimation();
+            input_TextureBlend.Enabled = CurrentSettings.GetTexture() != "";
+            checkBox_UseCustomPalette_CheckedChanged(null, null);
         }
 
         private void input_Coloring_SelectionChangeCommitted(object sender, EventArgs e)
