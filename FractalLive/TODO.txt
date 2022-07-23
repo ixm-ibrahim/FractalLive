@@ -40,5 +40,7 @@ fix min iterations bug
 lambda distance estimation bug
 popup if user inputed high value which may slow down machine (get rid of unnecessary <type>bounds)
 showcase how fold offset shows more detail without zooming
+make ints floats so ctrl modifer can be used
+fold bug with mandelbrot power of -3, -4, etc.
 
-folds, textures, adjustable time with arrow keys, different projections (including flat riemann) and camera, stripe average coloring, custom, julia set (different shader), julia set matings (different shader), lighting (different shader?) and menu, julia minimap, load save settings, complex power
+folds, textures, adjustable time with arrow keys, different projections (including flat riemann) and camera, stripe average coloring, custom, julia set (different shader), julia set matings (different shader), lighting (different shader?) and menu, julia minimap, load save settings, complex power, doubles and quads

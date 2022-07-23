@@ -357,16 +357,15 @@ vec2 FoldZ(vec2 z)
     new_z += foldOffset;
     
     // Burning Ships
-    bool even = mod(abs(foldCount), 2) < 1;
+    float m = mod(abs(foldCount), 2);
+    bool even = m > 0 && m <= 1;
     float count = even ? abs(foldCount) - 1 : abs(foldCount);
-    float a = abs(foldCount) < 1 ? abs(foldCount) : 1;
     
     if (foldCount < 1)
     {
-        new_z.y = abs(new_z.y)*a + new_z.y*(1-a);
+        new_z.y = mix(new_z.y, abs(new_z.y), foldCount);
 
-        new_z = c_rotate(new_z, M_PI * a);
-        //new_z = c_rotate(new_z, -M_PI / foldCount);
+        new_z = c_rotate(new_z, M_PI * foldCount);
     }
     
     if (even && foldCount >= 1)

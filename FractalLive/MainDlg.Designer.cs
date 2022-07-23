@@ -768,7 +768,7 @@
             this.input_Bailout.Name = "input_Bailout";
             this.input_Bailout.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout.TabIndex = 36;
-            this.input_Bailout.Text = "0";
+            this.input_Bailout.Text = "100";
             this.input_Bailout.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_Bailout.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_Bailout.Validating += new System.ComponentModel.CancelEventHandler(this.input_Bailout_Validating);
