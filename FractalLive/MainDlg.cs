@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -196,10 +197,11 @@ namespace FractalLive
 
             // Menu 3
             shader.SetFloat("time", applicationTime.ElapsedMilliseconds / 1000.0f + 150);
-
+            shader.SetBool("useCustomPalette", checkBox_UseCustomPalette.Checked);
+            shader.SetVector4Array("customPalette", CurrentSettings.CustomPalette);
             shader.SetBool("splitInteriorExterior", fractalSettings.EditingColor != Fractal.Editing.Both);
             shader.SetInt("coloring", (int)fractalSettings.Coloring);
-            shader.SetFloat("colorCycle", fractalSettings.ColorCycles);
+            shader.SetFloat("colorCycles", fractalSettings.ColorCycles);
             shader.SetFloat("colorFactor", fractalSettings.ColorFactor);
             shader.SetFloat("orbitTrapFactor", fractalSettings.OrbitTrapFactor);
             shader.SetInt("domainCalculation", (int)fractalSettings.DomainCalculation);
@@ -211,6 +213,11 @@ namespace FractalLive
             shader.SetBool("useDistanceEstimation", fractalSettings.UseDistanceEstimation);
             shader.SetFloat("maxDistanceEstimation", fractalSettings.MaxDistanceEstimation);
             shader.SetFloat("distanceEstimationFactor", fractalSettings.DistanceEstimationFactor);
+            shader.SetBool("useTexture", fractalSettings.Texture != "");
+            shader.SetInt("texture0", 0);
+            shader.SetFloat("textureBlend", fractalSettings.TextureBlend);
+            shader.SetFloat("textureScaleX", fractalSettings.TextureScaleX);
+            shader.SetFloat("textureScaleY", fractalSettings.TextureScaleY);
 
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
@@ -247,17 +254,6 @@ namespace FractalLive
             checkBox_UseBuddhabrot.Enabled = false;
             input_BuddhabrotType.Enabled = false;
 
-            checkBox_UseCustomPalette.Enabled = false;  // can we gray out the colors without losing their value? yes by saving them to settings
-            button_Color1.Enabled = false;
-            button_Color2.Enabled = false;
-            button_Color3.Enabled = false;
-            button_Color4.Enabled = false;
-            button_Color5.Enabled = false;
-            button_Color6.Enabled = false;
-            button_ClearTexture.Enabled = false;
-            input_Texture.Enabled = false;
-            input_TextureBlend.Enabled = false;
-
 
             // Default values
             input_FractalType.SelectedIndex = (int)CurrentSettings.Type;
@@ -278,6 +274,8 @@ namespace FractalLive
             input_SecondDomainValueFactor2.Enabled = false;
             input_MaxDistanceEstimation.Enabled = false;
             input_DistanceEstimationFactor.Enabled = false;
+            input_TextureBlend.Enabled = false;
+            checkBox_UseCustomPalette_CheckedChanged(null, null);
 
 
             // Callbacks
@@ -551,6 +549,21 @@ namespace FractalLive
                     CurrentSettings.AdjustDistanceEstimationFactor(modifier / 100);
                     input_DistanceEstimationFactor.Text = CurrentSettings.GetDistanceEstimationFactor().ToString();
                 }
+                if (inputState.keysDown[Keys.D8] && input_TextureBlend.Enabled)
+                {
+                    CurrentSettings.AdjustTextureBlend(modifier / 100);
+                    input_TextureBlend.Text = CurrentSettings.GetTextureBlend().ToString();
+                }
+                if (inputState.keysDown[Keys.D9] && input_TextureScaleX.Enabled)
+                {
+                    CurrentSettings.AdjustTextureScaleX(modifier / 10);
+                    input_TextureScaleX.Text = CurrentSettings.GetTextureScaleX().ToString();
+                }
+                if (inputState.keysDown[Keys.D0] && input_TextureScaleY.Enabled)
+                {
+                    CurrentSettings.AdjustTextureScaleY(modifier / 10);
+                    input_TextureScaleY.Text = CurrentSettings.GetTextureScaleY().ToString();
+                }
             }
 
             // keyboard controls
@@ -589,7 +602,7 @@ namespace FractalLive
             }
 
             // update controls
-            Log(CurrentSettings.UseDistanceEstimation.ToString());
+            Log((CurrentSettings.Texture != "").ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal
@@ -1307,36 +1320,96 @@ namespace FractalLive
                 input_DomainCalculation.Enabled = false;*/
         }
 
+        private void checkBox_UseCustomPalette_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_UseCustomPalette.Checked)
+            {
+                button_Color1.Enabled = true;
+                button_Color2.Enabled = true;
+                button_Color3.Enabled = true;
+                button_Color4.Enabled = true;
+                button_Color5.Enabled = true;
+                button_Color6.Enabled = true;
+
+                button_Color1.BackColor = CurrentSettings.GetCustomPalette(0);
+                button_Color2.BackColor = CurrentSettings.GetCustomPalette(1);
+                button_Color3.BackColor = CurrentSettings.GetCustomPalette(2);
+                button_Color4.BackColor = CurrentSettings.GetCustomPalette(3);
+                button_Color5.BackColor = CurrentSettings.GetCustomPalette(4);
+                button_Color6.BackColor = CurrentSettings.GetCustomPalette(5);
+            }
+            else
+            {
+                button_Color1.Enabled = false;
+                button_Color2.Enabled = false;
+                button_Color3.Enabled = false;
+                button_Color4.Enabled = false;
+                button_Color5.Enabled = false;
+                button_Color6.Enabled = false;
+
+                int scale = 2;
+                button_Color1.BackColor = Color.FromArgb(255, button_Color1.BackColor.R / scale, button_Color1.BackColor.G / scale, button_Color1.BackColor.B / scale);
+                button_Color2.BackColor = Color.FromArgb(255, button_Color2.BackColor.R / scale, button_Color2.BackColor.G / scale, button_Color2.BackColor.B / scale);
+                button_Color3.BackColor = Color.FromArgb(255, button_Color3.BackColor.R / scale, button_Color3.BackColor.G / scale, button_Color3.BackColor.B / scale);
+                button_Color4.BackColor = Color.FromArgb(255, button_Color4.BackColor.R / scale, button_Color4.BackColor.G / scale, button_Color4.BackColor.B / scale);
+                button_Color5.BackColor = Color.FromArgb(255, button_Color5.BackColor.R / scale, button_Color5.BackColor.G / scale, button_Color5.BackColor.B / scale);
+                button_Color6.BackColor = Color.FromArgb(255, button_Color6.BackColor.R / scale, button_Color6.BackColor.G / scale, button_Color6.BackColor.B / scale);
+            }
+        }
+
         private void button_Color1_Click(object sender, EventArgs e)
         {
             colorDialog1.Color = button_Color1.BackColor;
             if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
                 button_Color1.BackColor = colorDialog1.Color;
+                CurrentSettings.SetCustomPalette(0, colorDialog1.Color);
+            }
         }
         private void button_Color2_Click(object sender, EventArgs e)
         {
+            colorDialog1.Color = button_Color2.BackColor;
             if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
                 button_Color2.BackColor = colorDialog1.Color;
+                CurrentSettings.SetCustomPalette(1, colorDialog1.Color);
+            }
         }
         private void button_Color3_Click(object sender, EventArgs e)
         {
+            colorDialog1.Color = button_Color3.BackColor;
             if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
                 button_Color3.BackColor = colorDialog1.Color;
+                CurrentSettings.SetCustomPalette(2, colorDialog1.Color);
+            }
         }
         private void button_Color4_Click(object sender, EventArgs e)
         {
+            colorDialog1.Color = button_Color4.BackColor;
             if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
                 button_Color4.BackColor = colorDialog1.Color;
+                CurrentSettings.SetCustomPalette(3, colorDialog1.Color);
+            }
         }
         private void button_Color5_Click(object sender, EventArgs e)
         {
+            colorDialog1.Color = button_Color5.BackColor;
             if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
                 button_Color5.BackColor = colorDialog1.Color;
+                CurrentSettings.SetCustomPalette(4, colorDialog1.Color);
+            }
         }
         private void button_Color6_Click(object sender, EventArgs e)
         {
+            colorDialog1.Color = button_Color6.BackColor;
             if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
                 button_Color6.BackColor = colorDialog1.Color;
+                CurrentSettings.SetCustomPalette(5, colorDialog1.Color);
+            }
         }
 
         private void input_ColorCycles_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1457,6 +1530,53 @@ namespace FractalLive
             input_DistanceEstimationFactor.Text = CurrentSettings.GetDistanceEstimationFactor().ToString();
         }
 
+        private void button_ClearTexture_Click(object sender, EventArgs e)
+        {
+            CurrentSettings.SetTexture("");
+            input_Texture.Text = "";
+            input_TextureBlend.Enabled = false;
+        }
+
+        private void input_Texture_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.FileName = input_Texture.Text;
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                input_Texture.Text = openFileDialog1.FileName;
+                CurrentSettings.SetTexture(openFileDialog1.FileName);
+                input_TextureBlend.Enabled = true;
+                texture0 = Texture.LoadFromFile(openFileDialog1.FileName);
+                texture0.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture0);
+            }
+        }
+
+        private void input_TextureBlend_ValueChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.SetTextureBlend((float)input_TextureBlend.Value);
+        }
+
+        private void input_TextureScaleX_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_TextureScaleX.Text))
+                e.Cancel = true;
+        }
+        private void input_TextureScaleX_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.SetTextureScaleX(float.Parse(input_TextureScaleX.Text));
+            input_TextureScaleX.Text = CurrentSettings.GetTextureScaleX().ToString();
+        }
+
+        private void input_TextureScaleY_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_TextureScaleY.Text))
+                e.Cancel = true;
+        }
+        private void input_TextureScaleY_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.SetTextureScaleY(float.Parse(input_TextureScaleY.Text));
+            input_TextureScaleY.Text = CurrentSettings.GetTextureScaleY().ToString();
+        }
+
         #endregion
 
         #region Properties
@@ -1545,6 +1665,8 @@ namespace FractalLive
         private Camera customCamera;
 
         private int vboPlane, vaoPlane;
+
+        Texture texture0, texture1;
 
         #endregion
 

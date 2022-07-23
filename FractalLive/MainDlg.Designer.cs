@@ -126,6 +126,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
             this.panel_ColorMenu = new System.Windows.Forms.Panel();
+            this.input_TextureScaleY = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.input_TextureScaleX = new System.Windows.Forms.TextBox();
             this.input_SecondDomainValueFactor2 = new System.Windows.Forms.TextBox();
             this.label_SecondDomainValueFactors = new System.Windows.Forms.Label();
             this.input_SecondDomainValueFactor1 = new System.Windows.Forms.TextBox();
@@ -157,6 +160,7 @@
             this.label_EditingColor = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.input_LockedZoom = new System.Windows.Forms.TextBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -208,7 +212,7 @@
             // label_TextureBlend
             // 
             label_TextureBlend.AutoSize = true;
-            label_TextureBlend.Location = new System.Drawing.Point(4, 430);
+            label_TextureBlend.Location = new System.Drawing.Point(3, 430);
             label_TextureBlend.Name = "label_TextureBlend";
             label_TextureBlend.Size = new System.Drawing.Size(86, 15);
             label_TextureBlend.TabIndex = 70;
@@ -244,7 +248,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(984, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1104, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -911,7 +915,7 @@
             this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutY);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_Bailout);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrap);
-            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(518, 24);
+            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(717, 24);
             this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
             this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 664);
@@ -1152,7 +1156,7 @@
             // label_Texture
             // 
             this.label_Texture.AutoSize = true;
-            this.label_Texture.Location = new System.Drawing.Point(4, 405);
+            this.label_Texture.Location = new System.Drawing.Point(3, 405);
             this.label_Texture.Name = "label_Texture";
             this.label_Texture.Size = new System.Drawing.Size(48, 15);
             this.label_Texture.TabIndex = 40;
@@ -1161,10 +1165,11 @@
             // 
             // input_Texture
             // 
-            this.input_Texture.Location = new System.Drawing.Point(58, 402);
+            this.input_Texture.Location = new System.Drawing.Point(57, 402);
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
+            this.input_Texture.Click += new System.EventHandler(this.input_Texture_Click);
             this.input_Texture.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // checkBox_LockZoomFactor
@@ -1265,6 +1270,9 @@
             this.panel_ColorMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_ColorMenu.AutoScroll = true;
+            this.panel_ColorMenu.Controls.Add(this.input_TextureScaleY);
+            this.panel_ColorMenu.Controls.Add(this.label1);
+            this.panel_ColorMenu.Controls.Add(this.input_TextureScaleX);
             this.panel_ColorMenu.Controls.Add(this.input_SecondDomainValueFactor2);
             this.panel_ColorMenu.Controls.Add(this.label_SecondDomainValueFactors);
             this.panel_ColorMenu.Controls.Add(this.input_SecondDomainValueFactor1);
@@ -1300,15 +1308,49 @@
             this.panel_ColorMenu.Controls.Add(this.label_ColorFactors);
             this.panel_ColorMenu.Controls.Add(this.input_ColorCycles);
             this.panel_ColorMenu.Controls.Add(this.input_ColorFactor);
-            this.panel_ColorMenu.Location = new System.Drawing.Point(716, 24);
+            this.panel_ColorMenu.Location = new System.Drawing.Point(915, 24);
             this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_ColorMenu.Name = "panel_ColorMenu";
             this.panel_ColorMenu.Size = new System.Drawing.Size(177, 664);
             this.panel_ColorMenu.TabIndex = 59;
             // 
+            // input_TextureScaleY
+            // 
+            this.input_TextureScaleY.Location = new System.Drawing.Point(115, 454);
+            this.input_TextureScaleY.Name = "input_TextureScaleY";
+            this.input_TextureScaleY.Size = new System.Drawing.Size(40, 23);
+            this.input_TextureScaleY.TabIndex = 93;
+            this.input_TextureScaleY.Text = "1";
+            this.input_TextureScaleY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_TextureScaleY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_TextureScaleY.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureScaleY_Validating);
+            this.input_TextureScaleY.Validated += new System.EventHandler(this.input_TextureScaleY_Validated);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 457);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 15);
+            this.label1.TabIndex = 92;
+            this.label1.Text = "Factors:*";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_TextureScaleX
+            // 
+            this.input_TextureScaleX.Location = new System.Drawing.Point(66, 454);
+            this.input_TextureScaleX.Name = "input_TextureScaleX";
+            this.input_TextureScaleX.Size = new System.Drawing.Size(40, 23);
+            this.input_TextureScaleX.TabIndex = 91;
+            this.input_TextureScaleX.Text = "1";
+            this.input_TextureScaleX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_TextureScaleX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_TextureScaleX.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureScaleX_Validating);
+            this.input_TextureScaleX.Validated += new System.EventHandler(this.input_TextureScaleX_Validated);
+            // 
             // input_SecondDomainValueFactor2
             // 
-            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(114, 271);
+            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(115, 271);
             this.input_SecondDomainValueFactor2.Name = "input_SecondDomainValueFactor2";
             this.input_SecondDomainValueFactor2.Size = new System.Drawing.Size(40, 23);
             this.input_SecondDomainValueFactor2.TabIndex = 90;
@@ -1394,7 +1436,7 @@
             "Average",
             "First",
             "Last"});
-            this.input_DomainCalculation.Location = new System.Drawing.Point(89, 206);
+            this.input_DomainCalculation.Location = new System.Drawing.Point(88, 206);
             this.input_DomainCalculation.Name = "input_DomainCalculation";
             this.input_DomainCalculation.Size = new System.Drawing.Size(67, 23);
             this.input_DomainCalculation.TabIndex = 82;
@@ -1481,6 +1523,7 @@
             this.checkBox_UseCustomPalette.TabIndex = 75;
             this.checkBox_UseCustomPalette.Text = "Use Custom Palette";
             this.checkBox_UseCustomPalette.UseVisualStyleBackColor = true;
+            this.checkBox_UseCustomPalette.CheckedChanged += new System.EventHandler(this.checkBox_UseCustomPalette_CheckedChanged);
             // 
             // label_OrbitTrapFactor
             // 
@@ -1511,8 +1554,8 @@
             1,
             0,
             0,
-            65536});
-            this.input_TextureBlend.Location = new System.Drawing.Point(100, 428);
+            131072});
+            this.input_TextureBlend.Location = new System.Drawing.Point(99, 428);
             this.input_TextureBlend.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1531,6 +1574,7 @@
             0,
             0,
             65536});
+            this.input_TextureBlend.ValueChanged += new System.EventHandler(this.input_TextureBlend_ValueChanged);
             this.input_TextureBlend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // button_ClearTexture
@@ -1542,10 +1586,11 @@
             this.button_ClearTexture.TabIndex = 69;
             this.button_ClearTexture.Text = "Clear Texture";
             this.button_ClearTexture.UseVisualStyleBackColor = true;
+            this.button_ClearTexture.Click += new System.EventHandler(this.button_ClearTexture_Click);
             // 
             // input_MaxDistanceEstimation
             // 
-            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(116, 318);
+            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(115, 317);
             this.input_MaxDistanceEstimation.Name = "input_MaxDistanceEstimation";
             this.input_MaxDistanceEstimation.Size = new System.Drawing.Size(40, 23);
             this.input_MaxDistanceEstimation.TabIndex = 65;
@@ -1556,7 +1601,7 @@
             // 
             // input_DistanceEstimationFactor
             // 
-            this.input_DistanceEstimationFactor.Location = new System.Drawing.Point(116, 344);
+            this.input_DistanceEstimationFactor.Location = new System.Drawing.Point(115, 344);
             this.input_DistanceEstimationFactor.Name = "input_DistanceEstimationFactor";
             this.input_DistanceEstimationFactor.Size = new System.Drawing.Size(40, 23);
             this.input_DistanceEstimationFactor.TabIndex = 67;
@@ -1568,7 +1613,7 @@
             // label_DistanceEstimationMax
             // 
             this.label_DistanceEstimationMax.AutoSize = true;
-            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(4, 320);
+            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(3, 321);
             this.label_DistanceEstimationMax.Name = "label_DistanceEstimationMax";
             this.label_DistanceEstimationMax.Size = new System.Drawing.Size(86, 15);
             this.label_DistanceEstimationMax.TabIndex = 66;
@@ -1578,7 +1623,7 @@
             // label_DistanceEstimationFineness
             // 
             this.label_DistanceEstimationFineness.AutoSize = true;
-            this.label_DistanceEstimationFineness.Location = new System.Drawing.Point(4, 347);
+            this.label_DistanceEstimationFineness.Location = new System.Drawing.Point(3, 347);
             this.label_DistanceEstimationFineness.Name = "label_DistanceEstimationFineness";
             this.label_DistanceEstimationFineness.Size = new System.Drawing.Size(96, 15);
             this.label_DistanceEstimationFineness.TabIndex = 68;
@@ -1683,11 +1728,16 @@
             this.input_LockedZoom.Validating += new System.ComponentModel.CancelEventHandler(this.input_LockedZoom_Validating);
             this.input_LockedZoom.Validated += new System.EventHandler(this.input_LockedZoom_Validated);
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 762);
+            this.ClientSize = new System.Drawing.Size(1104, 762);
             this.Controls.Add(this.input_LockedZoom);
             this.Controls.Add(this.panel_ColorMenu);
             this.Controls.Add(this.glControl);
@@ -1852,6 +1902,10 @@
         private System.Windows.Forms.TextBox input_SecondDomainValueFactor2;
         private System.Windows.Forms.Label label_SecondDomainValueFactors;
         private System.Windows.Forms.TextBox input_SecondDomainValueFactor1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.TextBox input_TextureScaleY;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox input_TextureScaleX;
     }
 }
 

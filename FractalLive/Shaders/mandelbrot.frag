@@ -67,7 +67,9 @@ uniform bool splitInteriorExterior;
 uniform int coloring;
 uniform int interiorColoring;
 uniform int exteriorColoring;
-uniform float colorCycle;
+uniform bool useCustomPalette;
+uniform vec4[6] customPalette;
+uniform float colorCycles;
 uniform float colorFactor;
 uniform float orbitTrapFactor;
 uniform int domainCalculation;
@@ -79,6 +81,11 @@ uniform bool useDomainIteration;
 uniform bool useDistanceEstimation;
 uniform float maxDistanceEstimation;
 uniform float distanceEstimationFactor;
+uniform bool useTexture;
+uniform sampler2D texture0;
+uniform float textureBlend;
+uniform float textureScaleX;
+uniform float textureScaleY;
 
 vec3 Mandelbrot();
 
@@ -99,10 +106,15 @@ vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, i
 vec4 CalculateDomainZ(vec4 domainZ, vec2 newZ, int iter, inout ivec2 domainIter);
 float GetSmoothIter(float iter, vec2 z);
 vec2 Fix(vec2 z);
-vec3 ColorFromHSV(vec3 color);
+vec3 HSVtoRGB(vec3 color);
+vec3 RGBtoHSV(vec3 color);
 vec3 Rainbow(float mu);
+vec3 CustomPalette(float ratio);
 float DistanceToPoint(vec2 z, vec2 p);
 float DistanceToLine(vec2 p, vec2 a, vec2 b);
+vec3 lerp(vec3 a, vec3 b, float ratio);
+vec2 lerp(vec2 a, vec2 b, float ratio);
+float lerp(float a, float b, float ratio);
 float sigmoid(float x, float factor);
 vec3 sigmoid(vec3 v, float factor);
 vec2 c_conj(vec2 c);
@@ -111,7 +123,7 @@ vec2 c_mul(vec2 a, vec2 b);
 vec2 c_div(vec2 a, vec2 b);
 vec2 c_pow(vec2 c, float p);
 vec2 c_invert(vec2 c);
-vec3 ColorFromHSV(vec3 color);
+vec3 HSVtoRGB(vec3 color);
 
 vec3 Mandelbrot()
 {
@@ -143,7 +155,7 @@ vec3 Mandelbrot()
 	return GetColor(z, iter, trap, domainZ, domainIter, distanceEstimation);
     
 
-	//return 0.5 + 0.5*sin(GetColor(z, iter, trap) * colorCycle);colorFactor;
+	//return 0.5 + 0.5*sin(GetColor(z, iter, trap) * colorCycles);colorFactor;
 }
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter)
@@ -271,6 +283,9 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
     {
         int c = splitInteriorExterior ? exteriorColoring : coloring;
 
+        vec3 iterColor = useCustomPalette ? CustomPalette(iter/31) : Rainbow(iter);
+        vec3 orbitColor = useCustomPalette ? CustomPalette(orbitTrapFactor*trap.x/31) : Rainbow(orbitTrapFactor*trap.x);
+
         switch (c)
         {
             case COL_CUSTOM:
@@ -291,16 +306,18 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
                 break;
             case COL_ITERATION:
                 //color = Rainbow(iter * (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? trap : 1));
-                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(orbitTrapFactor*trap.x), Rainbow(iter), trap.x) : Rainbow(iter);
+                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(orbitColor, iterColor, trap.x) : iterColor;
                 break;
             case COL_SMOOTH:
                 float mu;
         
                 mu = GetSmoothIter(iter, z);
 
+                vec3 muColor = useCustomPalette ? CustomPalette(mu/31) : Rainbow(mu);
+
                 //color = Rainbow(mu + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 10*trap : 1));
                 //color = Rainbow(mu) * (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? Rainbow(trap) : vec3(1));
-                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(Rainbow(orbitTrapFactor*trap.x), Rainbow(mu), trap.x) : Rainbow(mu);
+                color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(orbitColor, muColor, trap.x) : muColor;
                 //color = 0.5*Rainbow(mu) + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 0.5*Rainbow(10*trap) : 0.5*Rainbow(mu));
                 break;
             default:
@@ -308,13 +325,26 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
                 break;
         }
     }
-
+    return color;
     color = sigmoid(color, colorFactor);
 
     if (useDistanceEstimation && iter < maxIterations)
         //color = pow( vec3(dist), vec3(0.9,1.1,1.4) );
         color *= pow(distanceEstimation,1);
 
+    if (useTexture)
+    {
+        //vec2 tex = TexCoords;
+        //vec2 tex = z;
+        //vec2 tex = vec2(mod(1,log(GetSmoothIter(iter, z))), atan(z.y, z.x));
+        //vec2 tex = vec2(atan(z.y, z.x), length(z));
+        //vec2 tex = vec2(atan(FragPos.y, FragPos.x), GetSmoothIter(iter, z));
+        vec2 tex = vec2(pow(atan(FragPos.y, FragPos.x),2), GetSmoothIter(iter, z));
+        //vec2 tex = vec2(pow(atan(FragPos.y, FragPos.x),2), mod(1,GetSmoothIter(iter, z)));
+
+        color = mix(color, texture(texture0, tex * vec2(textureScaleX, textureScaleY)).xyz, textureBlend);
+    }
+    
     return color;
 }
 
@@ -325,7 +355,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
     
     vec3 color;
 
-    float theta = atan(z.y, z.x) / (2*M_PI) + M_PI;
+    float theta = (atan(z.y, z.x) + M_PI) / (2*M_PI);
 	float r = length(z.xy);
 
     if (useDomainSecondValue)
@@ -376,7 +406,11 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
         theta *= r;
     }
     
-    theta = theta * 360 * colorCycle + t;
+
+    theta = theta * 360 * (useCustomPalette ? 1 : colorCycles) + (useCustomPalette ? 0 : t);
+    
+    if (useCustomPalette)
+        theta = RGBtoHSV(CustomPalette(mod(theta, 360)/360)).x;
 
 	if (z.x == 0 && z.y == 0)
 	{
@@ -395,30 +429,31 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
 	float b = sqrt(sqrt(abs(sin(mod(z.y * twoPI, twoPI)) * sin(mod(z.x * twoPI, twoPI)))));
 	float b2 = .5 * ((1 - s) + b + sqrt(pow(1 - s - b, 2) + 0.01));
 
+
     switch (coloring)
     {
         case COL_DOMAIN_NORMAL:
-            color = ColorFromHSV(vec3(theta, s, b2 > 1 ? 1 : b2));
+            color = HSVtoRGB(vec3(theta, s, b2 > 1 ? 1 : b2));
             break;
         case COL_DOMAIN_BRIGHTNESS:
-            color = ColorFromHSV(vec3(theta, 1, b2 > 1 ? 1 : b2));
+            color = HSVtoRGB(vec3(theta, 1, b2 > 1 ? 1 : b2));
             break;
         case COL_DOMAIN_BRIGHT_RINGS:
-            color = ColorFromHSV(vec3(theta, s, 1));
+            color = HSVtoRGB(vec3(theta, s, 1));
             break;
         case COL_DOMAIN_BRIGHT_RINGS_SMOOTH:
-            color = ColorFromHSV(vec3(theta, mod(r,1), 1));
+            color = HSVtoRGB(vec3(theta, mod(r,1), 1));
             break;
         case COL_DOMAIN_DARK_RINGS:
-            color = ColorFromHSV(vec3(theta, 1, s));
+            color = HSVtoRGB(vec3(theta, 1, s));
             break;
         case COL_DOMAIN_BRIGHT_DARK_SMOOTH:
-            color = ColorFromHSV(vec3(theta, 1, mod(r,1)));
+            color = HSVtoRGB(vec3(theta, 1, mod(r,1)));
             break;
         default:
             //color = mix(outerColor1, outerColor2, theta);
             //float test = log(length(c_invert(z)));
-            color = ColorFromHSV(vec3(theta, 1, 1));
+            color = HSVtoRGB(vec3(theta, 1, 1));
             break;
     }
 
@@ -704,12 +739,23 @@ vec2 Fix(vec2 z)
     return z;
 }
 
-vec3 ColorFromHSV(vec3 color)
+vec3 RGBtoHSV(vec3 color)
 {
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(color.bg, K.wz), vec4(color.gb, K.xy), step(color.b, color.g));
+    vec4 q = mix(vec4(p.xyw, color.r), vec4(color.r, p.yzx), step(p.x, color.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)) * 360, d / (q.x + e), q.x);
+}
+
+vec3 HSVtoRGB(vec3 color)
+{/*
+    */
     float hi = mod(floor(color.x / 60.0), 6);
     float f = color.x / 60.0 - floor(color.x / 60.0);
 
-    //value = value * 255;
     float v = color.z;
     float p = color.z * (1 - color.y);
     float q = color.z * (1 - f * color.y);
@@ -727,11 +773,45 @@ vec3 ColorFromHSV(vec3 color)
         return vec3(t, p, v);
 
     return vec3(v, p, q);
+    
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 pp = abs(fract(color.xxx + K.xyz) * 6.0 - K.www);
+    return color.z * mix(K.xxx, clamp(pp - K.xxx, 0.0, 1.0), color.y) * 360;
 }
 
 vec3 Rainbow(float mu)
 {
-    return vec3(sin(colorCycle * 7 * (mu + time) / 17) * .5 + .5, sin(colorCycle * 11 * (mu + time) / 29) * .5 + .5, sin(colorCycle * 13 * (mu + time) / 41) * .5 + .5);
+    return vec3(sin(colorCycles * 7 * (mu + time) / 17) * .5 + .5, sin(colorCycles * 11 * (mu + time) / 29) * .5 + .5, sin(colorCycles * 13 * (mu + time) / 41) * .5 + .5);
+}
+
+vec3 CustomPalette(float ratio)
+{
+    ratio = mod(ratio*colorCycles*6 + time/4, 6);
+    //ratio = mod(ratio, 1);
+
+    //return lerp(vec3(0,0,1), vec3(1,1,0), 0.6);
+    //return lerp(vec3(0,0,1), vec3(1,1,0), 0.6);
+    //float t = lerp(0.0,1.0, mod(time,1));
+    //return vec3(t,t,t);
+    
+    if (ratio < 1)
+        //return customPalette[0].xyz;
+        return mix(customPalette[0].xyz, customPalette[1].xyz, ratio);
+    if (ratio < 2)
+        //return customPalette[1].xyz;
+        return mix(customPalette[1].xyz, customPalette[2].xyz, ratio-1);
+    if (ratio < 3)
+        //return customPalette[2].xyz;
+        return mix(customPalette[2].xyz, customPalette[3].xyz, ratio-2);
+    if (ratio < 4)
+        //return customPalette[3].xyz;
+        return mix(customPalette[3].xyz, customPalette[4].xyz, ratio-3);
+    if (ratio < 5)
+        //return customPalette[4].xyz;
+        return mix(customPalette[4].xyz, customPalette[5].xyz, ratio-4);
+    //if (ratio < 6)
+        //return customPalette[5].xyz;
+        return mix(customPalette[5].xyz, customPalette[0].xyz, ratio-5);
 }
 
 float DistanceToPoint(vec2 z, vec2 p)
@@ -741,6 +821,19 @@ float DistanceToPoint(vec2 z, vec2 p)
 float DistanceToLine(vec2 p, vec2 a, vec2 b)
 {
     return abs((b.x-a.x)*(a.y-p.y) - (a.x-p.x)*(b.y-a.y)) / sqrt(pow(b.x-a.x,2) + pow(b.y-a.y,2));
+}
+
+vec3 lerp(vec3 a, vec3 b, float ratio)
+{
+    return vec3(lerp(a.x,b.x, ratio), lerp(a.y,b.y, ratio), lerp(a.z,b.z, ratio));
+}
+vec2 lerp(vec2 a, vec2 b, float ratio)
+{
+    return vec2(lerp(a.x,b.x, ratio), lerp(a.y,b.y, ratio));
+}
+float lerp(float a, float b, float ratio)
+{
+    return a + ratio * (b - a);
 }
 
 float sigmoid(float x, float factor)

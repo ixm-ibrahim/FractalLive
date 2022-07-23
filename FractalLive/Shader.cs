@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using System.Drawing;
 
 namespace FractalLive
 {
@@ -119,7 +120,7 @@ namespace FractalLive
             if (code != (int)All.True)
             {
                 // We can use `GL.GetProgramInfoLog(program)` to get information about the error.
-                throw new Exception($"Error occurred whilst linking Program({program})");
+                throw new Exception($"Error occurred whilst linking Program({program})\n" + GL.GetProgramInfoLog(program));
             }
         }
 
@@ -268,6 +269,17 @@ namespace FractalLive
             GL.UseProgram(Handle);
             GL.Uniform4(_uniformLocations[name], data);
         }
+        
+        /// <summary>
+        /// Set a uniform Vector4 on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetVector4(string name, Color data)
+        {
+            GL.UseProgram(Handle);
+            GL.Uniform4(_uniformLocations[name], data);
+        }
 
         /// <summary>
         /// Set a uniform Vector4 array on this shader.
@@ -283,6 +295,26 @@ namespace FractalLive
                 tmp[4*i + 1] = data[i].Y;
                 tmp[4*i + 2] = data[i].Z;
                 tmp[4*i + 3] = data[i].W;
+            }
+
+            GL.UseProgram(Handle);
+            GL.Uniform4(_uniformLocations[name + "[0]"], data.Length, tmp);
+        }
+        
+        /// <summary>
+        /// Set a uniform Vector4 array on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetVector4Array(string name, Color[] data)
+        {
+            float[] tmp = new float[data.Length * 4];
+            for (int i = 0; i < data.Length; i++)
+            {
+                tmp[4*i] = (float)data[i].R / 255;
+                tmp[4*i + 1] = (float)data[i].G / 255;
+                tmp[4*i + 2] = (float)data[i].B / 255;
+                tmp[4*i + 3] = (float)data[i].A / 255;
             }
 
             GL.UseProgram(Handle);

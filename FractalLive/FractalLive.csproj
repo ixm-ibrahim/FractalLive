@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="OpenTK" Version="4.6.7" />
     <PackageReference Include="OpenTK.Input" Version="4.6.7" />
+    <PackageReference Include="StbImageSharp" Version="2.27.11" />
   </ItemGroup>
 
   <ItemGroup>

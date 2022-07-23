@@ -1,6 +1,7 @@
 ﻿using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -105,6 +106,13 @@ namespace FractalLive
                 EditingColor = Editing.Both;
 
                 Coloring = Coloring.Smooth;
+                CustomPalette = new Color[6];
+                CustomPalette[0] = Color.Red;
+                CustomPalette[1] = Color.Orange;
+                CustomPalette[2] = Color.Yellow;
+                CustomPalette[3] = Color.Green;
+                CustomPalette[4] = Color.Blue;
+                CustomPalette[5] = Color.Purple;
                 ColorCycles = 1;
                 ColorFactor = 6;
                 OrbitTrapFactor = 10;
@@ -119,8 +127,17 @@ namespace FractalLive
                 DistanceEstimationFactor = 10;
                 Texture = "";
                 TextureBlend = 0.5f;
+                TextureScaleX = 1;
+                TextureScaleY = 1;
 
                 I_Coloring = Coloring.Smooth;
+                I_CustomPalette = new Color[6];
+                I_CustomPalette[0] = Color.Red;
+                I_CustomPalette[1] = Color.Orange;
+                I_CustomPalette[2] = Color.Yellow;
+                I_CustomPalette[3] = Color.Green;
+                I_CustomPalette[4] = Color.Blue;
+                I_CustomPalette[5] = Color.Purple;
                 I_ColorCycles = 1;
                 I_ColorFactor = 1;
                 I_OrbitTrapFactor = 1;
@@ -135,8 +152,17 @@ namespace FractalLive
                 I_DistanceEstimationFactor = 10;
                 I_Texture = "";
                 I_TextureBlend = 0.5f;
+                I_TextureScaleX = 1;
+                I_TextureScaleY = 1;
 
                 E_Coloring = Coloring.Smooth;
+                E_CustomPalette = new Color[6];
+                E_CustomPalette[0] = Color.Red;
+                E_CustomPalette[1] = Color.Orange;
+                E_CustomPalette[2] = Color.Yellow;
+                E_CustomPalette[3] = Color.Green;
+                E_CustomPalette[4] = Color.Blue;
+                E_CustomPalette[5] = Color.Purple;
                 E_ColorCycles = 1;
                 E_ColorFactor = 1;
                 E_OrbitTrapFactor = 1;
@@ -151,6 +177,8 @@ namespace FractalLive
                 E_DistanceEstimationFactor = 10;
                 E_Texture = "";
                 E_TextureBlend = 0.5f;
+                E_TextureScaleX = 1;
+                E_TextureScaleY = 1;
 
                 UseLighting = false;
                 UseTerrainColor = false;
@@ -193,13 +221,10 @@ namespace FractalLive
                 {
                     case Editing.Interior:
                         return I_Coloring;
-                        break;
                     case Editing.Exterior:
                         return E_Coloring;
-                        break;
                     default:
                         return Coloring;
-                        break;
                 }
             }
             public void SetColoring(Coloring coloring)
@@ -214,6 +239,34 @@ namespace FractalLive
                         break;
                     default:
                         Coloring = coloring;
+                        break;
+                }
+            }
+
+            public Color GetCustomPalette(int index)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_CustomPalette[index];
+                    case Editing.Exterior:
+                        return E_CustomPalette[index];
+                    default:
+                        return CustomPalette[index];
+                }
+            }
+            public void SetCustomPalette(int index, Color color)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_CustomPalette[index] = color;
+                        break;
+                    case Editing.Exterior:
+                        E_CustomPalette[index] = color;
+                        break;
+                    default:
+                        CustomPalette[index] = color;
                         break;
                 }
             }
@@ -599,6 +652,166 @@ namespace FractalLive
                 }
             }
 
+            public string GetTexture()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_Texture;
+                    case Editing.Exterior:
+                        return E_Texture;
+                    default:
+                        return Texture;
+                }
+            }
+            public void SetTexture(string texture)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_Texture = texture;
+                        break;
+                    case Editing.Exterior:
+                        E_Texture = texture;
+                        break;
+                    default:
+                        Texture = texture;
+                        break;
+                }
+            }
+
+            public float GetTextureBlend()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_TextureBlend;
+                        break;
+                    case Editing.Exterior:
+                        return E_TextureBlend;
+                        break;
+                    default:
+                        return TextureBlend;
+                        break;
+                }
+            }
+            public void SetTextureBlend(float textureBlend)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_TextureBlend = textureBlend;
+                        break;
+                    case Editing.Exterior:
+                        E_TextureBlend = textureBlend;
+                        break;
+                    default:
+                        TextureBlend = textureBlend;
+                        break;
+                }
+            }
+            public void AdjustTextureBlend(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_TextureBlend += offset;
+                        break;
+                    case Editing.Exterior:
+                        E_TextureBlend += offset;
+                        break;
+                    default:
+                        TextureBlend += offset;
+                        break;
+                }
+            }
+
+            public float GetTextureScaleX()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_TextureScaleX;
+                    case Editing.Exterior:
+                        return E_TextureScaleX;
+                    default:
+                        return TextureScaleX;
+                }
+            }
+            public void SetTextureScaleX(float textureScaleX)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_TextureScaleX = textureScaleX;
+                        break;
+                    case Editing.Exterior:
+                        E_TextureScaleX = textureScaleX;
+                        break;
+                    default:
+                        TextureScaleX = textureScaleX;
+                        break;
+                }
+            }
+            public void AdjustTextureScaleX(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_TextureScaleX += offset;
+                        break;
+                    case Editing.Exterior:
+                        E_TextureScaleX += offset;
+                        break;
+                    default:
+                        TextureScaleX += offset;
+                        break;
+                }
+            }
+
+            public float GetTextureScaleY()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_TextureScaleY;
+                    case Editing.Exterior:
+                        return E_TextureScaleY;
+                    default:
+                        return TextureScaleY;
+                }
+            }
+            public void SetTextureScaleY(float textureScaleY)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_TextureScaleY = textureScaleY;
+                        break;
+                    case Editing.Exterior:
+                        E_TextureScaleY = textureScaleY;
+                        break;
+                    default:
+                        TextureScaleY = textureScaleY;
+                        break;
+                }
+            }
+            public void AdjustTextureScaleY(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_TextureScaleY += offset;
+                        break;
+                    case Editing.Exterior:
+                        E_TextureScaleY += offset;
+                        break;
+                    default:
+                        TextureScaleY += offset;
+                        break;
+                }
+            }
+
             public Vector2 Center;
             public float Zoom;
             public float LockedZoom;
@@ -642,6 +855,7 @@ namespace FractalLive
             public Editing EditingColor;
 
             public Coloring Coloring;
+            public Color[] CustomPalette;
             public float ColorCycles;
             public float ColorFactor;
             public float OrbitTrapFactor;
@@ -656,8 +870,11 @@ namespace FractalLive
             public float DistanceEstimationFactor;
             public string Texture;
             public float TextureBlend;
+            public float TextureScaleX;
+            public float TextureScaleY;
 
             public Coloring I_Coloring;
+            public Color[] I_CustomPalette;
             public float I_ColorCycles;
             public float I_ColorFactor;
             public float I_OrbitTrapFactor;
@@ -672,8 +889,11 @@ namespace FractalLive
             public float I_DistanceEstimationFactor;
             public string I_Texture;
             public float I_TextureBlend;
+            public float I_TextureScaleX;
+            public float I_TextureScaleY;
 
             public Coloring E_Coloring;
+            public Color[] E_CustomPalette;
             public float E_ColorCycles;
             public float E_ColorFactor;
             public float E_OrbitTrapFactor;
@@ -688,28 +908,14 @@ namespace FractalLive
             public float E_DistanceEstimationFactor;
             public string E_Texture;
             public float E_TextureBlend;
+            public float E_TextureScaleX;
+            public float E_TextureScaleY;
 
             public bool UseLighting;
             public bool UseTerrainColor;
             public FloatBounds TerrainHeight;
 
         }
-        #endregion
-
-        #region Constructors
-
-        #endregion
-
-        #region Methods
-
-        #endregion
-
-        #region Properties
-
-        #endregion
-
-        #region Fields
-
         #endregion
 
         #region Constants
