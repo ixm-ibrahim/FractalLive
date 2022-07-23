@@ -316,7 +316,6 @@ vec2 FoldZ(vec2 z)
     if (foldCount == 0)
         return z;
     
-    vec2 new_z = z;
     // 1
     /*
     new_z = RotateZ(new_z, foldAngle);
@@ -351,38 +350,38 @@ vec2 FoldZ(vec2 z)
     */
     
     // N
-    // Rotate
-    new_z = c_rotate(new_z, foldAngle);
-    // Translate
-    new_z += foldOffset;
+// Rotate
+z = c_rotate(z, foldAngle);
+// Translate
+z += foldOffset;
     
-    // Burning Ships
-    float m = mod(abs(foldCount), 2);
-    bool even = m > 0 && m <= 1;
-    float count = even ? abs(foldCount) - 1 : abs(foldCount);
+// Burning Ships
+float m = mod(foldCount, 2);
+bool even = m > 0 && m <= 1;
+float count = even ? abs(foldCount) - 1 : abs(foldCount);
     
-    if (foldCount < 1)
-    {
-        new_z.y = mix(new_z.y, abs(new_z.y), foldCount);
+if (foldCount < 1)
+{
+    z.y = mix(z.y, abs(z.y), foldCount);
 
-        new_z = c_rotate(new_z, M_PI * foldCount);
-    }
+    z = c_rotate(z, M_PI * foldCount);
+}
     
-    if (even && foldCount >= 1)
-        new_z.y = abs(new_z.y);
+if (even && foldCount >= 1)
+    z.y = abs(z.y);
 
-    for (int i = 0; i < count; i++)
-    {
-        new_z = c_rotate(new_z, M_PI / foldCount);
-        new_z.y = abs(new_z.y);
-    }
+for (int i = 0; i < count; i++)
+{
+    z = c_rotate(z, M_PI / foldCount);
+    z.y = abs(z.y);
+}
 
-    // Untranslate
-    new_z -= foldOffset;
-    // Unrotate
-    new_z = c_rotate(new_z, -foldAngle);
+// Untranslate
+z -= foldOffset;
+// Unrotate
+z = c_rotate(z, -foldAngle);
 
-    return new_z;
+    return z;
 }
 
 vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation)
