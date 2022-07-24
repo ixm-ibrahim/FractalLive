@@ -38,6 +38,10 @@ namespace FractalLive
                 keysDown[Keys.LShiftKey] = false;
                 // projection
                 keysDown[Keys.Space] = false;
+                // time
+                keysDown[Keys.Oemcomma] = false;
+                keysDown[Keys.OemPeriod] = false;
+                keysDown[Keys.OemQuestion] = false;
                 // panning/movement
                 keysDown[Keys.W] = false;
                 keysDown[Keys.A] = false;
@@ -51,6 +55,11 @@ namespace FractalLive
                 // zooming
                 keysDown[Keys.R] = false;
                 keysDown[Keys.F] = false;
+                // riemann center
+                keysDown[Keys.I] = false;
+                keysDown[Keys.J] = false;
+                keysDown[Keys.K] = false;
+                keysDown[Keys.L] = false;
                 // fractal settings
                 keysDown[Keys.D1] = false;          // max iterations
                 keysDown[Keys.D2] = false;          // bailout (general)
@@ -162,6 +171,7 @@ namespace FractalLive
             shader.SetMatrix4("view", camera.GetViewMatrix());
             shader.SetMatrix4("model", Matrix4.Identity);
 
+            shader.SetInt("proj", (int)fractalSettings.Projection);
             shader.SetBool("is3D", camera.Is3D());
             shader.SetDouble("zoom", fractalSettings.Zoom);
             shader.SetDouble("lockedZoom", fractalSettings.LockedZoom);
@@ -171,6 +181,7 @@ namespace FractalLive
 
             shader.SetVector2d("center", fractalSettings.Center);
             shader.SetFloat("rollAngle", camera.Roll);
+            shader.SetVector2("riemannAngles", fractalSettings.RiemannAngles);
 
             // Menu 1
             shader.SetInt("formula", (int)fractalSettings.Formula);
@@ -202,7 +213,7 @@ namespace FractalLive
             shader.SetFloat("secondValueFactor2", fractalSettings.SecondValueFactor2);
 
             // Menu 3
-            shader.SetFloat("time", applicationTime.ElapsedMilliseconds / 1000.0f + 150);
+            shader.SetFloat("time", fractalTime + 150);
             bool split = fractalSettings.EditingColor != Fractal.Editing.Both;
             shader.SetBool("splitInteriorExterior", split);
 
@@ -269,6 +280,7 @@ namespace FractalLive
             InitShaders();
 
             applicationTime = new Stopwatch();
+            fractalTime = 0;
             currentFractal = Fractal.Type.Mandelbrot;
 
             mandelbrotSettings = new Fractal.Settings(Fractal.Type.Mandelbrot);
@@ -413,6 +425,8 @@ namespace FractalLive
             float currentFrame = applicationTime.ElapsedMilliseconds;
             deltaTime = (currentFrame - lastFrame) / 1000;
             lastFrame = currentFrame;
+
+            if (!pauseTime) fractalTime += deltaTime;
 
             // input
             float modifier = inputState.keysDown[Keys.Oemtilde] ? -1 : 1;
@@ -646,10 +660,24 @@ namespace FractalLive
                         input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
                     }
                 }
+
+                if (CurrentSettings.Projection == Fractal.Projection.Riemann_Flat)
+                {
+                    if (inputState.keysDown[Keys.I] || inputState.keysDown[Keys.K])
+                        CurrentSettings.RiemannAngles.X -= modifier / 50 * (inputState.keysDown[Keys.I] ? 1 : -1);
+                    if (inputState.keysDown[Keys.J] || inputState.keysDown[Keys.L])
+                        CurrentSettings.RiemannAngles.Y -= modifier / 50 * (inputState.keysDown[Keys.J] ? 1 : -1);
+                }
             }
 
+            // time
+            if (inputState.keysDown[Keys.OemQuestion])
+                fractalTime += deltaTime * modifier * 5;
+            if (inputState.keysDown[Keys.Oemcomma])
+                fractalTime -= deltaTime * modifier * (pauseTime ? 5 : 6);
+
             // update controls
-            //Log(CurrentSettings.Projection.ToString());
+            Log(CurrentSettings.Projection.ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal
@@ -735,8 +763,20 @@ namespace FractalLive
                 inputState.keysDown[Keys.R] = true;
             else if (e.KeyCode == Keys.F)
                 inputState.keysDown[Keys.F] = true;
+            else if (e.KeyCode == Keys.I)
+                inputState.keysDown[Keys.I] = true;
+            else if (e.KeyCode == Keys.J)
+                inputState.keysDown[Keys.J] = true;
+            else if (e.KeyCode == Keys.K)
+                inputState.keysDown[Keys.K] = true;
+            else if (e.KeyCode == Keys.L)
+                inputState.keysDown[Keys.L] = true;
             else if (e.KeyCode == Keys.Space)
                 inputState.keysDown[Keys.Space] = true;
+            else if (e.KeyCode == Keys.Oemcomma)
+                inputState.keysDown[Keys.Oemcomma] = true;
+            else if (e.KeyCode == Keys.OemQuestion)
+                inputState.keysDown[Keys.OemQuestion] = true;
             else if (e.KeyCode == Keys.LControlKey)
                 inputState.keysDown[Keys.LControlKey] = true;
             else if (e.KeyCode == Keys.RControlKey)
@@ -796,8 +836,20 @@ namespace FractalLive
                 inputState.keysDown[Keys.R] = false;
             else if (e.KeyCode == Keys.F)
                 inputState.keysDown[Keys.F] = false;
+            else if (e.KeyCode == Keys.I)
+                inputState.keysDown[Keys.I] = false;
+            else if (e.KeyCode == Keys.J)
+                inputState.keysDown[Keys.J] = false;
+            else if (e.KeyCode == Keys.K)
+                inputState.keysDown[Keys.K] = false;
+            else if (e.KeyCode == Keys.L)
+                inputState.keysDown[Keys.L] = false;
             else if (e.KeyCode == Keys.Space)
                 inputState.keysDown[Keys.Space] = false;
+            else if (e.KeyCode == Keys.Oemcomma)
+                inputState.keysDown[Keys.Oemcomma] = false;
+            else if (e.KeyCode == Keys.OemQuestion)
+                inputState.keysDown[Keys.OemQuestion] = false;
             else if (e.KeyCode == Keys.LControlKey)
                 inputState.keysDown[Keys.LControlKey] = false;
             else if (e.KeyCode == Keys.RControlKey)
@@ -844,6 +896,8 @@ namespace FractalLive
         {
             if (e.KeyChar == ' ')
                 CurrentSettings.Projection = (Fractal.Projection)(((int)CurrentSettings.Projection + 1) % 3);
+            if (e.KeyChar == '.')
+                pauseTime = !pauseTime;
         }
 
         #endregion
@@ -1768,6 +1822,8 @@ namespace FractalLive
         #region Fields
         private OpenTK.WinForms.INativeInput _nativeInput;
         internal static Stopwatch? applicationTime;
+        float fractalTime;
+        bool pauseTime = false;
         private Timer _timer = null!;
         private int fps = 60;
         private InputState inputState;

@@ -60,7 +60,8 @@ namespace FractalLive
             {
                 Zoom = 0;
                 LockedZoom = 0;
-                Center = new Vector2(0, 0);
+                Center = Vector2.Zero;
+                RiemannAngles = Vector2.Zero;
 
                 Type = type;
                 Formula = formula;
@@ -901,6 +902,7 @@ namespace FractalLive
             public Vector2 Center;
             public float Zoom;
             public float LockedZoom;
+            public Vector2 RiemannAngles;
 
             public Type Type;
             public Formula Formula;

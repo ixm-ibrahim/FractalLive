@@ -13,7 +13,6 @@ uniform bool is3D;
 
 uniform float zoom;
 uniform float rollAngle;
-uniform float aspectRatio;
 
 uniform vec2 center;
 
@@ -26,8 +25,6 @@ out vec2 TexCoords;
 
 void main(void)
 {
-    zoom;rollAngle;aspectRatio;center;
-
     if (is3D)
     {
         gl_Position = projection * view * model * vec4(aPos, 1.0);

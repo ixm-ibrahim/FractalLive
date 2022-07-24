@@ -3,6 +3,10 @@
 #define M_PI            3.1415926535897932384626433832795
 #define MAX_LENGTH      1e15
 
+#define PROJ_NORMAL                     0
+#define PROJ_RIEMANN_FLAT               1
+#define PROJ_RIEMANN_SPHERE             2
+
 #define FRAC_CUSTOM						-1
 #define FRAC_MANDELBROT					0
 #define FRAC_LAMBDA						1
@@ -40,10 +44,15 @@ out vec4 FragColor;
 in vec2 FragPos;
 in vec2 TexCoords;
 
+uniform int proj;
+uniform float normalizedCoordsWidth;
+uniform float normalizedCoordsHeight;
 uniform float time;
 uniform float zoom;
 uniform float lockedZoom;
 
+uniform vec2 center;
+uniform vec2 riemannAngles;
 
 uniform int formula;
 uniform int maxIterations;
@@ -121,7 +130,7 @@ void main()
 }
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter);
-vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation);
+vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, float riemannAdjustment);
 vec2 ComputeFractal(vec2 z, vec2 c);
 vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz);
 vec2 FoldZ(vec2 z);
@@ -160,10 +169,45 @@ vec3 Mandelbrot()
     ivec2 domainIter;
     float distanceEstimation;
     
+    vec2 c = FragPos;
+    float riemannAdjustment = 1;
+    
+    if (proj == PROJ_RIEMANN_FLAT)
+    {
+        vec2 uv = TexCoords;
+        //vec2 uv = TexCoords * normalize(vec2(normalizedCoordsWidth,normalizedCoordsHeight));
+        uv = (1 - uv)*2 - 1;
+        uv = vec2(uv.x * sqrt(1 - uv.y*uv.y/2), uv.y * sqrt(1 - uv.x*uv.x/2));
+        
+        float theta = atan(uv.y, uv.x) + M_PI;
+        float phi = length(uv)*M_PI;
+
+        vec3 spherePos;
+        spherePos.x = cos(theta)*sin(phi);
+        spherePos.y = sin(theta)*sin(phi);
+        spherePos.z = -cos(phi);
+
+        vec4 q = vec4(vec3(1,0,0)*sin(riemannAngles.x/2), cos(riemannAngles.x/2));
+        vec3 temp = cross(q.xyz, spherePos) + q.w * spherePos;
+        vec3 rotatedX = spherePos + 2.0*cross(q.xyz, temp);
+        
+        q = vec4(vec3(0,1,0)*sin(riemannAngles.y/2), cos(riemannAngles.y/2));
+        temp = cross(q.xyz, rotatedX) + q.w * rotatedX;
+        vec3 rotatedY = rotatedX + 2.0*cross(q.xyz, temp);
+        
+        // Riemann projection
+        vec3 pos = normalize(vec3(rotatedY.x, rotatedY.y, rotatedY.z));
+        riemannAdjustment = (1 + (pos.z + 1)/(1 - pos.z)) / 2.0;
+        float r = pos.x*riemannAdjustment / pow(2,zoom);
+        float i = pos.y*riemannAdjustment / pow(2,zoom);
+    
+        c = vec2(r + center.x, i + center.y);
+    }
+
     if (useDistanceEstimation)
-        z = MandelbrotDistanceLoop(FragPos, iter, trap, domainZ, domainIter, distanceEstimation);
+        z = MandelbrotDistanceLoop(c, iter, trap, domainZ, domainIter, distanceEstimation, riemannAdjustment);
     else
-        z = MandelbrotLoop(FragPos, iter, trap, domainZ, domainIter);
+        z = MandelbrotLoop(c, iter, trap, domainZ, domainIter);
 
 	//if (iter >= maxIterations)
 		//return vec3(1.0);
@@ -215,7 +259,7 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
 
 	return z;
 }
-vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation)
+vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, float riemannAdjustment)
 {
 	vec2 z = (formula == FRAC_LAMBDA) ? vec2(1.0/power,0) : vec2(0);
     domainZ = vec4(c,c);
@@ -260,7 +304,7 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
     
     float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
     //distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,zoom) / riemannAdjustment, 0, 1));
-    distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,lockedZoom), 0, 1));
+    distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,lockedZoom) / riemannAdjustment, 0, 1));
     
 	return z;
 }
