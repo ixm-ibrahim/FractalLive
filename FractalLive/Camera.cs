@@ -446,7 +446,6 @@ namespace FractalLive
             pitch = (float)Math.Asin(direction.Y);
         }
 
-        //void ApplyRotationToVector(Quaternion rotation, ref Vector3D v)
         void ApplyRotationToVector(Quaternion rotation, ref Vector3 v)
         {
             //v = tmp * (rotation * v);

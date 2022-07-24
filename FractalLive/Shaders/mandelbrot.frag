@@ -252,7 +252,6 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
             trap.x = trap.y / trap.x;
 
         trap.x = pow(sigmoid(trap.x, secondValueFactor1), secondValueFactor2);
-        //trap.x = sigmoid(trap.x, secondValueFactor1) * pow(trap.x, secondValueFactor2);
     }
 
     trap.x = sigmoid(pow( trap.x*pow(2,lockedZoom), bailoutFactor1 ), bailoutFactor2);
@@ -297,13 +296,11 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
             trap.x = trap.y / trap.x;
 
         trap.x = pow(sigmoid(trap.x, secondValueFactor1), secondValueFactor2);
-        //trap.x = sigmoid(trap.x, secondValueFactor1) * pow(trap.x, secondValueFactor2);
     }
 
     trap.x = sigmoid(pow( trap.x*pow(2,lockedZoom), bailoutFactor1 ), bailoutFactor2);
     
     float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
-    //distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,zoom) / riemannAdjustment, 0, 1));
     distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,lockedZoom) / riemannAdjustment, 0, 1));
     
 	return z;
@@ -394,36 +391,37 @@ vec2 FoldZ(vec2 z)
     */
     
     // N
-// Rotate
-z = c_rotate(z, foldAngle);
-// Translate
-z += foldOffset;
-    
-// Burning Ships
-float m = mod(foldCount, 2);
-bool even = m > 0 && m <= 1;
-float count = even ? abs(foldCount) - 1 : abs(foldCount);
-    
-if (foldCount < 1)
-{
-    z.y = mix(z.y, abs(z.y), foldCount);
+    // Rotate
+    z = c_rotate(z, foldAngle); // radians
+    // Translate
+    z += foldOffset;
+   
+    // Burning Ships
+    float absCount = abs(foldCount);
+    float m = mod(foldCount, 2);
+    bool even = m > 0 && m <= 1;
+    float count = even ? absCount - 1 : absCount;
+   
+    if (foldCount < 1)
+    {
+        z.y = mix(z.y, abs(z.y), foldCount);
 
-    z = c_rotate(z, M_PI * foldCount);
-}
-    
-if (even && foldCount >= 1)
-    z.y = abs(z.y);
+        z = c_rotate(z, M_PI * foldCount);
+    }
+   
+    if (even && absCount >= 1)
+        z.y = abs(z.y);
 
-for (int i = 0; i < count; i++)
-{
-    z = c_rotate(z, M_PI / foldCount);
-    z.y = abs(z.y);
-}
+    for (int i = 0; i < count; i++)
+    {
+        z = c_rotate(z, M_PI / foldCount);
+        z.y = abs(z.y);
+    }
 
-// Untranslate
-z -= foldOffset;
-// Unrotate
-z = c_rotate(z, -foldAngle);
+    // Untranslate
+    z -= foldOffset;
+    // Unrotate
+    z = c_rotate(z, -foldAngle);
 
     return z;
 }
