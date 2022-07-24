@@ -3,7 +3,7 @@
 #define M_PI            3.1415926535897932384626433832795
 #define MAX_LENGTH      1e15
 
-#define PROJ_NORMAL                     0
+#define PROJ_CARTESIAN                  0
 #define PROJ_RIEMANN_FLAT               1
 #define PROJ_RIEMANN_SPHERE             2
 
@@ -41,7 +41,9 @@
 
 out vec4 FragColor;
 
-in vec2 FragPos;
+in vec3 FragPosModel;
+in vec3 FragPosWorld;
+in vec3 FragNormal;
 in vec2 TexCoords;
 
 uniform int proj;
@@ -126,7 +128,7 @@ vec3 Mandelbrot();
 void main()
 {
 	//FragColor = vec4(Mandelbrot() * vec3(TexCoords,1), 1.0);
-	FragColor = vec4(Mandelbrot(), 1.0);
+	FragColor = vec4(Mandelbrot(), 1.0);FragPosWorld;
 }
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter);
@@ -169,7 +171,7 @@ vec3 Mandelbrot()
     ivec2 domainIter;
     float distanceEstimation;
     
-    vec2 c = FragPos;
+    vec2 c = FragPosModel.xy;
     float riemannAdjustment = 1;
     
     if (proj == PROJ_RIEMANN_FLAT)
@@ -199,8 +201,19 @@ vec3 Mandelbrot()
         vec3 pos = normalize(vec3(rotatedY.x, rotatedY.y, rotatedY.z));
         riemannAdjustment = (1 + (pos.z + 1)/(1 - pos.z)) / 2.0;
         float r = pos.x*riemannAdjustment / pow(2,zoom);
+
         float i = pos.y*riemannAdjustment / pow(2,zoom);
     
+        c = vec2(r + center.x, i + center.y);
+    }
+    else if (proj == PROJ_RIEMANN_SPHERE)
+    {
+        vec3 pos = normalize(vec3(FragPosModel.x, FragPosModel.y, FragPosModel.z));
+        float tmp = (1 + (pos.y + 1)/(1 - pos.y)) / 2.0 / pow(2,zoom);
+        float r = pos.x*tmp;
+        float i = pos.z*tmp;
+    
+        // Initialize image center
         c = vec2(r + center.x, i + center.y);
     }
 
@@ -514,7 +527,7 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
 
     if (splitInteriorExterior && iter >= maxIterations && i_useTexture)
     {
-        vec2 tex = vec2(pow(atan(FragPos.y, FragPos.x),2), GetSmoothIter(iter, z));
+        vec2 tex = vec2(pow(atan(FragPosModel.y, FragPosModel.x),2), GetSmoothIter(iter, z));   //@pass c here
 
         color = mix(color, texture(texture1, tex * vec2(i_textureScaleX, i_textureScaleY)).xyz, i_textureBlend);
     }
@@ -525,7 +538,7 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
         //vec2 tex = vec2(mod(1,log(GetSmoothIter(iter, z))), atan(z.y, z.x));
         //vec2 tex = vec2(atan(z.y, z.x), length(z));
         //vec2 tex = vec2(atan(FragPos.y, FragPos.x), GetSmoothIter(iter, z));
-        vec2 tex = vec2(pow(atan(FragPos.y, FragPos.x),2), GetSmoothIter(iter, z));
+        vec2 tex = vec2(pow(atan(FragPosModel.y, FragPosModel.x),2), GetSmoothIter(iter, z));   //@pass c here
         //vec2 tex = vec2(pow(atan(FragPos.y, FragPos.x),2), mod(1,GetSmoothIter(iter, z)));
 
         color = mix(color, texture(texture0, tex * vec2(textureScaleX, textureScaleY)).xyz, textureBlend);
@@ -1200,7 +1213,6 @@ vec2 c_pow(vec2 c, float a)
     float theta = atan(c.y, c.x);   
     return isnan(r) || isnan(theta) ? c : pow(r, a) * vec2(cos(theta * a), sin(theta * a));
 }
-
 vec2 c_rotate(vec2 c, float a)
 {
    return c_mul(c, vec2(cos(a), sin(a)));

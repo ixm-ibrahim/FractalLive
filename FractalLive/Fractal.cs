@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FractalLive
 {
-    class Fractal
+    public class Fractal
     {
         #region Enumerations
         public enum Type
@@ -38,7 +38,7 @@ namespace FractalLive
 
         public enum Projection
         {
-            Normal, Riemann_Flat, Riemann_Sphere
+            Cartesian, Riemann_Flat, Riemann_Sphere
         }
 
         public enum Editing
@@ -66,7 +66,7 @@ namespace FractalLive
                 Type = type;
                 Formula = formula;
                 InitialDisplayRadius = new FloatBounds(2, .01f, 100);
-                Projection = Projection.Normal;
+                Projection = Projection.Cartesian;
                 IsJulia = false;
                 IsJuliaCentered = false;
                 Julia = new Vector2(-0.4f, 0.6f);

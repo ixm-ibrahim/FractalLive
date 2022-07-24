@@ -55,6 +55,9 @@ namespace FractalLive
                 // zooming
                 keysDown[Keys.R] = false;
                 keysDown[Keys.F] = false;
+                // axes
+                keysDown[Keys.OemSemicolon] = false;
+                keysDown[Keys.OemQuotes] = false;
                 // riemann center
                 keysDown[Keys.I] = false;
                 keysDown[Keys.J] = false;
@@ -120,11 +123,11 @@ namespace FractalLive
         {
             TexturedVertex[] plane =
             {
-                new TexturedVertex(-1,-1,0,0,0,0,0,0),  //  1,-1 +----+ 1,1
-                new TexturedVertex(-1, 1,0,0,0,0,0,1),  //       |   /|
+                new TexturedVertex(-1, 1,0,0,0,0,0,1),  //  1,-1 +----+ 1,1
+                new TexturedVertex(-1,-1,0,0,0,0,0,0),  //       |   /|
                 new TexturedVertex( 1, 1,0,0,0,0,1,1),  //       |  / |
-                new TexturedVertex( 1,-1,0,0,0,0,1,0),  //       | /  |
-                new TexturedVertex(-1,-1,0,0,0,0,0,0),  //       |/   |
+                new TexturedVertex(-1,-1,0,0,0,0,0,0),  //       | /  |
+                new TexturedVertex( 1,-1,0,0,0,0,1,0),  //       |/   |
                 new TexturedVertex( 1, 1,0,0,0,0,1,1),  // -1,-1 +----+ -1,1
             };
 
@@ -141,6 +144,25 @@ namespace FractalLive
 
             GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
             GL.EnableVertexAttribArray(1);
+
+            // --------------------------------------------------------------
+
+            vboSphere = GL.GenBuffer();
+            vaoSphere = GL.GenVertexArray();
+
+            GL.BindVertexArray(vaoSphere);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vboSphere);
+            GL.BufferData(BufferTarget.ArrayBuffer, sphereVertices.Length * TexturedVertex.Size, sphereVertices, BufferUsageHint.StaticDraw);
+
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+            GL.EnableVertexAttribArray(0);
+
+            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
+            GL.EnableVertexAttribArray(1);
+
+            GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+            GL.EnableVertexAttribArray(2);
         }
 
         private void InitShaders()
@@ -256,11 +278,20 @@ namespace FractalLive
 
             if (currentFractal == Fractal.Type.Mandelbrot)
             {
-                mandelbrot.Use();
-                GL.BindVertexArray(vaoPlane);
-                GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
+                shader.Use();
 
-                mandelbrotCamera.Render();
+                if (CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere)
+                {
+                    GL.BindVertexArray(vaoSphere);
+                    GL.DrawArrays(PrimitiveType.Triangles, 0, sphereVertices.Length);
+                }
+                else
+                {
+                    GL.BindVertexArray(vaoPlane);
+                    GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
+                }
+
+                camera.Render();
             }
 
             glControl.SwapBuffers();
@@ -367,7 +398,7 @@ namespace FractalLive
             glControl_Resize(glControl, EventArgs.Empty);
 
             GL.Enable(EnableCap.DepthTest);
-            //GL.Enable(EnableCap.CullFace);
+            GL.Enable(EnableCap.CullFace);
             //GL.CullFace(CullFaceMode.Back);
             //GL.FrontFace(FrontFaceDirection.Cw);
 
@@ -387,6 +418,8 @@ namespace FractalLive
             // Delete all the resources.
             GL.DeleteBuffer(vboPlane);
             GL.DeleteVertexArray(vaoPlane);
+            GL.DeleteBuffer(vboSphere);
+            GL.DeleteVertexArray(vaoSphere);
 
             GL.DeleteProgram(mandelbrot.Handle);
         }
@@ -628,45 +661,65 @@ namespace FractalLive
             }
 
             // keyboard controls
-            if (CurrentCamera.CurrentMode == Camera.Mode.FLAT)
+            switch (CurrentCamera.CurrentMode)
             {
-                if (inputState.IsMovementKeyDown())
+                case Camera.Mode.Flat:
                 {
-                    float rad = MathHelper.DegreesToRadians(CurrentCamera.Roll);
-                    float rad90 = rad + MathHelper.Pi / 2;
-                    float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2, CurrentSettings.Zoom);
-
-                    float delta = modifier * 3;
-                    float deltaX = inputState.keysDown[Keys.D] ? delta : (inputState.keysDown[Keys.A] ? -delta : 0);
-                    float deltaY = inputState.keysDown[Keys.W] ? delta : (inputState.keysDown[Keys.S] ? -delta : 0);
-
-                    CurrentSettings.Center += new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad)) * (float)deltaX * factor;
-                    CurrentSettings.Center += new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90)) * (float)deltaY * factor;
-
-                    input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
-                }
-                if (inputState.keysDown[Keys.Q] || inputState.keysDown[Keys.E])
-                {
-                    CurrentCamera.Roll -= modifier / 2 * (inputState.keysDown[Keys.Q] ? 1 : -1);
-                }
-                if (inputState.keysDown[Keys.R] || inputState.keysDown[Keys.F])
-                {
-                    CurrentSettings.Zoom += modifier / 40 * (inputState.keysDown[Keys.R] ? 1 : -1);
-                    input_Zoom.Text = CurrentSettings.Zoom.ToString();
-
-                    if (!checkBox_LockZoomFactor.Checked)
+                    if (inputState.IsMovementKeyDown())
                     {
-                        CurrentSettings.LockedZoom = CurrentSettings.Zoom;
-                        input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
-                    }
-                }
+                        float rad = MathHelper.DegreesToRadians(CurrentCamera.Roll);
+                        float rad90 = rad + MathHelper.Pi / 2;
+                        float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2, CurrentSettings.Zoom);
 
-                if (CurrentSettings.Projection == Fractal.Projection.Riemann_Flat)
+                        float delta = modifier * 3;
+                        float deltaX = inputState.keysDown[Keys.D] ? delta : (inputState.keysDown[Keys.A] ? -delta : 0);
+                        float deltaY = inputState.keysDown[Keys.W] ? delta : (inputState.keysDown[Keys.S] ? -delta : 0);
+
+                        CurrentSettings.Center += new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad)) * (float)deltaX * factor;
+                        CurrentSettings.Center += new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90)) * (float)deltaY * factor;
+
+                        input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
+                    }
+                    if (inputState.keysDown[Keys.Q] || inputState.keysDown[Keys.E])
+                    {
+                        CurrentCamera.Roll -= modifier / 2 * (inputState.keysDown[Keys.Q] ? 1 : -1);
+                    }
+                    if (inputState.keysDown[Keys.R] || inputState.keysDown[Keys.F])
+                    {
+                        CurrentSettings.Zoom += modifier / 40 * (inputState.keysDown[Keys.R] ? 1 : -1);
+                        input_Zoom.Text = CurrentSettings.Zoom.ToString();
+
+                        if (!checkBox_LockZoomFactor.Checked)
+                        {
+                            CurrentSettings.LockedZoom = CurrentSettings.Zoom;
+                            input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
+                        }
+                    }
+
+                    if (CurrentSettings.Projection == Fractal.Projection.Riemann_Flat)
+                    {
+                        if (inputState.keysDown[Keys.I] || inputState.keysDown[Keys.K])
+                            CurrentSettings.RiemannAngles.X -= modifier / 50 * (inputState.keysDown[Keys.I] ? 1 : -1);
+                        if (inputState.keysDown[Keys.J] || inputState.keysDown[Keys.L])
+                            CurrentSettings.RiemannAngles.Y -= modifier / 50 * (inputState.keysDown[Keys.J] ? 1 : -1);
+                    }
+
+                    break;
+                }
+                case Camera.Mode.FPS:
+                case Camera.Mode.Free:
                 {
-                    if (inputState.keysDown[Keys.I] || inputState.keysDown[Keys.K])
-                        CurrentSettings.RiemannAngles.X -= modifier / 50 * (inputState.keysDown[Keys.I] ? 1 : -1);
-                    if (inputState.keysDown[Keys.J] || inputState.keysDown[Keys.L])
-                        CurrentSettings.RiemannAngles.Y -= modifier / 50 * (inputState.keysDown[Keys.J] ? 1 : -1);
+                    if (inputState.IsMovementKeyDown())
+                    {
+                        float delta = modifier * 3;
+                        float deltaSide = inputState.keysDown[Keys.D] ? delta : (inputState.keysDown[Keys.A] ? -delta : 0);
+                        float deltaForward = inputState.keysDown[Keys.W] ? delta : (inputState.keysDown[Keys.S] ? -delta : 0);
+
+                        if (deltaSide != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Right, deltaSide);
+                        if (deltaForward != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Direction, deltaForward);
+                    }
+
+                    break;
                 }
             }
 
@@ -700,7 +753,7 @@ namespace FractalLive
             {
                 Cursor.Position = new System.Drawing.Point(inputState.PreviousMouseX, inputState.PreviousMouseY);
 
-                if (CurrentCamera.CurrentMode == Camera.Mode.FLAT)
+                if (CurrentCamera.CurrentMode == Camera.Mode.Flat)
                 {
                     float rad = MathHelper.DegreesToRadians(CurrentCamera.Roll);
                     float rad90 = rad + MathHelper.Pi / 2;
@@ -895,9 +948,16 @@ namespace FractalLive
         private void glControl_KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == ' ')
+            {
                 CurrentSettings.Projection = (Fractal.Projection)(((int)CurrentSettings.Projection + 1) % 3);
+                CurrentCamera.ChangeMode(CurrentSettings.Projection);
+            }
             if (e.KeyChar == '.')
                 pauseTime = !pauseTime;
+            if (e.KeyChar == ';')
+                CurrentCamera.CurrentSettings.showTarget = !CurrentCamera.CurrentSettings.showTarget;
+            if (e.KeyChar == '.')
+                CurrentCamera.CurrentSettings.showAxis = !CurrentCamera.CurrentSettings.showAxis;
         }
 
         #endregion
@@ -1853,6 +1913,8 @@ namespace FractalLive
         private Camera customCamera;
 
         private int vboPlane, vaoPlane;
+        private int vboSphere, vaoSphere;
+        TexturedVertex[] sphereVertices = new IcoSphere().Create(5, 1, true);
 
         Texture texture0, texture1;
 

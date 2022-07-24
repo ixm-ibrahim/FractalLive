@@ -13,7 +13,7 @@ namespace FractalLive
         #region Enumerations
         public enum Mode
         {
-            FLAT, FPS, FREE
+            Flat, FPS, Free
         }
 
         public enum Projection
@@ -40,7 +40,7 @@ namespace FractalLive
 
             public Settings(Mode mode, float fov = 67.5f, Projection projection = Projection.CARTESIAN, bool showTarget = false, bool showAxis = false, float moveSpeed = .03f, float panSpeed = .015f, float turnSpeed = .2f, float zoomSpeed = .1f, float mouseSensitivity = .2f, float nearClipping = 0.1f, float farClipping = 100f)
             {
-                this.mode = Mode.FLAT;
+                this.mode = Mode.Flat;
                 this.projection = Projection.CARTESIAN;
                 this.fov = MathHelper.DegreesToRadians(fov);
                 this.showTarget = showTarget;
@@ -59,9 +59,12 @@ namespace FractalLive
         #region Constructors
         public Camera(int aspectRatio = 1)
         {
-            flatSettings = new Settings(Mode.FLAT, 45.0f);
-            freeSettings = new Settings(Mode.FREE, 67.5f);
-            currentSettings = flatSettings;
+            flatSettings = new Settings(Mode.Flat, 45.0f);
+            freeSettings = new Settings(Mode.Free, 67.5f);
+
+
+            CurrentMode = Mode.Flat;
+            CurrentSettings = flatSettings;
             
             FullScreen = false;
             AspectRatio = aspectRatio;
@@ -154,7 +157,7 @@ namespace FractalLive
             if (aspectRatio != 0)
                 AspectRatio = aspectRatio;
 
-            if (currentSettings.showTarget || currentSettings.showAxis)
+            if (CurrentSettings.showTarget || CurrentSettings.showAxis)
             {
                 shader.Use();
 
@@ -163,7 +166,7 @@ namespace FractalLive
 
                 GL.LineWidth(3);
 
-                if (currentSettings.showAxis)
+                if (CurrentSettings.showAxis)
                 {
                     GL.BindVertexArray(vaoAxis);
 
@@ -172,7 +175,7 @@ namespace FractalLive
                     GL.DrawArrays(PrimitiveType.Lines, 0, 6);
                 }
 
-                if (currentSettings.showTarget)
+                if (CurrentSettings.showTarget)
                 {
                     GL.BindVertexArray(vaoTarget);
 
@@ -190,17 +193,11 @@ namespace FractalLive
 
         public void ChangeMode(Mode newMode)
         {
-            if (currentSettings.mode != newMode)
-                if (currentSettings.mode == Mode.FLAT)
-                {
-                    flatSettings = currentSettings;
-                    currentSettings = freeSettings;
-                }
-                else
-                {
-                    freeSettings = currentSettings;
-                    currentSettings = flatSettings;
-                }
+            CurrentMode = newMode;
+        }
+        public void ChangeMode(Fractal.Projection projection)
+        {
+            CurrentMode = projection == Fractal.Projection.Riemann_Sphere ? Mode.Free : Mode.Flat;
         }
 
         public void UpdateTargetDistance()
@@ -224,14 +221,14 @@ namespace FractalLive
         // Gets the projection matrix @DOES NOT WORK AS INTENDED
         public Matrix4 GetOrthographicMatrix(int Width, int Height)
         {
-            return Matrix4.CreateOrthographic(Width, Height, currentSettings.nearClipping, currentSettings.farClipping);
+            return Matrix4.CreateOrthographic(Width, Height, CurrentSettings.nearClipping, CurrentSettings.farClipping);
             //return Matrix4.LookAt(Position, Direction + direction, Up);
         }
 
         // Gets the projection matrix
         public Matrix4 GetProjectionMatrix()
         {
-            return Matrix4.CreatePerspectiveFieldOfView(currentSettings.fov, AspectRatio, currentSettings.nearClipping, currentSettings.farClipping);
+            return Matrix4.CreatePerspectiveFieldOfView(CurrentSettings.fov, AspectRatio, CurrentSettings.nearClipping, CurrentSettings.farClipping);
             //return Matrix4.CreatePerspectiveFieldOfView(fov, AspectRatio, 0.0001f, targetDistance * 10);
         }
 
@@ -243,7 +240,7 @@ namespace FractalLive
         public void MoveAlongAxis(Vector3 axis, float distance, bool updateTarget = true)
         {
             UpdateTargetDistance();
-            position += axis * distance * currentSettings.moveSpeed;
+            position += axis * distance * CurrentSettings.moveSpeed;
 
             if (updateTarget)
                 UpdateTarget();
@@ -256,18 +253,18 @@ namespace FractalLive
         public void Zoom(float distance = 1)
         {
             //MoveAlongAxis(direction, currentSettings.zoomSpeed * distance * targetDistance, false);
-            MoveAlongAxis(direction, currentSettings.zoomSpeed * distance * (position - position.Normalized()).Length, false);
+            MoveAlongAxis(direction, CurrentSettings.zoomSpeed * distance * (position - position.Normalized()).Length, false);
         }
 
         public void ZoomAlongAxis(Vector3 axis, float distance)
         {
-            MoveAlongAxis(axis, currentSettings.zoomSpeed * distance * targetDistance, false);
+            MoveAlongAxis(axis, CurrentSettings.zoomSpeed * distance * targetDistance, false);
         }
 
         public void ZoomTarget(Vector3 target, float distance, bool updateTarget = true)
         {
             UpdateTargetDistance();
-            MoveAlongAxis((target - position).Normalized(), currentSettings.zoomSpeed * distance * targetDistance, false);
+            MoveAlongAxis((target - position).Normalized(), CurrentSettings.zoomSpeed * distance * targetDistance, false);
 
             if (updateTarget)
                 UpdateTarget();
@@ -294,7 +291,7 @@ namespace FractalLive
         public void RotateZ(float angle, bool updateTarget = true)
         {
             UpdateTargetDistance();
-            ArcBall(Vector3.UnitZ, angle);
+            ArcBall(-Vector3.UnitZ, angle);
 
             if (updateTarget)
                 UpdateTarget();
@@ -306,10 +303,10 @@ namespace FractalLive
             UpdateTargetDistance();
 
             if (mode == Mode.FPS)
-                Yaw += angle * currentSettings.turnSpeed;
+                Yaw += angle * CurrentSettings.turnSpeed;
             else
                 //RotateVectors(Quaternion.FromAxisAngle(MathHelper.DegreesToRadians(angle * currentSettings.turnSpeed), new Vector3D(up)));
-                RotateVectors(Quaternion.FromAxisAngle(up, MathHelper.DegreesToRadians(angle * currentSettings.turnSpeed)));
+                RotateVectors(Quaternion.FromAxisAngle(up, MathHelper.DegreesToRadians(angle * CurrentSettings.turnSpeed)));
 
             if (updateTarget)
                 UpdateTarget();
@@ -320,10 +317,10 @@ namespace FractalLive
             UpdateTargetDistance();
 
             if (mode == Mode.FPS)
-                Pitch += angle * currentSettings.turnSpeed;
+                Pitch += angle * CurrentSettings.turnSpeed;
             else
                 //RotateVectors(Quaternion.FromAxisAngle(MathHelper.DegreesToRadians(angle * turnSpeed), new Vector3D(right)));
-                RotateVectors(Quaternion.FromAxisAngle(right, MathHelper.DegreesToRadians(angle * currentSettings.turnSpeed)));
+                RotateVectors(Quaternion.FromAxisAngle(right, MathHelper.DegreesToRadians(angle * CurrentSettings.turnSpeed)));
 
             if (updateTarget)
                 UpdateTarget();
@@ -334,7 +331,7 @@ namespace FractalLive
             UpdateTargetDistance();
 
             //RotateVectors(Quaternion.FromAxisAngle(MathHelper.DegreesToRadians(angle * turnSpeed), new Vector3D(direction)));
-            RotateVectors(Quaternion.FromAxisAngle(direction, MathHelper.DegreesToRadians(angle * currentSettings.turnSpeed)));
+            RotateVectors(Quaternion.FromAxisAngle(direction, MathHelper.DegreesToRadians(angle * CurrentSettings.turnSpeed)));
 
             if (updateTarget)
                 UpdateTarget();
@@ -361,9 +358,9 @@ namespace FractalLive
             position -= (aroundOrigin ? Vector3.Zero : target);
 
             if (mode == Mode.FPS)
-                Yaw += angle * currentSettings.turnSpeed;
+                Yaw += angle * CurrentSettings.turnSpeed;
             else
-                RotateVectors(Quaternion.FromAxisAngle(up, MathHelper.DegreesToRadians(currentSettings.turnSpeed * angle)));
+                RotateVectors(Quaternion.FromAxisAngle(up, MathHelper.DegreesToRadians(CurrentSettings.turnSpeed * angle)));
 
             position = (direction * -position.Length) + (aroundOrigin ? Vector3.Zero : target);
 
@@ -376,9 +373,9 @@ namespace FractalLive
             position -= (aroundOrigin ? Vector3.Zero : target);
 
             if (mode == Mode.FPS)
-                Pitch += angle * currentSettings.turnSpeed;
+                Pitch += angle * CurrentSettings.turnSpeed;
             else
-                RotateVectors(Quaternion.FromAxisAngle(right, MathHelper.DegreesToRadians(currentSettings.turnSpeed * angle)));
+                RotateVectors(Quaternion.FromAxisAngle(right, MathHelper.DegreesToRadians(CurrentSettings.turnSpeed * angle)));
 
             position = (direction * -position.Length) + (aroundOrigin ? Vector3.Zero : target);
 
@@ -389,9 +386,9 @@ namespace FractalLive
         public void ArcBall(Vector3 axis, float angle, bool aroundOrigin = true)
         {
             //RotateVectors(Quaternion.FromAxisAngle(turnSpeed * MathHelper.DegreesToRadians(angle), new Vector3D(axis)));
-            RotateVectors(Quaternion.FromAxisAngle(axis, currentSettings.turnSpeed * MathHelper.DegreesToRadians(angle)));
+            RotateVectors(Quaternion.FromAxisAngle(axis, CurrentSettings.turnSpeed * MathHelper.DegreesToRadians(angle)));
 
-            position = (Vector3.UnitZ * -position.Length) + (aroundOrigin ? Vector3.Zero : target);
+            position = (-Vector3.UnitZ * -position.Length) + (aroundOrigin ? Vector3.Zero : target);
 
             if (aroundOrigin)
                 UpdateTarget();
@@ -455,28 +452,40 @@ namespace FractalLive
 
         public bool Is3D()
         {
-            return CurrentMode != Mode.FLAT;
+            return CurrentMode != Mode.Flat;
         }
 
         #endregion
 
         #region Properties
+        public Mode CurrentMode { get; private set; }
+
         public float AspectRatio { get; set; }
-        public Settings CurrentSettings => currentSettings;
+        public ref Settings CurrentSettings
+        {
+            get
+            {
+                if (CurrentMode == Mode.Flat)
+                    return ref flatSettings;
+
+                return ref freeSettings;
+            }
+        }
+        public Vector3 Right => right;
+        public Vector3 Direction => direction;
+        public float CurrentMoveSpeed => CurrentSettings.moveSpeed;
+        public float CurrentZoomSpeed => CurrentSettings.zoomSpeed;
+        public float CurrentPanSpeed => CurrentSettings.panSpeed;
         public bool FullScreen { get; set; }
         public bool Lock { get; set; }
-        public Mode CurrentMode => CurrentSettings.mode;
-        public float CurrentMoveSpeed => CurrentSettings.moveSpeed;
-        public float CurrentPanSpeed => CurrentSettings.panSpeed;
-        public float CurrentZoomSpeed => CurrentSettings.zoomSpeed;
 
 
         // Changing this can simulate a zoom
         public float FOV
         {
-            get => MathHelper.RadiansToDegrees(currentSettings.fov);
+            get => MathHelper.RadiansToDegrees(CurrentSettings.fov);
 
-            set => currentSettings.fov = MathHelper.DegreesToRadians(value);
+            set => CurrentSettings.fov = MathHelper.DegreesToRadians(value);
         }
 
         public float Pitch
@@ -522,7 +531,6 @@ namespace FractalLive
         float pitch = 0;
         float roll = 0;
 
-        private Settings currentSettings;
         private Settings flatSettings;
         private Settings freeSettings;
 
