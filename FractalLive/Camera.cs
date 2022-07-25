@@ -368,7 +368,7 @@ namespace FractalLive
             position -= (aroundOrigin ? Vector3.Zero : target);
             float dist = targetDistance - minusRadius;
 
-            if (CurrentMode == Mode.FPS)
+            if (CurrentMode == Mode.FPS && angle != 0)
                 Yaw += angle * CurrentSettings.turnSpeed;
             else
                 RotateVectors(Quaternion.FromAxisAngle(up, MathHelper.DegreesToRadians(CurrentSettings.turnSpeed * (dist < 0 ? 0 : dist) * angle)));
@@ -384,7 +384,7 @@ namespace FractalLive
             position -= (aroundOrigin ? Vector3.Zero : target);
             float dist = targetDistance - minusRadius;
 
-            if (CurrentMode == Mode.FPS)
+            if (CurrentMode == Mode.FPS && angle != 0)
                 Pitch += angle * CurrentSettings.turnSpeed;
             else
                 RotateVectors(Quaternion.FromAxisAngle(right, MathHelper.DegreesToRadians(CurrentSettings.turnSpeed * (dist < 0 ? 0 : dist) * angle)));
