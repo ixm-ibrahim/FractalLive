@@ -129,8 +129,8 @@
             this.label_ColorFactors = new System.Windows.Forms.Label();
             this.input_ColorFactor = new System.Windows.Forms.TextBox();
             this.input_Center = new System.Windows.Forms.TextBox();
-            this.label_Center = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.label_FractalCenter = new System.Windows.Forms.Label();
+            this.label_FractalZoom = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
             this.panel_ColorMenu = new System.Windows.Forms.Panel();
             this.input_TextureScaleY = new System.Windows.Forms.TextBox();
@@ -168,6 +168,13 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.input_LockedZoom = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.input_CameraPosition = new System.Windows.Forms.TextBox();
+            this.label_CameraOrientation = new System.Windows.Forms.Label();
+            this.input_CameraZoom = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.input_CameraDirection = new System.Windows.Forms.TextBox();
+            this.input_RiemannAngles = new System.Windows.Forms.TextBox();
+            this.label_RiemannAngles = new System.Windows.Forms.Label();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -519,22 +526,24 @@
             // 
             // glControl
             // 
-            this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.glControl.API = OpenTK.Windowing.Common.ContextAPI.OpenGL;
             this.glControl.APIVersion = new System.Version(3, 3, 0, 0);
             this.glControl.Flags = OpenTK.Windowing.Common.ContextFlags.Default;
             this.glControl.IsEventDriven = true;
             this.glControl.Location = new System.Drawing.Point(12, 24);
+            this.glControl.MinimumSize = new System.Drawing.Size(500, 309);
             this.glControl.Name = "glControl";
             this.glControl.Profile = OpenTK.Windowing.Common.ContextProfile.Compatability;
-            this.glControl.Size = new System.Drawing.Size(500, 697);
+            this.glControl.Size = new System.Drawing.Size(500, 664);
             this.glControl.TabIndex = 2;
             this.glControl.Text = "glControl1";
             // 
             // button_Left
             // 
-            this.button_Left.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Left.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Left.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Left.Location = new System.Drawing.Point(521, 728);
             this.button_Left.Name = "button_Left";
@@ -545,9 +554,9 @@
             // 
             // button_Right
             // 
-            this.button_Right.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Right.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Right.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Right.Location = new System.Drawing.Point(623, 728);
+            this.button_Right.Location = new System.Drawing.Point(624, 728);
             this.button_Right.Name = "button_Right";
             this.button_Right.Size = new System.Drawing.Size(50, 25);
             this.button_Right.TabIndex = 22;
@@ -709,7 +718,7 @@
             // 
             // button_Menu1
             // 
-            this.button_Menu1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Menu1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu1.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Menu1.Location = new System.Drawing.Point(521, 696);
             this.button_Menu1.Name = "button_Menu1";
@@ -731,7 +740,7 @@
             // 
             // button_Menu2
             // 
-            this.button_Menu2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Menu2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu2.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Menu2.Location = new System.Drawing.Point(560, 696);
             this.button_Menu2.Name = "button_Menu2";
@@ -752,7 +761,7 @@
             // 
             // button_Menu3
             // 
-            this.button_Menu3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Menu3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu3.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Menu3.Location = new System.Drawing.Point(599, 696);
             this.button_Menu3.Name = "button_Menu3";
@@ -776,7 +785,7 @@
             // 
             // button_Menu4
             // 
-            this.button_Menu4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Menu4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu4.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Menu4.Location = new System.Drawing.Point(639, 696);
             this.button_Menu4.Name = "button_Menu4";
@@ -789,7 +798,7 @@
             // panel_FormulaMenu
             // 
             this.panel_FormulaMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_FormulaMenu.AutoScroll = true;
             this.panel_FormulaMenu.CausesValidation = false;
             this.panel_FormulaMenu.Controls.Add(this.input_FoldCount);
@@ -893,7 +902,7 @@
             // checkBox_UseConjugate
             // 
             this.checkBox_UseConjugate.AutoSize = true;
-            this.checkBox_UseConjugate.Location = new System.Drawing.Point(5, 133);
+            this.checkBox_UseConjugate.Location = new System.Drawing.Point(8, 133);
             this.checkBox_UseConjugate.Name = "checkBox_UseConjugate";
             this.checkBox_UseConjugate.Size = new System.Drawing.Size(103, 19);
             this.checkBox_UseConjugate.TabIndex = 87;
@@ -924,7 +933,7 @@
             // label_BuddhabrotType
             // 
             this.label_BuddhabrotType.AutoSize = true;
-            this.label_BuddhabrotType.Location = new System.Drawing.Point(3, 344);
+            this.label_BuddhabrotType.Location = new System.Drawing.Point(3, 317);
             this.label_BuddhabrotType.Name = "label_BuddhabrotType";
             this.label_BuddhabrotType.Size = new System.Drawing.Size(34, 15);
             this.label_BuddhabrotType.TabIndex = 83;
@@ -940,7 +949,7 @@
             "Normal",
             "Inverse",
             "Nebulabrot"});
-            this.input_BuddhabrotType.Location = new System.Drawing.Point(69, 341);
+            this.input_BuddhabrotType.Location = new System.Drawing.Point(69, 314);
             this.input_BuddhabrotType.Name = "input_BuddhabrotType";
             this.input_BuddhabrotType.Size = new System.Drawing.Size(86, 23);
             this.input_BuddhabrotType.TabIndex = 84;
@@ -948,7 +957,7 @@
             // checkBox_UseBuddhabrot
             // 
             this.checkBox_UseBuddhabrot.AutoSize = true;
-            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(4, 322);
+            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(8, 295);
             this.checkBox_UseBuddhabrot.Name = "checkBox_UseBuddhabrot";
             this.checkBox_UseBuddhabrot.Size = new System.Drawing.Size(111, 19);
             this.checkBox_UseBuddhabrot.TabIndex = 65;
@@ -980,7 +989,7 @@
             // panel_OrbitTrapMenu
             // 
             this.panel_OrbitTrapMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_OrbitTrapMenu.AutoScroll = true;
             this.panel_OrbitTrapMenu.Controls.Add(this.input_SecondValueFactor2);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_SecondValueFactors);
@@ -1271,7 +1280,7 @@
             // 
             this.checkBox_LockZoomFactor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_LockZoomFactor.AutoSize = true;
-            this.checkBox_LockZoomFactor.Location = new System.Drawing.Point(365, 733);
+            this.checkBox_LockZoomFactor.Location = new System.Drawing.Point(353, 700);
             this.checkBox_LockZoomFactor.Name = "checkBox_LockZoomFactor";
             this.checkBox_LockZoomFactor.Size = new System.Drawing.Size(122, 19);
             this.checkBox_LockZoomFactor.TabIndex = 38;
@@ -1315,9 +1324,9 @@
             // input_Center
             // 
             this.input_Center.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_Center.Location = new System.Drawing.Point(57, 730);
+            this.input_Center.Location = new System.Drawing.Point(59, 698);
             this.input_Center.Name = "input_Center";
-            this.input_Center.Size = new System.Drawing.Size(141, 23);
+            this.input_Center.Size = new System.Drawing.Size(145, 23);
             this.input_Center.TabIndex = 55;
             this.input_Center.Text = "0, 0";
             this.input_Center.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
@@ -1325,34 +1334,34 @@
             this.input_Center.Validating += new System.ComponentModel.CancelEventHandler(this.input_Center_Validating);
             this.input_Center.Validated += new System.EventHandler(this.input_Center_Validated);
             // 
-            // label_Center
+            // label_FractalCenter
             // 
-            this.label_Center.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label_Center.AutoSize = true;
-            this.label_Center.Location = new System.Drawing.Point(12, 734);
-            this.label_Center.Name = "label_Center";
-            this.label_Center.Size = new System.Drawing.Size(45, 15);
-            this.label_Center.TabIndex = 56;
-            this.label_Center.Text = "Center:";
-            this.label_Center.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_FractalCenter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label_FractalCenter.AutoSize = true;
+            this.label_FractalCenter.Location = new System.Drawing.Point(13, 701);
+            this.label_FractalCenter.Name = "label_FractalCenter";
+            this.label_FractalCenter.Size = new System.Drawing.Size(45, 15);
+            this.label_FractalCenter.TabIndex = 56;
+            this.label_FractalCenter.Text = "Center:";
+            this.label_FractalCenter.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label2
+            // label_FractalZoom
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(204, 734);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 15);
-            this.label2.TabIndex = 58;
-            this.label2.Text = "Zoom: ";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_FractalZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label_FractalZoom.AutoSize = true;
+            this.label_FractalZoom.Location = new System.Drawing.Point(208, 703);
+            this.label_FractalZoom.Name = "label_FractalZoom";
+            this.label_FractalZoom.Size = new System.Drawing.Size(45, 15);
+            this.label_FractalZoom.TabIndex = 58;
+            this.label_FractalZoom.Text = "Zoom: ";
+            this.label_FractalZoom.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // input_Zoom
             // 
             this.input_Zoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_Zoom.Location = new System.Drawing.Point(249, 730);
+            this.input_Zoom.Location = new System.Drawing.Point(250, 698);
             this.input_Zoom.Name = "input_Zoom";
-            this.input_Zoom.Size = new System.Drawing.Size(52, 23);
+            this.input_Zoom.Size = new System.Drawing.Size(45, 23);
             this.input_Zoom.TabIndex = 57;
             this.input_Zoom.Text = "0";
             this.input_Zoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
@@ -1813,9 +1822,9 @@
             // input_LockedZoom
             // 
             this.input_LockedZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_LockedZoom.Location = new System.Drawing.Point(307, 730);
+            this.input_LockedZoom.Location = new System.Drawing.Point(298, 698);
             this.input_LockedZoom.Name = "input_LockedZoom";
-            this.input_LockedZoom.Size = new System.Drawing.Size(52, 23);
+            this.input_LockedZoom.Size = new System.Drawing.Size(45, 23);
             this.input_LockedZoom.TabIndex = 60;
             this.input_LockedZoom.Text = "0";
             this.input_LockedZoom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
@@ -1828,19 +1837,95 @@
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
             // 
+            // input_CameraPosition
+            // 
+            this.input_CameraPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.input_CameraPosition.Location = new System.Drawing.Point(83, 725);
+            this.input_CameraPosition.Name = "input_CameraPosition";
+            this.input_CameraPosition.Size = new System.Drawing.Size(82, 23);
+            this.input_CameraPosition.TabIndex = 61;
+            this.input_CameraPosition.Text = "0, 0, 0";
+            // 
+            // label_CameraOrientation
+            // 
+            this.label_CameraOrientation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label_CameraOrientation.AutoSize = true;
+            this.label_CameraOrientation.Location = new System.Drawing.Point(12, 728);
+            this.label_CameraOrientation.Name = "label_CameraOrientation";
+            this.label_CameraOrientation.Size = new System.Drawing.Size(70, 15);
+            this.label_CameraOrientation.TabIndex = 62;
+            this.label_CameraOrientation.Text = "Orientation:";
+            this.label_CameraOrientation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_CameraZoom
+            // 
+            this.input_CameraZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.input_CameraZoom.Location = new System.Drawing.Point(298, 725);
+            this.input_CameraZoom.Name = "input_CameraZoom";
+            this.input_CameraZoom.Size = new System.Drawing.Size(45, 23);
+            this.input_CameraZoom.TabIndex = 63;
+            this.input_CameraZoom.Text = "0";
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(257, 728);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(45, 15);
+            this.label2.TabIndex = 64;
+            this.label2.Text = "Zoom: ";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_CameraDirection
+            // 
+            this.input_CameraDirection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.input_CameraDirection.Location = new System.Drawing.Point(169, 725);
+            this.input_CameraDirection.Name = "input_CameraDirection";
+            this.input_CameraDirection.Size = new System.Drawing.Size(82, 23);
+            this.input_CameraDirection.TabIndex = 65;
+            this.input_CameraDirection.Text = "0, 0, 0";
+            // 
+            // input_RiemannAngles
+            // 
+            this.input_RiemannAngles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.input_RiemannAngles.Location = new System.Drawing.Point(405, 725);
+            this.input_RiemannAngles.Name = "input_RiemannAngles";
+            this.input_RiemannAngles.Size = new System.Drawing.Size(107, 23);
+            this.input_RiemannAngles.TabIndex = 66;
+            this.input_RiemannAngles.Text = "0, 0";
+            // 
+            // label_RiemannAngles
+            // 
+            this.label_RiemannAngles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label_RiemannAngles.AutoSize = true;
+            this.label_RiemannAngles.Location = new System.Drawing.Point(349, 728);
+            this.label_RiemannAngles.Name = "label_RiemannAngles";
+            this.label_RiemannAngles.Size = new System.Drawing.Size(57, 15);
+            this.label_RiemannAngles.TabIndex = 67;
+            this.label_RiemannAngles.Text = "Riemann:";
+            this.label_RiemannAngles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1104, 762);
-            this.Controls.Add(this.input_LockedZoom);
-            this.Controls.Add(this.panel_ColorMenu);
-            this.Controls.Add(this.glControl);
+            this.Controls.Add(this.input_RiemannAngles);
+            this.Controls.Add(this.label_RiemannAngles);
+            this.Controls.Add(this.input_CameraDirection);
+            this.Controls.Add(this.input_CameraZoom);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.input_Zoom);
-            this.Controls.Add(this.label_Center);
+            this.Controls.Add(this.input_CameraPosition);
+            this.Controls.Add(this.label_CameraOrientation);
             this.Controls.Add(this.input_Center);
             this.Controls.Add(this.checkBox_LockZoomFactor);
+            this.Controls.Add(this.input_LockedZoom);
+            this.Controls.Add(this.input_Zoom);
+            this.Controls.Add(this.label_FractalZoom);
+            this.Controls.Add(this.label_FractalCenter);
+            this.Controls.Add(this.panel_ColorMenu);
+            this.Controls.Add(this.glControl);
             this.Controls.Add(this.LogTextBox);
             this.Controls.Add(this.button_Menu1);
             this.Controls.Add(this.button_Menu2);
@@ -1950,8 +2035,8 @@
         private System.Windows.Forms.TextBox input_OrbitTrapBlendingFactor;
         private System.Windows.Forms.TextBox input_OrbitTrapThicknessFactor;
         private System.Windows.Forms.TextBox input_Center;
-        private System.Windows.Forms.Label label_Center;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label_FractalCenter;
+        private System.Windows.Forms.Label label_FractalZoom;
         private System.Windows.Forms.TextBox input_Zoom;
         private System.Windows.Forms.Panel panel_ColorMenu;
         private System.Windows.Forms.Label label_ColorMenu;
@@ -2007,6 +2092,13 @@
         private System.Windows.Forms.TextBox input_FoldAngle;
         private System.Windows.Forms.Label label_FoldAngle;
         private System.Windows.Forms.TextBox input_FoldCount;
+        private System.Windows.Forms.TextBox input_CameraPosition;
+        private System.Windows.Forms.Label label_CameraOrientation;
+        private System.Windows.Forms.TextBox input_CameraZoom;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox input_CameraDirection;
+        private System.Windows.Forms.TextBox input_RiemannAngles;
+        private System.Windows.Forms.Label label_RiemannAngles;
     }
 }
 

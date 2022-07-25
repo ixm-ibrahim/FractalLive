@@ -324,7 +324,12 @@ namespace FractalLive
             input_BuddhabrotType.Enabled = false;
 
 
-            // Default values
+            // Starting values
+            input_CameraPosition.Enabled = false;
+            input_CameraDirection.Enabled = false;
+            input_CameraZoom.Enabled = false;
+            input_RiemannAngles.Enabled = false;
+
             input_FractalType.SelectedIndex = (int)CurrentSettings.Type;
             input_FractalFormula.SelectedIndex = (int)CurrentSettings.Formula;
             input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
@@ -772,7 +777,7 @@ namespace FractalLive
 
             // update controls
             //Log(CurrentSettings.Projection.ToString());
-            Log(CurrentCamera.TargetDistance.ToString());
+            //Log(CurrentCamera.TargetDistance.ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal
@@ -1021,6 +1026,11 @@ namespace FractalLive
             {
                 CurrentSettings.Projection = (Fractal.Projection)(((int)CurrentSettings.Projection + 1) % 3);
                 CurrentCamera.ChangeMode(CurrentSettings.Projection);
+
+                input_CameraPosition.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere;
+                input_CameraDirection.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere;
+                input_CameraZoom.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere;
+                input_RiemannAngles.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Flat;
             }
             if (e.KeyChar == '.')
                 pauseTime = !pauseTime;

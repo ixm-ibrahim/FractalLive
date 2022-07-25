@@ -34,6 +34,8 @@ showcase how fold offset shows more detail without zooming
 make ints floats so ctrl modifer can be used
 flat riemann camera controls and aspect ratio
 camera axis bug
-camera precision
+camera precision bug
+animation menu
+when no buttons are pressed, don't calulate any values
 
-stripe average coloring, textures, custom, julia set (different shader), julia set matings (different shader), lighting (different shader?) and menu, julia minimap, load save settings, complex power, panel for universal values, doubles and quads
+stripe average coloring, textures, custom, julia set (different shader), julia set matings (different shader), lighting (different shader?) and menu (coloring?), julia minimap, load save settings, complex power, panel for universal values, doubles and quads
