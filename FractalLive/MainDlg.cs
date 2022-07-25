@@ -1695,6 +1695,14 @@ namespace FractalLive
                 input_DomainCalculation.Enabled = true;
             else
                 input_DomainCalculation.Enabled = false;*/
+
+            bool usingDomain = CurrentSettings.GetColoring() == Fractal.Coloring.Iteration || CurrentSettings.GetColoring() == Fractal.Coloring.Smooth || CurrentSettings.GetColoring() >= Fractal.Coloring.Domain_1;
+            checkBox_MatchOrbitTrap.Enabled = usingDomain;
+            input_DomainCalculation.Enabled = usingDomain && !checkBox_MatchOrbitTrap.Checked;
+            checkBox_UseDomainIteration.Enabled = usingDomain; 
+            checkBox_UseSecondDomainValue.Enabled = usingDomain; 
+            input_SecondDomainValueFactor1.Enabled = usingDomain && checkBox_UseSecondDomainValue.Checked; 
+            input_SecondDomainValueFactor2.Enabled = usingDomain && checkBox_UseSecondDomainValue.Checked; 
         }
 
         private void checkBox_UseCustomPalette_CheckedChanged(object sender, EventArgs e)

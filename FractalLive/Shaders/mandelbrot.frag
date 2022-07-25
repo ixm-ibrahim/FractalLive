@@ -25,13 +25,14 @@
 #define COL_WHITE						1
 #define COL_ITERATION                   2
 #define COL_SMOOTH                      3
-#define COL_DOMAIN_SIMPLE               4
-#define COL_DOMAIN_NORMAL               5
-#define COL_DOMAIN_BRIGHTNESS           6
-#define COL_DOMAIN_BRIGHT_RINGS         7
-#define COL_DOMAIN_BRIGHT_RINGS_SMOOTH  8
-#define COL_DOMAIN_DARK_RINGS           9
-#define COL_DOMAIN_BRIGHT_DARK_SMOOTH   10
+#define COL_STRIPES                     4
+#define COL_DOMAIN_SIMPLE               5
+#define COL_DOMAIN_NORMAL               6
+#define COL_DOMAIN_BRIGHTNESS           7
+#define COL_DOMAIN_BRIGHT_RINGS         8
+#define COL_DOMAIN_BRIGHT_RINGS_SMOOTH  9
+#define COL_DOMAIN_DARK_RINGS           10
+#define COL_DOMAIN_BRIGHT_DARK_SMOOTH   11
 
 #define CALC_MIN                        0
 #define CALC_MAX                        1
@@ -131,12 +132,12 @@ void main()
 	FragColor = vec4(Mandelbrot(), 1.0);FragPosWorld;
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter);
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float stripesAddend);
 vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, float riemannAdjustment);
 vec2 ComputeFractal(vec2 z, vec2 c);
 vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz);
 vec2 FoldZ(vec2 z);
-vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation);
+vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, float stripes);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 bool IsBounded(int iter, vec2 z);
@@ -161,6 +162,7 @@ vec2 c_div(vec2 a, vec2 b);
 vec2 c_pow(vec2 c, float p);
 vec2 c_invert(vec2 c);
 vec2 c_rotate(vec2 c, float a);
+float c_arg(vec2 c);
 
 vec3 Mandelbrot()
 {
@@ -170,6 +172,7 @@ vec3 Mandelbrot()
 	vec4 domainZ;
     ivec2 domainIter;
     float distanceEstimation;
+    float stripes = 0;
     
     vec2 c = FragPosModel.xy;
     float riemannAdjustment = 1;
@@ -189,6 +192,7 @@ vec3 Mandelbrot()
         spherePos.y = sin(theta)*sin(phi);
         spherePos.z = -cos(phi);
 
+        // https://stackoverflow.com/questions/9037174/glsl-rotation-with-a-rotation-vector
         vec4 q = vec4(vec3(1,0,0)*sin(riemannAngles.x/2), cos(riemannAngles.x/2));
         vec3 temp = cross(q.xyz, spherePos) + q.w * spherePos;
         vec3 rotatedX = spherePos + 2.0*cross(q.xyz, temp);
@@ -220,7 +224,7 @@ vec3 Mandelbrot()
     if (useDistanceEstimation)
         z = MandelbrotDistanceLoop(c, iter, trap, domainZ, domainIter, distanceEstimation, riemannAdjustment);
     else
-        z = MandelbrotLoop(c, iter, trap, domainZ, domainIter);
+        z = MandelbrotLoop(c, iter, trap, domainZ, domainIter, stripes);
 
 	//if (iter >= maxIterations)
 		//return vec3(1.0);
@@ -235,28 +239,46 @@ vec3 Mandelbrot()
     
 	//return vec3(sqrt(float(iter)/maxIterations));
 	//return sqrt(float(iter)/maxIterations) *  GetColor(z, iter);
-	return GetColor(z, iter, trap, domainZ, domainIter, distanceEstimation);
+	return GetColor(z, iter, trap, domainZ, domainIter, distanceEstimation, stripes);
     
 
 	//return 0.5 + 0.5*sin(GetColor(z, iter, trap) * colorCycles);colorFactor;
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter)
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float stripesAddend)
 {
 	vec2 z = (formula == FRAC_LAMBDA) ? vec2(1.0/power,0) : vec2(0);
     domainZ = vec4(c,c);
     trap = vec2(startOrbitDistance);
+    float lastAdded = 0;
+    int stripesCount = 0;
 
-	for (iter = 0; iter < maxIterations && IsBounded(iter, z); ++iter)
+	for (iter = 0; iter < maxIterations; ++iter)
 	{
         z = ComputeFractal(z, c);
 
+        if (IsWithinIteration(iter))
+        {
+            stripesAddend += sin(colorCycles * c_arg(z))/2 + 0.5;
+            stripesCount++;
+        }
+        /*
         if (!matchOrbitTrap)
             domainZ = CalculateDomainZ(domainZ, z, iter, domainIter);
 
         trap = GetOrbitTrap(z, iter, trap, domainZ, domainIter);
+        */
+        if (!IsBounded(iter, z)) break;
+
+        lastAdded = stripesAddend;
 	}
 
+    stripesAddend /= stripesCount;
+    float prevStripes = lastAdded / (stripesCount - 1);
+
+    float frac = fract(GetSmoothIter(iter, z));
+    stripesAddend = mix(prevStripes, stripesAddend, frac);
+    /*
     if (useSecondValue)
     {
         if (trap.y > trap.x)
@@ -268,7 +290,7 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
     }
 
     trap.x = sigmoid(pow( trap.x*pow(2,lockedZoom), bailoutFactor1 ), bailoutFactor2);
-
+    */
 	return z;
 }
 vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, float riemannAdjustment)
@@ -439,7 +461,7 @@ vec2 FoldZ(vec2 z)
     return z;
 }
 
-vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation)
+vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, float stripes)
 {
     // Decide the color based on the number of iterations
     vec3 color;
@@ -453,7 +475,7 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
                 vec3 outerColor1 = vec3(0.13f, 0.94f, 0.13f);
                 vec3 outerColor2 = vec3(0.0f, 0.47f, 0.95f);
             
-                float theta = sin(atan(float(z.y), float(z.x)) + time)*.5 + .5;
+                float theta = sin(c_arg(z) + time)*.5 + .5;
 
                 color = mix(outerColor1, outerColor2, theta);
                 break;
@@ -475,10 +497,17 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
         //int c = splitInteriorExterior ? exteriorColoring : coloring;
         vec3 iterColor = useCustomPalette ? ColorPalette(customPalette, iter/31) : Rainbow(iter, colorCycles);
         vec3 orbitColor = useCustomPalette ? ColorPalette(customPalette, orbitTrapFactor*trap.x/31) : Rainbow(orbitTrapFactor*trap.x, colorCycles);
-
+return vec3(stripes);
         switch (coloring)
         {
+            case COL_STRIPES:
+            {
+                color = vec3(stripes);
+                //color = useCustomPalette ? ColorPalette(customPalette, stripes*colorFactor) : Rainbow(stripes*colorFactor, 1);
+                break;
+            }
             case COL_CUSTOM:
+            {
                 vec3 outerColor1 = vec3(0.13f, 0.94f, 0.13f);
                 vec3 outerColor2 = vec3(0.0f, 0.47f, 0.95f);
             
@@ -488,17 +517,25 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
                 //color = mix(outerColor1, outerColor2, dist);
                 color = mix(outerColor1, outerColor2, iter/maxIterations);
                 break;
+            }
             case COL_BLACK:
+            {
                 color = vec3(0);
                 break;
+            }
             case COL_WHITE:
+            {
                 color = vec3(1);
                 break;
+            }
             case COL_ITERATION:
+            {
                 //color = Rainbow(iter * (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? trap : 1));
                 color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(orbitColor, iterColor, trap.x) : iterColor;
                 break;
+            }
             case COL_SMOOTH:
+            {
                 float mu;
         
                 mu = GetSmoothIter(iter, z);
@@ -510,9 +547,12 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
                 color = (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES) ? mix(orbitColor, muColor, trap.x) : muColor;
                 //color = 0.5*Rainbow(mu) + (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES ? 0.5*Rainbow(10*trap) : 0.5*Rainbow(mu));
                 break;
+            }
             default:
+            {
                 color = DomainColoring(coloring, domainZ, domainIter, trap);
                 break;
+            }
         }
     }
     
@@ -554,7 +594,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
     
     vec3 color;
 
-    float theta = (atan(z.y, z.x) + M_PI) / (2*M_PI);
+    float theta = (c_arg(z.xy) + M_PI) / (2*M_PI);
 	float r = length(z.xy);
 
     if (useDomainSecondValue)
@@ -1049,13 +1089,10 @@ float GetSmoothIter(float iter, vec2 z)
     if (coloring == COL_SMOOTH)
         //mu = iter;
         //return iter + 1 - (log2(log2(length(z))));
-        //return clamp(log2(log(length(z)) / log(bailout)), 0.0, 1.0);
-        //return iter - log2(log2(dot(z,z))) + 4.0;
-        //return iter - log(log(dot(z,z))/(log(bailout)))/log(power);
-        //return iter - (log(log(length(z))/log(bailout)) / (sign(power)*log(abs(power))));
-        //return iter - (log(log(length(z))/log(bailout)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
-        return iter + 1 - (log(log(length(z))) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power))));
-        //return iter - (log(log(length(z))/log(bailout)));
+        //return iter + 1 + log(log(bailout)/log(dot(z,z))) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power)));
+        //return iter + 1 + log2(log(bailout)/log(dot(z,z)));
+        //return iter - log(log(dot(z,z))/log(bailout)) / log(power);
+        return iter - log(log(dot(z,z))/log(bailout)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power)));
     
     return iter;
 }
@@ -1216,4 +1253,9 @@ vec2 c_pow(vec2 c, float a)
 vec2 c_rotate(vec2 c, float a)
 {
    return c_mul(c, vec2(cos(a), sin(a)));
+}
+
+float c_arg(vec2 c)
+{
+    return atan(c.y,c.x);
 }

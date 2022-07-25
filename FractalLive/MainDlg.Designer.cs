@@ -1773,6 +1773,7 @@
             "White",
             "Interation",
             "Smooth",
+            "Stripes",
             "Domain 1",
             "Domain 2",
             "Domain 3",

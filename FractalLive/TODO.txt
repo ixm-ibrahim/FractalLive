@@ -38,6 +38,8 @@ camera precision bug
 animation menu
 when no buttons are pressed, don't calulate any values
 make riemann angle gimbal lock?
-resolution
+lower resolution
+fold only after min iteration
+miniterations can't exceed maxiterations-1
 
-stripe average coloring, textures, custom, julia set (different shader), julia set matings (different shader), lighting (different shader?) and menu (coloring?), julia minimap, load save settings, complex power, panel for universal values, doubles and quads
+stripe average coloring, textures, custom, julia set (different shader), lighting (different shader?) and menu (coloring?), julia set matings (different shader), complex power, julia minimap, load save settings, doubles and quads
