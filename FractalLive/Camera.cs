@@ -62,6 +62,8 @@ namespace FractalLive
             flatSettings = new Settings(Mode.Flat, 45.0f);
             freeSettings = new Settings(Mode.Free, 67.5f);
 
+            freeSettings.moveSpeed = .01f;
+            freeSettings.zoomSpeed = 0.5f;
 
             CurrentMode = Mode.Flat;
             CurrentSettings = flatSettings;
@@ -170,6 +172,8 @@ namespace FractalLive
                 {
                     GL.BindVertexArray(vaoAxis);
 
+                    shader.SetMatrix4("projection", GetProjectionMatrix());
+                    shader.SetMatrix4("view", GetViewMatrix());
                     shader.SetMatrix4("model", Matrix4.Identity);
 
                     GL.DrawArrays(PrimitiveType.Lines, 0, 6);
@@ -183,9 +187,9 @@ namespace FractalLive
                     model *= Matrix4.CreateRotationX((float) MainDlg.applicationTime.Elapsed.TotalSeconds);
                     model *= Matrix4.CreateRotationY((float) MainDlg.applicationTime.Elapsed.TotalSeconds / 2);
                     model *= Matrix4.CreateRotationZ((float) MainDlg.applicationTime.Elapsed.TotalSeconds / 3);
-                    model *= Matrix4.CreateScale(new Vector3(targetDistance / 3));
+                    model *= Matrix4.CreateScale(new Vector3(1/targetDistance));
                     shader.SetMatrix4("model", model);
-
+                    
                     GL.DrawArrays(PrimitiveType.Lines, 0, 6);
                 }
             }
@@ -252,8 +256,8 @@ namespace FractalLive
 
         public void Zoom(float distance = 1)
         {
-            //MoveAlongAxis(direction, currentSettings.zoomSpeed * distance * targetDistance, false);
-            MoveAlongAxis(direction, CurrentSettings.zoomSpeed * distance * (position - position.Normalized()).Length, false);
+            MoveAlongAxis(direction, CurrentSettings.zoomSpeed * distance * targetDistance, false);
+            //MoveAlongAxis(direction, CurrentSettings.zoomSpeed * distance * (position - position.Normalized()).Length, false);
         }
 
         public void ZoomAlongAxis(Vector3 axis, float distance)
@@ -472,6 +476,7 @@ namespace FractalLive
             }
         }
         public Vector3 Right => right;
+        public Vector3 Up => up;
         public Vector3 Direction => direction;
         public float CurrentMoveSpeed => CurrentSettings.moveSpeed;
         public float CurrentZoomSpeed => CurrentSettings.zoomSpeed;

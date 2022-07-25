@@ -1,13 +1,8 @@
 ﻿julia centering for lambda
 setting for inverting camera controls
-remove degreestoradians for RotatePitch/Yaw (and all other imstances where turnSpeed is used)
+remove degreestoradians for RotatePitch/Yaw (and all other instances where turnSpeed is used)
 test if FromAxisAngle requires a normalized axis
 should arcball rotating have its own speed?
-see if currentCamera can be replaced with a Mode
-figure out culling
-roll 2d vs 3d
-shader SetDouble, Vector2d
-initial zoom conditions
 follow random center of fractal (ai?)
 convert right variables to doubles
 more functions to break down larger functions
@@ -16,10 +11,7 @@ enable copy and paste in textboxes
 undo redo
 left click decides orbit trap point and others
 see if raising zoom to power can be optimized in shaders
-investigate bug where Update is called after exit, and menu disappears
-adjustable zoom factor
 minimize calls to GL.Uniform
-load and save settings
 focus glcontrol after each winforms input
 lighting menu
 normal maps in lighting menu
@@ -30,19 +22,17 @@ investigate behavior when bailout is between 0 and 1
 optimize glsl arithmetic
 complex powers for power and c_power
 snap values textbox
-minIterations with first orbit trap not working
 optimize main cardioid and other areas - as long as color calculation doesn't require the right iteration
-consolidate keypress as most of them only look for a single value
 consolidate IsWithinOrbitTrap
 match orbit trap exposed bug in middle of cardioid
 separate smooth setting
 fix min iterations bug
+minIterations with first orbit trap not working
 lambda distance estimation bug
 popup if user inputed high value which may slow down machine (get rid of unnecessary <type>bounds)
 showcase how fold offset shows more detail without zooming
 make ints floats so ctrl modifer can be used
-fold bug with mandelbrot power of -3, -4, etc.
 flat riemann camera controls and aspect ratio
+camera axis bug
 
-
-different projections and camera, stripe average coloring, textures, custom, julia set (different shader), julia set matings (different shader), lighting (different shader?) and menu, julia minimap, load save settings, complex power, panel for universal values, doubles and quads
+stripe average coloring, textures, custom, julia set (different shader), julia set matings (different shader), lighting (different shader?) and menu, julia minimap, load save settings, complex power, panel for universal values, doubles and quads

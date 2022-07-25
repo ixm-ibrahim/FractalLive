@@ -63,6 +63,8 @@ namespace FractalLive
                 keysDown[Keys.J] = false;
                 keysDown[Keys.K] = false;
                 keysDown[Keys.L] = false;
+                keysDown[Keys.U] = false;
+                keysDown[Keys.O] = false;
                 // fractal settings
                 keysDown[Keys.D1] = false;          // max iterations
                 keysDown[Keys.D2] = false;          // bailout (general)
@@ -86,7 +88,12 @@ namespace FractalLive
 
             public bool IsMovementKeyDown()
             {
-                return IsKeyDown(Keys.W) || IsKeyDown(Keys.A) || IsKeyDown(Keys.S) || IsKeyDown(Keys.D);
+                return IsKeyDown(Keys.W) || IsKeyDown(Keys.A) || IsKeyDown(Keys.S) || IsKeyDown(Keys.D) || IsKeyDown(Keys.Q) || IsKeyDown(Keys.E) || IsKeyDown(Keys.R) || IsKeyDown(Keys.F);
+            }
+
+            public bool IsSecondaryMovementKeyDown()
+            {
+                return IsKeyDown(Keys.I) || IsKeyDown(Keys.J) || IsKeyDown(Keys.K) || IsKeyDown(Keys.L) || IsKeyDown(Keys.U) || IsKeyDown(Keys.O);
             }
 
             public Dictionary<Keys, bool> keysDown;
@@ -399,8 +406,6 @@ namespace FractalLive
 
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
-            //GL.CullFace(CullFaceMode.Back);
-            //GL.FrontFace(FrontFaceDirection.Cw);
 
             glControl.Focus();
             button_Menu1_Click(null, null);
@@ -712,12 +717,42 @@ namespace FractalLive
                     if (inputState.IsMovementKeyDown())
                     {
                         float delta = modifier * 3;
+
                         float deltaSide = inputState.keysDown[Keys.D] ? delta : (inputState.keysDown[Keys.A] ? -delta : 0);
+                        float deltaUp = inputState.keysDown[Keys.Q] ? delta : (inputState.keysDown[Keys.E] ? -delta : 0);
                         float deltaForward = inputState.keysDown[Keys.W] ? delta : (inputState.keysDown[Keys.S] ? -delta : 0);
+                        float deltaZoom = inputState.keysDown[Keys.R] ? delta : (inputState.keysDown[Keys.F] ? -delta : 0);
 
                         if (deltaSide != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Right, deltaSide);
+                        if (deltaUp != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Up, deltaUp);
                         if (deltaForward != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Direction, deltaForward);
+                        if (deltaZoom != 0) CurrentCamera.Zoom(deltaZoom);
                     }
+                    if (inputState.IsSecondaryMovementKeyDown())
+                    {
+                            float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2, CurrentSettings.Zoom);
+
+                            float delta = modifier * factor;
+                            float deltaX = inputState.keysDown[Keys.J] ? delta : (inputState.keysDown[Keys.L] ? -delta : 0);
+                            float deltaY = inputState.keysDown[Keys.I] ? delta : (inputState.keysDown[Keys.K] ? -delta : 0);
+
+                            CurrentSettings.Center.X += deltaX;
+                            CurrentSettings.Center.Y += deltaY;
+
+                            input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
+
+                            if (inputState.keysDown[Keys.U] || inputState.keysDown[Keys.O])
+                            {
+                                CurrentSettings.Zoom += modifier / 40 * (inputState.keysDown[Keys.O] ? 1 : -1);
+                                input_Zoom.Text = CurrentSettings.Zoom.ToString();
+
+                                if (!checkBox_LockZoomFactor.Checked)
+                                {
+                                    CurrentSettings.LockedZoom = CurrentSettings.Zoom;
+                                    input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
+                                }
+                            }
+                        }
 
                     break;
                 }
@@ -730,7 +765,8 @@ namespace FractalLive
                 fractalTime -= deltaTime * modifier * (pauseTime ? 5 : 6);
 
             // update controls
-            Log(CurrentSettings.Projection.ToString());
+            //Log(CurrentSettings.Projection.ToString());
+            Log(CurrentCamera.CurrentSettings.showAxis.ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal
@@ -774,27 +810,30 @@ namespace FractalLive
         {
             int scrollOffset = e.Delta > 0 ? 1 : (e.Delta < 1 ? -1 : 0);
 
-            float rad = MathHelper.DegreesToRadians(CurrentCamera.Roll);
-            float rad90 = rad + MathHelper.Pi / 2;
-
-            Vector2 xRoll = new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad));
-            Vector2 yRoll = new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90));
-
-            Vector2 normalizedMousePos = new Vector2((float)inputState.GLMousePositionX / glControl.Width, (float)inputState.GLMousePositionY / glControl.Height) * 2 - new Vector2(1, 1);
-            Vector2 aspectRatio = new Vector2(glControl.Width, -glControl.Height) / Math.Max(minGLWidth, minGLHeight);
-            Vector2 offset = normalizedMousePos * CurrentSettings.InitialDisplayRadius.Value * aspectRatio;
-
-            Vector2 mousePos = CurrentSettings.Center + (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
-            CurrentSettings.Zoom += scrollOffset * CurrentCamera.CurrentZoomSpeed;
-            CurrentSettings.Center = mousePos - (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
-
-            input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
-            input_Zoom.Text = CurrentSettings.Zoom.ToString();
-
-            if (!checkBox_LockZoomFactor.Checked)
+            if (CurrentCamera.CurrentMode == Camera.Mode.Flat)
             {
-                CurrentSettings.LockedZoom = CurrentSettings.Zoom;
-                input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
+                float rad = MathHelper.DegreesToRadians(CurrentCamera.Roll);
+                float rad90 = rad + MathHelper.Pi / 2;
+
+                Vector2 xRoll = new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad));
+                Vector2 yRoll = new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90));
+
+                Vector2 normalizedMousePos = new Vector2((float)inputState.GLMousePositionX / glControl.Width, (float)inputState.GLMousePositionY / glControl.Height) * 2 - new Vector2(1, 1);
+                Vector2 aspectRatio = new Vector2(glControl.Width, -glControl.Height) / Math.Max(minGLWidth, minGLHeight);
+                Vector2 offset = normalizedMousePos * CurrentSettings.InitialDisplayRadius.Value * aspectRatio;
+
+                Vector2 mousePos = CurrentSettings.Center + (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
+                CurrentSettings.Zoom += scrollOffset * CurrentCamera.CurrentZoomSpeed;
+                CurrentSettings.Center = mousePos - (xRoll * offset.X + yRoll * offset.Y) / (float)Math.Pow(2, CurrentSettings.Zoom);
+
+                input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
+                input_Zoom.Text = CurrentSettings.Zoom.ToString();
+
+                if (!checkBox_LockZoomFactor.Checked)
+                {
+                    CurrentSettings.LockedZoom = CurrentSettings.Zoom;
+                    input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
+                }
             }
         }
 
@@ -824,6 +863,10 @@ namespace FractalLive
                 inputState.keysDown[Keys.K] = true;
             else if (e.KeyCode == Keys.L)
                 inputState.keysDown[Keys.L] = true;
+            else if (e.KeyCode == Keys.U)
+                inputState.keysDown[Keys.U] = true;
+            else if (e.KeyCode == Keys.O)
+                inputState.keysDown[Keys.O] = true;
             else if (e.KeyCode == Keys.Space)
                 inputState.keysDown[Keys.Space] = true;
             else if (e.KeyCode == Keys.Oemcomma)
@@ -897,6 +940,10 @@ namespace FractalLive
                 inputState.keysDown[Keys.K] = false;
             else if (e.KeyCode == Keys.L)
                 inputState.keysDown[Keys.L] = false;
+            else if (e.KeyCode == Keys.U)
+                inputState.keysDown[Keys.U] = false;
+            else if (e.KeyCode == Keys.O)
+                inputState.keysDown[Keys.O] = false;
             else if (e.KeyCode == Keys.Space)
                 inputState.keysDown[Keys.Space] = false;
             else if (e.KeyCode == Keys.Oemcomma)
@@ -956,7 +1003,7 @@ namespace FractalLive
                 pauseTime = !pauseTime;
             if (e.KeyChar == ';')
                 CurrentCamera.CurrentSettings.showTarget = !CurrentCamera.CurrentSettings.showTarget;
-            if (e.KeyChar == '.')
+            if (e.KeyChar == '\'')
                 CurrentCamera.CurrentSettings.showAxis = !CurrentCamera.CurrentSettings.showAxis;
         }
 
@@ -1914,7 +1961,7 @@ namespace FractalLive
 
         private int vboPlane, vaoPlane;
         private int vboSphere, vaoSphere;
-        TexturedVertex[] sphereVertices = new IcoSphere().Create(5, 1, true);
+        TexturedVertex[] sphereVertices = new IcoSphere().Create(5, 0.5f, true);
 
         Texture texture0, texture1;
 
