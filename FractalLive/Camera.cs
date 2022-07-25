@@ -255,7 +255,7 @@ namespace FractalLive
             return position + (axis * distance);
         }
 
-        public void Zoom(float distance, float minusRadius = 0)
+        public void ZoomDirection(float distance, float minusRadius = 0)
         {
             float dist = Math.Min(2, targetDistance - minusRadius);
             if (dist > .01f || distance < 0) MoveAlongAxis(direction, CurrentSettings.zoomSpeed * distance * (dist < 0 ? 0 : dist), false);
@@ -483,6 +483,16 @@ namespace FractalLive
                 return ref freeSettings;
             }
         }
+        public Vector3 Position
+        {
+            get { return position; }
+            set
+            {
+                position = value;
+                UpdateTargetDistance();
+            }
+        }
+        public Vector3 Zoom { get { return position; } set { position = value; } }
         public Vector3 Right => right;
         public Vector3 Up => up;
         public Vector3 Direction => direction;
@@ -514,6 +524,9 @@ namespace FractalLive
                 pitch = MathHelper.DegreesToRadians(MathHelper.Clamp(value, -89f, 89f));
 
                 RotateVectors();
+
+                if (Lock)
+                    ArcBallPitch(0, true, 1);
             }
         }
 
@@ -526,6 +539,9 @@ namespace FractalLive
                 yaw = MathHelper.DegreesToRadians(value);
 
                 RotateVectors();
+
+                if (Lock)
+                    ArcBallYaw(0, true, 1);
             }
         }
 

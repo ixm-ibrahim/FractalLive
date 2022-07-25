@@ -168,13 +168,11 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.input_LockedZoom = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.input_CameraPosition = new System.Windows.Forms.TextBox();
             this.label_CameraOrientation = new System.Windows.Forms.Label();
-            this.input_CameraZoom = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.input_CameraDirection = new System.Windows.Forms.TextBox();
             this.input_RiemannAngles = new System.Windows.Forms.TextBox();
             this.label_RiemannAngles = new System.Windows.Forms.Label();
+            this.input_CameraAngles = new System.Windows.Forms.TextBox();
+            this.input_CameraPosition = new System.Windows.Forms.TextBox();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -1330,7 +1328,7 @@
             this.input_Center.TabIndex = 55;
             this.input_Center.Text = "0, 0";
             this.input_Center.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_Center.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_Validate2DDecimalChar);
+            this.input_Center.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateMultipleDecimalChar);
             this.input_Center.Validating += new System.ComponentModel.CancelEventHandler(this.input_Center_Validating);
             this.input_Center.Validated += new System.EventHandler(this.input_Center_Validated);
             // 
@@ -1837,15 +1835,6 @@
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
             // 
-            // input_CameraPosition
-            // 
-            this.input_CameraPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_CameraPosition.Location = new System.Drawing.Point(83, 725);
-            this.input_CameraPosition.Name = "input_CameraPosition";
-            this.input_CameraPosition.Size = new System.Drawing.Size(82, 23);
-            this.input_CameraPosition.TabIndex = 61;
-            this.input_CameraPosition.Text = "0, 0, 0";
-            // 
             // label_CameraOrientation
             // 
             this.label_CameraOrientation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -1857,66 +1846,65 @@
             this.label_CameraOrientation.Text = "Orientation:";
             this.label_CameraOrientation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // input_CameraZoom
-            // 
-            this.input_CameraZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_CameraZoom.Location = new System.Drawing.Point(298, 725);
-            this.input_CameraZoom.Name = "input_CameraZoom";
-            this.input_CameraZoom.Size = new System.Drawing.Size(45, 23);
-            this.input_CameraZoom.TabIndex = 63;
-            this.input_CameraZoom.Text = "0";
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(257, 728);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 15);
-            this.label2.TabIndex = 64;
-            this.label2.Text = "Zoom: ";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // input_CameraDirection
-            // 
-            this.input_CameraDirection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_CameraDirection.Location = new System.Drawing.Point(169, 725);
-            this.input_CameraDirection.Name = "input_CameraDirection";
-            this.input_CameraDirection.Size = new System.Drawing.Size(82, 23);
-            this.input_CameraDirection.TabIndex = 65;
-            this.input_CameraDirection.Text = "0, 0, 0";
-            // 
             // input_RiemannAngles
             // 
             this.input_RiemannAngles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_RiemannAngles.Location = new System.Drawing.Point(405, 725);
+            this.input_RiemannAngles.Location = new System.Drawing.Point(298, 725);
             this.input_RiemannAngles.Name = "input_RiemannAngles";
             this.input_RiemannAngles.Size = new System.Drawing.Size(107, 23);
             this.input_RiemannAngles.TabIndex = 66;
             this.input_RiemannAngles.Text = "0, 0";
+            this.input_RiemannAngles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_RiemannAngles.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateMultipleDecimalChar);
+            this.input_RiemannAngles.Validating += new System.ComponentModel.CancelEventHandler(this.input_RiemannAngles_Validating);
+            this.input_RiemannAngles.Validated += new System.EventHandler(this.input_RiemannAngles_Validated);
             // 
             // label_RiemannAngles
             // 
             this.label_RiemannAngles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_RiemannAngles.AutoSize = true;
-            this.label_RiemannAngles.Location = new System.Drawing.Point(349, 728);
+            this.label_RiemannAngles.Location = new System.Drawing.Point(242, 728);
             this.label_RiemannAngles.Name = "label_RiemannAngles";
             this.label_RiemannAngles.Size = new System.Drawing.Size(57, 15);
             this.label_RiemannAngles.TabIndex = 67;
             this.label_RiemannAngles.Text = "Riemann:";
             this.label_RiemannAngles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // input_CameraAngles
+            // 
+            this.input_CameraAngles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.input_CameraAngles.Location = new System.Drawing.Point(169, 725);
+            this.input_CameraAngles.Name = "input_CameraAngles";
+            this.input_CameraAngles.Size = new System.Drawing.Size(60, 23);
+            this.input_CameraAngles.TabIndex = 65;
+            this.input_CameraAngles.Text = "-90, 0";
+            this.input_CameraAngles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_CameraAngles.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateMultipleDecimalChar);
+            this.input_CameraAngles.Validating += new System.ComponentModel.CancelEventHandler(this.input_CameraAngles_Validating);
+            this.input_CameraAngles.Validated += new System.EventHandler(this.input_CameraAngles_Validated);
+            // 
+            // input_CameraPosition
+            // 
+            this.input_CameraPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.input_CameraPosition.Location = new System.Drawing.Point(83, 725);
+            this.input_CameraPosition.Name = "input_CameraPosition";
+            this.input_CameraPosition.Size = new System.Drawing.Size(82, 23);
+            this.input_CameraPosition.TabIndex = 68;
+            this.input_CameraPosition.Text = "0, 0, 3";
+            this.input_CameraPosition.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_CameraPosition.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateMultipleDecimalChar);
+            this.input_CameraPosition.Validating += new System.ComponentModel.CancelEventHandler(this.input_CameraPosition_Validating);
+            this.input_CameraPosition.Validated += new System.EventHandler(this.input_CameraPosition_Validated);
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1104, 762);
+            this.Controls.Add(this.input_CameraPosition);
             this.Controls.Add(this.input_RiemannAngles);
             this.Controls.Add(this.label_RiemannAngles);
-            this.Controls.Add(this.input_CameraDirection);
-            this.Controls.Add(this.input_CameraZoom);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.input_CameraPosition);
+            this.Controls.Add(this.input_CameraAngles);
             this.Controls.Add(this.label_CameraOrientation);
             this.Controls.Add(this.input_Center);
             this.Controls.Add(this.checkBox_LockZoomFactor);
@@ -2092,13 +2080,11 @@
         private System.Windows.Forms.TextBox input_FoldAngle;
         private System.Windows.Forms.Label label_FoldAngle;
         private System.Windows.Forms.TextBox input_FoldCount;
-        private System.Windows.Forms.TextBox input_CameraPosition;
         private System.Windows.Forms.Label label_CameraOrientation;
-        private System.Windows.Forms.TextBox input_CameraZoom;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox input_CameraDirection;
         private System.Windows.Forms.TextBox input_RiemannAngles;
         private System.Windows.Forms.Label label_RiemannAngles;
+        private System.Windows.Forms.TextBox input_CameraAngles;
+        private System.Windows.Forms.TextBox input_CameraPosition;
     }
 }
 

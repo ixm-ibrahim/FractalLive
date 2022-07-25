@@ -37,5 +37,8 @@ camera axis bug
 camera precision bug
 animation menu
 when no buttons are pressed, don't calulate any values
+fps arcball bug
+make riemann angle gimbal lock?
+resolution
 
 stripe average coloring, textures, custom, julia set (different shader), julia set matings (different shader), lighting (different shader?) and menu (coloring?), julia minimap, load save settings, complex power, panel for universal values, doubles and quads

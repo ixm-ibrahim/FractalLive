@@ -326,8 +326,7 @@ namespace FractalLive
 
             // Starting values
             input_CameraPosition.Enabled = false;
-            input_CameraDirection.Enabled = false;
-            input_CameraZoom.Enabled = false;
+            input_CameraAngles.Enabled = false;
             input_RiemannAngles.Enabled = false;
 
             input_FractalType.SelectedIndex = (int)CurrentSettings.Type;
@@ -701,12 +700,14 @@ namespace FractalLive
                         }
                     }
 
-                    if (CurrentSettings.Projection == Fractal.Projection.Riemann_Flat)
+                    if (CurrentSettings.Projection == Fractal.Projection.Riemann_Flat && inputState.IsSecondaryMovementKeyDown())
                     {
                         if (inputState.keysDown[Keys.I] || inputState.keysDown[Keys.K])
                             CurrentSettings.RiemannAngles.X -= modifier / 50 * (inputState.keysDown[Keys.I] ? 1 : -1);
                         if (inputState.keysDown[Keys.J] || inputState.keysDown[Keys.L])
                             CurrentSettings.RiemannAngles.Y -= modifier / 50 * (inputState.keysDown[Keys.J] ? 1 : -1);
+                        
+                        input_RiemannAngles.Text = Make2D(MathHelper.RadiansToDegrees(CurrentSettings.RiemannAngles.X), MathHelper.RadiansToDegrees(CurrentSettings.RiemannAngles.Y));
                     }
 
                     break;
@@ -736,8 +737,11 @@ namespace FractalLive
                             if (deltaForward != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Direction, deltaForward);
                         }
                         
-                        if (deltaZoom != 0) CurrentCamera.Zoom(deltaZoom, 1);
+                        if (deltaZoom != 0) CurrentCamera.ZoomDirection(deltaZoom, 1);
                         if (deltaRoll != 0) CurrentCamera.RotateRoll(deltaRoll);
+
+                        input_CameraPosition.Text = Make3D(CurrentCamera.Position.X, CurrentCamera.Position.Y, CurrentCamera.Position.Z);
+                        input_CameraAngles.Text = Make2D(CurrentCamera.Yaw, CurrentCamera.Pitch);
                     }
                     if (inputState.IsSecondaryMovementKeyDown())
                     {
@@ -813,6 +817,9 @@ namespace FractalLive
                 {
                     CurrentCamera.RotateYaw(deltaX);
                     CurrentCamera.RotatePitch(deltaY);
+
+                    input_CameraPosition.Text = Make3D(CurrentCamera.Position.X, CurrentCamera.Position.Y, CurrentCamera.Position.Z);
+                    input_CameraAngles.Text = Make2D(CurrentCamera.Yaw, CurrentCamera.Pitch);
                 }
 
                 input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
@@ -853,7 +860,8 @@ namespace FractalLive
             }
             else
             {
-                CurrentCamera.Zoom(scrollOffset * 5, 1);
+                CurrentCamera.ZoomDirection(scrollOffset * 5, 1);
+                input_CameraPosition.Text = Make3D(CurrentCamera.Position.X, CurrentCamera.Position.Y, CurrentCamera.Position.Z);
             }
         }
 
@@ -1028,8 +1036,7 @@ namespace FractalLive
                 CurrentCamera.ChangeMode(CurrentSettings.Projection);
 
                 input_CameraPosition.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere;
-                input_CameraDirection.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere;
-                input_CameraZoom.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere;
+                input_CameraAngles.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere;
                 input_RiemannAngles.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Flat;
             }
             if (e.KeyChar == '.')
@@ -1075,7 +1082,7 @@ namespace FractalLive
         }
         #endregion
 
-        #region MainDlg Controls
+        #region General Controls
         private void button_Menu1_Click(object sender, EventArgs e)
         {
             panel_FormulaMenu.Show();
@@ -1123,8 +1130,7 @@ namespace FractalLive
 
         private void input_Center_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!TryParse2DFloat(input_Center.Text))
-                e.Cancel = true;
+
         }
         private void input_Center_Validated(object sender, EventArgs e)
         {
@@ -1170,6 +1176,48 @@ namespace FractalLive
             input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString(); // in case number gets restricted by bounds
 
             checkBox_LockZoomFactor.Checked = true;
+        }
+
+        private void input_CameraPosition_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse3DFloat(input_CameraPosition.Text))
+                e.Cancel = true;
+        }
+        private void input_CameraPosition_Validated(object sender, EventArgs e)
+        {
+            Vector3 tmp = new Vector3();
+            tmp.X = float.Parse(GetFrom3D(input_CameraPosition.Text, 0));
+            tmp.Y = float.Parse(GetFrom3D(input_CameraPosition.Text, 1));
+            tmp.Z = float.Parse(GetFrom3D(input_CameraPosition.Text, 2));
+
+            CurrentCamera.Position = tmp;
+            input_CameraPosition.Text = Make3D(tmp.X, tmp.Y, tmp.Z);
+        }
+
+        private void input_CameraAngles_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse2DFloat(input_CameraAngles.Text))
+                e.Cancel = true;
+        }
+        private void input_CameraAngles_Validated(object sender, EventArgs e)
+        {
+            CurrentCamera.Yaw = float.Parse(GetFrom2D(input_CameraAngles.Text, true));
+            CurrentCamera.Pitch = float.Parse(GetFrom2D(input_CameraAngles.Text, false));
+            input_CameraAngles.Text = Make2D(CurrentCamera.Yaw, CurrentCamera.Pitch);
+
+            input_CameraPosition.Text = Make3D(CurrentCamera.Position.X, CurrentCamera.Position.Y, CurrentCamera.Position.Z);
+        }
+
+        private void input_RiemannAngles_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse2DFloat(input_RiemannAngles.Text))
+                e.Cancel = true;
+        }
+        private void input_RiemannAngles_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.RiemannAngles.X = MathHelper.DegreesToRadians(float.Parse(GetFrom2D(input_RiemannAngles.Text, true)));
+            CurrentSettings.RiemannAngles.Y = MathHelper.DegreesToRadians(float.Parse(GetFrom2D(input_RiemannAngles.Text, false)));
+            input_RiemannAngles.Text = Make2D(MathHelper.RadiansToDegrees(CurrentSettings.RiemannAngles.X), MathHelper.RadiansToDegrees(CurrentSettings.RiemannAngles.Y));
         }
 
         #endregion
@@ -2026,6 +2074,11 @@ namespace FractalLive
             string[] values = text.Replace(" ", "").Split(',');
             return values.Length == 2 && TryParse1DFloat(values[0]) && TryParse1DFloat(values[1]);
         }
+        internal bool TryParse3DFloat(string text)
+        {
+            string[] values = text.Replace(" ", "").Split(',');
+            return values.Length == 3 && TryParse1DFloat(values[0]) && TryParse1DFloat(values[1]) && TryParse1DFloat(values[2]);
+        }
 
         internal float[] Parse2DFloat(string text)
         {
@@ -2037,15 +2090,34 @@ namespace FractalLive
 
             return ret;
         }
+        internal float[] Parse3DFloat(string text)
+        {
+            string[] values = text.Replace(" ", "").Split(',');
+            float[] ret = new float[3];
+
+            for (int i = 0; i < 3; i++)
+                ret[i] = float.Parse(values[i]);
+
+            return ret;
+        }
 
         internal string Make2D(float x, float y)
         {
             return x.ToString() + ", " + y.ToString();
         }
+        internal string Make3D(float x, float y, float z)
+        {
+            return x.ToString() + ", " + y.ToString() + ", " + z.ToString();
+        }
 
         internal string GetFrom2D(string input, bool getFirst)
         {
             return input.Replace(" ", "").Split(',')[getFirst ? 0 : 1];
+        }
+
+        internal string GetFrom3D(string input, int index)
+        {
+            return input.Replace(" ", "").Split(',')[index];
         }
 
         internal string Replace2D(string input, string original, bool replaceFirst)
@@ -2072,8 +2144,7 @@ namespace FractalLive
         {
             e.Handled = !IsDecimalChar(e);
         }
-
-        private void control_Validate2DDecimalChar(object sender, KeyPressEventArgs e)
+        private void control_ValidateMultipleDecimalChar(object sender, KeyPressEventArgs e)
         {
             e.Handled = !IsDecimalChar(e, true);
         }
