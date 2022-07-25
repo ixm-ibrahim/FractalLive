@@ -88,7 +88,7 @@ namespace FractalLive
 
             public bool IsMovementKeyDown()
             {
-                return IsKeyDown(Keys.W) || IsKeyDown(Keys.A) || IsKeyDown(Keys.S) || IsKeyDown(Keys.D) || IsKeyDown(Keys.Q) || IsKeyDown(Keys.E) || IsKeyDown(Keys.R) || IsKeyDown(Keys.F);
+                return IsKeyDown(Keys.W) || IsKeyDown(Keys.A) || IsKeyDown(Keys.S) || IsKeyDown(Keys.D) || IsKeyDown(Keys.Q) || IsKeyDown(Keys.E) || IsKeyDown(Keys.Z) || IsKeyDown(Keys.X) || IsKeyDown(Keys.R) || IsKeyDown(Keys.F);
             }
 
             public bool IsSecondaryMovementKeyDown()
@@ -194,7 +194,7 @@ namespace FractalLive
             ref Shader shader = ref CurrentShader;
             ref Camera camera = ref CurrentCamera;
 
-
+            camera.Render();
 
             shader.SetMatrix4("projection", camera.GetProjectionMatrix());
             shader.SetMatrix4("view", camera.GetViewMatrix());
@@ -283,22 +283,17 @@ namespace FractalLive
             shader.SetFloat("i_textureScaleX", fractalSettings.I_TextureScaleX);
             shader.SetFloat("i_textureScaleY", fractalSettings.I_TextureScaleY);
 
-            if (currentFractal == Fractal.Type.Mandelbrot)
+            shader.Use();
+
+            if (CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere)
             {
-                shader.Use();
-
-                if (CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere)
-                {
-                    GL.BindVertexArray(vaoSphere);
-                    GL.DrawArrays(PrimitiveType.Triangles, 0, sphereVertices.Length);
-                }
-                else
-                {
-                    GL.BindVertexArray(vaoPlane);
-                    GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
-                }
-
-                camera.Render();
+                GL.BindVertexArray(vaoSphere);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, sphereVertices.Length);
+            }
+            else
+            {
+                GL.BindVertexArray(vaoPlane);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
             }
 
             glControl.SwapBuffers();
@@ -719,40 +714,42 @@ namespace FractalLive
                         float delta = modifier * 3;
 
                         float deltaSide = inputState.keysDown[Keys.D] ? delta : (inputState.keysDown[Keys.A] ? -delta : 0);
-                        float deltaUp = inputState.keysDown[Keys.Q] ? delta : (inputState.keysDown[Keys.E] ? -delta : 0);
+                        float deltaUp = inputState.keysDown[Keys.Z] ? delta : (inputState.keysDown[Keys.X] ? -delta : 0);
                         float deltaForward = inputState.keysDown[Keys.W] ? delta : (inputState.keysDown[Keys.S] ? -delta : 0);
                         float deltaZoom = inputState.keysDown[Keys.R] ? delta : (inputState.keysDown[Keys.F] ? -delta : 0);
+                        float deltaRoll = inputState.keysDown[Keys.Q] ? delta : (inputState.keysDown[Keys.E] ? -delta : 0);
 
                         if (deltaSide != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Right, deltaSide);
                         if (deltaUp != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Up, deltaUp);
                         if (deltaForward != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Direction, deltaForward);
-                        if (deltaZoom != 0) CurrentCamera.Zoom(deltaZoom);
+                        if (deltaZoom != 0) CurrentCamera.Zoom(deltaZoom, 1);
+                        if (deltaRoll != 0) CurrentCamera.RotateRoll(deltaRoll);
                     }
                     if (inputState.IsSecondaryMovementKeyDown())
                     {
-                            float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2, CurrentSettings.Zoom);
+                        float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2, CurrentSettings.Zoom);
 
-                            float delta = modifier * factor;
-                            float deltaX = inputState.keysDown[Keys.J] ? delta : (inputState.keysDown[Keys.L] ? -delta : 0);
-                            float deltaY = inputState.keysDown[Keys.I] ? delta : (inputState.keysDown[Keys.K] ? -delta : 0);
+                        float delta = modifier * factor;
+                        float deltaX = inputState.keysDown[Keys.J] ? delta : (inputState.keysDown[Keys.L] ? -delta : 0);
+                        float deltaY = inputState.keysDown[Keys.I] ? delta : (inputState.keysDown[Keys.K] ? -delta : 0);
 
-                            CurrentSettings.Center.X += deltaX;
-                            CurrentSettings.Center.Y += deltaY;
+                        CurrentSettings.Center.X += deltaX;
+                        CurrentSettings.Center.Y += deltaY;
 
-                            input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
+                        input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
 
-                            if (inputState.keysDown[Keys.U] || inputState.keysDown[Keys.O])
+                        if (inputState.keysDown[Keys.U] || inputState.keysDown[Keys.O])
+                        {
+                            CurrentSettings.Zoom += modifier / 40 * (inputState.keysDown[Keys.O] ? 1 : -1);
+                            input_Zoom.Text = CurrentSettings.Zoom.ToString();
+
+                            if (!checkBox_LockZoomFactor.Checked)
                             {
-                                CurrentSettings.Zoom += modifier / 40 * (inputState.keysDown[Keys.O] ? 1 : -1);
-                                input_Zoom.Text = CurrentSettings.Zoom.ToString();
-
-                                if (!checkBox_LockZoomFactor.Checked)
-                                {
-                                    CurrentSettings.LockedZoom = CurrentSettings.Zoom;
-                                    input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
-                                }
+                                CurrentSettings.LockedZoom = CurrentSettings.Zoom;
+                                input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
                             }
                         }
+                    }
 
                     break;
                 }
@@ -798,6 +795,11 @@ namespace FractalLive
                     CurrentSettings.Center += new Vector2((float)Math.Cos(rad), (float)Math.Sin(rad)) * (float)deltaX * factor;
                     CurrentSettings.Center -= new Vector2((float)Math.Cos(rad90), (float)Math.Sin(rad90)) * (float)deltaY * factor;
                 }
+                else
+                {
+                    CurrentCamera.RotateYaw(deltaX);
+                    CurrentCamera.RotatePitch(deltaY);
+                }
 
                 input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
             }
@@ -835,6 +837,10 @@ namespace FractalLive
                     input_LockedZoom.Text = CurrentSettings.LockedZoom.ToString();
                 }
             }
+            else
+            {
+                CurrentCamera.Zoom(scrollOffset * 5, 1);
+            }
         }
 
         private void glControl_KeyDown(object? sender, KeyEventArgs e)
@@ -851,6 +857,10 @@ namespace FractalLive
                 inputState.keysDown[Keys.Q] = true;
             else if (e.KeyCode == Keys.E)
                 inputState.keysDown[Keys.E] = true;
+            else if (e.KeyCode == Keys.Z)
+                inputState.keysDown[Keys.Z] = true;
+            else if (e.KeyCode == Keys.X)
+                inputState.keysDown[Keys.X] = true;
             else if (e.KeyCode == Keys.R)
                 inputState.keysDown[Keys.R] = true;
             else if (e.KeyCode == Keys.F)
@@ -928,6 +938,10 @@ namespace FractalLive
                 inputState.keysDown[Keys.Q] = false;
             else if (e.KeyCode == Keys.E)
                 inputState.keysDown[Keys.E] = false;
+            else if (e.KeyCode == Keys.Z)
+                inputState.keysDown[Keys.Z] = false;
+            else if (e.KeyCode == Keys.X)
+                inputState.keysDown[Keys.X] = false;
             else if (e.KeyCode == Keys.R)
                 inputState.keysDown[Keys.R] = false;
             else if (e.KeyCode == Keys.F)
@@ -1005,6 +1019,18 @@ namespace FractalLive
                 CurrentCamera.CurrentSettings.showTarget = !CurrentCamera.CurrentSettings.showTarget;
             if (e.KeyChar == '\'')
                 CurrentCamera.CurrentSettings.showAxis = !CurrentCamera.CurrentSettings.showAxis;
+            if (e.KeyChar == 'n')
+            {
+                CurrentCamera.Lock = !CurrentCamera.Lock;
+
+                if (CurrentCamera.Lock)
+                {
+                    CurrentCamera.ArcBallYaw(0, true);
+                    CurrentCamera.ArcBallPitch(0, true);
+                }
+            }
+            if (e.KeyChar == 'm' && CurrentCamera.CurrentMode != Camera.Mode.Flat)
+                CurrentCamera.ChangeMode(CurrentCamera.CurrentMode == Camera.Mode.FPS ? Camera.Mode.Free : Camera.Mode.FPS);
         }
 
         #endregion
@@ -1961,7 +1987,7 @@ namespace FractalLive
 
         private int vboPlane, vaoPlane;
         private int vboSphere, vaoSphere;
-        TexturedVertex[] sphereVertices = new IcoSphere().Create(5, 0.5f, true);
+        TexturedVertex[] sphereVertices = new IcoSphere().Create(5, 1, true);
 
         Texture texture0, texture1;
 

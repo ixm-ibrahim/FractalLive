@@ -38,7 +38,7 @@ namespace FractalLive
             public float nearClipping;
             public float farClipping;
 
-            public Settings(Mode mode, float fov = 67.5f, Projection projection = Projection.CARTESIAN, bool showTarget = false, bool showAxis = false, float moveSpeed = .03f, float panSpeed = .015f, float turnSpeed = .2f, float zoomSpeed = .1f, float mouseSensitivity = .2f, float nearClipping = 0.1f, float farClipping = 100f)
+            public Settings(Mode mode, float fov = 67.5f, Projection projection = Projection.CARTESIAN, bool showTarget = false, bool showAxis = false, float moveSpeed = .03f, float panSpeed = .015f, float turnSpeed = .2f, float zoomSpeed = .1f, float mouseSensitivity = .2f, float nearClipping = 0.001f, float farClipping = 10f)
             {
                 this.mode = Mode.Flat;
                 this.projection = Projection.CARTESIAN;
@@ -70,7 +70,7 @@ namespace FractalLive
             
             FullScreen = false;
             AspectRatio = aspectRatio;
-            Lock = false;
+            Lock = true;
             
             position = new Vector3(0,0,3);
             target = Vector3.Zero;
@@ -254,9 +254,10 @@ namespace FractalLive
             return position + (axis * distance);
         }
 
-        public void Zoom(float distance = 1)
+        public void Zoom(float distance, float minusRadius = 0)
         {
-            MoveAlongAxis(direction, CurrentSettings.zoomSpeed * distance * targetDistance, false);
+            float dist = targetDistance - minusRadius;
+            MoveAlongAxis(direction, CurrentSettings.zoomSpeed * distance * (dist < 0 ? 0 : dist), false);
             //MoveAlongAxis(direction, CurrentSettings.zoomSpeed * distance * (position - position.Normalized()).Length, false);
         }
 
@@ -295,19 +296,21 @@ namespace FractalLive
         public void RotateZ(float angle, bool updateTarget = true)
         {
             UpdateTargetDistance();
-            ArcBall(-Vector3.UnitZ, angle);
+            ArcBall(Vector3.UnitZ, angle);
 
             if (updateTarget)
                 UpdateTarget();
         }
 
         //@OpenTK.Quaternion error has to do something with FromAxisAngle()
-        public void RotateYaw(float angle, Mode mode, bool updateTarget = true)
+        public void RotateYaw(float angle, bool updateTarget = true)
         {
             UpdateTargetDistance();
 
-            if (mode == Mode.FPS)
-                Yaw += angle * CurrentSettings.turnSpeed;
+            if (CurrentMode == Mode.FPS)
+                Yaw -= angle * CurrentSettings.turnSpeed;
+            else if (Lock)
+                ArcBallYaw(angle, true);
             else
                 //RotateVectors(Quaternion.FromAxisAngle(MathHelper.DegreesToRadians(angle * currentSettings.turnSpeed), new Vector3D(up)));
                 RotateVectors(Quaternion.FromAxisAngle(up, MathHelper.DegreesToRadians(angle * CurrentSettings.turnSpeed)));
@@ -316,12 +319,14 @@ namespace FractalLive
                 UpdateTarget();
         }
 
-        public void RotatePitch(float angle, Mode mode, bool updateTarget = true)
+        public void RotatePitch(float angle, bool updateTarget = true)
         {
             UpdateTargetDistance();
 
-            if (mode == Mode.FPS)
+            if (CurrentMode == Mode.FPS)
                 Pitch += angle * CurrentSettings.turnSpeed;
+            else if (Lock)
+                ArcBallPitch(angle, true);
             else
                 //RotateVectors(Quaternion.FromAxisAngle(MathHelper.DegreesToRadians(angle * turnSpeed), new Vector3D(right)));
                 RotateVectors(Quaternion.FromAxisAngle(right, MathHelper.DegreesToRadians(angle * CurrentSettings.turnSpeed)));
@@ -357,11 +362,11 @@ namespace FractalLive
             return position;*/
         }
 
-        public void ArcBallYaw(float angle, Mode mode, bool aroundOrigin = false)
+        public void ArcBallYaw(float angle, bool aroundOrigin = false)
         {
             position -= (aroundOrigin ? Vector3.Zero : target);
 
-            if (mode == Mode.FPS)
+            if (CurrentMode == Mode.FPS)
                 Yaw += angle * CurrentSettings.turnSpeed;
             else
                 RotateVectors(Quaternion.FromAxisAngle(up, MathHelper.DegreesToRadians(CurrentSettings.turnSpeed * angle)));
@@ -372,11 +377,11 @@ namespace FractalLive
                 UpdateTarget();
         }
 
-        public void ArcBallPitch(float angle, Mode mode, bool aroundOrigin = false)
+        public void ArcBallPitch(float angle,  bool aroundOrigin = false)
         {
             position -= (aroundOrigin ? Vector3.Zero : target);
 
-            if (mode == Mode.FPS)
+            if (CurrentMode == Mode.FPS)
                 Pitch += angle * CurrentSettings.turnSpeed;
             else
                 RotateVectors(Quaternion.FromAxisAngle(right, MathHelper.DegreesToRadians(CurrentSettings.turnSpeed * angle)));
@@ -392,7 +397,7 @@ namespace FractalLive
             //RotateVectors(Quaternion.FromAxisAngle(turnSpeed * MathHelper.DegreesToRadians(angle), new Vector3D(axis)));
             RotateVectors(Quaternion.FromAxisAngle(axis, CurrentSettings.turnSpeed * MathHelper.DegreesToRadians(angle)));
 
-            position = (-Vector3.UnitZ * -position.Length) + (aroundOrigin ? Vector3.Zero : target);
+            position = (Vector3.UnitZ * -position.Length) + (aroundOrigin ? Vector3.Zero : target);
 
             if (aroundOrigin)
                 UpdateTarget();
