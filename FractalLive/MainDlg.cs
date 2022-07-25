@@ -719,9 +719,18 @@ namespace FractalLive
                         float deltaZoom = inputState.keysDown[Keys.R] ? delta : (inputState.keysDown[Keys.F] ? -delta : 0);
                         float deltaRoll = inputState.keysDown[Keys.Q] ? delta : (inputState.keysDown[Keys.E] ? -delta : 0);
 
-                        if (deltaSide != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Right, deltaSide);
-                        if (deltaUp != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Up, deltaUp);
-                        if (deltaForward != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Direction, deltaForward);
+                        if (CurrentCamera.Lock)
+                        {
+                            if (deltaSide != 0) CurrentCamera.RotateYaw(deltaSide);
+                            if (deltaForward != 0) CurrentCamera.RotatePitch(deltaForward);
+                        }
+                        else
+                        {
+                            if (deltaSide != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Right, deltaSide);
+                            if (deltaUp != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Up, deltaUp);
+                            if (deltaForward != 0) CurrentCamera.MoveAlongAxis(CurrentCamera.Direction, deltaForward);
+                        }
+                        
                         if (deltaZoom != 0) CurrentCamera.Zoom(deltaZoom, 1);
                         if (deltaRoll != 0) CurrentCamera.RotateRoll(deltaRoll);
                     }
@@ -763,7 +772,7 @@ namespace FractalLive
 
             // update controls
             //Log(CurrentSettings.Projection.ToString());
-            Log(CurrentCamera.CurrentSettings.showAxis.ToString());
+            Log(CurrentCamera.TargetDistance.ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
             // update fractal
@@ -1025,8 +1034,8 @@ namespace FractalLive
 
                 if (CurrentCamera.Lock)
                 {
-                    CurrentCamera.ArcBallYaw(0, true);
-                    CurrentCamera.ArcBallPitch(0, true);
+                    CurrentCamera.ArcBallYaw(0, true, 1);
+                    CurrentCamera.ArcBallPitch(0, true, 1);
                 }
             }
             if (e.KeyChar == 'm' && CurrentCamera.CurrentMode != Camera.Mode.Flat)
