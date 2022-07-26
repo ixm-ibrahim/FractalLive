@@ -33,6 +33,5 @@ lower resolution
 miniterations can't exceed maxiterations-1
 third texture bug
 interior texture
-texture with c
 
 julia set (different shader), animation menu, julia set matings (different shader), complex power, terrian, julia minimap, load save settings, doubles and quads

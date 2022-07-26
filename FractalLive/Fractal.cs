@@ -26,6 +26,7 @@ namespace FractalLive
             Normal, Inverse, Nebulabrot
         }
 
+        // Note: the higher the bailout, the more dense the domain lines
         public enum Coloring
         {
             Black = 0, White = 1, Iteration = 2, Smooth = 3, Stripes_1 = 4, Stripes_2 = 5, Domain_1 = 6, Domain_2 = 7, Domain_3 = 8, Domain_4 = 9, Domain_5 = 10, Domain_6 = 11, Domain_7 = 12, Custom = 13

@@ -655,7 +655,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
     vec3 color;
 
     float theta = (c_arg(z.xy) + M_PI) / M_2PI;
-	float r = length(z.xy);
+	float r = length(z.xy)/bailout;
 
     if (useDomainSecondValue)
     {
@@ -728,7 +728,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
     
     float twoPI = 2 * M_PI;
     float s = abs(sin(mod(r * twoPI, twoPI)));
-	float b = sqrt(sqrt(abs(sin(mod(z.y * twoPI, twoPI)) * sin(mod(z.x * twoPI, twoPI)))));
+	float b = sqrt(sqrt(abs(sin(mod(z.y/bailout * twoPI, twoPI)) * sin(mod(z.x/bailout * twoPI, twoPI)))));
 	float b2 = .5 * ((1 - s) + b + sqrt(pow(1 - s - b, 2) + 0.01));
 
     switch (coloring)
@@ -736,8 +736,10 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
         case COL_STRIPES_DOMAIN:
         {
             //color = vec3(stripes);
-            //color = useCustomPalette ? ColorPalette(customPalette, stripes*colorFactor) : Rainbow(stripes, 1*colorFactor);
-            color = HSVtoRGB(vec3(sigmoid(stripes.x, colorFactor)*360, 1, b2 > 1 ? 1 : b2));
+            //color = HSVtoRGB(vec3(sigmoid(stripes.x, colorFactor)*360*colorCycles + t, 1, 1));
+            float strp = sigmoid(stripes.x, colorFactor)*360*colorCycles;
+            float th = useCustomPalette ? RGBtoHSV(ColorPalette(customPalette, mod(strp + t, 360)/360)).x : strp + t;
+            color = HSVtoRGB(vec3(th, 1, 1));
             break;
         }
         case COL_DOMAIN_NORMAL:
