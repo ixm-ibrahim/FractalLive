@@ -13,8 +13,6 @@ left click decides orbit trap point and others
 see if raising zoom to power can be optimized in shaders
 minimize calls to GL.Uniform
 focus glcontrol after each winforms input
-lighting menu
-normal maps in lighting menu
 key for cycling orbit traps/colorings (+/- ?)
 deal with interior colorings that wont work
 test max float value
@@ -36,10 +34,9 @@ flat riemann camera controls and aspect ratio
 camera axis bug
 camera precision bug
 animation menu
-when no buttons are pressed, don't calulate any values
-make riemann angle gimbal lock?
+when no buttons are pressed, don't calulate any values (still image whose values gets passed to new shader that only cares about colors)
+make riemann angle gimbal lock? (rotate with spherical coordinates)
 lower resolution
-fold only after min iteration
 miniterations can't exceed maxiterations-1
 
-stripe average coloring, textures, custom, julia set (different shader), lighting (different shader?) and menu (coloring?), julia set matings (different shader), complex power, julia minimap, load save settings, doubles and quads
+textures (interior - domain),  stripe average coloring, textures, custom, julia set (different shader), lighting (different shader?) and menu (coloring?), julia set matings (different shader), complex power, julia minimap, load save settings, doubles and quads

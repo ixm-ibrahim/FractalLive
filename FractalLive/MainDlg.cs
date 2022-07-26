@@ -36,6 +36,7 @@ namespace FractalLive
                 keysDown[Keys.ShiftKey] = false;
                 keysDown[Keys.RShiftKey] = false;
                 keysDown[Keys.LShiftKey] = false;
+                keysDown[Keys.Oemtilde] = false;    
                 // projection
                 keysDown[Keys.Space] = false;
                 // time
@@ -78,7 +79,6 @@ namespace FractalLive
                 keysDown[Keys.D0] = false;          // fold offset y
                 keysDown[Keys.OemMinus] = false;    // toggle conjugate
                 keysDown[Keys.Oemplus] = false;     // toggle distance estimation
-                keysDown[Keys.Oemtilde] = false;    // screenshot
             }
 
             public bool IsKeyDown(Keys key)
@@ -267,6 +267,8 @@ namespace FractalLive
             shader.SetFloat("textureBlend", split ? fractalSettings.E_TextureBlend : fractalSettings.TextureBlend);
             shader.SetFloat("textureScaleX", split ? fractalSettings.E_TextureScaleX : fractalSettings.TextureScaleX);
             shader.SetFloat("textureScaleY", split ? fractalSettings.E_TextureScaleY : fractalSettings.TextureScaleY);
+            shader.SetBool("useDistortedTexture", split ? fractalSettings.E_UseTextureDistortion : fractalSettings.UseTextureDistortion);
+            shader.SetFloat("textureDistortionFactor", split ? fractalSettings.E_TextureDistortion : fractalSettings.TextureDistortion);
 
             shader.SetInt("i_coloring", (int)fractalSettings.I_Coloring);
             shader.SetBool("i_useCustomPalette", fractalSettings.I_UseCustomPalette);
@@ -284,6 +286,8 @@ namespace FractalLive
             shader.SetFloat("i_textureBlend", fractalSettings.I_TextureBlend);
             shader.SetFloat("i_textureScaleX", fractalSettings.I_TextureScaleX);
             shader.SetFloat("i_textureScaleY", fractalSettings.I_TextureScaleY);
+            shader.SetBool("i_useDistortedTexture", fractalSettings.I_UseTextureDistortion);
+            shader.SetFloat("i_textureDistortionFactor", fractalSettings.I_TextureDistortion);
 
             shader.Use();
 
@@ -355,6 +359,7 @@ namespace FractalLive
             input_TextureScaleY.Enabled = false;
             checkBox_UseCustomPalette_CheckedChanged(null, null);
             input_EditingColor_SelectionChangeCommitted(null, null);
+            input_Coloring_SelectionChangeCommitted(null, null);
 
             // Callbacks
             glControl.Resize += glControl_Resize;
@@ -669,6 +674,11 @@ namespace FractalLive
                     CurrentSettings.AdjustTextureScaleY(modifier / 10);
                     input_TextureScaleY.Text = CurrentSettings.GetTextureScaleY().ToString();
                 }
+                if (inputState.keysDown[Keys.Oemplus] && input_TextureDistortionFactor.Enabled)
+                {
+                    CurrentSettings.AdjustTextureDistortion(modifier / 50);
+                    input_TextureDistortionFactor.Text = CurrentSettings.GetTextureDistortion().ToString();
+                }
             }
 
             // keyboard controls
@@ -951,6 +961,10 @@ namespace FractalLive
                 inputState.keysDown[Keys.D9] = true;
             else if (e.KeyCode == Keys.D0)
                 inputState.keysDown[Keys.D0] = true;
+            else if (e.KeyCode == Keys.OemMinus)
+                inputState.keysDown[Keys.OemMinus] = true;
+            else if (e.KeyCode == Keys.Oemplus)
+                inputState.keysDown[Keys.Oemplus] = true;
         }
 
         private void glControl_KeyUp(object? sender, KeyEventArgs e)
@@ -1032,6 +1046,10 @@ namespace FractalLive
                 inputState.keysDown[Keys.D9] = false;
             else if (e.KeyCode == Keys.D0)
                 inputState.keysDown[Keys.D0] = false;
+            else if (e.KeyCode == Keys.OemMinus)
+                inputState.keysDown[Keys.OemMinus] = false;
+            else if (e.KeyCode == Keys.Oemplus)
+                inputState.keysDown[Keys.Oemplus] = false;
 
         }
 
@@ -1676,6 +1694,7 @@ namespace FractalLive
             input_ColorCycles.Text = CurrentSettings.GetColorCycles().ToString();
             input_ColorFactor.Text = CurrentSettings.GetColorFactor().ToString();
             input_OrbitTrapFactor.Text = CurrentSettings.GetOrbitTrapFactor().ToString();
+            input_StripeDensity.Text = CurrentSettings.GetStripeDensity().ToString();
             //checkBox_MatchOrbitTrap.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
             checkBox_MatchOrbitTrap.Checked = CurrentSettings.GetMatchOrbitTrap();
             //input_DomainCalculation.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
@@ -1688,10 +1707,16 @@ namespace FractalLive
             checkBox_UseDistanceEstimation.Checked = CurrentSettings.GetUseDistanceEstimation();
             input_MaxDistanceEstimation.Text = CurrentSettings.GetMaxDistanceEstimation().ToString();
             input_DistanceEstimationFactor.Text = CurrentSettings.GetDistanceEstimationFactor().ToString();
+            //checkBox_UseNormals.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
+            checkBox_UseNormals.Checked = CurrentSettings.GetUseNormals();
+            //checkBox_UseRotatingNormals.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
+            checkBox_UseRotatingNormals.Checked = CurrentSettings.GetUseRotatingNormals();
             input_Texture.Text = CurrentSettings.GetTexture();
             input_TextureBlend.Value = (decimal)CurrentSettings.GetTextureBlend();
             input_TextureScaleX.Text = CurrentSettings.GetTextureScaleX().ToString();
             input_TextureScaleY.Text = CurrentSettings.GetTextureScaleY().ToString();
+            checkBox_UseDistortedTexture.Checked = CurrentSettings.GetUseTextureDistortion();
+            input_TextureDistortionFactor.Text = CurrentSettings.GetTextureDistortion().ToString();
         }
 
         private void input_Coloring_SelectionChangeCommitted(object sender, EventArgs e)
@@ -1703,8 +1728,9 @@ namespace FractalLive
             else
                 input_DomainCalculation.Enabled = false;*/
 
-            bool usingDomain = CurrentSettings.GetColoring() == Fractal.Coloring.Iteration || CurrentSettings.GetColoring() == Fractal.Coloring.Smooth || CurrentSettings.GetColoring() >= Fractal.Coloring.Domain_1;
+            bool usingDomain = CurrentSettings.GetColoring() >= Fractal.Coloring.Iteration || CurrentSettings.GetColoring() <= Fractal.Coloring.Stripes || CurrentSettings.GetColoring() >= Fractal.Coloring.Domain_1;
             checkBox_MatchOrbitTrap.Enabled = usingDomain;
+            input_StripeDensity.Enabled = CurrentSettings.GetColoring() == Fractal.Coloring.Stripes;
             input_DomainCalculation.Enabled = usingDomain && !checkBox_MatchOrbitTrap.Checked;
             checkBox_UseDomainIteration.Enabled = usingDomain; 
             checkBox_UseSecondDomainValue.Enabled = usingDomain; 
@@ -1927,11 +1953,25 @@ namespace FractalLive
             input_DistanceEstimationFactor.Text = CurrentSettings.GetDistanceEstimationFactor().ToString();
         }
 
+        private void checkBox_UseNormals_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.SetUseNormals(checkBox_UseNormals.Checked);
+
+            checkBox_UseRotatingNormals.Enabled = checkBox_UseNormals.Checked;
+        }
+
+        private void checkBox_UseRotatingNormals_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.SetUseRotatingNormals(checkBox_UseRotatingNormals.Checked);
+        }
+
         private void button_ClearTexture_Click(object sender, EventArgs e)
         {
             CurrentSettings.SetTexture("");
             input_Texture.Text = "";
             input_TextureBlend.Enabled = false;
+            input_TextureScaleX.Enabled = false;
+            input_TextureScaleY.Enabled = false;
         }
 
         private void input_Texture_Click(object sender, EventArgs e)
@@ -1952,14 +1992,17 @@ namespace FractalLive
                     texture0 = Texture.LoadFromFile(openFileDialog1.FileName);
                     texture0.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture0);
                 }
-            }
-        }
 
-        private void input_Texture_TextChanged(object sender, EventArgs e)
-        {
-            input_TextureBlend.Enabled = CurrentSettings.GetTexture() != "";
-            input_TextureScaleX.Enabled = CurrentSettings.GetTexture() != "";
-            input_TextureScaleY.Enabled = CurrentSettings.GetTexture() != "";
+                input_TextureBlend.Enabled = true;
+                input_TextureScaleX.Enabled = true;
+                input_TextureScaleY.Enabled = true;
+            }
+            else
+            {
+                input_TextureBlend.Enabled = false;
+                input_TextureScaleX.Enabled = false;
+                input_TextureScaleY.Enabled = false;
+            }
         }
 
         private void input_TextureBlend_ValueChanged(object sender, EventArgs e)
@@ -1988,6 +2031,25 @@ namespace FractalLive
             CurrentSettings.SetTextureScaleY(float.Parse(input_TextureScaleY.Text));
             input_TextureScaleY.Text = CurrentSettings.GetTextureScaleY().ToString();
         }
+
+        private void checkBox_UseDistortedTexture_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.SetUseTextureDistortion(checkBox_UseDistortedTexture.Checked);
+
+            input_TextureDistortionFactor.Enabled = checkBox_UseDistortedTexture.Checked;
+        }
+
+        private void input_TextureDistortionFactor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_TextureDistortionFactor.Text))
+                e.Cancel = true;
+        }
+        private void input_TextureDistortionFactor_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.SetTextureDistortion(float.Parse(input_TextureDistortionFactor.Text));
+            input_TextureDistortionFactor.Text = CurrentSettings.GetTextureDistortion().ToString();
+        }
+
 
         #endregion
 

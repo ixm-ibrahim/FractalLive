@@ -175,6 +175,11 @@
             this.label_RiemannAngles = new System.Windows.Forms.Label();
             this.input_CameraAngles = new System.Windows.Forms.TextBox();
             this.input_CameraPosition = new System.Windows.Forms.TextBox();
+            this.checkBox_UseDistortedTexture = new System.Windows.Forms.CheckBox();
+            this.input_TextureDistortionFactor = new System.Windows.Forms.TextBox();
+            this.label_TextureDistortionFactor = new System.Windows.Forms.Label();
+            this.checkBox_UseRotatingNormals = new System.Windows.Forms.CheckBox();
+            this.checkBox_UseNormals = new System.Windows.Forms.CheckBox();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -227,7 +232,7 @@
             // label_TextureBlend
             // 
             label_TextureBlend.AutoSize = true;
-            label_TextureBlend.Location = new System.Drawing.Point(3, 459);
+            label_TextureBlend.Location = new System.Drawing.Point(4, 503);
             label_TextureBlend.Name = "label_TextureBlend";
             label_TextureBlend.Size = new System.Drawing.Size(86, 15);
             label_TextureBlend.TabIndex = 70;
@@ -1259,7 +1264,7 @@
             // label_Texture
             // 
             this.label_Texture.AutoSize = true;
-            this.label_Texture.Location = new System.Drawing.Point(3, 434);
+            this.label_Texture.Location = new System.Drawing.Point(4, 478);
             this.label_Texture.Name = "label_Texture";
             this.label_Texture.Size = new System.Drawing.Size(48, 15);
             this.label_Texture.TabIndex = 40;
@@ -1268,12 +1273,11 @@
             // 
             // input_Texture
             // 
-            this.input_Texture.Location = new System.Drawing.Point(57, 431);
+            this.input_Texture.Location = new System.Drawing.Point(58, 475);
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
             this.input_Texture.Click += new System.EventHandler(this.input_Texture_Click);
-            this.input_Texture.TextChanged += new System.EventHandler(this.input_Texture_TextChanged);
             this.input_Texture.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // checkBox_LockZoomFactor
@@ -1372,8 +1376,13 @@
             // panel_ColorMenu
             // 
             this.panel_ColorMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_ColorMenu.AutoScroll = true;
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseRotatingNormals);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseNormals);
+            this.panel_ColorMenu.Controls.Add(this.input_TextureDistortionFactor);
+            this.panel_ColorMenu.Controls.Add(this.label_TextureDistortionFactor);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistortedTexture);
             this.panel_ColorMenu.Controls.Add(this.label_StripeDensity);
             this.panel_ColorMenu.Controls.Add(this.input_StripeDensity);
             this.panel_ColorMenu.Controls.Add(this.input_TextureScaleY);
@@ -1443,7 +1452,7 @@
             // 
             // input_TextureScaleY
             // 
-            this.input_TextureScaleY.Location = new System.Drawing.Point(115, 483);
+            this.input_TextureScaleY.Location = new System.Drawing.Point(116, 527);
             this.input_TextureScaleY.Name = "input_TextureScaleY";
             this.input_TextureScaleY.Size = new System.Drawing.Size(40, 23);
             this.input_TextureScaleY.TabIndex = 93;
@@ -1456,7 +1465,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 486);
+            this.label1.Location = new System.Drawing.Point(4, 530);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 15);
             this.label1.TabIndex = 92;
@@ -1465,7 +1474,7 @@
             // 
             // input_TextureScaleX
             // 
-            this.input_TextureScaleX.Location = new System.Drawing.Point(66, 483);
+            this.input_TextureScaleX.Location = new System.Drawing.Point(67, 527);
             this.input_TextureScaleX.Name = "input_TextureScaleX";
             this.input_TextureScaleX.Size = new System.Drawing.Size(40, 23);
             this.input_TextureScaleX.TabIndex = 91;
@@ -1682,7 +1691,7 @@
             0,
             0,
             131072});
-            this.input_TextureBlend.Location = new System.Drawing.Point(99, 457);
+            this.input_TextureBlend.Location = new System.Drawing.Point(100, 501);
             this.input_TextureBlend.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1707,7 +1716,7 @@
             // button_ClearTexture
             // 
             this.button_ClearTexture.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_ClearTexture.Location = new System.Drawing.Point(32, 403);
+            this.button_ClearTexture.Location = new System.Drawing.Point(33, 447);
             this.button_ClearTexture.Name = "button_ClearTexture";
             this.button_ClearTexture.Size = new System.Drawing.Size(96, 25);
             this.button_ClearTexture.TabIndex = 69;
@@ -1922,6 +1931,61 @@
             this.input_CameraPosition.Validating += new System.ComponentModel.CancelEventHandler(this.input_CameraPosition_Validating);
             this.input_CameraPosition.Validated += new System.EventHandler(this.input_CameraPosition_Validated);
             // 
+            // checkBox_UseDistortedTexture
+            // 
+            this.checkBox_UseDistortedTexture.AutoSize = true;
+            this.checkBox_UseDistortedTexture.Location = new System.Drawing.Point(9, 553);
+            this.checkBox_UseDistortedTexture.Name = "checkBox_UseDistortedTexture";
+            this.checkBox_UseDistortedTexture.Size = new System.Drawing.Size(115, 19);
+            this.checkBox_UseDistortedTexture.TabIndex = 96;
+            this.checkBox_UseDistortedTexture.Text = "Distorted Texture";
+            this.checkBox_UseDistortedTexture.UseVisualStyleBackColor = true;
+            this.checkBox_UseDistortedTexture.CheckedChanged += new System.EventHandler(this.checkBox_UseDistortedTexture_CheckedChanged);
+            // 
+            // input_TextureDistortionFactor
+            // 
+            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(116, 572);
+            this.input_TextureDistortionFactor.Name = "input_TextureDistortionFactor";
+            this.input_TextureDistortionFactor.Size = new System.Drawing.Size(40, 23);
+            this.input_TextureDistortionFactor.TabIndex = 97;
+            this.input_TextureDistortionFactor.Text = "5";
+            this.input_TextureDistortionFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_TextureDistortionFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_TextureDistortionFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureDistortionFactor_Validating);
+            this.input_TextureDistortionFactor.Validated += new System.EventHandler(this.input_TextureDistortionFactor_Validated);
+            // 
+            // label_TextureDistortionFactor
+            // 
+            this.label_TextureDistortionFactor.AutoSize = true;
+            this.label_TextureDistortionFactor.Location = new System.Drawing.Point(4, 575);
+            this.label_TextureDistortionFactor.Name = "label_TextureDistortionFactor";
+            this.label_TextureDistortionFactor.Size = new System.Drawing.Size(103, 15);
+            this.label_TextureDistortionFactor.TabIndex = 98;
+            this.label_TextureDistortionFactor.Text = "Distortion Factor:*";
+            this.label_TextureDistortionFactor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // checkBox_UseRotatingNormals
+            // 
+            this.checkBox_UseRotatingNormals.AutoSize = true;
+            this.checkBox_UseRotatingNormals.Location = new System.Drawing.Point(8, 422);
+            this.checkBox_UseRotatingNormals.Name = "checkBox_UseRotatingNormals";
+            this.checkBox_UseRotatingNormals.Size = new System.Drawing.Size(140, 19);
+            this.checkBox_UseRotatingNormals.TabIndex = 100;
+            this.checkBox_UseRotatingNormals.Text = "Rotating Light Source";
+            this.checkBox_UseRotatingNormals.UseVisualStyleBackColor = true;
+            this.checkBox_UseRotatingNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseRotatingNormals_CheckedChanged);
+            // 
+            // checkBox_UseNormals
+            // 
+            this.checkBox_UseNormals.AutoSize = true;
+            this.checkBox_UseNormals.Location = new System.Drawing.Point(8, 402);
+            this.checkBox_UseNormals.Name = "checkBox_UseNormals";
+            this.checkBox_UseNormals.Size = new System.Drawing.Size(148, 19);
+            this.checkBox_UseNormals.TabIndex = 99;
+            this.checkBox_UseNormals.Text = "Use Normals (Lighting)";
+            this.checkBox_UseNormals.UseVisualStyleBackColor = true;
+            this.checkBox_UseNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseNormals_CheckedChanged);
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2113,6 +2177,11 @@
         private System.Windows.Forms.TextBox input_CameraPosition;
         private System.Windows.Forms.Label label_StripeDensity;
         private System.Windows.Forms.TextBox input_StripeDensity;
+        private System.Windows.Forms.TextBox input_TextureDistortionFactor;
+        private System.Windows.Forms.Label label_TextureDistortionFactor;
+        private System.Windows.Forms.CheckBox checkBox_UseDistortedTexture;
+        private System.Windows.Forms.CheckBox checkBox_UseRotatingNormals;
+        private System.Windows.Forms.CheckBox checkBox_UseNormals;
     }
 }
 

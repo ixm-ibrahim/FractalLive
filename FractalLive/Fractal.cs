@@ -128,10 +128,14 @@ namespace FractalLive
                 UseDistanceEstimation = false;
                 MaxDistanceEstimation = 100;
                 DistanceEstimationFactor = 10;
+                UseNormals = false;
+                UseRotatingNormals = false;
                 Texture = "";
                 TextureBlend = 0.5f;
                 TextureScaleX = 1;
                 TextureScaleY = 1;
+                UseTextureDistortion = false;
+                TextureDistortion = 5;
 
                 I_Coloring = Coloring.Smooth;
                 I_UseCustomPalette = false;
@@ -155,10 +159,14 @@ namespace FractalLive
                 I_UseDistanceEstimation = false;
                 I_MaxDistanceEstimation = 100;
                 I_DistanceEstimationFactor = 10;
+                I_UseNormals = false;
+                I_UseRotatingNormals = false;
                 I_Texture = "";
                 I_TextureBlend = 0.5f;
                 I_TextureScaleX = 1;
                 I_TextureScaleY = 1;
+                I_UseTextureDistortion = false;
+                I_TextureDistortion = 5;
 
                 E_Coloring = Coloring.Smooth;
                 E_UseCustomPalette = false;
@@ -181,6 +189,8 @@ namespace FractalLive
                 E_TextureBlend = 0.5f;
                 E_TextureScaleX = 1;
                 E_TextureScaleY = 1;
+                E_UseTextureDistortion = false;
+                E_TextureDistortion = 5;
 
                 UseLighting = false;
                 UseTerrainColor = false;
@@ -785,6 +795,62 @@ namespace FractalLive
                 }
             }
 
+            public bool GetUseNormals()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_UseNormals;
+                    case Editing.Exterior:
+                        return I_UseNormals;
+                    default:
+                        return UseNormals;
+                }
+            }
+            public void SetUseNormals(bool useNormals)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_UseNormals = useNormals;
+                        break;
+                    case Editing.Exterior:
+                        I_UseNormals = useNormals;
+                        break;
+                    default:
+                        UseNormals = useNormals;
+                        break;
+                }
+            }
+
+            public bool GetUseRotatingNormals()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_UseRotatingNormals;
+                    case Editing.Exterior:
+                        return I_UseRotatingNormals;
+                    default:
+                        return UseRotatingNormals;
+                }
+            }
+            public void SetUseRotatingNormals(bool useRotatingNormals)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_UseRotatingNormals = useRotatingNormals;
+                        break;
+                    case Editing.Exterior:
+                        I_UseRotatingNormals = useRotatingNormals;
+                        break;
+                    default:
+                        UseRotatingNormals = useRotatingNormals;
+                        break;
+                }
+            }
+
             public string GetTexture()
             {
                 switch (EditingColor)
@@ -945,6 +1011,78 @@ namespace FractalLive
                 }
             }
 
+            public bool GetUseTextureDistortion()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_UseTextureDistortion;
+                    case Editing.Exterior:
+                        return E_UseTextureDistortion;
+                    default:
+                        return UseTextureDistortion;
+                }
+            }
+            public void SetUseTextureDistortion(bool useTextureDistortion)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_UseTextureDistortion = useTextureDistortion;
+                        break;
+                    case Editing.Exterior:
+                        E_UseTextureDistortion = useTextureDistortion;
+                        break;
+                    default:
+                        UseTextureDistortion = useTextureDistortion;
+                        break;
+                }
+            }
+
+            public float GetTextureDistortion()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_TextureDistortion;
+                    case Editing.Exterior:
+                        return I_TextureDistortion;
+                    default:
+                        return TextureDistortion;
+                }
+            }
+            public void SetTextureDistortion(float textureDistortion)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_TextureDistortion = textureDistortion;
+                        break;
+                    case Editing.Exterior:
+                        I_TextureDistortion = textureDistortion;
+                        break;
+                    default:
+                        TextureDistortion = textureDistortion;
+                        break;
+                }
+            }
+            public void AdjustTextureDistortion(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_TextureDistortion += offset;
+                        break;
+                    case Editing.Exterior:
+                        I_TextureDistortion += offset;
+                        break;
+                    default:
+                        TextureDistortion += offset;
+                        break;
+                }
+            }
+
+
             public Vector2 Center;
             public float Zoom;
             public float LockedZoom;
@@ -1004,10 +1142,14 @@ namespace FractalLive
             public bool UseDistanceEstimation;
             public float MaxDistanceEstimation;
             public float DistanceEstimationFactor;
+            public bool UseNormals;
+            public bool UseRotatingNormals;
             public string Texture;
             public float TextureBlend;
             public float TextureScaleX;
             public float TextureScaleY;
+            public bool UseTextureDistortion;
+            public float TextureDistortion;
 
             public Coloring I_Coloring;
             public bool I_UseCustomPalette;
@@ -1025,10 +1167,14 @@ namespace FractalLive
             public bool I_UseDistanceEstimation;
             public float I_MaxDistanceEstimation;
             public float I_DistanceEstimationFactor;
+            public bool I_UseNormals;
+            public bool I_UseRotatingNormals;
             public string I_Texture;
             public float I_TextureBlend;
             public float I_TextureScaleX;
             public float I_TextureScaleY;
+            public bool I_UseTextureDistortion;
+            public float I_TextureDistortion;
 
             public Coloring E_Coloring;
             public bool E_UseCustomPalette;
@@ -1046,10 +1192,14 @@ namespace FractalLive
             //public bool I_UseDistanceEstimation;
             //public float I_MaxDistanceEstimation;
             //public float I_DistanceEstimationFactor;
+            //public bool I_UseNormals;
+            //public bool I_UseRotatingNormals;
             public string E_Texture;
             public float E_TextureBlend;
             public float E_TextureScaleX;
             public float E_TextureScaleY;
+            public bool E_UseTextureDistortion;
+            public float E_TextureDistortion;
 
             public bool UseLighting;
             public bool UseTerrainColor;
