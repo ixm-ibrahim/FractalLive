@@ -8,11 +8,10 @@
 #define PROJ_RIEMANN_FLAT               1
 #define PROJ_RIEMANN_SPHERE             2
 
-#define FRAC_CUSTOM						-1
 #define FRAC_MANDELBROT					0
 #define FRAC_LAMBDA						1
+#define FRAC_CUSTOM						2
 
-#define TRAP_CUSTOM						-1
 #define TRAP_CIRCLE						0
 #define TRAP_SQUARE						1
 #define TRAP_REAL						2
@@ -20,8 +19,8 @@
 #define TRAP_RECTANGLE					4
 #define TRAP_POINTS						5
 #define TRAP_LINES						6
+#define TRAP_CUSTOM						7
 
-#define COL_CUSTOM						-1
 #define COL_BLACK						0
 #define COL_WHITE						1
 #define COL_ITERATION                   2
@@ -34,6 +33,7 @@
 #define COL_DOMAIN_BRIGHT_RINGS_SMOOTH  9
 #define COL_DOMAIN_DARK_RINGS           10
 #define COL_DOMAIN_BRIGHT_DARK_SMOOTH   11
+#define COL_CUSTOM						12
 
 #define CALC_MIN                        0
 #define CALC_MAX                        1
@@ -144,7 +144,7 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
 vec2 ComputeFractal(vec2 z, vec2 c);
 vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz);
 vec2 FoldZ(vec2 z);
-vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes);
+vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 bool IsBounded(int iter, vec2 z);
@@ -233,7 +233,7 @@ vec3 Mandelbrot()
     else
         z = MandelbrotLoop(c, iter, trap, domainZ, domainIter, stripes);
 
-	return GetColor(z, iter, trap, domainZ, domainIter, distanceEstimation, stripes);
+	return GetColor(z, c, iter, trap, domainZ, domainIter, distanceEstimation, stripes);
 }
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout vec4 stripesAddend)
@@ -374,6 +374,7 @@ vec2 ComputeFractal(vec2 z, vec2 c)
             //new_z = c_mul(c_pow(c, c_power), c_mul(z, vec2(1,0) - z));
             new_z = c_mul(c_pow(c, c_power), z - c_pow(z, power));
             break;
+        case FRAC_CUSTOM:
         default:
             
             new_z = c_pow(z, power) - z - 1 + c_pow(c, c_power);
@@ -394,6 +395,7 @@ vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz)
             case FRAC_LAMBDA:   // c^cp * (z - z^p)
                 dz = c_mul(vec2(c_power,0.0), dz - power * c_mul(z,dz));
                 break;
+            case FRAC_CUSTOM:
             default:
                 break;
         }
@@ -475,7 +477,7 @@ vec2 FoldZ(vec2 z)
     return z;
 }
 
-vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes)
+vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes)
 {
     // Decide the color based on the number of iterations
     vec3 color;
@@ -493,6 +495,10 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
                 float theta = sin(c_arg(z) + time)*.5 + .5;
 
                 color = mix(outerColor1, outerColor2, theta);
+
+                if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+                    color = mix(Rainbow(orbitTrapFactor*trap.x, colorCycles), color, trap.x);
+
                 break;
             case COL_BLACK:
                 color = vec3(0);
@@ -544,7 +550,11 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
 
                 //color = mix(outerColor1, outerColor2, theta);
                 //color = mix(outerColor1, outerColor2, dist);
-                color = mix(outerColor1, outerColor2, iter/maxIterations);
+                color = mix(outerColor1, outerColor2, fract(GetSmoothIter(iter, z)));
+
+                if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+                    color = mix(Rainbow(orbitTrapFactor*trap.x, colorCycles), color, trap.x);
+
                 break;
             }
             case COL_BLACK:
@@ -628,7 +638,7 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
         if (useDistortedTexture)
             tex = vec2(pow(stripes.z,1), 1-fract(GetSmoothIter(iter, z)));
         else
-            tex = vec2(atan(FragPosModel.y, FragPosModel.x), GetSmoothIter(iter, z));   //@pass c here
+            tex = vec2(atan(c.y, c.x), GetSmoothIter(iter, z));   //@pass c here
 
         color = mix(color, texture(texture0, tex * vec2(textureScaleX, textureScaleY)).xyz, textureBlend);
     }
@@ -680,6 +690,9 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
                         trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.zw, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.zw, matchOrbitTrap, dummyDomainZ, dummyDomainIter); 
                     r2 = trap.x;
 
+                    break;
+                case TRAP_CUSTOM:
+                default:
                     break;
             }
         }
@@ -809,6 +822,9 @@ vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
                     r2 = trap.x;
 
                     break;
+                case TRAP_CUSTOM:
+                default:
+                    break;
             }
         }
 
@@ -903,7 +919,7 @@ bool IsBounded(int iter, vec2 z)
     switch (orbitTrap)
     {
         case TRAP_CUSTOM:
-            return (sin(z.y) < sin(bailout.x));
+            return sin(z.y) < sin(bailout);
         case TRAP_SQUARE:
             return abs(z.x) < bailout && abs(z.y) < bailout;
         case TRAP_REAL:
@@ -938,6 +954,7 @@ vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout i
                 for (int i = 0; i < bailoutLinesCount; i++)
                     trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
                 break;
+            case TRAP_CUSTOM:
             default:
                 trap.x = 0;
         }

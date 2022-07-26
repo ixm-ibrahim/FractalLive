@@ -13,8 +13,6 @@ left click decides orbit trap point and others
 see if raising zoom to power can be optimized in shaders
 minimize calls to GL.Uniform
 focus glcontrol after each winforms input
-key for cycling orbit traps/colorings (+/- ?)
-deal with interior colorings that wont work
 test max float value
 investigate behavior when bailout is between 0 and 1
 optimize glsl arithmetic
@@ -35,5 +33,6 @@ lower resolution
 miniterations can't exceed maxiterations-1
 third texture bug
 interior texture
+texture with c
 
-custom, julia set (different shader), animation menu, julia set matings (different shader), complex power, julia minimap, load save settings, doubles and quads
+julia set (different shader), animation menu, julia set matings (different shader), complex power, julia minimap, load save settings, doubles and quads

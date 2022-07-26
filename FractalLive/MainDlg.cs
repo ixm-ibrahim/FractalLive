@@ -320,9 +320,9 @@ namespace FractalLive
 
             applicationTime = new Stopwatch();
             fractalTime = 0;
-            currentFractal = Fractal.Type.Mandelbrot;
+            currentFractal = Fractal.Type.Classic;
 
-            mandelbrotSettings = new Fractal.Settings(Fractal.Type.Mandelbrot);
+            mandelbrotSettings = new Fractal.Settings(Fractal.Type.Classic);
             mandelbrotCamera = new Camera();
 
             // todo
@@ -1728,7 +1728,7 @@ namespace FractalLive
             else
                 input_DomainCalculation.Enabled = false;*/
 
-            bool usingDomain = CurrentSettings.GetColoring() >= Fractal.Coloring.Iteration || CurrentSettings.GetColoring() <= Fractal.Coloring.Stripes || CurrentSettings.GetColoring() >= Fractal.Coloring.Domain_1;
+            bool usingDomain = CurrentSettings.GetColoring() >= Fractal.Coloring.Iteration || CurrentSettings.GetColoring() <= Fractal.Coloring.Stripes || (CurrentSettings.GetColoring() >= Fractal.Coloring.Domain_1 && CurrentSettings.GetColoring() <= Fractal.Coloring.Domain_7);
             checkBox_MatchOrbitTrap.Enabled = usingDomain;
             input_StripeDensity.Enabled = CurrentSettings.GetColoring() == Fractal.Coloring.Stripes;
             input_DomainCalculation.Enabled = usingDomain && !checkBox_MatchOrbitTrap.Checked;
@@ -2066,7 +2066,7 @@ namespace FractalLive
             {
                 switch (currentFractal)
                 {
-                    case Fractal.Type.Mandelbrot:
+                    case Fractal.Type.Classic:
                         return ref mandelbrotCamera;
                     case Fractal.Type.Julia:
                         return ref juliaCamera;
@@ -2083,7 +2083,7 @@ namespace FractalLive
             {
                 switch (currentFractal)
                 {
-                    case Fractal.Type.Mandelbrot:
+                    case Fractal.Type.Classic:
                         return ref mandelbrotSettings;
                     case Fractal.Type.Julia:
                         return ref juliaSettings;
@@ -2100,7 +2100,7 @@ namespace FractalLive
             {
                 switch (currentFractal)
                 {
-                    case Fractal.Type.Mandelbrot:
+                    case Fractal.Type.Classic:
                         return ref mandelbrot;
                     case Fractal.Type.Julia:
                         return ref julia;

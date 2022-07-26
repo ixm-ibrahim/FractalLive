@@ -133,6 +133,11 @@
             this.label_FractalZoom = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
             this.panel_ColorMenu = new System.Windows.Forms.Panel();
+            this.checkBox_UseRotatingNormals = new System.Windows.Forms.CheckBox();
+            this.checkBox_UseNormals = new System.Windows.Forms.CheckBox();
+            this.input_TextureDistortionFactor = new System.Windows.Forms.TextBox();
+            this.label_TextureDistortionFactor = new System.Windows.Forms.Label();
+            this.checkBox_UseDistortedTexture = new System.Windows.Forms.CheckBox();
             this.label_StripeDensity = new System.Windows.Forms.Label();
             this.input_StripeDensity = new System.Windows.Forms.TextBox();
             this.input_TextureScaleY = new System.Windows.Forms.TextBox();
@@ -175,11 +180,6 @@
             this.label_RiemannAngles = new System.Windows.Forms.Label();
             this.input_CameraAngles = new System.Windows.Forms.TextBox();
             this.input_CameraPosition = new System.Windows.Forms.TextBox();
-            this.checkBox_UseDistortedTexture = new System.Windows.Forms.CheckBox();
-            this.input_TextureDistortionFactor = new System.Windows.Forms.TextBox();
-            this.label_TextureDistortionFactor = new System.Windows.Forms.Label();
-            this.checkBox_UseRotatingNormals = new System.Windows.Forms.CheckBox();
-            this.checkBox_UseNormals = new System.Windows.Forms.CheckBox();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -612,7 +612,8 @@
             "Imaginary",
             "Rectangle",
             "Points",
-            "Lines"});
+            "Lines",
+            "Custom"});
             this.input_OrbitTrap.Location = new System.Drawing.Point(69, 27);
             this.input_OrbitTrap.Name = "input_OrbitTrap";
             this.input_OrbitTrap.Size = new System.Drawing.Size(87, 23);
@@ -626,7 +627,8 @@
             this.input_FractalFormula.FormattingEnabled = true;
             this.input_FractalFormula.Items.AddRange(new object[] {
             "Mandelbrot",
-            "Lambda"});
+            "Lambda",
+            "Custom"});
             this.input_FractalFormula.Location = new System.Drawing.Point(68, 27);
             this.input_FractalFormula.Name = "input_FractalFormula";
             this.input_FractalFormula.Size = new System.Drawing.Size(87, 23);
@@ -1429,6 +1431,61 @@
             this.panel_ColorMenu.Size = new System.Drawing.Size(177, 664);
             this.panel_ColorMenu.TabIndex = 59;
             // 
+            // checkBox_UseRotatingNormals
+            // 
+            this.checkBox_UseRotatingNormals.AutoSize = true;
+            this.checkBox_UseRotatingNormals.Location = new System.Drawing.Point(8, 422);
+            this.checkBox_UseRotatingNormals.Name = "checkBox_UseRotatingNormals";
+            this.checkBox_UseRotatingNormals.Size = new System.Drawing.Size(140, 19);
+            this.checkBox_UseRotatingNormals.TabIndex = 100;
+            this.checkBox_UseRotatingNormals.Text = "Rotating Light Source";
+            this.checkBox_UseRotatingNormals.UseVisualStyleBackColor = true;
+            this.checkBox_UseRotatingNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseRotatingNormals_CheckedChanged);
+            // 
+            // checkBox_UseNormals
+            // 
+            this.checkBox_UseNormals.AutoSize = true;
+            this.checkBox_UseNormals.Location = new System.Drawing.Point(8, 402);
+            this.checkBox_UseNormals.Name = "checkBox_UseNormals";
+            this.checkBox_UseNormals.Size = new System.Drawing.Size(148, 19);
+            this.checkBox_UseNormals.TabIndex = 99;
+            this.checkBox_UseNormals.Text = "Use Normals (Lighting)";
+            this.checkBox_UseNormals.UseVisualStyleBackColor = true;
+            this.checkBox_UseNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseNormals_CheckedChanged);
+            // 
+            // input_TextureDistortionFactor
+            // 
+            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(116, 572);
+            this.input_TextureDistortionFactor.Name = "input_TextureDistortionFactor";
+            this.input_TextureDistortionFactor.Size = new System.Drawing.Size(40, 23);
+            this.input_TextureDistortionFactor.TabIndex = 97;
+            this.input_TextureDistortionFactor.Text = "5";
+            this.input_TextureDistortionFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_TextureDistortionFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_TextureDistortionFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureDistortionFactor_Validating);
+            this.input_TextureDistortionFactor.Validated += new System.EventHandler(this.input_TextureDistortionFactor_Validated);
+            // 
+            // label_TextureDistortionFactor
+            // 
+            this.label_TextureDistortionFactor.AutoSize = true;
+            this.label_TextureDistortionFactor.Location = new System.Drawing.Point(4, 575);
+            this.label_TextureDistortionFactor.Name = "label_TextureDistortionFactor";
+            this.label_TextureDistortionFactor.Size = new System.Drawing.Size(103, 15);
+            this.label_TextureDistortionFactor.TabIndex = 98;
+            this.label_TextureDistortionFactor.Text = "Distortion Factor:*";
+            this.label_TextureDistortionFactor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // checkBox_UseDistortedTexture
+            // 
+            this.checkBox_UseDistortedTexture.AutoSize = true;
+            this.checkBox_UseDistortedTexture.Location = new System.Drawing.Point(9, 553);
+            this.checkBox_UseDistortedTexture.Name = "checkBox_UseDistortedTexture";
+            this.checkBox_UseDistortedTexture.Size = new System.Drawing.Size(115, 19);
+            this.checkBox_UseDistortedTexture.TabIndex = 96;
+            this.checkBox_UseDistortedTexture.Text = "Distorted Texture";
+            this.checkBox_UseDistortedTexture.UseVisualStyleBackColor = true;
+            this.checkBox_UseDistortedTexture.CheckedChanged += new System.EventHandler(this.checkBox_UseDistortedTexture_CheckedChanged);
+            // 
             // label_StripeDensity
             // 
             this.label_StripeDensity.AutoSize = true;
@@ -1814,7 +1871,8 @@
             "Domain 4",
             "Domain 5",
             "Domain 6",
-            "Domain 7"});
+            "Domain 7",
+            "Custom"});
             this.input_Coloring.Location = new System.Drawing.Point(68, 53);
             this.input_Coloring.Name = "input_Coloring";
             this.input_Coloring.Size = new System.Drawing.Size(87, 23);
@@ -1930,61 +1988,6 @@
             this.input_CameraPosition.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateMultipleDecimalChar);
             this.input_CameraPosition.Validating += new System.ComponentModel.CancelEventHandler(this.input_CameraPosition_Validating);
             this.input_CameraPosition.Validated += new System.EventHandler(this.input_CameraPosition_Validated);
-            // 
-            // checkBox_UseDistortedTexture
-            // 
-            this.checkBox_UseDistortedTexture.AutoSize = true;
-            this.checkBox_UseDistortedTexture.Location = new System.Drawing.Point(9, 553);
-            this.checkBox_UseDistortedTexture.Name = "checkBox_UseDistortedTexture";
-            this.checkBox_UseDistortedTexture.Size = new System.Drawing.Size(115, 19);
-            this.checkBox_UseDistortedTexture.TabIndex = 96;
-            this.checkBox_UseDistortedTexture.Text = "Distorted Texture";
-            this.checkBox_UseDistortedTexture.UseVisualStyleBackColor = true;
-            this.checkBox_UseDistortedTexture.CheckedChanged += new System.EventHandler(this.checkBox_UseDistortedTexture_CheckedChanged);
-            // 
-            // input_TextureDistortionFactor
-            // 
-            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(116, 572);
-            this.input_TextureDistortionFactor.Name = "input_TextureDistortionFactor";
-            this.input_TextureDistortionFactor.Size = new System.Drawing.Size(40, 23);
-            this.input_TextureDistortionFactor.TabIndex = 97;
-            this.input_TextureDistortionFactor.Text = "5";
-            this.input_TextureDistortionFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_TextureDistortionFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_TextureDistortionFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureDistortionFactor_Validating);
-            this.input_TextureDistortionFactor.Validated += new System.EventHandler(this.input_TextureDistortionFactor_Validated);
-            // 
-            // label_TextureDistortionFactor
-            // 
-            this.label_TextureDistortionFactor.AutoSize = true;
-            this.label_TextureDistortionFactor.Location = new System.Drawing.Point(4, 575);
-            this.label_TextureDistortionFactor.Name = "label_TextureDistortionFactor";
-            this.label_TextureDistortionFactor.Size = new System.Drawing.Size(103, 15);
-            this.label_TextureDistortionFactor.TabIndex = 98;
-            this.label_TextureDistortionFactor.Text = "Distortion Factor:*";
-            this.label_TextureDistortionFactor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // checkBox_UseRotatingNormals
-            // 
-            this.checkBox_UseRotatingNormals.AutoSize = true;
-            this.checkBox_UseRotatingNormals.Location = new System.Drawing.Point(8, 422);
-            this.checkBox_UseRotatingNormals.Name = "checkBox_UseRotatingNormals";
-            this.checkBox_UseRotatingNormals.Size = new System.Drawing.Size(140, 19);
-            this.checkBox_UseRotatingNormals.TabIndex = 100;
-            this.checkBox_UseRotatingNormals.Text = "Rotating Light Source";
-            this.checkBox_UseRotatingNormals.UseVisualStyleBackColor = true;
-            this.checkBox_UseRotatingNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseRotatingNormals_CheckedChanged);
-            // 
-            // checkBox_UseNormals
-            // 
-            this.checkBox_UseNormals.AutoSize = true;
-            this.checkBox_UseNormals.Location = new System.Drawing.Point(8, 402);
-            this.checkBox_UseNormals.Name = "checkBox_UseNormals";
-            this.checkBox_UseNormals.Size = new System.Drawing.Size(148, 19);
-            this.checkBox_UseNormals.TabIndex = 99;
-            this.checkBox_UseNormals.Text = "Use Normals (Lighting)";
-            this.checkBox_UseNormals.UseVisualStyleBackColor = true;
-            this.checkBox_UseNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseNormals_CheckedChanged);
             // 
             // MainDlg
             // 

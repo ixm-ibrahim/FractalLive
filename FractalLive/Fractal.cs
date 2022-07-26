@@ -13,12 +13,12 @@ namespace FractalLive
         #region Enumerations
         public enum Type
         {
-            Custom = -1, Mandelbrot = 0, Julia = 1, Julia_Mating = 2
+            Classic = 0, Julia = 1, Julia_Mating = 2
         }
 
         public enum Formula
         {
-            Custom = -1, Classic = 0, Lambda = 1
+            Mandelbrot = 0, Lambda = 1, Custom = 2
         }
 
         public enum Buddhabrot
@@ -28,12 +28,12 @@ namespace FractalLive
 
         public enum Coloring
         {
-            Custom = -1, Black = 0, White = 1, Iteration = 2, Smooth = 3, Stripes = 4, Domain_1 = 5, Domain_2 = 6, Domain_3 = 7, Domain_4 = 8, Domain_5 = 9, Domain_6 = 10, Domain_7 = 11
+            Black = 0, White = 1, Iteration = 2, Smooth = 3, Stripes = 4, Domain_1 = 5, Domain_2 = 6, Domain_3 = 7, Domain_4 = 8, Domain_5 = 9, Domain_6 = 10, Domain_7 = 11, Custom = 12
         }
 
         public enum OrbitTrap
         {
-            Custom = -1, Circle = 0, Square = 1, Real = 2, Imaginary = 3, Rectangle = 4, Points = 5, Lines = 6, COUNT
+            Circle = 0, Square = 1, Real = 2, Imaginary = 3, Rectangle = 4, Points = 5, Lines = 6, Custom = 7
         }
 
         public enum Projection
@@ -48,7 +48,7 @@ namespace FractalLive
 
         public enum Calculation
         {
-            Custom = -1, Minimum = 0, Maximum = 1, Average = 2, First = 3, Last = 4
+            Minimum = 0, Maximum = 1, Average = 2, First = 3, Last = 4
         }
 
         #endregion
@@ -56,7 +56,7 @@ namespace FractalLive
         #region Structures
         public struct Settings
         {
-            public Settings(Type type = Type.Mandelbrot, Formula formula = Formula.Classic)
+            public Settings(Type type = Type.Classic, Formula formula = Formula.Mandelbrot)
             {
                 Zoom = 0;
                 LockedZoom = 0;
