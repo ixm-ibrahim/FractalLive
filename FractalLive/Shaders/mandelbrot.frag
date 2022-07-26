@@ -1,6 +1,7 @@
 ﻿#version 450 core
 
-#define M_PI            3.1415926535897932384626433832795
+#define M_PI            3.141592653589793238462643383279
+#define M_2PI           6.283185307179586476925286766559
 #define MAX_LENGTH      1e15
 
 #define PROJ_CARTESIAN                  0
@@ -495,16 +496,24 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
                 break;
             case COL_BLACK:
                 color = vec3(0);
+                
+                if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+                    color = mix(1-vec3(pow(trap.x,orbitTrapFactor)), color, trap.x);
+
                 break;
             case COL_WHITE:
                 color = vec3(1);
+                
+                if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+                    color = mix(vec3(pow(trap.x,orbitTrapFactor)), color, trap.x);
+
                 break;
             case COL_STRIPES:
                 color = stripes.y * domColor;
                 break;
             case COL_ITERATION:
             case COL_SMOOTH:
-                float mu = (atan(z.y,z.x)+M_PI/2)/(2*M_PI);
+                float mu = (atan(z.y,z.x)+M_PI/2)/M_2PI;
                 //color = useCustomPalette ? ColorPalette(customPalette, GetSmoothIter(mu, z)/31) : Rainbow(GetSmoothIter(mu, z), colorCycles);
                 color = useCustomPalette ? ColorPalette(customPalette, mu) : Rainbow(mu*50, colorCycles);
                 
@@ -541,11 +550,19 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
             case COL_BLACK:
             {
                 color = vec3(0);
+                
+                if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+                    color = mix(1-vec3(pow(trap.x,orbitTrapFactor)), color, trap.x);
+
                 break;
             }
             case COL_WHITE:
             {
                 color = vec3(1);
+                
+                if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+                    color = mix(vec3(pow(trap.x,orbitTrapFactor)), color, trap.x);
+
                 break;
             }
             case COL_ITERATION:
@@ -581,7 +598,10 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
     
     if (useDistanceEstimation && iter < maxIterations)
         //color = pow( vec3(dist), vec3(0.9,1.1,1.4) );
-        color *= pow(distanceEstimation,1);
+        if (coloring == COL_BLACK)
+            color += 1-distanceEstimation;
+        else
+            color *= distanceEstimation;
 
     if (splitInteriorExterior && iter >= maxIterations && i_useTexture)
     {
@@ -623,7 +643,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
     
     vec3 color;
 
-    float theta = (c_arg(z.xy) + M_PI) / (2*M_PI);
+    float theta = (c_arg(z.xy) + M_PI) / M_2PI;
 	float r = length(z.xy);
 
     if (useDomainSecondValue)
@@ -692,9 +712,8 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
 		r = 0;
 	}
 
-    float twoPI = 2 * M_PI;
-    float s = abs(sin(mod(r * twoPI, twoPI)));
-	float b = sqrt(sqrt(abs(sin(mod(z.y * twoPI, twoPI)) * sin(mod(z.x * twoPI, twoPI)))));
+    float s = abs(sin(mod(r * M_2PI, M_2PI)));
+	float b = sqrt(sqrt(abs(sin(mod(z.y * M_2PI, M_2PI)) * sin(mod(z.x * M_2PI, M_2PI)))));
 	float b2 = .5 * ((1 - s) + b + sqrt(pow(1 - s - b, 2) + 0.01));
 
 
@@ -752,7 +771,7 @@ vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
     
     vec3 color;
 
-    float theta = (atan(z.y, z.x) + M_PI) / (2*M_PI);
+    float theta = (atan(z.y, z.x) + M_PI) / M_2PI;
 	float r = length(z.xy);
 
     if (i_useDomainSecondValue)
@@ -821,9 +840,8 @@ vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
 		r = 0;
 	}
 
-    float twoPI = 2 * M_PI;
-    float s = abs(sin(mod(r * twoPI, twoPI)));
-	float b = sqrt(sqrt(abs(sin(mod(z.y * twoPI, twoPI)) * sin(mod(z.x * twoPI, twoPI)))));
+    float s = abs(sin(mod(r * M_2PI, M_2PI)));
+	float b = sqrt(sqrt(abs(sin(mod(z.y * M_2PI, M_2PI)) * sin(mod(z.x * M_2PI, M_2PI)))));
 	float b2 = .5 * ((1 - s) + b + sqrt(pow(1 - s - b, 2) + 0.01));
 
 

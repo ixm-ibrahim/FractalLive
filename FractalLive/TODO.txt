@@ -21,25 +21,19 @@ optimize glsl arithmetic
 complex powers for power and c_power
 snap values textbox
 optimize main cardioid and other areas - as long as color calculation doesn't require the right iteration
-consolidate IsWithinOrbitTrap
-match orbit trap exposed bug in middle of cardioid
-separate smooth setting
-fix min iterations bug
-minIterations with first orbit trap not working
+minIterations with "first"" orbit trap not working
 lambda distance estimation bug
 popup if user inputed high value which may slow down machine (get rid of unnecessary <type>bounds)
 showcase how fold offset shows more detail without zooming
 make ints floats so ctrl modifer can be used
-flat riemann camera controls and aspect ratio
 camera axis bug
 camera precision bug
-animation menu
 when no buttons are pressed, don't calulate any values (still image whose values gets passed to new shader that only cares about colors)
 make riemann angle gimbal lock? (rotate with spherical coordinates)
+flat riemann camera controls and aspect ratio
 lower resolution
 miniterations can't exceed maxiterations-1
 third texture bug
 interior texture
-2pi glsl constant
 
-custom, julia set (different shader), lighting (different shader?) and menu (coloring?), julia set matings (different shader), complex power, julia minimap, load save settings, doubles and quads
+custom, julia set (different shader), animation menu, julia set matings (different shader), complex power, julia minimap, load save settings, doubles and quads

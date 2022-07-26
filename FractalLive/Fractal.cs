@@ -125,7 +125,7 @@ namespace FractalLive
                 SecondDomainValueFactor2 = 7;
                 MatchOrbitTrap = false;
                 UseDomainIteration = false;
-                UseDistanceEstimation = false;
+                UseDistanceEstimation = true;
                 MaxDistanceEstimation = 100;
                 DistanceEstimationFactor = 10;
                 UseNormals = false;
@@ -156,7 +156,7 @@ namespace FractalLive
                 I_SecondDomainValueFactor2 = 7;
                 I_MatchOrbitTrap = false;
                 I_UseDomainIteration = false;
-                I_UseDistanceEstimation = false;
+                I_UseDistanceEstimation = true;
                 I_MaxDistanceEstimation = 100;
                 I_DistanceEstimationFactor = 10;
                 I_UseNormals = false;

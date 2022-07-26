@@ -352,8 +352,6 @@ namespace FractalLive
             input_DomainCalculation.SelectedIndex = 4;
             input_SecondDomainValueFactor1.Enabled = false;
             input_SecondDomainValueFactor2.Enabled = false;
-            input_MaxDistanceEstimation.Enabled = false;
-            input_DistanceEstimationFactor.Enabled = false;
             input_TextureBlend.Enabled = false;
             input_TextureScaleX.Enabled = false;
             input_TextureScaleY.Enabled = false;
