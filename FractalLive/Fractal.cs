@@ -118,6 +118,7 @@ namespace FractalLive
                 ColorCycles = 1;
                 ColorFactor = 6;
                 OrbitTrapFactor = 10;
+                StripeDensity = 5;
                 DomainCalculation = Calculation.Last;
                 UseSecondDomainValue = false;
                 SecondDomainValueFactor1 = 10;
@@ -144,6 +145,7 @@ namespace FractalLive
                 I_ColorCycles = 1;
                 I_ColorFactor = 6;
                 I_OrbitTrapFactor = 10;
+                I_StripeDensity = 5;
                 I_DomainCalculation = Calculation.Last;
                 I_UseSecondDomainValue = false;
                 I_SecondDomainValueFactor1 = 10;
@@ -170,6 +172,7 @@ namespace FractalLive
                 E_ColorCycles = 1;
                 E_ColorFactor = 6;
                 E_OrbitTrapFactor = 10;
+                E_StripeDensity = 5;
                 E_UseSecondDomainValue = false;
                 E_SecondDomainValueFactor1 = 10;
                 E_SecondDomainValueFactor2 = 7;
@@ -423,6 +426,49 @@ namespace FractalLive
                         break;
                     default:
                         OrbitTrapFactor += offset;
+                        break;
+                }
+            }
+            
+            public float GetStripeDensity()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_StripeDensity;
+                    case Editing.Exterior:
+                        return E_StripeDensity;
+                    default:
+                        return StripeDensity;
+                }
+            }
+            public void SetStripeDensity(float stripeDensity)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_StripeDensity = stripeDensity;
+                        break;
+                    case Editing.Exterior:
+                        E_StripeDensity = stripeDensity;
+                        break;
+                    default:
+                        StripeDensity = stripeDensity;
+                        break;
+                }
+            }
+            public void AdjustStripeDensity(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_StripeDensity += offset;
+                        break;
+                    case Editing.Exterior:
+                        E_StripeDensity += offset;
+                        break;
+                    default:
+                        StripeDensity += offset;
                         break;
                 }
             }
@@ -948,6 +994,7 @@ namespace FractalLive
             public float ColorCycles;
             public float ColorFactor;
             public float OrbitTrapFactor;
+            public float StripeDensity;
             public Calculation DomainCalculation;
             public bool UseSecondDomainValue;
             public float SecondDomainValueFactor1;
@@ -968,6 +1015,7 @@ namespace FractalLive
             public float I_ColorCycles;
             public float I_ColorFactor;
             public float I_OrbitTrapFactor;
+            public float I_StripeDensity;
             public Calculation I_DomainCalculation;
             public bool I_UseSecondDomainValue;
             public float I_SecondDomainValueFactor1;
@@ -988,6 +1036,7 @@ namespace FractalLive
             public float E_ColorCycles;
             public float E_ColorFactor;
             public float E_OrbitTrapFactor;
+            public float E_StripeDensity;
             //public Calculation E_DomainCalculation;
             public bool E_UseSecondDomainValue;
             public float E_SecondDomainValueFactor1;

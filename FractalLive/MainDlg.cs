@@ -252,6 +252,7 @@ namespace FractalLive
             shader.SetFloat("colorCycles", split ? fractalSettings.E_ColorCycles : fractalSettings.ColorCycles);
             shader.SetFloat("colorFactor", split ? fractalSettings.E_ColorFactor : fractalSettings.ColorFactor);
             shader.SetFloat("orbitTrapFactor", split ? fractalSettings.E_OrbitTrapFactor : fractalSettings.OrbitTrapFactor);
+            shader.SetFloat("stripeDensity", split ? fractalSettings.E_StripeDensity : fractalSettings.StripeDensity);
             shader.SetInt("domainCalculation", (int)(split ? fractalSettings.I_DomainCalculation : fractalSettings.DomainCalculation));
             shader.SetBool("matchOrbitTrap", (split ? fractalSettings.I_MatchOrbitTrap : fractalSettings.MatchOrbitTrap) && fractalSettings.OrbitTrap >= Fractal.OrbitTrap.Points);
             shader.SetBool("useDomainSecondValue", split ? fractalSettings.E_UseSecondDomainValue : fractalSettings.UseSecondDomainValue);
@@ -273,6 +274,7 @@ namespace FractalLive
             shader.SetFloat("i_colorCycles", fractalSettings.I_ColorCycles);
             shader.SetFloat("i_colorFactor", fractalSettings.I_ColorFactor);
             shader.SetFloat("i_orbitTrapFactor", fractalSettings.I_OrbitTrapFactor);
+            shader.SetFloat("i_stripeDensity", fractalSettings.I_StripeDensity);
             shader.SetBool("i_useDomainSecondValue", fractalSettings.I_UseSecondDomainValue);
             shader.SetFloat("i_secondDomainValueFactor1", fractalSettings.I_SecondDomainValueFactor1);
             shader.SetFloat("i_secondDomainValueFactor2", fractalSettings.I_SecondDomainValueFactor2);
@@ -627,37 +629,42 @@ namespace FractalLive
                     CurrentSettings.AdjustOrbitTrapFactor(modifier / 10);
                     input_OrbitTrapFactor.Text = CurrentSettings.GetOrbitTrapFactor().ToString();
                 }
-                if (inputState.keysDown[Keys.D4] && input_SecondDomainValueFactor1.Enabled)
+                if (inputState.keysDown[Keys.D4] && input_StripeDensity.Enabled)
+                {
+                    CurrentSettings.AdjustStripeDensity(modifier / 50);
+                    input_StripeDensity.Text = CurrentSettings.GetStripeDensity().ToString();
+                }
+                if (inputState.keysDown[Keys.D5] && input_SecondDomainValueFactor1.Enabled)
                 {
                     CurrentSettings.AdjustSecondDomainValueFactor1(modifier / 10);
                     input_SecondDomainValueFactor1.Text = CurrentSettings.GetSecondDomainValueFactor1().ToString();
                 }
-                if (inputState.keysDown[Keys.D5] && input_SecondDomainValueFactor2.Enabled)
+                if (inputState.keysDown[Keys.D6] && input_SecondDomainValueFactor2.Enabled)
                 {
                     CurrentSettings.AdjustSecondDomainValueFactor2(modifier / 10);
                     input_SecondDomainValueFactor2.Text = CurrentSettings.GetSecondDomainValueFactor2().ToString();
                 }
-                if (inputState.keysDown[Keys.D6] && input_MaxDistanceEstimation.Enabled)
+                if (inputState.keysDown[Keys.D7] && input_MaxDistanceEstimation.Enabled)
                 {
                     CurrentSettings.AdjustMaxDistanceEstimation(modifier / 10);
                     input_MaxDistanceEstimation.Text = CurrentSettings.GetMaxDistanceEstimation().ToString();
                 }
-                if (inputState.keysDown[Keys.D7] && input_DistanceEstimationFactor.Enabled)
+                if (inputState.keysDown[Keys.D8] && input_DistanceEstimationFactor.Enabled)
                 {
                     CurrentSettings.AdjustDistanceEstimationFactor(modifier / 100);
                     input_DistanceEstimationFactor.Text = CurrentSettings.GetDistanceEstimationFactor().ToString();
                 }
-                if (inputState.keysDown[Keys.D8] && input_TextureBlend.Enabled)
+                if (inputState.keysDown[Keys.D9] && input_TextureBlend.Enabled)
                 {
                     CurrentSettings.AdjustTextureBlend(modifier / 100);
                     input_TextureBlend.Text = CurrentSettings.GetTextureBlend().ToString();
                 }
-                if (inputState.keysDown[Keys.D9] && input_TextureScaleX.Enabled)
+                if (inputState.keysDown[Keys.D0] && input_TextureScaleX.Enabled)
                 {
                     CurrentSettings.AdjustTextureScaleX(modifier / 10);
                     input_TextureScaleX.Text = CurrentSettings.GetTextureScaleX().ToString();
                 }
-                if (inputState.keysDown[Keys.D0] && input_TextureScaleY.Enabled)
+                if (inputState.keysDown[Keys.OemMinus] && input_TextureScaleY.Enabled)
                 {
                     CurrentSettings.AdjustTextureScaleY(modifier / 10);
                     input_TextureScaleY.Text = CurrentSettings.GetTextureScaleY().ToString();
@@ -1830,6 +1837,17 @@ namespace FractalLive
         {
             CurrentSettings.SetOrbitTrapFactor(float.Parse(input_OrbitTrapFactor.Text));
             input_OrbitTrapFactor.Text = CurrentSettings.GetOrbitTrapFactor().ToString();
+        }
+
+        private void input_StripeDensity_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_StripeDensity.Text))
+                e.Cancel = true;
+        }
+        private void input_StripeDensity_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.SetStripeDensity(float.Parse(input_StripeDensity.Text));
+            input_StripeDensity.Text = CurrentSettings.GetStripeDensity().ToString();
         }
 
         private void input_DomainCalculation_SelectionChangeCommitted(object sender, EventArgs e)
