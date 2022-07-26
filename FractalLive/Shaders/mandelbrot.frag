@@ -107,6 +107,8 @@ uniform sampler2D texture0;
 uniform float textureBlend;
 uniform float textureScaleX;
 uniform float textureScaleY;
+uniform bool useDistortedTexture;
+uniform float textureDistortionFactor;
 
 uniform int i_coloring;
 uniform bool i_useCustomPalette;
@@ -125,6 +127,8 @@ uniform sampler2D texture1;
 uniform float i_textureBlend;
 uniform float i_textureScaleX;
 uniform float i_textureScaleY;
+uniform bool i_useDistortedTexture;
+uniform float i_textureDistortionFactor;
 
 vec3 Mandelbrot();
 
@@ -134,12 +138,12 @@ void main()
 	FragColor = vec4(Mandelbrot(), 1.0);FragPosWorld;
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout vec2 stripesAddend);
-vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec2 stripesAddend, float riemannAdjustment);
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout vec4 stripesAddend);
+vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment);
 vec2 ComputeFractal(vec2 z, vec2 c);
 vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz);
 vec2 FoldZ(vec2 z);
-vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec2 stripes);
+vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
 bool IsBounded(int iter, vec2 z);
@@ -174,7 +178,7 @@ vec3 Mandelbrot()
 	vec4 domainZ;
     ivec2 domainIter;
     float distanceEstimation;
-    vec2 stripes = vec2(0);
+    vec4 stripes = vec4(0);
     
     vec2 c = FragPosModel.xy;
     float riemannAdjustment = 1;
@@ -231,12 +235,12 @@ vec3 Mandelbrot()
 	return GetColor(z, iter, trap, domainZ, domainIter, distanceEstimation, stripes);
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout vec2 stripesAddend)
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout vec4 stripesAddend)
 {
 	vec2 z = (formula == FRAC_LAMBDA) ? vec2(1.0/power,0) : vec2(0);
     domainZ = vec4(c,c);
     trap = vec2(startOrbitDistance);
-    vec2 lastAdded = vec2(0);
+    vec4 lastAdded = vec4(0);
     int stripesCount = 0;
 
 	for (iter = 0; iter < maxIterations; ++iter)
@@ -247,6 +251,8 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
         {
             stripesAddend.x += sin(stripeDensity * c_arg(z))/2 + 0.5;
             stripesAddend.y += sin((splitInteriorExterior ? i_stripeDensity : stripeDensity) * c_arg(z))/2 + 0.5;
+            stripesAddend.z += sin(textureDistortionFactor * c_arg(z))/2 + 0.5;
+            stripesAddend.w += sin((splitInteriorExterior ? i_textureDistortionFactor : textureDistortionFactor) * c_arg(z))/2 + 0.5;
             stripesCount++;
         
             if (!matchOrbitTrap)
@@ -279,12 +285,12 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
     
 	return z;
 }
-vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec2 stripesAddend, float riemannAdjustment)
+vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment)
 {
 	vec2 z = (formula == FRAC_LAMBDA) ? vec2(1.0/power,0) : vec2(0);
     domainZ = vec4(c,c);
     trap = vec2(startOrbitDistance);
-    vec2 lastAdded = vec2(0);
+    vec4 lastAdded = vec4(0);
     int stripesCount = 0;
 
     vec2 dz = vec2(1.0,0.0);
@@ -301,6 +307,8 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
         {
             stripesAddend.x += sin(stripeDensity * c_arg(z))/2 + 0.5;
             stripesAddend.y += sin((splitInteriorExterior ? i_stripeDensity : stripeDensity) * c_arg(z))/2 + 0.5;
+            stripesAddend.z += sin(textureDistortionFactor * c_arg(z))/2 + 0.5;
+            stripesAddend.w += sin((splitInteriorExterior ? i_textureDistortionFactor : textureDistortionFactor) * c_arg(z))/2 + 0.5;
             stripesCount++;
         
             if (!matchOrbitTrap)
@@ -466,7 +474,7 @@ vec2 FoldZ(vec2 z)
     return z;
 }
 
-vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec2 stripes)
+vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes)
 {
     // Decide the color based on the number of iterations
     vec3 color;
@@ -496,6 +504,14 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
                 break;
             case COL_ITERATION:
             case COL_SMOOTH:
+                float mu = (atan(z.y,z.x)+M_PI/2)/(2*M_PI);
+                //color = useCustomPalette ? ColorPalette(customPalette, GetSmoothIter(mu, z)/31) : Rainbow(GetSmoothIter(mu, z), colorCycles);
+                color = useCustomPalette ? ColorPalette(customPalette, mu) : Rainbow(mu*50, colorCycles);
+                
+                if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
+                    color = mix(Rainbow(orbitTrapFactor*trap.x, colorCycles), color, trap.x);
+
+                break;
             default:
                 color = domColor;
                 break;
@@ -570,18 +586,29 @@ vec3 GetColor(vec2 z, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float
     if (splitInteriorExterior && iter >= maxIterations && i_useTexture)
     {
         //vec2 tex = vec2(pow(atan(FragPosModel.y, FragPosModel.x),2), GetSmoothIter(iter, z));   //@pass c here
-        vec2 tex = vec2(stripes.y, GetSmoothIter(iter, z));   //@pass c here
+        //vec2 tex = vec2(stripes.y, GetSmoothIter(iter, z));   //@pass c here
+        vec2 tex;
+        
+        if (i_useDistortedTexture)
+            tex = vec2(pow(stripes.w,1)*i_textureScaleX, (1-fract(GetSmoothIter(iter, z))) * i_textureScaleY);
+        else
+            //tex = vec2(atan(FragPosModel.y, FragPosModel.x), GetSmoothIter(iter, z));   //@pass c here
+            tex = vec2(atan(z.y, z.x)*i_textureScaleX, sin(length(z)*i_textureScaleY)*.5+.5);
 
-        color = mix(color, texture(texture1, tex * vec2(i_textureScaleX, i_textureScaleY)).xyz, i_textureBlend);
+        color = mix(color, texture(texture1, tex).xyz, i_textureBlend);
     }
     else if (useTexture)
     {
         //vec2 tex = TexCoords;
         //vec2 tex = z;
         //vec2 tex = vec2(atan(z.y, z.x), 1-fract(GetSmoothIter(iter, z)));
-        vec2 tex = vec2(atan(FragPosModel.y, FragPosModel.x), GetSmoothIter(iter, z));   //@pass c here
-        //vec2 tex = vec2(pow(sigmoid(stripes.x, colorFactor),1), 1-fract(GetSmoothIter(iter, z)));   //@pass c here
         //vec2 tex = vec2(pow(stripes.x, colorFactor), 1-fract(GetSmoothIter(iter, z)));
+        vec2 tex;
+        
+        if (useDistortedTexture)
+            tex = vec2(pow(stripes.z,1), 1-fract(GetSmoothIter(iter, z)));
+        else
+            tex = vec2(atan(FragPosModel.y, FragPosModel.x), GetSmoothIter(iter, z));   //@pass c here
 
         color = mix(color, texture(texture0, tex * vec2(textureScaleX, textureScaleY)).xyz, textureBlend);
     }
@@ -712,11 +739,8 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
     }
 
     if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
-        if (coloring <= COL_SMOOTH)
-            color = mix(Rainbow(orbitTrapFactor*trap.x, colorCycles), color, trap.x);
-        else
-            color = mix(color, color*sigmoid(trap.x,orbitTrapFactor), trap.x);
-            //color = mix(color, vec3(0), trap);
+        color = mix(color, color*sigmoid(trap.x,orbitTrapFactor), trap.x);
+        //color = mix(color, vec3(0), trap);
 
     return color;
 }

@@ -38,5 +38,8 @@ when no buttons are pressed, don't calulate any values (still image whose values
 make riemann angle gimbal lock? (rotate with spherical coordinates)
 lower resolution
 miniterations can't exceed maxiterations-1
+third texture bug
+interior texture
+2pi glsl constant
 
-textures (interior - domain),  stripe average coloring, textures, custom, julia set (different shader), lighting (different shader?) and menu (coloring?), julia set matings (different shader), complex power, julia minimap, load save settings, doubles and quads
+custom, julia set (different shader), lighting (different shader?) and menu (coloring?), julia set matings (different shader), complex power, julia minimap, load save settings, doubles and quads

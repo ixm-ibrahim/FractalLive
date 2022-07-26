@@ -357,6 +357,8 @@ namespace FractalLive
             input_TextureBlend.Enabled = false;
             input_TextureScaleX.Enabled = false;
             input_TextureScaleY.Enabled = false;
+            checkBox_UseDistortedTexture.Enabled = false;
+            input_TextureDistortionFactor.Enabled = false;
             checkBox_UseCustomPalette_CheckedChanged(null, null);
             input_EditingColor_SelectionChangeCommitted(null, null);
             input_Coloring_SelectionChangeCommitted(null, null);
@@ -1972,6 +1974,8 @@ namespace FractalLive
             input_TextureBlend.Enabled = false;
             input_TextureScaleX.Enabled = false;
             input_TextureScaleY.Enabled = false;
+            checkBox_UseDistortedTexture.Enabled = false;
+            input_TextureDistortionFactor.Enabled = false;
         }
 
         private void input_Texture_Click(object sender, EventArgs e)
@@ -1996,12 +2000,16 @@ namespace FractalLive
                 input_TextureBlend.Enabled = true;
                 input_TextureScaleX.Enabled = true;
                 input_TextureScaleY.Enabled = true;
+                checkBox_UseDistortedTexture.Enabled = true;
+                input_TextureDistortionFactor.Enabled = checkBox_UseDistortedTexture.Checked;
             }
             else
             {
                 input_TextureBlend.Enabled = false;
                 input_TextureScaleX.Enabled = false;
                 input_TextureScaleY.Enabled = false;
+                checkBox_UseDistortedTexture.Enabled = false;
+                input_TextureDistortionFactor.Enabled = false;
             }
         }
 
