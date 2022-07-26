@@ -1728,9 +1728,9 @@ namespace FractalLive
             else
                 input_DomainCalculation.Enabled = false;*/
 
-            bool usingDomain = CurrentSettings.GetColoring() >= Fractal.Coloring.Iteration || CurrentSettings.GetColoring() <= Fractal.Coloring.Stripes || (CurrentSettings.GetColoring() >= Fractal.Coloring.Domain_1 && CurrentSettings.GetColoring() <= Fractal.Coloring.Domain_7);
+            bool usingDomain = CurrentSettings.GetColoring() >= Fractal.Coloring.Iteration || CurrentSettings.GetColoring() <= Fractal.Coloring.Stripes_2 || (CurrentSettings.GetColoring() >= Fractal.Coloring.Domain_1 && CurrentSettings.GetColoring() <= Fractal.Coloring.Domain_7);
             checkBox_MatchOrbitTrap.Enabled = usingDomain;
-            input_StripeDensity.Enabled = CurrentSettings.GetColoring() == Fractal.Coloring.Stripes;
+            input_StripeDensity.Enabled = CurrentSettings.GetColoring() >= Fractal.Coloring.Stripes_1 || CurrentSettings.GetColoring() <= Fractal.Coloring.Stripes_2;
             input_DomainCalculation.Enabled = usingDomain && !checkBox_MatchOrbitTrap.Checked;
             checkBox_UseDomainIteration.Enabled = usingDomain; 
             checkBox_UseSecondDomainValue.Enabled = usingDomain; 
