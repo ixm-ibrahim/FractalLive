@@ -94,37 +94,37 @@
             this.label_JuliaPosition = new System.Windows.Forms.Label();
             this.input_JuliaX = new System.Windows.Forms.TextBox();
             this.input_JuliaY = new System.Windows.Forms.TextBox();
+            this.input_MinIterations = new System.Windows.Forms.NumericUpDown();
+            this.checkBox_UseConjugate = new System.Windows.Forms.CheckBox();
             this.input_FoldCount = new System.Windows.Forms.TextBox();
             this.input_FoldOffsetY = new System.Windows.Forms.TextBox();
             this.label_FoldOffset = new System.Windows.Forms.Label();
             this.input_FoldOffsetX = new System.Windows.Forms.TextBox();
             this.input_FoldAngle = new System.Windows.Forms.TextBox();
             this.label_FoldAngle = new System.Windows.Forms.Label();
-            this.checkBox_UseConjugate = new System.Windows.Forms.CheckBox();
-            this.input_MinIterations = new System.Windows.Forms.NumericUpDown();
+            this.checkBox_UseBuddhabrot = new System.Windows.Forms.CheckBox();
             this.label_BuddhabrotType = new System.Windows.Forms.Label();
             this.input_BuddhabrotType = new System.Windows.Forms.ComboBox();
-            this.checkBox_UseBuddhabrot = new System.Windows.Forms.CheckBox();
             this.label_OrbitTrapPosition = new System.Windows.Forms.Label();
             this.input_BailoutX = new System.Windows.Forms.TextBox();
             this.panel_OrbitTrapMenu = new System.Windows.Forms.Panel();
-            this.input_SecondValueFactor2 = new System.Windows.Forms.TextBox();
-            this.label_SecondValueFactors = new System.Windows.Forms.Label();
-            this.input_SecondValueFactor1 = new System.Windows.Forms.TextBox();
-            this.checkBox_UseSecondValue = new System.Windows.Forms.CheckBox();
+            this.label_OrbitTrapMenu = new System.Windows.Forms.Label();
+            this.label_EditingOrbitBailout = new System.Windows.Forms.Label();
+            this.input_EditingBailoutTrap = new System.Windows.Forms.NumericUpDown();
+            this.button_AddBailoutTrap = new System.Windows.Forms.Button();
+            this.button_RemoveBailoutTrap = new System.Windows.Forms.Button();
             this.input_StartDistance = new System.Windows.Forms.TextBox();
             this.label_OrbitTrapCalculation = new System.Windows.Forms.Label();
             this.input_OrbitTrapCalculation = new System.Windows.Forms.ComboBox();
-            this.label_OrbitTrapFactors = new System.Windows.Forms.Label();
-            this.label_EditingOrbitBailout = new System.Windows.Forms.Label();
             this.input_StartOrbit = new System.Windows.Forms.NumericUpDown();
-            this.input_OrbitTrapBlendingFactor = new System.Windows.Forms.TextBox();
-            this.input_EditingBailoutTrap = new System.Windows.Forms.NumericUpDown();
-            this.input_OrbitTrapThicknessFactor = new System.Windows.Forms.TextBox();
             this.input_OrbitRange = new System.Windows.Forms.NumericUpDown();
-            this.button_RemoveBailoutTrap = new System.Windows.Forms.Button();
-            this.button_AddBailoutTrap = new System.Windows.Forms.Button();
-            this.label_OrbitTrapMenu = new System.Windows.Forms.Label();
+            this.label_OrbitTrapFactors = new System.Windows.Forms.Label();
+            this.input_OrbitTrapBlendingFactor = new System.Windows.Forms.TextBox();
+            this.input_OrbitTrapThicknessFactor = new System.Windows.Forms.TextBox();
+            this.checkBox_UseSecondValue = new System.Windows.Forms.CheckBox();
+            this.label_SecondValueFactors = new System.Windows.Forms.Label();
+            this.input_SecondValueFactor1 = new System.Windows.Forms.TextBox();
+            this.input_SecondValueFactor2 = new System.Windows.Forms.TextBox();
             this.label_Texture = new System.Windows.Forms.Label();
             this.input_Texture = new System.Windows.Forms.TextBox();
             this.checkBox_LockZoomFactor = new System.Windows.Forms.CheckBox();
@@ -145,7 +145,7 @@
             this.label_StripeDensity = new System.Windows.Forms.Label();
             this.input_StripeDensity = new System.Windows.Forms.TextBox();
             this.input_TextureScaleY = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.label_TextureScale = new System.Windows.Forms.Label();
             this.input_TextureScaleX = new System.Windows.Forms.TextBox();
             this.input_SecondDomainValueFactor2 = new System.Windows.Forms.TextBox();
             this.label_SecondDomainValueFactors = new System.Windows.Forms.Label();
@@ -198,8 +198,8 @@
             this.panel_FormulaMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_MinIterations)).BeginInit();
             this.panel_OrbitTrapMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_EditingBailoutTrap)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_OrbitRange)).BeginInit();
             this.panel_ColorMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).BeginInit();
@@ -529,7 +529,7 @@
             this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(3, 808);
+            this.LogTextBox.Location = new System.Drawing.Point(3, 1144);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
@@ -815,9 +815,23 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_FormulaMenu.AutoScroll = true;
             this.panel_FormulaMenu.CausesValidation = false;
+            this.panel_FormulaMenu.Controls.Add(this.label_FormulaMenu);
+            this.panel_FormulaMenu.Controls.Add(this.label_Formula);
+            this.panel_FormulaMenu.Controls.Add(this.input_FractalFormula);
+            this.panel_FormulaMenu.Controls.Add(this.label_FractalType);
+            this.panel_FormulaMenu.Controls.Add(this.input_FractalType);
             this.panel_FormulaMenu.Controls.Add(this.label_JuliaPosition);
             this.panel_FormulaMenu.Controls.Add(this.input_JuliaX);
             this.panel_FormulaMenu.Controls.Add(this.input_JuliaY);
+            this.panel_FormulaMenu.Controls.Add(label_MaxIterations);
+            this.panel_FormulaMenu.Controls.Add(this.input_MaxIterations);
+            this.panel_FormulaMenu.Controls.Add(label_MinIterations);
+            this.panel_FormulaMenu.Controls.Add(this.input_MinIterations);
+            this.panel_FormulaMenu.Controls.Add(this.checkBox_UseConjugate);
+            this.panel_FormulaMenu.Controls.Add(this.label_Power);
+            this.panel_FormulaMenu.Controls.Add(this.input_Power);
+            this.panel_FormulaMenu.Controls.Add(this.label_CPower);
+            this.panel_FormulaMenu.Controls.Add(this.input_CPower);
             this.panel_FormulaMenu.Controls.Add(this.input_FoldCount);
             this.panel_FormulaMenu.Controls.Add(this.input_FoldOffsetY);
             this.panel_FormulaMenu.Controls.Add(this.label_FoldOffset);
@@ -825,25 +839,11 @@
             this.panel_FormulaMenu.Controls.Add(this.input_FoldAngle);
             this.panel_FormulaMenu.Controls.Add(this.label_FoldAngle);
             this.panel_FormulaMenu.Controls.Add(label_FoldCount);
-            this.panel_FormulaMenu.Controls.Add(this.checkBox_UseConjugate);
-            this.panel_FormulaMenu.Controls.Add(this.input_MinIterations);
-            this.panel_FormulaMenu.Controls.Add(label_MinIterations);
-            this.panel_FormulaMenu.Controls.Add(this.label_BuddhabrotType);
-            this.panel_FormulaMenu.Controls.Add(this.LogTextBox);
-            this.panel_FormulaMenu.Controls.Add(this.input_BuddhabrotType);
             this.panel_FormulaMenu.Controls.Add(this.checkBox_UseBuddhabrot);
-            this.panel_FormulaMenu.Controls.Add(this.label_FormulaMenu);
-            this.panel_FormulaMenu.Controls.Add(this.label_Formula);
-            this.panel_FormulaMenu.Controls.Add(this.input_FractalFormula);
-            this.panel_FormulaMenu.Controls.Add(this.input_FractalType);
-            this.panel_FormulaMenu.Controls.Add(this.input_Power);
-            this.panel_FormulaMenu.Controls.Add(this.input_MaxIterations);
-            this.panel_FormulaMenu.Controls.Add(this.label_FractalType);
-            this.panel_FormulaMenu.Controls.Add(label_MaxIterations);
-            this.panel_FormulaMenu.Controls.Add(this.input_CPower);
-            this.panel_FormulaMenu.Controls.Add(this.label_Power);
-            this.panel_FormulaMenu.Controls.Add(this.label_CPower);
-            this.panel_FormulaMenu.Location = new System.Drawing.Point(518, 24);
+            this.panel_FormulaMenu.Controls.Add(this.label_BuddhabrotType);
+            this.panel_FormulaMenu.Controls.Add(this.input_BuddhabrotType);
+            this.panel_FormulaMenu.Controls.Add(this.LogTextBox);
+            this.panel_FormulaMenu.Location = new System.Drawing.Point(517, 24);
             this.panel_FormulaMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_FormulaMenu.Name = "panel_FormulaMenu";
             this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 316);
@@ -874,6 +874,37 @@
             this.input_JuliaY.Size = new System.Drawing.Size(42, 23);
             this.input_JuliaY.TabIndex = 96;
             this.input_JuliaY.Text = "0";
+            // 
+            // input_MinIterations
+            // 
+            this.input_MinIterations.CausesValidation = false;
+            this.input_MinIterations.Location = new System.Drawing.Point(100, 135);
+            this.input_MinIterations.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.input_MinIterations.Name = "input_MinIterations";
+            this.input_MinIterations.Size = new System.Drawing.Size(55, 23);
+            this.input_MinIterations.TabIndex = 86;
+            this.input_MinIterations.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.input_MinIterations.ValueChanged += new System.EventHandler(this.input_MinIterations_ValueChanged);
+            this.input_MinIterations.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            // 
+            // checkBox_UseConjugate
+            // 
+            this.checkBox_UseConjugate.AutoSize = true;
+            this.checkBox_UseConjugate.Location = new System.Drawing.Point(8, 160);
+            this.checkBox_UseConjugate.Name = "checkBox_UseConjugate";
+            this.checkBox_UseConjugate.Size = new System.Drawing.Size(103, 19);
+            this.checkBox_UseConjugate.TabIndex = 87;
+            this.checkBox_UseConjugate.Text = "Use Conjugate";
+            this.checkBox_UseConjugate.UseVisualStyleBackColor = true;
+            this.checkBox_UseConjugate.CheckedChanged += new System.EventHandler(this.checkBox_UseConjugate_CheckedChanged);
             // 
             // input_FoldCount
             // 
@@ -943,36 +974,15 @@
             this.label_FoldAngle.Text = "Fold Angle:*";
             this.label_FoldAngle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // checkBox_UseConjugate
+            // checkBox_UseBuddhabrot
             // 
-            this.checkBox_UseConjugate.AutoSize = true;
-            this.checkBox_UseConjugate.Location = new System.Drawing.Point(8, 160);
-            this.checkBox_UseConjugate.Name = "checkBox_UseConjugate";
-            this.checkBox_UseConjugate.Size = new System.Drawing.Size(103, 19);
-            this.checkBox_UseConjugate.TabIndex = 87;
-            this.checkBox_UseConjugate.Text = "Use Conjugate";
-            this.checkBox_UseConjugate.UseVisualStyleBackColor = true;
-            this.checkBox_UseConjugate.CheckedChanged += new System.EventHandler(this.checkBox_UseConjugate_CheckedChanged);
-            // 
-            // input_MinIterations
-            // 
-            this.input_MinIterations.CausesValidation = false;
-            this.input_MinIterations.Location = new System.Drawing.Point(100, 135);
-            this.input_MinIterations.Maximum = new decimal(new int[] {
-            9999,
-            0,
-            0,
-            0});
-            this.input_MinIterations.Name = "input_MinIterations";
-            this.input_MinIterations.Size = new System.Drawing.Size(55, 23);
-            this.input_MinIterations.TabIndex = 86;
-            this.input_MinIterations.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.input_MinIterations.ValueChanged += new System.EventHandler(this.input_MinIterations_ValueChanged);
-            this.input_MinIterations.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.checkBox_UseBuddhabrot.AutoSize = true;
+            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(8, 322);
+            this.checkBox_UseBuddhabrot.Name = "checkBox_UseBuddhabrot";
+            this.checkBox_UseBuddhabrot.Size = new System.Drawing.Size(111, 19);
+            this.checkBox_UseBuddhabrot.TabIndex = 65;
+            this.checkBox_UseBuddhabrot.Text = "Use Buddhabrot";
+            this.checkBox_UseBuddhabrot.UseVisualStyleBackColor = true;
             // 
             // label_BuddhabrotType
             // 
@@ -997,16 +1007,6 @@
             this.input_BuddhabrotType.Name = "input_BuddhabrotType";
             this.input_BuddhabrotType.Size = new System.Drawing.Size(86, 23);
             this.input_BuddhabrotType.TabIndex = 84;
-            // 
-            // checkBox_UseBuddhabrot
-            // 
-            this.checkBox_UseBuddhabrot.AutoSize = true;
-            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(8, 322);
-            this.checkBox_UseBuddhabrot.Name = "checkBox_UseBuddhabrot";
-            this.checkBox_UseBuddhabrot.Size = new System.Drawing.Size(111, 19);
-            this.checkBox_UseBuddhabrot.TabIndex = 65;
-            this.checkBox_UseBuddhabrot.Text = "Use Buddhabrot";
-            this.checkBox_UseBuddhabrot.UseVisualStyleBackColor = true;
             // 
             // label_OrbitTrapPosition
             // 
@@ -1035,83 +1035,102 @@
             this.panel_OrbitTrapMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_OrbitTrapMenu.AutoScroll = true;
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_SecondValueFactor2);
-            this.panel_OrbitTrapMenu.Controls.Add(this.label_SecondValueFactors);
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_SecondValueFactor1);
-            this.panel_OrbitTrapMenu.Controls.Add(this.checkBox_UseSecondValue);
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_StartDistance);
-            this.panel_OrbitTrapMenu.Controls.Add(label_StartDistance);
-            this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapCalculation);
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrapCalculation);
-            this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapFactors);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapMenu);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_EditingOrbitBailout);
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_StartOrbit);
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrapBlendingFactor);
-            this.panel_OrbitTrapMenu.Controls.Add(label_StartOrbit);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_EditingBailoutTrap);
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrapThicknessFactor);
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitRange);
-            this.panel_OrbitTrapMenu.Controls.Add(label_OrbitRange);
-            this.panel_OrbitTrapMenu.Controls.Add(this.button_RemoveBailoutTrap);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_Bailout);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrap);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrap);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_Bailout);
             this.panel_OrbitTrapMenu.Controls.Add(this.button_AddBailoutTrap);
+            this.panel_OrbitTrapMenu.Controls.Add(this.button_RemoveBailoutTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapPosition);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutX);
-            this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapMenu);
-            this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrap);
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_Bailout);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutY);
-            this.panel_OrbitTrapMenu.Controls.Add(this.label_Bailout);
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrap);
-            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(518, 24);
+            this.panel_OrbitTrapMenu.Controls.Add(label_StartDistance);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_StartDistance);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapCalculation);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrapCalculation);
+            this.panel_OrbitTrapMenu.Controls.Add(label_StartOrbit);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_StartOrbit);
+            this.panel_OrbitTrapMenu.Controls.Add(label_OrbitRange);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitRange);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapFactors);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrapBlendingFactor);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrapThicknessFactor);
+            this.panel_OrbitTrapMenu.Controls.Add(this.checkBox_UseSecondValue);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_SecondValueFactors);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_SecondValueFactor1);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_SecondValueFactor2);
+            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(517, 24);
             this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
             this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 316);
             this.panel_OrbitTrapMenu.TabIndex = 33;
             // 
-            // input_SecondValueFactor2
+            // label_OrbitTrapMenu
             // 
-            this.input_SecondValueFactor2.Location = new System.Drawing.Point(116, 317);
-            this.input_SecondValueFactor2.Name = "input_SecondValueFactor2";
-            this.input_SecondValueFactor2.Size = new System.Drawing.Size(40, 23);
-            this.input_SecondValueFactor2.TabIndex = 87;
-            this.input_SecondValueFactor2.Text = "20";
-            this.input_SecondValueFactor2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_SecondValueFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_SecondValueFactor2.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondValueFactor2_Validating);
-            this.input_SecondValueFactor2.Validated += new System.EventHandler(this.input_SecondValueFactor2_Validated);
+            this.label_OrbitTrapMenu.AutoSize = true;
+            this.label_OrbitTrapMenu.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_OrbitTrapMenu.Location = new System.Drawing.Point(22, 0);
+            this.label_OrbitTrapMenu.Name = "label_OrbitTrapMenu";
+            this.label_OrbitTrapMenu.Size = new System.Drawing.Size(113, 19);
+            this.label_OrbitTrapMenu.TabIndex = 35;
+            this.label_OrbitTrapMenu.Text = "Orbit Trap Menu";
             // 
-            // label_SecondValueFactors
+            // label_EditingOrbitBailout
             // 
-            this.label_SecondValueFactors.AutoSize = true;
-            this.label_SecondValueFactors.Location = new System.Drawing.Point(3, 320);
-            this.label_SecondValueFactors.Name = "label_SecondValueFactors";
-            this.label_SecondValueFactors.Size = new System.Drawing.Size(53, 15);
-            this.label_SecondValueFactors.TabIndex = 86;
-            this.label_SecondValueFactors.Text = "Factors:*";
-            this.label_SecondValueFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_EditingOrbitBailout.AutoSize = true;
+            this.label_EditingOrbitBailout.Location = new System.Drawing.Point(3, 116);
+            this.label_EditingOrbitBailout.Name = "label_EditingOrbitBailout";
+            this.label_EditingOrbitBailout.Size = new System.Drawing.Size(78, 15);
+            this.label_EditingOrbitBailout.TabIndex = 51;
+            this.label_EditingOrbitBailout.Text = "Editing Point:";
             // 
-            // input_SecondValueFactor1
+            // input_EditingBailoutTrap
             // 
-            this.input_SecondValueFactor1.Location = new System.Drawing.Point(72, 317);
-            this.input_SecondValueFactor1.Name = "input_SecondValueFactor1";
-            this.input_SecondValueFactor1.Size = new System.Drawing.Size(40, 23);
-            this.input_SecondValueFactor1.TabIndex = 85;
-            this.input_SecondValueFactor1.Text = "4";
-            this.input_SecondValueFactor1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_SecondValueFactor1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_SecondValueFactor1.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondValueFactor1_Validating);
-            this.input_SecondValueFactor1.Validated += new System.EventHandler(this.input_SecondValueFactor1_Validated);
+            this.input_EditingBailoutTrap.CausesValidation = false;
+            this.input_EditingBailoutTrap.Location = new System.Drawing.Point(91, 111);
+            this.input_EditingBailoutTrap.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.input_EditingBailoutTrap.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.input_EditingBailoutTrap.Name = "input_EditingBailoutTrap";
+            this.input_EditingBailoutTrap.Size = new System.Drawing.Size(65, 23);
+            this.input_EditingBailoutTrap.TabIndex = 50;
+            this.input_EditingBailoutTrap.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.input_EditingBailoutTrap.ValueChanged += new System.EventHandler(this.input_EditingBailoutTrap_ValueChanged);
+            this.input_EditingBailoutTrap.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
-            // checkBox_UseSecondValue
+            // button_AddBailoutTrap
             // 
-            this.checkBox_UseSecondValue.AutoSize = true;
-            this.checkBox_UseSecondValue.Location = new System.Drawing.Point(8, 298);
-            this.checkBox_UseSecondValue.Name = "checkBox_UseSecondValue";
-            this.checkBox_UseSecondValue.Size = new System.Drawing.Size(118, 19);
-            this.checkBox_UseSecondValue.TabIndex = 84;
-            this.checkBox_UseSecondValue.Text = "Use Second Value";
-            this.checkBox_UseSecondValue.UseVisualStyleBackColor = true;
-            this.checkBox_UseSecondValue.CheckedChanged += new System.EventHandler(this.checkBox_UseSecondValue_CheckedChanged);
+            this.button_AddBailoutTrap.Location = new System.Drawing.Point(3, 85);
+            this.button_AddBailoutTrap.Name = "button_AddBailoutTrap";
+            this.button_AddBailoutTrap.Size = new System.Drawing.Size(74, 23);
+            this.button_AddBailoutTrap.TabIndex = 42;
+            this.button_AddBailoutTrap.Text = "Add";
+            this.button_AddBailoutTrap.UseVisualStyleBackColor = true;
+            this.button_AddBailoutTrap.Click += new System.EventHandler(this.button_AddBailoutTrap_Click);
+            // 
+            // button_RemoveBailoutTrap
+            // 
+            this.button_RemoveBailoutTrap.Location = new System.Drawing.Point(81, 85);
+            this.button_RemoveBailoutTrap.Name = "button_RemoveBailoutTrap";
+            this.button_RemoveBailoutTrap.Size = new System.Drawing.Size(74, 23);
+            this.button_RemoveBailoutTrap.TabIndex = 43;
+            this.button_RemoveBailoutTrap.Text = "Remove";
+            this.button_RemoveBailoutTrap.UseVisualStyleBackColor = true;
+            this.button_RemoveBailoutTrap.Click += new System.EventHandler(this.button_RemoveBailoutTrap_Click);
             // 
             // input_StartDistance
             // 
@@ -1152,25 +1171,6 @@
             this.input_OrbitTrapCalculation.TabIndex = 56;
             this.input_OrbitTrapCalculation.SelectionChangeCommitted += new System.EventHandler(this.input_OrbitTrapCalculation_SelectionChangeCommitted);
             // 
-            // label_OrbitTrapFactors
-            // 
-            this.label_OrbitTrapFactors.AutoSize = true;
-            this.label_OrbitTrapFactors.Location = new System.Drawing.Point(3, 274);
-            this.label_OrbitTrapFactors.Name = "label_OrbitTrapFactors";
-            this.label_OrbitTrapFactors.Size = new System.Drawing.Size(53, 15);
-            this.label_OrbitTrapFactors.TabIndex = 54;
-            this.label_OrbitTrapFactors.Text = "Factors:*";
-            this.label_OrbitTrapFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label_EditingOrbitBailout
-            // 
-            this.label_EditingOrbitBailout.AutoSize = true;
-            this.label_EditingOrbitBailout.Location = new System.Drawing.Point(3, 116);
-            this.label_EditingOrbitBailout.Name = "label_EditingOrbitBailout";
-            this.label_EditingOrbitBailout.Size = new System.Drawing.Size(78, 15);
-            this.label_EditingOrbitBailout.TabIndex = 51;
-            this.label_EditingOrbitBailout.Text = "Editing Point:";
-            // 
             // input_StartOrbit
             // 
             this.input_StartOrbit.CausesValidation = false;
@@ -1195,55 +1195,6 @@
             0});
             this.input_StartOrbit.ValueChanged += new System.EventHandler(this.input_StartOrbit_ValueChanged);
             this.input_StartOrbit.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            // 
-            // input_OrbitTrapBlendingFactor
-            // 
-            this.input_OrbitTrapBlendingFactor.Location = new System.Drawing.Point(72, 271);
-            this.input_OrbitTrapBlendingFactor.Name = "input_OrbitTrapBlendingFactor";
-            this.input_OrbitTrapBlendingFactor.Size = new System.Drawing.Size(40, 23);
-            this.input_OrbitTrapBlendingFactor.TabIndex = 53;
-            this.input_OrbitTrapBlendingFactor.Text = "0.25";
-            this.input_OrbitTrapBlendingFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_OrbitTrapBlendingFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_OrbitTrapBlendingFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor1_Validating);
-            this.input_OrbitTrapBlendingFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor1_Validated);
-            // 
-            // input_EditingBailoutTrap
-            // 
-            this.input_EditingBailoutTrap.CausesValidation = false;
-            this.input_EditingBailoutTrap.Location = new System.Drawing.Point(91, 111);
-            this.input_EditingBailoutTrap.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.input_EditingBailoutTrap.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.input_EditingBailoutTrap.Name = "input_EditingBailoutTrap";
-            this.input_EditingBailoutTrap.Size = new System.Drawing.Size(65, 23);
-            this.input_EditingBailoutTrap.TabIndex = 50;
-            this.input_EditingBailoutTrap.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.input_EditingBailoutTrap.ValueChanged += new System.EventHandler(this.input_EditingBailoutTrap_ValueChanged);
-            this.input_EditingBailoutTrap.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            // 
-            // input_OrbitTrapThicknessFactor
-            // 
-            this.input_OrbitTrapThicknessFactor.Location = new System.Drawing.Point(116, 271);
-            this.input_OrbitTrapThicknessFactor.Name = "input_OrbitTrapThicknessFactor";
-            this.input_OrbitTrapThicknessFactor.Size = new System.Drawing.Size(40, 23);
-            this.input_OrbitTrapThicknessFactor.TabIndex = 52;
-            this.input_OrbitTrapThicknessFactor.Text = "7";
-            this.input_OrbitTrapThicknessFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_OrbitTrapThicknessFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_OrbitTrapThicknessFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor2_Validating);
-            this.input_OrbitTrapThicknessFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor2_Validated);
             // 
             // input_OrbitRange
             // 
@@ -1270,35 +1221,84 @@
             this.input_OrbitRange.ValueChanged += new System.EventHandler(this.input_OrbitRange_ValueChanged);
             this.input_OrbitRange.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
-            // button_RemoveBailoutTrap
+            // label_OrbitTrapFactors
             // 
-            this.button_RemoveBailoutTrap.Location = new System.Drawing.Point(81, 85);
-            this.button_RemoveBailoutTrap.Name = "button_RemoveBailoutTrap";
-            this.button_RemoveBailoutTrap.Size = new System.Drawing.Size(74, 23);
-            this.button_RemoveBailoutTrap.TabIndex = 43;
-            this.button_RemoveBailoutTrap.Text = "Remove";
-            this.button_RemoveBailoutTrap.UseVisualStyleBackColor = true;
-            this.button_RemoveBailoutTrap.Click += new System.EventHandler(this.button_RemoveBailoutTrap_Click);
+            this.label_OrbitTrapFactors.AutoSize = true;
+            this.label_OrbitTrapFactors.Location = new System.Drawing.Point(3, 274);
+            this.label_OrbitTrapFactors.Name = "label_OrbitTrapFactors";
+            this.label_OrbitTrapFactors.Size = new System.Drawing.Size(53, 15);
+            this.label_OrbitTrapFactors.TabIndex = 54;
+            this.label_OrbitTrapFactors.Text = "Factors:*";
+            this.label_OrbitTrapFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // button_AddBailoutTrap
+            // input_OrbitTrapBlendingFactor
             // 
-            this.button_AddBailoutTrap.Location = new System.Drawing.Point(3, 85);
-            this.button_AddBailoutTrap.Name = "button_AddBailoutTrap";
-            this.button_AddBailoutTrap.Size = new System.Drawing.Size(74, 23);
-            this.button_AddBailoutTrap.TabIndex = 42;
-            this.button_AddBailoutTrap.Text = "Add";
-            this.button_AddBailoutTrap.UseVisualStyleBackColor = true;
-            this.button_AddBailoutTrap.Click += new System.EventHandler(this.button_AddBailoutTrap_Click);
+            this.input_OrbitTrapBlendingFactor.Location = new System.Drawing.Point(72, 271);
+            this.input_OrbitTrapBlendingFactor.Name = "input_OrbitTrapBlendingFactor";
+            this.input_OrbitTrapBlendingFactor.Size = new System.Drawing.Size(40, 23);
+            this.input_OrbitTrapBlendingFactor.TabIndex = 53;
+            this.input_OrbitTrapBlendingFactor.Text = "0.25";
+            this.input_OrbitTrapBlendingFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_OrbitTrapBlendingFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_OrbitTrapBlendingFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor1_Validating);
+            this.input_OrbitTrapBlendingFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor1_Validated);
             // 
-            // label_OrbitTrapMenu
+            // input_OrbitTrapThicknessFactor
             // 
-            this.label_OrbitTrapMenu.AutoSize = true;
-            this.label_OrbitTrapMenu.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label_OrbitTrapMenu.Location = new System.Drawing.Point(22, 0);
-            this.label_OrbitTrapMenu.Name = "label_OrbitTrapMenu";
-            this.label_OrbitTrapMenu.Size = new System.Drawing.Size(113, 19);
-            this.label_OrbitTrapMenu.TabIndex = 35;
-            this.label_OrbitTrapMenu.Text = "Orbit Trap Menu";
+            this.input_OrbitTrapThicknessFactor.Location = new System.Drawing.Point(116, 271);
+            this.input_OrbitTrapThicknessFactor.Name = "input_OrbitTrapThicknessFactor";
+            this.input_OrbitTrapThicknessFactor.Size = new System.Drawing.Size(40, 23);
+            this.input_OrbitTrapThicknessFactor.TabIndex = 52;
+            this.input_OrbitTrapThicknessFactor.Text = "7";
+            this.input_OrbitTrapThicknessFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_OrbitTrapThicknessFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_OrbitTrapThicknessFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor2_Validating);
+            this.input_OrbitTrapThicknessFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor2_Validated);
+            // 
+            // checkBox_UseSecondValue
+            // 
+            this.checkBox_UseSecondValue.AutoSize = true;
+            this.checkBox_UseSecondValue.Location = new System.Drawing.Point(8, 298);
+            this.checkBox_UseSecondValue.Name = "checkBox_UseSecondValue";
+            this.checkBox_UseSecondValue.Size = new System.Drawing.Size(118, 19);
+            this.checkBox_UseSecondValue.TabIndex = 84;
+            this.checkBox_UseSecondValue.Text = "Use Second Value";
+            this.checkBox_UseSecondValue.UseVisualStyleBackColor = true;
+            this.checkBox_UseSecondValue.CheckedChanged += new System.EventHandler(this.checkBox_UseSecondValue_CheckedChanged);
+            // 
+            // label_SecondValueFactors
+            // 
+            this.label_SecondValueFactors.AutoSize = true;
+            this.label_SecondValueFactors.Location = new System.Drawing.Point(3, 320);
+            this.label_SecondValueFactors.Name = "label_SecondValueFactors";
+            this.label_SecondValueFactors.Size = new System.Drawing.Size(53, 15);
+            this.label_SecondValueFactors.TabIndex = 86;
+            this.label_SecondValueFactors.Text = "Factors:*";
+            this.label_SecondValueFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_SecondValueFactor1
+            // 
+            this.input_SecondValueFactor1.Location = new System.Drawing.Point(72, 317);
+            this.input_SecondValueFactor1.Name = "input_SecondValueFactor1";
+            this.input_SecondValueFactor1.Size = new System.Drawing.Size(40, 23);
+            this.input_SecondValueFactor1.TabIndex = 85;
+            this.input_SecondValueFactor1.Text = "4";
+            this.input_SecondValueFactor1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_SecondValueFactor1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_SecondValueFactor1.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondValueFactor1_Validating);
+            this.input_SecondValueFactor1.Validated += new System.EventHandler(this.input_SecondValueFactor1_Validated);
+            // 
+            // input_SecondValueFactor2
+            // 
+            this.input_SecondValueFactor2.Location = new System.Drawing.Point(116, 317);
+            this.input_SecondValueFactor2.Name = "input_SecondValueFactor2";
+            this.input_SecondValueFactor2.Size = new System.Drawing.Size(40, 23);
+            this.input_SecondValueFactor2.TabIndex = 87;
+            this.input_SecondValueFactor2.Text = "20";
+            this.input_SecondValueFactor2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_SecondValueFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_SecondValueFactor2.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondValueFactor2_Validating);
+            this.input_SecondValueFactor2.Validated += new System.EventHandler(this.input_SecondValueFactor2_Validated);
             // 
             // label_Texture
             // 
@@ -1312,7 +1312,7 @@
             // 
             // input_Texture
             // 
-            this.input_Texture.Location = new System.Drawing.Point(58, 451);
+            this.input_Texture.Location = new System.Drawing.Point(56, 451);
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
@@ -1414,6 +1414,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_ColorMenu.AutoScroll = true;
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseNormals);
+            this.panel_ColorMenu.Controls.Add(this.button_Color1);
+            this.panel_ColorMenu.Controls.Add(this.button_Color2);
+            this.panel_ColorMenu.Controls.Add(this.button_Color3);
+            this.panel_ColorMenu.Controls.Add(this.button_Color4);
+            this.panel_ColorMenu.Controls.Add(this.button_Color5);
+            this.panel_ColorMenu.Controls.Add(this.button_Color6);
             this.panel_ColorMenu.Controls.Add(this.input_DistanceEstimationFactor2);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UsePolarTextureCoordinates);
             this.panel_ColorMenu.Controls.Add(this.input_TextureDistortionFactor);
@@ -1422,7 +1428,7 @@
             this.panel_ColorMenu.Controls.Add(this.label_StripeDensity);
             this.panel_ColorMenu.Controls.Add(this.input_StripeDensity);
             this.panel_ColorMenu.Controls.Add(this.input_TextureScaleY);
-            this.panel_ColorMenu.Controls.Add(this.label1);
+            this.panel_ColorMenu.Controls.Add(this.label_TextureScale);
             this.panel_ColorMenu.Controls.Add(this.input_TextureScaleX);
             this.panel_ColorMenu.Controls.Add(this.input_SecondDomainValueFactor2);
             this.panel_ColorMenu.Controls.Add(this.label_SecondDomainValueFactors);
@@ -1432,12 +1438,6 @@
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseDomainIteration);
             this.panel_ColorMenu.Controls.Add(this.label_DomainCalculation);
             this.panel_ColorMenu.Controls.Add(this.input_DomainCalculation);
-            this.panel_ColorMenu.Controls.Add(this.button_Color6);
-            this.panel_ColorMenu.Controls.Add(this.button_Color5);
-            this.panel_ColorMenu.Controls.Add(this.button_Color4);
-            this.panel_ColorMenu.Controls.Add(this.button_Color3);
-            this.panel_ColorMenu.Controls.Add(this.button_Color2);
-            this.panel_ColorMenu.Controls.Add(this.button_Color1);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseCustomPalette);
             this.panel_ColorMenu.Controls.Add(this.label_OrbitTrapFactor);
             this.panel_ColorMenu.Controls.Add(this.input_OrbitTrapFactor);
@@ -1459,7 +1459,7 @@
             this.panel_ColorMenu.Controls.Add(this.label_ColorFactors);
             this.panel_ColorMenu.Controls.Add(this.input_ColorCycles);
             this.panel_ColorMenu.Controls.Add(this.input_ColorFactor);
-            this.panel_ColorMenu.Location = new System.Drawing.Point(518, 24);
+            this.panel_ColorMenu.Location = new System.Drawing.Point(517, 24);
             this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_ColorMenu.Name = "panel_ColorMenu";
             this.panel_ColorMenu.Size = new System.Drawing.Size(177, 316);
@@ -1501,7 +1501,7 @@
             // 
             // input_TextureDistortionFactor
             // 
-            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(115, 569);
+            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(114, 569);
             this.input_TextureDistortionFactor.Name = "input_TextureDistortionFactor";
             this.input_TextureDistortionFactor.Size = new System.Drawing.Size(40, 23);
             this.input_TextureDistortionFactor.TabIndex = 97;
@@ -1555,7 +1555,7 @@
             // 
             // input_TextureScaleY
             // 
-            this.input_TextureScaleY.Location = new System.Drawing.Point(116, 503);
+            this.input_TextureScaleY.Location = new System.Drawing.Point(114, 503);
             this.input_TextureScaleY.Name = "input_TextureScaleY";
             this.input_TextureScaleY.Size = new System.Drawing.Size(40, 23);
             this.input_TextureScaleY.TabIndex = 93;
@@ -1565,15 +1565,15 @@
             this.input_TextureScaleY.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureScaleY_Validating);
             this.input_TextureScaleY.Validated += new System.EventHandler(this.input_TextureScaleY_Validated);
             // 
-            // label1
+            // label_TextureScale
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 506);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 15);
-            this.label1.TabIndex = 92;
-            this.label1.Text = "Scale:*";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_TextureScale.AutoSize = true;
+            this.label_TextureScale.Location = new System.Drawing.Point(3, 506);
+            this.label_TextureScale.Name = "label_TextureScale";
+            this.label_TextureScale.Size = new System.Drawing.Size(42, 15);
+            this.label_TextureScale.TabIndex = 92;
+            this.label_TextureScale.Text = "Scale:*";
+            this.label_TextureScale.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // input_TextureScaleX
             // 
@@ -1589,7 +1589,7 @@
             // 
             // input_SecondDomainValueFactor2
             // 
-            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(115, 300);
+            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(114, 300);
             this.input_SecondDomainValueFactor2.Name = "input_SecondDomainValueFactor2";
             this.input_SecondDomainValueFactor2.Size = new System.Drawing.Size(40, 23);
             this.input_SecondDomainValueFactor2.TabIndex = 90;
@@ -1675,7 +1675,7 @@
             "Average",
             "First",
             "Last"});
-            this.input_DomainCalculation.Location = new System.Drawing.Point(88, 235);
+            this.input_DomainCalculation.Location = new System.Drawing.Point(87, 235);
             this.input_DomainCalculation.Name = "input_DomainCalculation";
             this.input_DomainCalculation.Size = new System.Drawing.Size(67, 23);
             this.input_DomainCalculation.TabIndex = 82;
@@ -1794,7 +1794,7 @@
             0,
             0,
             131072});
-            this.input_TextureBlend.Location = new System.Drawing.Point(100, 477);
+            this.input_TextureBlend.Location = new System.Drawing.Point(98, 477);
             this.input_TextureBlend.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1829,7 +1829,7 @@
             // 
             // input_MaxDistanceEstimation
             // 
-            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(115, 346);
+            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(114, 346);
             this.input_MaxDistanceEstimation.Name = "input_MaxDistanceEstimation";
             this.input_MaxDistanceEstimation.Size = new System.Drawing.Size(40, 23);
             this.input_MaxDistanceEstimation.TabIndex = 65;
@@ -1920,7 +1920,7 @@
             "Domain 6",
             "Domain 7",
             "Custom"});
-            this.input_Coloring.Location = new System.Drawing.Point(68, 53);
+            this.input_Coloring.Location = new System.Drawing.Point(67, 53);
             this.input_Coloring.Name = "input_Coloring";
             this.input_Coloring.Size = new System.Drawing.Size(87, 23);
             this.input_Coloring.TabIndex = 63;
@@ -1935,7 +1935,7 @@
             "Both",
             "Interior",
             "Exterior"});
-            this.input_EditingColor.Location = new System.Drawing.Point(68, 27);
+            this.input_EditingColor.Location = new System.Drawing.Point(67, 27);
             this.input_EditingColor.Name = "input_EditingColor";
             this.input_EditingColor.Size = new System.Drawing.Size(87, 23);
             this.input_EditingColor.TabIndex = 61;
@@ -2044,14 +2044,15 @@
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.input_Zoom);
             this.panel1.Controls.Add(this.input_CameraRoll);
             this.panel1.Controls.Add(this.label_FractalCenter);
             this.panel1.Controls.Add(this.input_CameraPosition);
             this.panel1.Controls.Add(this.label_FractalZoom);
             this.panel1.Controls.Add(this.input_RiemannAngles);
-            this.panel1.Controls.Add(this.input_Zoom);
             this.panel1.Controls.Add(this.label_RiemannAngles);
             this.panel1.Controls.Add(this.input_LockedZoom);
             this.panel1.Controls.Add(this.input_CameraAngles);
@@ -2092,8 +2093,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_MinIterations)).EndInit();
             this.panel_OrbitTrapMenu.ResumeLayout(false);
             this.panel_OrbitTrapMenu.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_EditingBailoutTrap)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_OrbitRange)).EndInit();
             this.panel_ColorMenu.ResumeLayout(false);
             this.panel_ColorMenu.PerformLayout();
@@ -2230,7 +2231,7 @@
         private System.Windows.Forms.TextBox input_SecondDomainValueFactor1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.TextBox input_TextureScaleY;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label_TextureScale;
         private System.Windows.Forms.TextBox input_TextureScaleX;
         private System.Windows.Forms.Label label_FoldOffset;
         private System.Windows.Forms.TextBox input_FoldOffsetY;
