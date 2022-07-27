@@ -34,7 +34,6 @@ miniterations can't exceed maxiterations-1
 interior texture
 other ifs fractals (weather one, etc.)
 post iterations (smooth coloring)
-animate textures, julia, orbit traps, rotate normals
-switch classic and mandelbrot
+animate textures, julia (circle, factor*fractal edge, etc), orbit traps, rotate normals
 
-julia set (different shader), animation menu, julia set matings (different shader), complex power, terrian, julia minimap, load save settings, doubles and quads
+julia set matings (different shader), animation menu, complex power, terrian, julia minimap, load save settings, doubles and quads
