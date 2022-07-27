@@ -175,10 +175,11 @@ namespace FractalLive
 
         private void InitShaders()
         {
-
-
             mandelbrot = new Shader("Shaders/geometry.vert", "Shaders/mandelbrot.frag");
             mandelbrot.Use();
+
+            julia = new Shader("Shaders/geometry.vert", "Shaders/julia.frag");
+            julia.Use();
         }
 
         private void Log(string message)
@@ -212,6 +213,11 @@ namespace FractalLive
             shader.SetVector2d("center", fractalSettings.Center);
             shader.SetFloat("rollAngle", camera.Roll);
             shader.SetVector2("riemannAngles", fractalSettings.RiemannAngles);
+
+            if (currentFractalType == Fractal.Type.Julia)
+            {
+                shader.SetVector2("julia", fractalSettings.Julia);
+            }
 
             // Menu 1
             shader.SetInt("formula", (int)fractalSettings.Formula);
@@ -325,47 +331,16 @@ namespace FractalLive
 
             applicationTime = new Stopwatch();
             fractalTime = 0;
-            currentFractal = Fractal.Type.Classic;
+            currentFractalType = Fractal.Type.Mandelbrot;
 
-            mandelbrotSettings = new Fractal.Settings(Fractal.Type.Classic);
+            mandelbrotSettings = new Fractal.Settings(Fractal.Type.Mandelbrot);
             mandelbrotCamera = new Camera();
 
-            // todo
-            checkBox_UseBuddhabrot.Enabled = false;
-            input_BuddhabrotType.Enabled = false;
-
-
-            // Starting values
-            input_CameraPosition.Enabled = false;
-            input_CameraAngles.Enabled = false;
-            input_RiemannAngles.Enabled = false;
+            juliaSettings = new Fractal.Settings(Fractal.Type.Julia);
+            juliaCamera = new Camera();
 
             input_FractalType.SelectedIndex = (int)CurrentSettings.Type;
-            input_FractalFormula.SelectedIndex = (int)CurrentSettings.Formula;
-            input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
-
-            input_OrbitTrap.SelectedIndex = 0;
-            input_OrbitTrapCalculation.SelectedIndex = 0;
-            input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Maximum;
-            input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;
-            input_OrbitRange.Maximum = CurrentSettings.MaxIterations.Maximum;
-            input_OrbitTrap_SelectionChangeCommitted(null, null);
-
-            
-            input_EditingColor.SelectedIndex = 0;
-            input_Coloring.SelectedIndex = 3;
-            input_DomainCalculation.SelectedIndex = 4;
-            input_SecondDomainValueFactor1.Enabled = false;
-            input_SecondDomainValueFactor2.Enabled = false;
-            input_TextureBlend.Enabled = false;
-            input_TextureScaleX.Enabled = false;
-            input_TextureScaleY.Enabled = false;
-            checkBox_UsePolarTextureCoordinates.Enabled = false;
-            checkBox_UseDistortedTexture.Enabled = false;
-            input_TextureDistortionFactor.Enabled = false;
-            checkBox_UseCustomPalette_CheckedChanged(null, null);
-            input_EditingColor_SelectionChangeCommitted(null, null);
-            input_Coloring_SelectionChangeCommitted(null, null);
+            input_FractalType_SelectionChangeCommitted(null, null);
 
             // Callbacks
             glControl.Resize += glControl_Resize;
@@ -439,6 +414,7 @@ namespace FractalLive
             GL.DeleteVertexArray(vaoSphere);
 
             GL.DeleteProgram(mandelbrot.Handle);
+            GL.DeleteProgram(julia.Handle);
         }
 
         /// <summary>
@@ -455,7 +431,7 @@ namespace FractalLive
 
             float aspect_ratio = Math.Max(glControl.ClientSize.Width, 1) / (float)Math.Max(glControl.ClientSize.Height, 1);
 
-            //juliaCamera.AspectRatio = aspect_ratio;
+            juliaCamera.AspectRatio = aspect_ratio;
             mandelbrotCamera.AspectRatio = aspect_ratio;
             //juliaMatingCamera.AspectRatio = aspect_ratio;
         }
@@ -491,6 +467,42 @@ namespace FractalLive
             {
                 if (inputState.keysDown[Keys.D1])
                 {
+                    if (currentFractalType == Fractal.Type.Julia)
+                    {
+                        CurrentSettings.Julia.X += modifier / 10;
+                        input_JuliaX.Text = CurrentSettings.Julia.X.ToString();
+                    }
+                    else if (currentFractalType == Fractal.Type.Julia_Mating)
+                    {
+                        CurrentSettings.Julia.X += modifier / 10;
+                        input_JuliaX.Text = Replace2D(CurrentSettings.Julia.X.ToString(), input_JuliaX.Text, true);
+                    }
+                }
+                if (inputState.keysDown[Keys.D2])
+                {
+                    if (currentFractalType == Fractal.Type.Julia)
+                    {
+                        CurrentSettings.Julia.Y += modifier / 10;
+                        input_JuliaY.Text = CurrentSettings.Julia.Y.ToString();
+                    }
+                    else if (currentFractalType == Fractal.Type.Julia_Mating)
+                    {
+                        CurrentSettings.Julia.Y += modifier / 10;
+                        input_JuliaX.Text = Replace2D(CurrentSettings.Julia.Y.ToString(), input_JuliaY.Text, false);
+                    }
+                }
+                if (inputState.keysDown[Keys.D3] && currentFractalType == Fractal.Type.Julia_Mating)
+                {
+                    CurrentSettings.JuliaMating.X += modifier / 10;
+                    input_JuliaY.Text = Replace2D(CurrentSettings.JuliaMating.X.ToString(), input_JuliaY.Text, true);
+                }
+                if (inputState.keysDown[Keys.D4] && currentFractalType == Fractal.Type.Julia_Mating)
+                {
+                    CurrentSettings.JuliaMating.Y += modifier / 10;
+                    input_JuliaY.Text = Replace2D(CurrentSettings.JuliaMating.Y.ToString(), input_JuliaY.Text, false);
+                }
+                if (inputState.keysDown[Keys.D5])
+                {
                     if (CurrentSettings.MaxIterations.Value == CurrentSettings.OrbitRange.Value)
                     {
                         CurrentSettings.OrbitRange += (int)(modifier * 2);
@@ -500,37 +512,37 @@ namespace FractalLive
                     CurrentSettings.MaxIterations += (int)(modifier * 2);
                     input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
                 }
-                if (inputState.keysDown[Keys.D2])
+                if (inputState.keysDown[Keys.D6])
                 {
                     CurrentSettings.MinIterations += (int)(modifier * 2);
                     input_MinIterations.Value = CurrentSettings.MinIterations.Value;
                 }
-                if (inputState.keysDown[Keys.D3])
+                if (inputState.keysDown[Keys.D7])
                 {
                     CurrentSettings.Power += zoomedModifier / 50;
                     input_Power.Text = CurrentSettings.Power.ToString();
                 }
-                if (inputState.keysDown[Keys.D4])
+                if (inputState.keysDown[Keys.D8])
                 {
                     CurrentSettings.C_Power += zoomedModifier / 50;
                     input_CPower.Text = CurrentSettings.C_Power.ToString();
                 }
-                if (inputState.keysDown[Keys.D5])
+                if (inputState.keysDown[Keys.D9])
                 {
                     CurrentSettings.FoldCount += modifier / 50;
                     input_FoldCount.Text = CurrentSettings.FoldCount.ToString();
                 }
-                if (inputState.keysDown[Keys.D6])
+                if (inputState.keysDown[Keys.D0])
                 {
                     CurrentSettings.FoldAngle = (CurrentSettings.FoldAngle + modifier + 360) % 360;
                     input_FoldAngle.Text = CurrentSettings.FoldAngle.ToString();
                 }
-                if (inputState.keysDown[Keys.D7])
+                if (inputState.keysDown[Keys.OemMinus])
                 {
                     CurrentSettings.FoldOffset.X += modifier / 10;
                     input_FoldOffsetX.Text = CurrentSettings.FoldOffset.X.ToString();
                 }
-                if (inputState.keysDown[Keys.D8])
+                if (inputState.keysDown[Keys.Oemplus])
                 {
                     CurrentSettings.FoldOffset.Y += modifier / 10;
                     input_FoldOffsetY.Text = CurrentSettings.FoldOffset.Y.ToString();
@@ -1079,6 +1091,7 @@ namespace FractalLive
 
                 input_CameraPosition.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere;
                 input_CameraAngles.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere;
+                input_CameraRoll.Enabled = CurrentSettings.Projection == Fractal.Projection.Cartesian;
                 input_RiemannAngles.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Flat;
             }
             if (e.KeyChar == '.')
@@ -1172,7 +1185,8 @@ namespace FractalLive
 
         private void input_Center_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            if (!TryParse2DFloat(input_Center.Text))
+                e.Cancel = true;
         }
         private void input_Center_Validated(object sender, EventArgs e)
         {
@@ -1258,6 +1272,7 @@ namespace FractalLive
         private void input_CameraRoll_Validated(object sender, EventArgs e)
         {
             CurrentCamera.Roll = float.Parse(GetFrom2D(input_CameraRoll.Text, true));
+            input_CameraRoll.Text = CurrentCamera.Roll.ToString(); // in case number gets restricted by bounds
         }
 
         private void input_RiemannAngles_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1276,9 +1291,103 @@ namespace FractalLive
 
         #region Menu 1 Controls
 
+        private void input_FractalType_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            currentFractalType = (Fractal.Type)input_FractalType.SelectedIndex;
+
+
+            // todo
+            checkBox_UseBuddhabrot.Enabled = false;
+            input_BuddhabrotType.Enabled = false;
+
+
+            // Starting values
+            input_CameraPosition.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere;
+            input_CameraAngles.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere;
+            input_CameraRoll.Enabled = CurrentSettings.Projection == Fractal.Projection.Cartesian;
+            input_RiemannAngles.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Flat;
+
+            input_FractalFormula.SelectedIndex = (int)CurrentSettings.Formula;
+            input_JuliaX.Enabled = currentFractalType == Fractal.Type.Julia || currentFractalType == Fractal.Type.Julia_Mating;
+            input_JuliaY.Enabled = currentFractalType == Fractal.Type.Julia || currentFractalType == Fractal.Type.Julia_Mating;
+            input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
+
+            input_OrbitTrap.SelectedIndex = (int)CurrentSettings.OrbitTrap;
+            input_OrbitTrapCalculation.SelectedIndex = (int)CurrentSettings.OrbitTrapCalculation;
+            input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Maximum;
+            input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;
+            input_OrbitRange.Maximum = CurrentSettings.MaxIterations.Maximum;
+            input_OrbitTrap_SelectionChangeCommitted(null, null);
+
+
+            input_EditingColor.SelectedIndex = (int)CurrentSettings.EditingColor;
+            input_Coloring.SelectedIndex = (int)CurrentSettings.GetColoring();
+            input_DomainCalculation.SelectedIndex = (int)CurrentSettings.GetDomainCalculation();
+            input_SecondDomainValueFactor1.Enabled = CurrentSettings.GetUseSecondDomainValue();
+            input_SecondDomainValueFactor2.Enabled = CurrentSettings.GetUseSecondDomainValue();
+            input_TextureBlend.Enabled = CurrentSettings.GetTexture() != "";
+            input_TextureScaleX.Enabled = CurrentSettings.GetTexture() != "";
+            input_TextureScaleY.Enabled = CurrentSettings.GetTexture() != "";
+            checkBox_UsePolarTextureCoordinates.Enabled = CurrentSettings.GetTexture() != "";
+            checkBox_UseDistortedTexture.Enabled = CurrentSettings.GetTexture() != "";
+            input_TextureDistortionFactor.Enabled = CurrentSettings.GetTexture() != "" && checkBox_UseDistortedTexture.Checked;
+            checkBox_UseCustomPalette_CheckedChanged(null, null);
+            input_EditingColor_SelectionChangeCommitted(null, null);
+            input_Coloring_SelectionChangeCommitted(null, null);
+
+        }
+
         private void input_FractalFormula_SelectionChangeCommitted(object sender, EventArgs e)
         {
             CurrentSettings.Formula = (Fractal.Formula)input_FractalFormula.SelectedIndex;
+        }
+
+        private void input_JuliaX_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e, currentFractalType == Fractal.Type.Julia_Mating);
+        }
+        private void input_JuliaX_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if ((currentFractalType == Fractal.Type.Julia && !TryParse1DFloat(input_JuliaX.Text)) || (currentFractalType == Fractal.Type.Julia_Mating && !TryParse2DFloat(input_JuliaX.Text)))
+                e.Cancel = true;
+        }
+        private void input_JuliaX_Validated(object sender, EventArgs e)
+        {
+            if (currentFractalType == Fractal.Type.Julia)
+            {
+                CurrentSettings.Julia.X = float.Parse(input_JuliaX.Text);
+                input_JuliaX.Text = CurrentSettings.Julia.X.ToString();
+            }
+            else if (currentFractalType == Fractal.Type.Julia_Mating)
+            {
+                CurrentSettings.Julia.X = float.Parse(GetFrom2D(input_JuliaX.Text, true));
+                CurrentSettings.Julia.Y = float.Parse(GetFrom2D(input_JuliaX.Text, false));
+                input_JuliaX.Text = Make2D(CurrentSettings.Julia.X, CurrentSettings.Julia.Y);
+            }
+        }
+
+        private void input_JuliaY_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !IsDecimalChar(e, currentFractalType == Fractal.Type.Julia_Mating);
+        }
+        private void input_JuliaY_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if ((currentFractalType == Fractal.Type.Julia && !TryParse1DFloat(input_JuliaY.Text)) || (currentFractalType == Fractal.Type.Julia_Mating && !TryParse2DFloat(input_JuliaY.Text)))
+                e.Cancel = true;
+        }
+        private void input_JuliaY_Validated(object sender, EventArgs e)
+        {
+            if (currentFractalType == Fractal.Type.Julia)
+            {
+                CurrentSettings.Julia.Y = float.Parse(input_JuliaY.Text);
+                input_JuliaY.Text = CurrentSettings.Julia.Y.ToString();
+            }
+            else if (currentFractalType == Fractal.Type.Julia_Mating)
+            {
+                CurrentSettings.JuliaMating.X = float.Parse(GetFrom2D(input_JuliaY.Text, true));
+                CurrentSettings.JuliaMating.Y = float.Parse(GetFrom2D(input_JuliaY.Text, false));
+                input_JuliaY.Text = Make2D(CurrentSettings.JuliaMating.X, CurrentSettings.JuliaMating.Y);
+            }
         }
 
         private void input_MaxIterations_ValueChanged(object sender, EventArgs e)
@@ -2096,9 +2205,9 @@ namespace FractalLive
         {
             get
             {
-                switch (currentFractal)
+                switch (currentFractalType)
                 {
-                    case Fractal.Type.Classic:
+                    case Fractal.Type.Mandelbrot:
                         return ref mandelbrotCamera;
                     case Fractal.Type.Julia:
                         return ref juliaCamera;
@@ -2113,9 +2222,9 @@ namespace FractalLive
         {
             get
             {
-                switch (currentFractal)
+                switch (currentFractalType)
                 {
-                    case Fractal.Type.Classic:
+                    case Fractal.Type.Mandelbrot:
                         return ref mandelbrotSettings;
                     case Fractal.Type.Julia:
                         return ref juliaSettings;
@@ -2130,9 +2239,9 @@ namespace FractalLive
         {
             get
             {
-                switch (currentFractal)
+                switch (currentFractalType)
                 {
-                    case Fractal.Type.Classic:
+                    case Fractal.Type.Mandelbrot:
                         return ref mandelbrot;
                     case Fractal.Type.Julia:
                         return ref julia;
@@ -2160,7 +2269,7 @@ namespace FractalLive
         float deltaTime = 0;
         float lastFrame = 0;
 
-        private Fractal.Type currentFractal;
+        private Fractal.Type currentFractalType;
 
         private Fractal.Settings mandelbrotSettings;
         private Shader mandelbrot;

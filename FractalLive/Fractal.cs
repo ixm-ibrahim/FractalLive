@@ -13,7 +13,7 @@ namespace FractalLive
         #region Enumerations
         public enum Type
         {
-            Classic = 0, Julia = 1, Julia_Mating = 2
+            Mandelbrot = 0, Julia = 1, Julia_Mating = 2
         }
 
         public enum Formula
@@ -57,7 +57,7 @@ namespace FractalLive
         #region Structures
         public struct Settings
         {
-            public Settings(Type type = Type.Classic, Formula formula = Formula.Mandelbrot)
+            public Settings(Type type = Type.Mandelbrot, Formula formula = Formula.Mandelbrot)
             {
                 Zoom = 0;
                 LockedZoom = 0;

@@ -185,7 +185,7 @@
             this.input_CameraAngles = new System.Windows.Forms.TextBox();
             this.input_CameraPosition = new System.Windows.Forms.TextBox();
             this.input_CameraRoll = new System.Windows.Forms.TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel_GeneralMenu = new System.Windows.Forms.Panel();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -203,7 +203,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_OrbitRange)).BeginInit();
             this.panel_ColorMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).BeginInit();
-            this.panel1.SuspendLayout();
+            this.panel_GeneralMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_MaxIterations
@@ -529,7 +529,7 @@
             this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(3, 1192);
+            this.LogTextBox.Location = new System.Drawing.Point(3, 1480);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
@@ -588,7 +588,7 @@
             // label_Formula
             // 
             this.label_Formula.AutoSize = true;
-            this.label_Formula.Location = new System.Drawing.Point(3, 30);
+            this.label_Formula.Location = new System.Drawing.Point(3, 56);
             this.label_Formula.Name = "label_Formula";
             this.label_Formula.Size = new System.Drawing.Size(54, 15);
             this.label_Formula.TabIndex = 20;
@@ -633,10 +633,10 @@
             this.input_FractalFormula.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.input_FractalFormula.FormattingEnabled = true;
             this.input_FractalFormula.Items.AddRange(new object[] {
-            "Mandelbrot",
+            "Classic",
             "Lambda",
             "Custom"});
-            this.input_FractalFormula.Location = new System.Drawing.Point(68, 27);
+            this.input_FractalFormula.Location = new System.Drawing.Point(68, 53);
             this.input_FractalFormula.Name = "input_FractalFormula";
             this.input_FractalFormula.Size = new System.Drawing.Size(87, 23);
             this.input_FractalFormula.TabIndex = 21;
@@ -648,13 +648,14 @@
             this.input_FractalType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.input_FractalType.FormattingEnabled = true;
             this.input_FractalType.Items.AddRange(new object[] {
-            "Classic",
+            "Mandelbrot",
             "Julia",
             "Julia Mating"});
-            this.input_FractalType.Location = new System.Drawing.Point(68, 53);
+            this.input_FractalType.Location = new System.Drawing.Point(68, 27);
             this.input_FractalType.Name = "input_FractalType";
             this.input_FractalType.Size = new System.Drawing.Size(87, 23);
             this.input_FractalType.TabIndex = 19;
+            this.input_FractalType.SelectionChangeCommitted += new System.EventHandler(this.input_FractalType_SelectionChangeCommitted);
             // 
             // input_Power
             // 
@@ -671,7 +672,7 @@
             // label_FractalType
             // 
             this.label_FractalType.AutoSize = true;
-            this.label_FractalType.Location = new System.Drawing.Point(3, 56);
+            this.label_FractalType.Location = new System.Drawing.Point(3, 30);
             this.label_FractalType.Name = "label_FractalType";
             this.label_FractalType.Size = new System.Drawing.Size(45, 15);
             this.label_FractalType.TabIndex = 18;
@@ -816,10 +817,10 @@
             this.panel_FormulaMenu.AutoScroll = true;
             this.panel_FormulaMenu.CausesValidation = false;
             this.panel_FormulaMenu.Controls.Add(this.label_FormulaMenu);
-            this.panel_FormulaMenu.Controls.Add(this.label_Formula);
-            this.panel_FormulaMenu.Controls.Add(this.input_FractalFormula);
             this.panel_FormulaMenu.Controls.Add(this.label_FractalType);
             this.panel_FormulaMenu.Controls.Add(this.input_FractalType);
+            this.panel_FormulaMenu.Controls.Add(this.label_Formula);
+            this.panel_FormulaMenu.Controls.Add(this.input_FractalFormula);
             this.panel_FormulaMenu.Controls.Add(this.label_JuliaPosition);
             this.panel_FormulaMenu.Controls.Add(this.input_JuliaX);
             this.panel_FormulaMenu.Controls.Add(this.input_JuliaY);
@@ -866,6 +867,10 @@
             this.input_JuliaX.Size = new System.Drawing.Size(42, 23);
             this.input_JuliaX.TabIndex = 97;
             this.input_JuliaX.Text = "0";
+            this.input_JuliaX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_JuliaX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_JuliaX_KeyPress);
+            this.input_JuliaX.Validating += new System.ComponentModel.CancelEventHandler(this.input_JuliaX_Validating);
+            this.input_JuliaX.Validated += new System.EventHandler(this.input_JuliaX_Validated);
             // 
             // input_JuliaY
             // 
@@ -874,6 +879,10 @@
             this.input_JuliaY.Size = new System.Drawing.Size(42, 23);
             this.input_JuliaY.TabIndex = 96;
             this.input_JuliaY.Text = "0";
+            this.input_JuliaY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_JuliaY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_JuliaY_KeyPress);
+            this.input_JuliaY.Validating += new System.ComponentModel.CancelEventHandler(this.input_JuliaY_Validating);
+            this.input_JuliaY.Validated += new System.EventHandler(this.input_JuliaY_Validated);
             // 
             // input_MinIterations
             // 
@@ -1312,7 +1321,7 @@
             // 
             // input_Texture
             // 
-            this.input_Texture.Location = new System.Drawing.Point(56, 451);
+            this.input_Texture.Location = new System.Drawing.Point(57, 451);
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
@@ -1354,7 +1363,7 @@
             // 
             // input_ColorFactor
             // 
-            this.input_ColorFactor.Location = new System.Drawing.Point(114, 132);
+            this.input_ColorFactor.Location = new System.Drawing.Point(115, 132);
             this.input_ColorFactor.Name = "input_ColorFactor";
             this.input_ColorFactor.Size = new System.Drawing.Size(40, 23);
             this.input_ColorFactor.TabIndex = 45;
@@ -1494,7 +1503,7 @@
             "Both",
             "Interior",
             "Exterior"});
-            this.input_EditingColor.Location = new System.Drawing.Point(67, 27);
+            this.input_EditingColor.Location = new System.Drawing.Point(68, 27);
             this.input_EditingColor.Name = "input_EditingColor";
             this.input_EditingColor.Size = new System.Drawing.Size(87, 23);
             this.input_EditingColor.TabIndex = 61;
@@ -1530,7 +1539,7 @@
             "Domain 6",
             "Domain 7",
             "Custom"});
-            this.input_Coloring.Location = new System.Drawing.Point(67, 53);
+            this.input_Coloring.Location = new System.Drawing.Point(68, 53);
             this.input_Coloring.Name = "input_Coloring";
             this.input_Coloring.Size = new System.Drawing.Size(87, 23);
             this.input_Coloring.TabIndex = 63;
@@ -1630,7 +1639,7 @@
             // 
             // input_OrbitTrapFactor
             // 
-            this.input_OrbitTrapFactor.Location = new System.Drawing.Point(114, 158);
+            this.input_OrbitTrapFactor.Location = new System.Drawing.Point(115, 158);
             this.input_OrbitTrapFactor.Name = "input_OrbitTrapFactor";
             this.input_OrbitTrapFactor.Size = new System.Drawing.Size(40, 23);
             this.input_OrbitTrapFactor.TabIndex = 74;
@@ -1651,7 +1660,7 @@
             // 
             // input_StripeDensity
             // 
-            this.input_StripeDensity.Location = new System.Drawing.Point(114, 184);
+            this.input_StripeDensity.Location = new System.Drawing.Point(115, 184);
             this.input_StripeDensity.Name = "input_StripeDensity";
             this.input_StripeDensity.Size = new System.Drawing.Size(40, 23);
             this.input_StripeDensity.TabIndex = 95;
@@ -1693,7 +1702,7 @@
             "Average",
             "First",
             "Last"});
-            this.input_DomainCalculation.Location = new System.Drawing.Point(87, 235);
+            this.input_DomainCalculation.Location = new System.Drawing.Point(88, 235);
             this.input_DomainCalculation.Name = "input_DomainCalculation";
             this.input_DomainCalculation.Size = new System.Drawing.Size(67, 23);
             this.input_DomainCalculation.TabIndex = 82;
@@ -1745,7 +1754,7 @@
             // 
             // input_SecondDomainValueFactor2
             // 
-            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(114, 300);
+            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(115, 300);
             this.input_SecondDomainValueFactor2.Name = "input_SecondDomainValueFactor2";
             this.input_SecondDomainValueFactor2.Size = new System.Drawing.Size(40, 23);
             this.input_SecondDomainValueFactor2.TabIndex = 90;
@@ -1778,7 +1787,7 @@
             // 
             // input_MaxDistanceEstimation
             // 
-            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(114, 346);
+            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(115, 346);
             this.input_MaxDistanceEstimation.Name = "input_MaxDistanceEstimation";
             this.input_MaxDistanceEstimation.Size = new System.Drawing.Size(40, 23);
             this.input_MaxDistanceEstimation.TabIndex = 65;
@@ -1810,7 +1819,7 @@
             // 
             // input_DistanceEstimationFactor2
             // 
-            this.input_DistanceEstimationFactor2.Location = new System.Drawing.Point(114, 373);
+            this.input_DistanceEstimationFactor2.Location = new System.Drawing.Point(115, 373);
             this.input_DistanceEstimationFactor2.Name = "input_DistanceEstimationFactor2";
             this.input_DistanceEstimationFactor2.Size = new System.Drawing.Size(40, 23);
             this.input_DistanceEstimationFactor2.TabIndex = 103;
@@ -1851,7 +1860,7 @@
             0,
             0,
             131072});
-            this.input_TextureBlend.Location = new System.Drawing.Point(98, 477);
+            this.input_TextureBlend.Location = new System.Drawing.Point(99, 477);
             this.input_TextureBlend.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1875,7 +1884,7 @@
             // 
             // input_TextureDistortionFactor
             // 
-            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(114, 569);
+            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(115, 569);
             this.input_TextureDistortionFactor.Name = "input_TextureDistortionFactor";
             this.input_TextureDistortionFactor.Size = new System.Drawing.Size(40, 23);
             this.input_TextureDistortionFactor.TabIndex = 97;
@@ -1909,7 +1918,7 @@
             // 
             // input_TextureScaleY
             // 
-            this.input_TextureScaleY.Location = new System.Drawing.Point(114, 503);
+            this.input_TextureScaleY.Location = new System.Drawing.Point(115, 503);
             this.input_TextureScaleY.Name = "input_TextureScaleY";
             this.input_TextureScaleY.Size = new System.Drawing.Size(40, 23);
             this.input_TextureScaleY.TabIndex = 93;
@@ -2042,34 +2051,34 @@
             this.input_CameraRoll.Validating += new System.ComponentModel.CancelEventHandler(this.input_CameraRoll_Validating);
             this.input_CameraRoll.Validated += new System.EventHandler(this.input_CameraRoll_Validated);
             // 
-            // panel1
+            // panel_GeneralMenu
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.panel_GeneralMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.input_Zoom);
-            this.panel1.Controls.Add(this.input_CameraRoll);
-            this.panel1.Controls.Add(this.label_FractalCenter);
-            this.panel1.Controls.Add(this.input_CameraPosition);
-            this.panel1.Controls.Add(this.label_FractalZoom);
-            this.panel1.Controls.Add(this.input_RiemannAngles);
-            this.panel1.Controls.Add(this.label_RiemannAngles);
-            this.panel1.Controls.Add(this.input_LockedZoom);
-            this.panel1.Controls.Add(this.input_CameraAngles);
-            this.panel1.Controls.Add(this.checkBox_LockZoomFactor);
-            this.panel1.Controls.Add(this.label_CameraOrientation);
-            this.panel1.Controls.Add(this.input_Center);
-            this.panel1.Location = new System.Drawing.Point(12, 344);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(500, 71);
-            this.panel1.TabIndex = 70;
+            this.panel_GeneralMenu.AutoScroll = true;
+            this.panel_GeneralMenu.Controls.Add(this.input_Zoom);
+            this.panel_GeneralMenu.Controls.Add(this.input_CameraRoll);
+            this.panel_GeneralMenu.Controls.Add(this.label_FractalCenter);
+            this.panel_GeneralMenu.Controls.Add(this.input_CameraPosition);
+            this.panel_GeneralMenu.Controls.Add(this.label_FractalZoom);
+            this.panel_GeneralMenu.Controls.Add(this.input_RiemannAngles);
+            this.panel_GeneralMenu.Controls.Add(this.label_RiemannAngles);
+            this.panel_GeneralMenu.Controls.Add(this.input_LockedZoom);
+            this.panel_GeneralMenu.Controls.Add(this.input_CameraAngles);
+            this.panel_GeneralMenu.Controls.Add(this.checkBox_LockZoomFactor);
+            this.panel_GeneralMenu.Controls.Add(this.label_CameraOrientation);
+            this.panel_GeneralMenu.Controls.Add(this.input_Center);
+            this.panel_GeneralMenu.Location = new System.Drawing.Point(12, 344);
+            this.panel_GeneralMenu.Name = "panel_GeneralMenu";
+            this.panel_GeneralMenu.Size = new System.Drawing.Size(500, 71);
+            this.panel_GeneralMenu.TabIndex = 70;
             // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(696, 414);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel_GeneralMenu);
             this.Controls.Add(this.panel_ColorMenu);
             this.Controls.Add(this.glControl);
             this.Controls.Add(this.button_Menu1);
@@ -2099,8 +2108,8 @@
             this.panel_ColorMenu.ResumeLayout(false);
             this.panel_ColorMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.panel_GeneralMenu.ResumeLayout(false);
+            this.panel_GeneralMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2256,7 +2265,7 @@
         private System.Windows.Forms.CheckBox checkBox_UsePolarTextureCoordinates;
         private System.Windows.Forms.TextBox input_DistanceEstimationFactor2;
         private System.Windows.Forms.CheckBox checkBox_UseNormals;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel_GeneralMenu;
     }
 }
 

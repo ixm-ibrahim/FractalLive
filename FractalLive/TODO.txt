@@ -31,10 +31,10 @@ make riemann angle gimbal lock? (rotate with spherical coordinates)
 flat riemann camera controls and aspect ratio
 lower resolution
 miniterations can't exceed maxiterations-1
-third texture bug
 interior texture
 other ifs fractals (weather one, etc.)
 post iterations (smooth coloring)
 animate textures, julia, orbit traps, rotate normals
+switch classic and mandelbrot
 
 julia set (different shader), animation menu, julia set matings (different shader), complex power, terrian, julia minimap, load save settings, doubles and quads

@@ -551,7 +551,7 @@ namespace FractalLive
 
             set
             {
-                roll = MathHelper.DegreesToRadians(value);
+                roll = MathHelper.DegreesToRadians(value) % 360;
             }
         }
 
