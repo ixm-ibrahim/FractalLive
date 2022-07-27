@@ -109,6 +109,7 @@ uniform sampler2D texture0;
 uniform float textureBlend;
 uniform float textureScaleX;
 uniform float textureScaleY;
+uniform bool usePolarTextureCoordinates;
 uniform bool useDistortedTexture;
 uniform float textureDistortionFactor;
 
@@ -129,6 +130,7 @@ uniform sampler2D texture1;
 uniform float i_textureBlend;
 uniform float i_textureScaleX;
 uniform float i_textureScaleY;
+uniform bool i_usePolarTextureCoordinates;
 uniform bool i_useDistortedTexture;
 uniform float i_textureDistortionFactor;
 
@@ -616,15 +618,24 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
 
     if (splitInteriorExterior && iter >= maxIterations && i_useTexture)
     {
-        //vec2 tex = vec2(pow(atan(FragPosModel.y, FragPosModel.x),2), GetSmoothIter(iter, z));   //@pass c here
+        //vec2 tex = vec2(pow(atan(FragPosModel.y, FragPosModel.x),2), GetSmoothIter(iter, z));
         //vec2 tex = vec2(stripes.y, GetSmoothIter(iter, z));   //@pass c here
         vec2 tex;
         
         if (i_useDistortedTexture)
-            tex = vec2(pow(stripes.w,1)*i_textureScaleX, (1-fract(GetSmoothIter(iter, z))) * i_textureScaleY);
+            tex = vec2(pow(stripes.w,1), (1-fract(GetSmoothIter(iter, z))));
         else
-            //tex = vec2(atan(FragPosModel.y, FragPosModel.x), GetSmoothIter(iter, z));   //@pass c here
-            tex = vec2(atan(z.y, z.x)*i_textureScaleX, sin(length(z)*i_textureScaleY)*.5+.5);
+            //tex = vec2(atan(FragPosModel.y, FragPosModel.x), GetSmoothIter(iter, z));
+            //tex = vec2(atan(c.y, c.x), GetSmoothIter(iter, z));
+            tex = vec2(atan(c.y, c.x), sin(length(z))*.5+.5);
+            
+        if (i_usePolarTextureCoordinates)
+        {
+            tex *= vec2(M_2PI * i_textureScaleX, i_textureScaleY);
+            tex = 0.5*vec2(tex.y*cos(tex.x), tex.y*sin(tex.x)) + 0.5;
+        }
+        else
+            tex *= vec2(i_textureScaleX, i_textureScaleY);
 
         color = mix(color, texture(texture1, tex).xyz, i_textureBlend);
     }
@@ -639,9 +650,17 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
         if (useDistortedTexture)
             tex = vec2(pow(stripes.z,1), 1-fract(GetSmoothIter(iter, z)));
         else
-            tex = vec2(atan(c.y, c.x), GetSmoothIter(iter, z));   //@pass c here
+            tex = vec2((atan(z.y,z.x)+M_PI)/M_2PI, 1-fract(GetSmoothIter(iter, z)));
+            
+        if (usePolarTextureCoordinates)
+        {
+            tex *= vec2(M_2PI * textureScaleX, textureScaleY);
+            tex = 0.5*vec2(tex.y*cos(tex.x), tex.y*sin(tex.x)) + 0.5;
+        }
+        else
+            tex *= vec2(textureScaleX, textureScaleY);
 
-        color = mix(color, texture(texture0, tex * vec2(textureScaleX, textureScaleY)).xyz, textureBlend);
+        color = mix(color, texture(texture0, tex).xyz, textureBlend);
     }
     
     return color;
@@ -769,7 +788,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, b
         default:
             //color = mix(outerColor1, outerColor2, theta);
             //float test = log(length(c_invert(z)));
-            color = HSVtoRGB(vec3(theta, 1, 1));
+            color = HSVtoRGB(vec3(theta, 1, 1-fract(GetSmoothIter(iter.x, z.xy))));
             break;
     }
 

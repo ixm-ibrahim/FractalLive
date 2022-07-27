@@ -136,6 +136,7 @@
             this.label_FractalZoom = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
             this.panel_ColorMenu = new System.Windows.Forms.Panel();
+            this.checkBox_UsePolarTextureCoordinates = new System.Windows.Forms.CheckBox();
             this.checkBox_UseRotatingNormals = new System.Windows.Forms.CheckBox();
             this.checkBox_UseNormals = new System.Windows.Forms.CheckBox();
             this.input_TextureDistortionFactor = new System.Windows.Forms.TextBox();
@@ -236,7 +237,7 @@
             // label_TextureBlend
             // 
             label_TextureBlend.AutoSize = true;
-            label_TextureBlend.Location = new System.Drawing.Point(4, 503);
+            label_TextureBlend.Location = new System.Drawing.Point(3, 503);
             label_TextureBlend.Name = "label_TextureBlend";
             label_TextureBlend.Size = new System.Drawing.Size(86, 15);
             label_TextureBlend.TabIndex = 70;
@@ -526,11 +527,11 @@
             this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(683, 694);
+            this.LogTextBox.Location = new System.Drawing.Point(717, 694);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
-            this.LogTextBox.Size = new System.Drawing.Size(159, 59);
+            this.LogTextBox.Size = new System.Drawing.Size(375, 59);
             this.LogTextBox.TabIndex = 3;
             // 
             // glControl
@@ -1299,7 +1300,7 @@
             // label_Texture
             // 
             this.label_Texture.AutoSize = true;
-            this.label_Texture.Location = new System.Drawing.Point(4, 478);
+            this.label_Texture.Location = new System.Drawing.Point(3, 478);
             this.label_Texture.Name = "label_Texture";
             this.label_Texture.Size = new System.Drawing.Size(48, 15);
             this.label_Texture.TabIndex = 40;
@@ -1313,6 +1314,7 @@
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
             this.input_Texture.Click += new System.EventHandler(this.input_Texture_Click);
+            this.input_Texture.TextChanged += new System.EventHandler(this.input_Texture_TextChanged);
             this.input_Texture.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
             // checkBox_LockZoomFactor
@@ -1413,6 +1415,7 @@
             this.panel_ColorMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_ColorMenu.AutoScroll = true;
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UsePolarTextureCoordinates);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseRotatingNormals);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseNormals);
             this.panel_ColorMenu.Controls.Add(this.input_TextureDistortionFactor);
@@ -1464,6 +1467,17 @@
             this.panel_ColorMenu.Size = new System.Drawing.Size(177, 664);
             this.panel_ColorMenu.TabIndex = 59;
             // 
+            // checkBox_UsePolarTextureCoordinates
+            // 
+            this.checkBox_UsePolarTextureCoordinates.AutoSize = true;
+            this.checkBox_UsePolarTextureCoordinates.Location = new System.Drawing.Point(8, 554);
+            this.checkBox_UsePolarTextureCoordinates.Name = "checkBox_UsePolarTextureCoordinates";
+            this.checkBox_UsePolarTextureCoordinates.Size = new System.Drawing.Size(120, 19);
+            this.checkBox_UsePolarTextureCoordinates.TabIndex = 101;
+            this.checkBox_UsePolarTextureCoordinates.Text = "Polar Coordinates";
+            this.checkBox_UsePolarTextureCoordinates.UseVisualStyleBackColor = true;
+            this.checkBox_UsePolarTextureCoordinates.CheckedChanged += new System.EventHandler(this.checkBox_UsePolarTextureCoordinates_CheckedChanged);
+            // 
             // checkBox_UseRotatingNormals
             // 
             this.checkBox_UseRotatingNormals.AutoSize = true;
@@ -1488,7 +1502,7 @@
             // 
             // input_TextureDistortionFactor
             // 
-            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(116, 572);
+            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(115, 593);
             this.input_TextureDistortionFactor.Name = "input_TextureDistortionFactor";
             this.input_TextureDistortionFactor.Size = new System.Drawing.Size(40, 23);
             this.input_TextureDistortionFactor.TabIndex = 97;
@@ -1501,7 +1515,7 @@
             // label_TextureDistortionFactor
             // 
             this.label_TextureDistortionFactor.AutoSize = true;
-            this.label_TextureDistortionFactor.Location = new System.Drawing.Point(4, 575);
+            this.label_TextureDistortionFactor.Location = new System.Drawing.Point(3, 596);
             this.label_TextureDistortionFactor.Name = "label_TextureDistortionFactor";
             this.label_TextureDistortionFactor.Size = new System.Drawing.Size(103, 15);
             this.label_TextureDistortionFactor.TabIndex = 98;
@@ -1511,7 +1525,7 @@
             // checkBox_UseDistortedTexture
             // 
             this.checkBox_UseDistortedTexture.AutoSize = true;
-            this.checkBox_UseDistortedTexture.Location = new System.Drawing.Point(9, 553);
+            this.checkBox_UseDistortedTexture.Location = new System.Drawing.Point(8, 574);
             this.checkBox_UseDistortedTexture.Name = "checkBox_UseDistortedTexture";
             this.checkBox_UseDistortedTexture.Size = new System.Drawing.Size(115, 19);
             this.checkBox_UseDistortedTexture.TabIndex = 96;
@@ -1555,7 +1569,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 530);
+            this.label1.Location = new System.Drawing.Point(3, 530);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 15);
             this.label1.TabIndex = 92;
@@ -2237,6 +2251,7 @@
         private System.Windows.Forms.TextBox input_JuliaX;
         private System.Windows.Forms.TextBox input_JuliaY;
         private System.Windows.Forms.TextBox input_CameraRoll;
+        private System.Windows.Forms.CheckBox checkBox_UsePolarTextureCoordinates;
     }
 }
 

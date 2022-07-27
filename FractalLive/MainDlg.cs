@@ -263,13 +263,14 @@ namespace FractalLive
             shader.SetFloat("maxDistanceEstimation", split ? fractalSettings.I_MaxDistanceEstimation : fractalSettings.MaxDistanceEstimation);
             shader.SetFloat("distanceEstimationFactor", split ? fractalSettings.I_DistanceEstimationFactor : fractalSettings.DistanceEstimationFactor);
             shader.SetBool("useTexture", (split ? fractalSettings.E_Texture : fractalSettings.Texture) != "");
-            shader.SetInt("texture0", 0);
+            shader.SetInt("texture0", split ? 2 : 0);
             shader.SetFloat("textureBlend", split ? fractalSettings.E_TextureBlend : fractalSettings.TextureBlend);
             shader.SetFloat("textureScaleX", split ? fractalSettings.E_TextureScaleX : fractalSettings.TextureScaleX);
             shader.SetFloat("textureScaleY", split ? fractalSettings.E_TextureScaleY : fractalSettings.TextureScaleY);
+            shader.SetBool("usePolarTextureCoordinates", split ? fractalSettings.E_UsePolarTextureCoordinates : fractalSettings.UsePolarTextureCoordinates);
             shader.SetBool("useDistortedTexture", split ? fractalSettings.E_UseTextureDistortion : fractalSettings.UseTextureDistortion);
             shader.SetFloat("textureDistortionFactor", split ? fractalSettings.E_TextureDistortion : fractalSettings.TextureDistortion);
-
+            
             shader.SetInt("i_coloring", (int)fractalSettings.I_Coloring);
             shader.SetBool("i_useCustomPalette", fractalSettings.I_UseCustomPalette);
             shader.SetVector4Array("i_customPalette", fractalSettings.I_CustomPalette);
@@ -286,6 +287,7 @@ namespace FractalLive
             shader.SetFloat("i_textureBlend", fractalSettings.I_TextureBlend);
             shader.SetFloat("i_textureScaleX", fractalSettings.I_TextureScaleX);
             shader.SetFloat("i_textureScaleY", fractalSettings.I_TextureScaleY);
+            shader.SetBool("i_usePolarTextureCoordinates", fractalSettings.I_UsePolarTextureCoordinates);
             shader.SetBool("i_useDistortedTexture", fractalSettings.I_UseTextureDistortion);
             shader.SetFloat("i_textureDistortionFactor", fractalSettings.I_TextureDistortion);
 
@@ -355,6 +357,7 @@ namespace FractalLive
             input_TextureBlend.Enabled = false;
             input_TextureScaleX.Enabled = false;
             input_TextureScaleY.Enabled = false;
+            checkBox_UsePolarTextureCoordinates.Enabled = false;
             checkBox_UseDistortedTexture.Enabled = false;
             input_TextureDistortionFactor.Enabled = false;
             checkBox_UseCustomPalette_CheckedChanged(null, null);
@@ -799,7 +802,7 @@ namespace FractalLive
                 fractalTime -= deltaTime * modifier * (pauseTime ? 5 : 6);
 
             // update controls
-            //Log(CurrentSettings.Projection.ToString());
+            //Log(CurrentSettings.Texture + " - " + CurrentSettings.I_Texture + " - " + CurrentSettings.E_Texture);
             //Log(CurrentCamera.TargetDistance.ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
@@ -1727,6 +1730,7 @@ namespace FractalLive
             input_TextureBlend.Value = (decimal)CurrentSettings.GetTextureBlend();
             input_TextureScaleX.Text = CurrentSettings.GetTextureScaleX().ToString();
             input_TextureScaleY.Text = CurrentSettings.GetTextureScaleY().ToString();
+            checkBox_UsePolarTextureCoordinates.Checked = CurrentSettings.GetUsePolarTextureCoordinates();
             checkBox_UseDistortedTexture.Checked = CurrentSettings.GetUseTextureDistortion();
             input_TextureDistortionFactor.Text = CurrentSettings.GetTextureDistortion().ToString();
 
@@ -1981,48 +1985,43 @@ namespace FractalLive
 
         private void button_ClearTexture_Click(object sender, EventArgs e)
         {
-            CurrentSettings.SetTexture("");
             input_Texture.Text = "";
-            input_TextureBlend.Enabled = false;
-            input_TextureScaleX.Enabled = false;
-            input_TextureScaleY.Enabled = false;
-            checkBox_UseDistortedTexture.Enabled = false;
-            input_TextureDistortionFactor.Enabled = false;
         }
 
+        private void input_Texture_TextChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.SetTexture(input_Texture.Text);
+            bool enabled = input_Texture.Text != "";
+
+            if (enabled)
+                if (CurrentSettings.EditingColor == Fractal.Editing.Interior)
+                {
+                    texture1 = Texture.LoadFromFile(input_Texture.Text);
+                    texture1.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture1);
+                }
+                else if (CurrentSettings.EditingColor == Fractal.Editing.Exterior)
+                {
+                    texture2 = Texture.LoadFromFile(input_Texture.Text);
+                    texture2.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture2);
+                }
+                else
+                {
+                    texture0 = Texture.LoadFromFile(input_Texture.Text);
+                    texture0.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture0);
+                }
+
+            input_TextureBlend.Enabled = enabled;
+            input_TextureScaleX.Enabled = enabled;
+            input_TextureScaleY.Enabled = enabled;
+            checkBox_UsePolarTextureCoordinates.Enabled = enabled;
+            checkBox_UseDistortedTexture.Enabled = enabled;
+            input_TextureDistortionFactor.Enabled = checkBox_UseDistortedTexture.Checked;
+        }
         private void input_Texture_Click(object sender, EventArgs e)
         {
             openFileDialog1.FileName = input_Texture.Text;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
                 input_Texture.Text = openFileDialog1.FileName;
-                CurrentSettings.SetTexture(openFileDialog1.FileName);
-
-                if (CurrentSettings.EditingColor == Fractal.Editing.Interior)
-                {
-                    texture1 = Texture.LoadFromFile(openFileDialog1.FileName);
-                    texture1.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture1);
-                }
-                else
-                {
-                    texture0 = Texture.LoadFromFile(openFileDialog1.FileName);
-                    texture0.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture0);
-                }
-
-                input_TextureBlend.Enabled = true;
-                input_TextureScaleX.Enabled = true;
-                input_TextureScaleY.Enabled = true;
-                checkBox_UseDistortedTexture.Enabled = true;
-                input_TextureDistortionFactor.Enabled = checkBox_UseDistortedTexture.Checked;
-            }
-            else
-            {
-                input_TextureBlend.Enabled = false;
-                input_TextureScaleX.Enabled = false;
-                input_TextureScaleY.Enabled = false;
-                checkBox_UseDistortedTexture.Enabled = false;
-                input_TextureDistortionFactor.Enabled = false;
-            }
         }
 
         private void input_TextureBlend_ValueChanged(object sender, EventArgs e)
@@ -2050,6 +2049,11 @@ namespace FractalLive
         {
             CurrentSettings.SetTextureScaleY(float.Parse(input_TextureScaleY.Text));
             input_TextureScaleY.Text = CurrentSettings.GetTextureScaleY().ToString();
+        }
+
+        private void checkBox_UsePolarTextureCoordinates_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.SetUsePolarTextureCoordinates(checkBox_UsePolarTextureCoordinates.Checked);
         }
 
         private void checkBox_UseDistortedTexture_CheckedChanged(object sender, EventArgs e)
@@ -2164,7 +2168,7 @@ namespace FractalLive
         private int vboSphere, vaoSphere;
         TexturedVertex[] sphereVertices = new IcoSphere().Create(5, 1, true);
 
-        Texture texture0, texture1;
+        Texture texture0, texture1, texture2;
 
         #endregion
 

@@ -135,6 +135,7 @@ namespace FractalLive
                 TextureBlend = 0.5f;
                 TextureScaleX = 1;
                 TextureScaleY = 1;
+                UsePolarTextureCoordinates = false;
                 UseTextureDistortion = false;
                 TextureDistortion = 5;
 
@@ -166,6 +167,7 @@ namespace FractalLive
                 I_TextureBlend = 0.5f;
                 I_TextureScaleX = 1;
                 I_TextureScaleY = 1;
+                I_UsePolarTextureCoordinates = false;
                 I_UseTextureDistortion = false;
                 I_TextureDistortion = 5;
 
@@ -190,6 +192,7 @@ namespace FractalLive
                 E_TextureBlend = 0.5f;
                 E_TextureScaleX = 1;
                 E_TextureScaleY = 1;
+                E_UsePolarTextureCoordinates = false;
                 E_UseTextureDistortion = false;
                 E_TextureDistortion = 5;
 
@@ -1039,6 +1042,34 @@ namespace FractalLive
                         break;
                 }
             }
+            
+            public bool GetUsePolarTextureCoordinates()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_UsePolarTextureCoordinates;
+                    case Editing.Exterior:
+                        return E_UsePolarTextureCoordinates;
+                    default:
+                        return UsePolarTextureCoordinates;
+                }
+            }
+            public void SetUsePolarTextureCoordinates(bool usePolarTextureCoordinates)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_UsePolarTextureCoordinates = usePolarTextureCoordinates;
+                        break;
+                    case Editing.Exterior:
+                        E_UsePolarTextureCoordinates = usePolarTextureCoordinates;
+                        break;
+                    default:
+                        UsePolarTextureCoordinates = usePolarTextureCoordinates;
+                        break;
+                }
+            }
 
             public float GetTextureDistortion()
             {
@@ -1149,6 +1180,7 @@ namespace FractalLive
             public float TextureBlend;
             public float TextureScaleX;
             public float TextureScaleY;
+            public bool UsePolarTextureCoordinates;
             public bool UseTextureDistortion;
             public float TextureDistortion;
 
@@ -1174,6 +1206,7 @@ namespace FractalLive
             public float I_TextureBlend;
             public float I_TextureScaleX;
             public float I_TextureScaleY;
+            public bool I_UsePolarTextureCoordinates;
             public bool I_UseTextureDistortion;
             public float I_TextureDistortion;
 
@@ -1199,6 +1232,7 @@ namespace FractalLive
             public float E_TextureBlend;
             public float E_TextureScaleX;
             public float E_TextureScaleY;
+            public bool E_UsePolarTextureCoordinates;
             public bool E_UseTextureDistortion;
             public float E_TextureDistortion;
 

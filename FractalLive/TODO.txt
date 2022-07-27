@@ -35,5 +35,6 @@ third texture bug
 interior texture
 other ifs fractals (weather one, etc.)
 post iterations (smooth coloring)
+animate textures, julia, orbit traps
 
 julia set (different shader), animation menu, julia set matings (different shader), complex power, terrian, julia minimap, load save settings, doubles and quads
