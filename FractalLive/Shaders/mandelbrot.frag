@@ -146,8 +146,8 @@ vec2 ComputeFractal(vec2 z, vec2 c);
 vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz);
 vec2 FoldZ(vec2 z);
 vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes);
-vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes);
-vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap);
+vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, bool escacped);
+vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes);
 bool IsBounded(int iter, vec2 z);
 bool IsWithinIteration(int iter);
 vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout ivec2 domainIter);
@@ -485,7 +485,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
     if (iter >= maxIterations)
     {
         int c = splitInteriorExterior ? i_coloring : coloring;
-        vec3 domColor = splitInteriorExterior ? I_DomainColoring(i_coloring, domainZ, domainIter, trap) : DomainColoring(coloring, domainZ, domainIter, trap, stripes);
+        vec3 domColor = splitInteriorExterior ? I_DomainColoring(i_coloring, domainZ, domainIter, trap, stripes) : DomainColoring(coloring, domainZ, domainIter, trap, stripes, iter < maxIterations);
         
         switch (c)
         {
@@ -596,7 +596,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
             }
             default:
             {
-                color = DomainColoring(coloring, domainZ, domainIter, trap, stripes);
+                color = DomainColoring(coloring, domainZ, domainIter, trap, stripes, iter < maxIterations);
                 break;
             }
         }
@@ -647,7 +647,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
     return color;
 }
 
-vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
+vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, bool escaped)
 {
     //float t = (time + trap) * 20;
     float t = time * 20;
@@ -655,7 +655,8 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
     vec3 color;
 
     float theta = (c_arg(z.xy) + M_PI) / M_2PI;
-	float r = length(z.xy)/bailout;
+	//float r = sigmoid(length(z.xy), orbitTrapFactor);
+	float r = length(z.xy);
 
     if (useDomainSecondValue)
     {
@@ -725,10 +726,9 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
 		theta = 0;
 		r = 0;
 	}
-    
-    float twoPI = 2 * M_PI;
-    float s = abs(sin(mod(r * twoPI, twoPI)));
-	float b = sqrt(sqrt(abs(sin(mod(z.y/bailout * twoPI, twoPI)) * sin(mod(z.x/bailout * twoPI, twoPI)))));
+
+    float s = abs(sin(mod(r * M_2PI, M_2PI)));
+	float b = sqrt(sqrt(abs(sin(mod(z.y * M_2PI, M_2PI)) * sin(mod(z.x * M_2PI, M_2PI)))));
 	float b2 = .5 * ((1 - s) + b + sqrt(pow(1 - s - b, 2) + 0.01));
 
     switch (coloring)
@@ -738,8 +738,14 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
             //color = vec3(stripes);
             //color = HSVtoRGB(vec3(sigmoid(stripes.x, colorFactor)*360*colorCycles + t, 1, 1));
             float strp = sigmoid(stripes.x, colorFactor)*360*colorCycles;
-            float th = useCustomPalette ? RGBtoHSV(ColorPalette(customPalette, mod(strp + t, 360)/360)).x : strp + t;
-            color = HSVtoRGB(vec3(th, 1, 1));
+            vec3 hsv =  RGBtoHSV(ColorPalette(customPalette, mod(strp + t, 360)/360));
+            float th = useCustomPalette ? hsv.x : strp + t;
+            
+            if (escaped)
+                color = HSVtoRGB(vec3(th, hsv.y, hsv.z));
+            else
+                color = HSVtoRGB(vec3(th + theta, hsv.y, hsv.z));
+
             break;
         }
         case COL_DOMAIN_NORMAL:
@@ -787,7 +793,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
     return color;
 }
 
-vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
+vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
 {
     //float t = (time + trap) * 20;
     float t = time * 20;
@@ -873,6 +879,16 @@ vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap)
 
     switch (i_coloring)
     {
+        case COL_STRIPES_DOMAIN:
+        {
+            //color = vec3(stripes);
+            //color = HSVtoRGB(vec3(sigmoid(stripes.x, colorFactor)*360*colorCycles + t, 1, 1));
+            float strp = sigmoid(stripes.x, colorFactor)*360*colorCycles;
+            vec3 hsv = RGBtoHSV(ColorPalette(customPalette, mod(strp + t, 360)/360));
+            float th = useCustomPalette ? hsv.x : strp + t;
+            color = HSVtoRGB(vec3(th + theta, hsv.y, hsv.z));
+            break;
+        }
         case COL_DOMAIN_NORMAL:
             color = HSVtoRGB(vec3(theta, s, b2 > 1 ? 1 : b2));
             break;

@@ -704,6 +704,7 @@ namespace FractalLive
                     if (inputState.keysDown[Keys.Q] || inputState.keysDown[Keys.E])
                     {
                         CurrentCamera.Roll -= modifier / 2 * (inputState.keysDown[Keys.Q] ? 1 : -1);
+                        input_CameraRoll.Text = CurrentCamera.Roll.ToString();
                     }
                     if (inputState.keysDown[Keys.R] || inputState.keysDown[Keys.F])
                     {
@@ -759,6 +760,7 @@ namespace FractalLive
 
                         input_CameraPosition.Text = Make3D(CurrentCamera.Position.X, CurrentCamera.Position.Y, CurrentCamera.Position.Z);
                         input_CameraAngles.Text = Make2D(CurrentCamera.Yaw, CurrentCamera.Pitch);
+                        input_CameraRoll.Text = CurrentCamera.Roll.ToString();
                     }
                     if (inputState.IsSecondaryMovementKeyDown())
                     {
@@ -1231,6 +1233,16 @@ namespace FractalLive
             input_CameraAngles.Text = Make2D(CurrentCamera.Yaw, CurrentCamera.Pitch);
 
             input_CameraPosition.Text = Make3D(CurrentCamera.Position.X, CurrentCamera.Position.Y, CurrentCamera.Position.Z);
+        }
+
+        private void input_CameraRoll_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_CameraRoll.Text))
+                e.Cancel = true;
+        }
+        private void input_CameraRoll_Validated(object sender, EventArgs e)
+        {
+            CurrentCamera.Roll = float.Parse(GetFrom2D(input_CameraRoll.Text, true));
         }
 
         private void input_RiemannAngles_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1717,6 +1729,8 @@ namespace FractalLive
             input_TextureScaleY.Text = CurrentSettings.GetTextureScaleY().ToString();
             checkBox_UseDistortedTexture.Checked = CurrentSettings.GetUseTextureDistortion();
             input_TextureDistortionFactor.Text = CurrentSettings.GetTextureDistortion().ToString();
+
+            input_Coloring_SelectionChangeCommitted(null, null);
         }
 
         private void input_Coloring_SelectionChangeCommitted(object sender, EventArgs e)
@@ -1728,9 +1742,9 @@ namespace FractalLive
             else
                 input_DomainCalculation.Enabled = false;*/
 
-            bool usingDomain = CurrentSettings.GetColoring() == Fractal.Coloring.Stripes_2 || (CurrentSettings.GetColoring() >= Fractal.Coloring.Domain_1 && CurrentSettings.GetColoring() <= Fractal.Coloring.Domain_7);
+            bool usingDomain = (CurrentSettings.GetColoring() >= Fractal.Coloring.Stripes_1 && CurrentSettings.GetColoring() <= Fractal.Coloring.Stripes_2) || (CurrentSettings.GetColoring() >= Fractal.Coloring.Domain_1 && CurrentSettings.GetColoring() <= Fractal.Coloring.Domain_7);
             checkBox_MatchOrbitTrap.Enabled = usingDomain;
-            input_StripeDensity.Enabled = CurrentSettings.GetColoring() >= Fractal.Coloring.Stripes_1 || CurrentSettings.GetColoring() <= Fractal.Coloring.Stripes_2;
+            input_StripeDensity.Enabled = CurrentSettings.GetColoring() >= Fractal.Coloring.Stripes_1 && CurrentSettings.GetColoring() <= Fractal.Coloring.Stripes_2;
             input_DomainCalculation.Enabled = usingDomain && !checkBox_MatchOrbitTrap.Checked;
             checkBox_UseDomainIteration.Enabled = usingDomain; 
             checkBox_UseSecondDomainValue.Enabled = usingDomain; 
@@ -1901,8 +1915,8 @@ namespace FractalLive
         }
         private void input_SecondDomainValueFactor1_Validated(object sender, EventArgs e)
         {
-            CurrentSettings.SecondDomainValueFactor1 = float.Parse(input_SecondDomainValueFactor1.Text);
-            input_SecondDomainValueFactor1.Text = CurrentSettings.SecondDomainValueFactor1.ToString();
+            CurrentSettings.SetSecondDomainValueFactor1(float.Parse(input_SecondDomainValueFactor1.Text));
+            input_SecondDomainValueFactor1.Text = CurrentSettings.GetSecondDomainValueFactor1().ToString();
         }
 
         private void input_SecondDomainValueFactor2_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1912,8 +1926,8 @@ namespace FractalLive
         }
         private void input_SecondDomainValueFactor2_Validated(object sender, EventArgs e)
         {
-            CurrentSettings.SecondDomainValueFactor2 = float.Parse(input_SecondDomainValueFactor2.Text);
-            input_SecondDomainValueFactor2.Text = CurrentSettings.SecondDomainValueFactor2.ToString();
+            CurrentSettings.SetSecondDomainValueFactor2(float.Parse(input_SecondDomainValueFactor2.Text));
+            input_SecondDomainValueFactor2.Text = CurrentSettings.GetSecondDomainValueFactor2().ToString();
         }
 
         private void checkBox_MatchOrbitTrap_CheckedChanged(object sender, EventArgs e)

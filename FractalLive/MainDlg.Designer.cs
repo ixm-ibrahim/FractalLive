@@ -91,6 +91,9 @@
             this.input_Bailout = new System.Windows.Forms.TextBox();
             this.button_Menu4 = new System.Windows.Forms.Button();
             this.panel_FormulaMenu = new System.Windows.Forms.Panel();
+            this.label_JuliaPosition = new System.Windows.Forms.Label();
+            this.input_JuliaX = new System.Windows.Forms.TextBox();
+            this.input_JuliaY = new System.Windows.Forms.TextBox();
             this.input_FoldCount = new System.Windows.Forms.TextBox();
             this.input_FoldOffsetY = new System.Windows.Forms.TextBox();
             this.label_FoldOffset = new System.Windows.Forms.Label();
@@ -180,6 +183,7 @@
             this.label_RiemannAngles = new System.Windows.Forms.Label();
             this.input_CameraAngles = new System.Windows.Forms.TextBox();
             this.input_CameraPosition = new System.Windows.Forms.TextBox();
+            this.input_CameraRoll = new System.Windows.Forms.TextBox();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -202,7 +206,7 @@
             // label_MaxIterations
             // 
             label_MaxIterations.AutoSize = true;
-            label_MaxIterations.Location = new System.Drawing.Point(3, 84);
+            label_MaxIterations.Location = new System.Drawing.Point(3, 111);
             label_MaxIterations.Name = "label_MaxIterations";
             label_MaxIterations.Size = new System.Drawing.Size(90, 15);
             label_MaxIterations.TabIndex = 6;
@@ -252,7 +256,7 @@
             // label_MinIterations
             // 
             label_MinIterations.AutoSize = true;
-            label_MinIterations.Location = new System.Drawing.Point(3, 110);
+            label_MinIterations.Location = new System.Drawing.Point(3, 137);
             label_MinIterations.Name = "label_MinIterations";
             label_MinIterations.Size = new System.Drawing.Size(93, 15);
             label_MinIterations.TabIndex = 85;
@@ -262,7 +266,7 @@
             // label_FoldCount
             // 
             label_FoldCount.AutoSize = true;
-            label_FoldCount.Location = new System.Drawing.Point(3, 214);
+            label_FoldCount.Location = new System.Drawing.Point(3, 241);
             label_FoldCount.Name = "label_FoldCount";
             label_FoldCount.Size = new System.Drawing.Size(74, 15);
             label_FoldCount.TabIndex = 88;
@@ -651,7 +655,7 @@
             // 
             // input_Power
             // 
-            this.input_Power.Location = new System.Drawing.Point(71, 158);
+            this.input_Power.Location = new System.Drawing.Point(71, 185);
             this.input_Power.Name = "input_Power";
             this.input_Power.Size = new System.Drawing.Size(84, 23);
             this.input_Power.TabIndex = 28;
@@ -674,7 +678,7 @@
             // label_Power
             // 
             this.label_Power.AutoSize = true;
-            this.label_Power.Location = new System.Drawing.Point(3, 161);
+            this.label_Power.Location = new System.Drawing.Point(3, 188);
             this.label_Power.Name = "label_Power";
             this.label_Power.Size = new System.Drawing.Size(48, 15);
             this.label_Power.TabIndex = 29;
@@ -683,7 +687,7 @@
             // 
             // input_CPower
             // 
-            this.input_CPower.Location = new System.Drawing.Point(71, 184);
+            this.input_CPower.Location = new System.Drawing.Point(71, 211);
             this.input_CPower.Name = "input_CPower";
             this.input_CPower.Size = new System.Drawing.Size(84, 23);
             this.input_CPower.TabIndex = 30;
@@ -696,7 +700,7 @@
             // label_CPower
             // 
             this.label_CPower.AutoSize = true;
-            this.label_CPower.Location = new System.Drawing.Point(3, 187);
+            this.label_CPower.Location = new System.Drawing.Point(3, 214);
             this.label_CPower.Name = "label_CPower";
             this.label_CPower.Size = new System.Drawing.Size(59, 15);
             this.label_CPower.TabIndex = 31;
@@ -706,7 +710,7 @@
             // input_MaxIterations
             // 
             this.input_MaxIterations.CausesValidation = false;
-            this.input_MaxIterations.Location = new System.Drawing.Point(100, 81);
+            this.input_MaxIterations.Location = new System.Drawing.Point(100, 108);
             this.input_MaxIterations.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -784,7 +788,7 @@
             this.input_Bailout.Name = "input_Bailout";
             this.input_Bailout.Size = new System.Drawing.Size(40, 23);
             this.input_Bailout.TabIndex = 36;
-            this.input_Bailout.Text = "100";
+            this.input_Bailout.Text = "2";
             this.input_Bailout.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             this.input_Bailout.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
             this.input_Bailout.Validating += new System.ComponentModel.CancelEventHandler(this.input_Bailout_Validating);
@@ -808,6 +812,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_FormulaMenu.AutoScroll = true;
             this.panel_FormulaMenu.CausesValidation = false;
+            this.panel_FormulaMenu.Controls.Add(this.label_JuliaPosition);
+            this.panel_FormulaMenu.Controls.Add(this.input_JuliaX);
+            this.panel_FormulaMenu.Controls.Add(this.input_JuliaY);
             this.panel_FormulaMenu.Controls.Add(this.input_FoldCount);
             this.panel_FormulaMenu.Controls.Add(this.input_FoldOffsetY);
             this.panel_FormulaMenu.Controls.Add(this.label_FoldOffset);
@@ -838,9 +845,35 @@
             this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 664);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
+            // label_JuliaPosition
+            // 
+            this.label_JuliaPosition.AutoSize = true;
+            this.label_JuliaPosition.Location = new System.Drawing.Point(3, 83);
+            this.label_JuliaPosition.Name = "label_JuliaPosition";
+            this.label_JuliaPosition.Size = new System.Drawing.Size(38, 15);
+            this.label_JuliaPosition.TabIndex = 98;
+            this.label_JuliaPosition.Text = "Julia:*";
+            this.label_JuliaPosition.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_JuliaX
+            // 
+            this.input_JuliaX.Location = new System.Drawing.Point(68, 80);
+            this.input_JuliaX.Name = "input_JuliaX";
+            this.input_JuliaX.Size = new System.Drawing.Size(42, 23);
+            this.input_JuliaX.TabIndex = 97;
+            this.input_JuliaX.Text = "0";
+            // 
+            // input_JuliaY
+            // 
+            this.input_JuliaY.Location = new System.Drawing.Point(113, 80);
+            this.input_JuliaY.Name = "input_JuliaY";
+            this.input_JuliaY.Size = new System.Drawing.Size(42, 23);
+            this.input_JuliaY.TabIndex = 96;
+            this.input_JuliaY.Text = "0";
+            // 
             // input_FoldCount
             // 
-            this.input_FoldCount.Location = new System.Drawing.Point(99, 211);
+            this.input_FoldCount.Location = new System.Drawing.Point(99, 238);
             this.input_FoldCount.Name = "input_FoldCount";
             this.input_FoldCount.Size = new System.Drawing.Size(56, 23);
             this.input_FoldCount.TabIndex = 95;
@@ -852,7 +885,7 @@
             // 
             // input_FoldOffsetY
             // 
-            this.input_FoldOffsetY.Location = new System.Drawing.Point(117, 265);
+            this.input_FoldOffsetY.Location = new System.Drawing.Point(117, 292);
             this.input_FoldOffsetY.Name = "input_FoldOffsetY";
             this.input_FoldOffsetY.Size = new System.Drawing.Size(38, 23);
             this.input_FoldOffsetY.TabIndex = 93;
@@ -865,7 +898,7 @@
             // label_FoldOffset
             // 
             this.label_FoldOffset.AutoSize = true;
-            this.label_FoldOffset.Location = new System.Drawing.Point(3, 268);
+            this.label_FoldOffset.Location = new System.Drawing.Point(3, 295);
             this.label_FoldOffset.Name = "label_FoldOffset";
             this.label_FoldOffset.Size = new System.Drawing.Size(73, 15);
             this.label_FoldOffset.TabIndex = 94;
@@ -874,7 +907,7 @@
             // 
             // input_FoldOffsetX
             // 
-            this.input_FoldOffsetX.Location = new System.Drawing.Point(76, 265);
+            this.input_FoldOffsetX.Location = new System.Drawing.Point(76, 292);
             this.input_FoldOffsetX.Name = "input_FoldOffsetX";
             this.input_FoldOffsetX.Size = new System.Drawing.Size(38, 23);
             this.input_FoldOffsetX.TabIndex = 92;
@@ -886,7 +919,7 @@
             // 
             // input_FoldAngle
             // 
-            this.input_FoldAngle.Location = new System.Drawing.Point(99, 238);
+            this.input_FoldAngle.Location = new System.Drawing.Point(99, 265);
             this.input_FoldAngle.Name = "input_FoldAngle";
             this.input_FoldAngle.Size = new System.Drawing.Size(56, 23);
             this.input_FoldAngle.TabIndex = 90;
@@ -899,7 +932,7 @@
             // label_FoldAngle
             // 
             this.label_FoldAngle.AutoSize = true;
-            this.label_FoldAngle.Location = new System.Drawing.Point(3, 241);
+            this.label_FoldAngle.Location = new System.Drawing.Point(3, 268);
             this.label_FoldAngle.Name = "label_FoldAngle";
             this.label_FoldAngle.Size = new System.Drawing.Size(72, 15);
             this.label_FoldAngle.TabIndex = 91;
@@ -909,7 +942,7 @@
             // checkBox_UseConjugate
             // 
             this.checkBox_UseConjugate.AutoSize = true;
-            this.checkBox_UseConjugate.Location = new System.Drawing.Point(8, 133);
+            this.checkBox_UseConjugate.Location = new System.Drawing.Point(8, 160);
             this.checkBox_UseConjugate.Name = "checkBox_UseConjugate";
             this.checkBox_UseConjugate.Size = new System.Drawing.Size(103, 19);
             this.checkBox_UseConjugate.TabIndex = 87;
@@ -920,7 +953,7 @@
             // input_MinIterations
             // 
             this.input_MinIterations.CausesValidation = false;
-            this.input_MinIterations.Location = new System.Drawing.Point(100, 108);
+            this.input_MinIterations.Location = new System.Drawing.Point(100, 135);
             this.input_MinIterations.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -940,7 +973,7 @@
             // label_BuddhabrotType
             // 
             this.label_BuddhabrotType.AutoSize = true;
-            this.label_BuddhabrotType.Location = new System.Drawing.Point(3, 317);
+            this.label_BuddhabrotType.Location = new System.Drawing.Point(3, 344);
             this.label_BuddhabrotType.Name = "label_BuddhabrotType";
             this.label_BuddhabrotType.Size = new System.Drawing.Size(34, 15);
             this.label_BuddhabrotType.TabIndex = 83;
@@ -956,7 +989,7 @@
             "Normal",
             "Inverse",
             "Nebulabrot"});
-            this.input_BuddhabrotType.Location = new System.Drawing.Point(69, 314);
+            this.input_BuddhabrotType.Location = new System.Drawing.Point(69, 341);
             this.input_BuddhabrotType.Name = "input_BuddhabrotType";
             this.input_BuddhabrotType.Size = new System.Drawing.Size(86, 23);
             this.input_BuddhabrotType.TabIndex = 84;
@@ -964,7 +997,7 @@
             // checkBox_UseBuddhabrot
             // 
             this.checkBox_UseBuddhabrot.AutoSize = true;
-            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(8, 295);
+            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(8, 322);
             this.checkBox_UseBuddhabrot.Name = "checkBox_UseBuddhabrot";
             this.checkBox_UseBuddhabrot.Size = new System.Drawing.Size(111, 19);
             this.checkBox_UseBuddhabrot.TabIndex = 65;
@@ -1943,7 +1976,7 @@
             // input_RiemannAngles
             // 
             this.input_RiemannAngles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_RiemannAngles.Location = new System.Drawing.Point(298, 725);
+            this.input_RiemannAngles.Location = new System.Drawing.Point(368, 725);
             this.input_RiemannAngles.Name = "input_RiemannAngles";
             this.input_RiemannAngles.Size = new System.Drawing.Size(107, 23);
             this.input_RiemannAngles.TabIndex = 66;
@@ -1957,7 +1990,7 @@
             // 
             this.label_RiemannAngles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_RiemannAngles.AutoSize = true;
-            this.label_RiemannAngles.Location = new System.Drawing.Point(242, 728);
+            this.label_RiemannAngles.Location = new System.Drawing.Point(312, 728);
             this.label_RiemannAngles.Name = "label_RiemannAngles";
             this.label_RiemannAngles.Size = new System.Drawing.Size(57, 15);
             this.label_RiemannAngles.TabIndex = 67;
@@ -1967,9 +2000,9 @@
             // input_CameraAngles
             // 
             this.input_CameraAngles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_CameraAngles.Location = new System.Drawing.Point(169, 725);
+            this.input_CameraAngles.Location = new System.Drawing.Point(178, 725);
             this.input_CameraAngles.Name = "input_CameraAngles";
-            this.input_CameraAngles.Size = new System.Drawing.Size(60, 23);
+            this.input_CameraAngles.Size = new System.Drawing.Size(69, 23);
             this.input_CameraAngles.TabIndex = 65;
             this.input_CameraAngles.Text = "-90, 0";
             this.input_CameraAngles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
@@ -1982,7 +2015,7 @@
             this.input_CameraPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.input_CameraPosition.Location = new System.Drawing.Point(83, 725);
             this.input_CameraPosition.Name = "input_CameraPosition";
-            this.input_CameraPosition.Size = new System.Drawing.Size(82, 23);
+            this.input_CameraPosition.Size = new System.Drawing.Size(91, 23);
             this.input_CameraPosition.TabIndex = 68;
             this.input_CameraPosition.Text = "0, 0, 3";
             this.input_CameraPosition.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
@@ -1990,11 +2023,25 @@
             this.input_CameraPosition.Validating += new System.ComponentModel.CancelEventHandler(this.input_CameraPosition_Validating);
             this.input_CameraPosition.Validated += new System.EventHandler(this.input_CameraPosition_Validated);
             // 
+            // input_CameraRoll
+            // 
+            this.input_CameraRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.input_CameraRoll.Location = new System.Drawing.Point(250, 725);
+            this.input_CameraRoll.Name = "input_CameraRoll";
+            this.input_CameraRoll.Size = new System.Drawing.Size(45, 23);
+            this.input_CameraRoll.TabIndex = 69;
+            this.input_CameraRoll.Text = "0";
+            this.input_CameraRoll.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_CameraRoll.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_CameraRoll.Validating += new System.ComponentModel.CancelEventHandler(this.input_CameraRoll_Validating);
+            this.input_CameraRoll.Validated += new System.EventHandler(this.input_CameraRoll_Validated);
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1104, 762);
+            this.Controls.Add(this.input_CameraRoll);
             this.Controls.Add(this.input_CameraPosition);
             this.Controls.Add(this.input_RiemannAngles);
             this.Controls.Add(this.label_RiemannAngles);
@@ -2186,6 +2233,10 @@
         private System.Windows.Forms.CheckBox checkBox_UseDistortedTexture;
         private System.Windows.Forms.CheckBox checkBox_UseRotatingNormals;
         private System.Windows.Forms.CheckBox checkBox_UseNormals;
+        private System.Windows.Forms.Label label_JuliaPosition;
+        private System.Windows.Forms.TextBox input_JuliaX;
+        private System.Windows.Forms.TextBox input_JuliaY;
+        private System.Windows.Forms.TextBox input_CameraRoll;
     }
 }
 

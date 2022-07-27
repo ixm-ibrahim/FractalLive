@@ -84,7 +84,7 @@ namespace FractalLive
                 FoldOffset = new Vector2(0,0);
 
                 OrbitTrap = OrbitTrap.Circle;
-                Bailout = 100;
+                Bailout = 2;
                 OrbitTrapCalculation = Calculation.Minimum;
                 BailoutRectangle = new Vector2(2,2);
                 BailoutPoints = new Vector2[16];

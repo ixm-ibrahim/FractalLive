@@ -545,7 +545,15 @@ namespace FractalLive
             }
         }
 
-        public float Roll { get; set; }
+        public float Roll
+        {
+            get => MathHelper.RadiansToDegrees(roll);
+
+            set
+            {
+                roll = MathHelper.DegreesToRadians(value);
+            }
+        }
 
         #endregion
 
