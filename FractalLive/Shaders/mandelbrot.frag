@@ -142,10 +142,8 @@ void main()
 	FragColor = vec4(Mandelbrot(), 1.0);FragPosWorld;
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout vec4 stripesAddend);
-vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment);
-vec2 ComputeFractal(vec2 z, vec2 c);
-vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz);
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment);
+vec2 ComputeFractal(vec2 z, vec2 c, bool withinDistance, inout vec2 dz);
 vec2 FoldZ(vec2 z);
 vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, bool escacped);
@@ -231,65 +229,12 @@ vec3 Mandelbrot()
         c = vec2(r + center.x, i + center.y);
     }
 
-    if (useDistanceEstimation)
-        z = MandelbrotDistanceLoop(c, iter, trap, domainZ, domainIter, distanceEstimation, stripes, riemannAdjustment);
-    else
-        z = MandelbrotLoop(c, iter, trap, domainZ, domainIter, stripes);
+    z = MandelbrotLoop(c, iter, trap, domainZ, domainIter, distanceEstimation, stripes, riemannAdjustment);
 
 	return GetColor(z, c, iter, trap, domainZ, domainIter, distanceEstimation, stripes);
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout vec4 stripesAddend)
-{
-	vec2 z = (formula == FRAC_LAMBDA) ? vec2(1.0/power,0) : vec2(0);
-    domainZ = vec4(c,c);
-    trap = vec2(startOrbitDistance);
-    vec4 lastAdded = vec4(0);
-    int stripesCount = 0;
-
-	for (iter = 0; iter < maxIterations; ++iter)
-	{
-        z = ComputeFractal(z, c);
-
-        if (IsWithinIteration(iter))
-        {
-            stripesAddend.x += sin(stripeDensity * c_arg(z))/2 + 0.5;
-            stripesAddend.y += sin((splitInteriorExterior ? i_stripeDensity : stripeDensity) * c_arg(z))/2 + 0.5;
-            stripesAddend.z += sin(textureDistortionFactor * c_arg(z))/2 + 0.5;
-            stripesAddend.w += sin((splitInteriorExterior ? i_textureDistortionFactor : textureDistortionFactor) * c_arg(z))/2 + 0.5;
-            stripesCount++;
-        
-            if (!matchOrbitTrap)
-                domainZ = CalculateDomainZ(domainZ, z, iter, domainIter);
-
-            trap = GetOrbitTrap(z, iter, trap, domainZ, domainIter);
-        }
-        
-        if (!IsBounded(iter, z)) break;
-
-        lastAdded = stripesAddend;
-	}
-
-    if (IsBounded(iter, z))
-        stripesAddend /= stripesCount;
-    else
-        stripesAddend = mix(lastAdded/(stripesCount - 1), stripesAddend/stripesCount, fract(GetSmoothIter(iter, z)));
-    
-    if (useSecondValue)
-    {
-        if (trap.y > trap.x)
-            trap.x /= trap.y;
-        else
-            trap.x = trap.y / trap.x;
-
-        trap.x = pow(sigmoid(trap.x, secondValueFactor1), secondValueFactor2);
-    }
-
-    trap.x = sigmoid(pow( trap.x*pow(2,lockedZoom), bailoutFactor1 ), bailoutFactor2);
-    
-	return z;
-}
-vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment)
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment)
 {
 	vec2 z = (formula == FRAC_LAMBDA) ? vec2(1.0/power,0) : vec2(0);
     domainZ = vec4(c,c);
@@ -303,9 +248,7 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
     
 	for (iter = 0; iter < maxIterations; ++iter)
 	{
-        if (withinDistance) dz = 2 * c_mul(z,dz) + vec2(1.0,0.0);
-        
-        z = ComputeFractal(z, c);
+        z = ComputeFractal(z, c, withinDistance, dz);
         
         if (IsWithinIteration(iter))
         {
@@ -358,8 +301,22 @@ vec2 MandelbrotDistanceLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 do
 	return z;
 }
 
-vec2 ComputeFractal(vec2 z, vec2 c)
+vec2 ComputeFractal(vec2 z, vec2 c, bool withinDistance, inout vec2 dz)
 {
+    if (withinDistance) 
+        switch (formula)
+        {
+            case FRAC_MANDELBROT:
+                dz = power * c_mul(z,dz) + vec2(c_power,0.0);
+                break;
+            case FRAC_LAMBDA:   // c^cp * (z - z^p)
+                dz = c_mul(vec2(c_power,0.0), dz - power * c_mul(z,dz));
+                break;
+            case FRAC_CUSTOM:
+            default:
+                break;
+        }
+
     vec2 new_z;
 
     if (useConjugate)
@@ -385,25 +342,6 @@ vec2 ComputeFractal(vec2 z, vec2 c)
     }
 
     return Fix(new_z);
-}
-
-vec2 ComputeFractalDistance(vec2 z, vec2 c, bool withinDistance, inout vec2 dz)
-{
-    if (withinDistance) 
-        switch (formula)
-        {
-            case FRAC_MANDELBROT:
-                dz = power * c_mul(z,dz) + vec2(c_power,0.0);
-                break;
-            case FRAC_LAMBDA:   // c^cp * (z - z^p)
-                dz = c_mul(vec2(c_power,0.0), dz - power * c_mul(z,dz));
-                break;
-            case FRAC_CUSTOM:
-            default:
-                break;
-        }
-
-    return ComputeFractal(z,c);
 }
 
 vec2 FoldZ(vec2 z)

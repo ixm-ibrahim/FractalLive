@@ -130,6 +130,7 @@ namespace FractalLive
                 MaxDistanceEstimation = 100;
                 DistanceEstimationFactor = 10;
                 UseNormals = false;
+                NormalsFactor = 1;
                 UseRotatingNormals = false;
                 Texture = "";
                 TextureBlend = 0.5f;
@@ -162,6 +163,7 @@ namespace FractalLive
                 I_MaxDistanceEstimation = 100;
                 I_DistanceEstimationFactor = 10;
                 I_UseNormals = false;
+                I_NormalsFactor = 1;
                 I_UseRotatingNormals = false;
                 I_Texture = "";
                 I_TextureBlend = 0.5f;
@@ -827,6 +829,49 @@ namespace FractalLive
                 }
             }
 
+            public float GetNormalsFactor()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_NormalsFactor;
+                    case Editing.Exterior:
+                        return I_NormalsFactor;
+                    default:
+                        return NormalsFactor;
+                }
+            }
+            public void SetNormalsFactor(float normalsFactor)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_NormalsFactor = normalsFactor;
+                        break;
+                    case Editing.Exterior:
+                        I_NormalsFactor = normalsFactor;
+                        break;
+                    default:
+                        NormalsFactor = normalsFactor;
+                        break;
+                }
+            }
+            public void AdjustNormalsFactor(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_NormalsFactor += offset;
+                        break;
+                    case Editing.Exterior:
+                        I_NormalsFactor += offset;
+                        break;
+                    default:
+                        NormalsFactor += offset;
+                        break;
+                }
+            }
+
             public bool GetUseRotatingNormals()
             {
                 switch (EditingColor)
@@ -1175,6 +1220,7 @@ namespace FractalLive
             public float MaxDistanceEstimation;
             public float DistanceEstimationFactor;
             public bool UseNormals;
+            public float NormalsFactor;
             public bool UseRotatingNormals;
             public string Texture;
             public float TextureBlend;
@@ -1201,6 +1247,7 @@ namespace FractalLive
             public float I_MaxDistanceEstimation;
             public float I_DistanceEstimationFactor;
             public bool I_UseNormals;
+            public float I_NormalsFactor;
             public bool I_UseRotatingNormals;
             public string I_Texture;
             public float I_TextureBlend;
@@ -1227,6 +1274,7 @@ namespace FractalLive
             //public float I_MaxDistanceEstimation;
             //public float I_DistanceEstimationFactor;
             //public bool I_UseNormals;
+            //public float I_NormalsFactor;
             //public bool I_UseRotatingNormals;
             public string E_Texture;
             public float E_TextureBlend;

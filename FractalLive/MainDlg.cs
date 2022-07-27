@@ -67,18 +67,19 @@ namespace FractalLive
                 keysDown[Keys.U] = false;
                 keysDown[Keys.O] = false;
                 // fractal settings
-                keysDown[Keys.D1] = false;          // max iterations
-                keysDown[Keys.D2] = false;          // bailout (general)
-                keysDown[Keys.D3] = false;          // max distance
-                keysDown[Keys.D4] = false;          // distance fineness
-                keysDown[Keys.D5] = false;          // power
-                keysDown[Keys.D6] = false;          // c power
-                keysDown[Keys.D7] = false;          // fold count
-                keysDown[Keys.D8] = false;          // fold angle
-                keysDown[Keys.D9] = false;          // fold offset x
-                keysDown[Keys.D0] = false;          // fold offset y
-                keysDown[Keys.OemMinus] = false;    // toggle conjugate
-                keysDown[Keys.Oemplus] = false;     // toggle distance estimation
+                keysDown[Keys.D1] = false;
+                keysDown[Keys.D2] = false;
+                keysDown[Keys.D3] = false;
+                keysDown[Keys.D4] = false;
+                keysDown[Keys.D5] = false;
+                keysDown[Keys.D6] = false;
+                keysDown[Keys.D7] = false;
+                keysDown[Keys.D8] = false;
+                keysDown[Keys.D9] = false;
+                keysDown[Keys.D0] = false;
+                keysDown[Keys.OemMinus] = false;
+                keysDown[Keys.Oemplus] = false;
+                keysDown[Keys.Back] = false;
             }
 
             public bool IsKeyDown(Keys key)
@@ -662,22 +663,27 @@ namespace FractalLive
                     CurrentSettings.AdjustDistanceEstimationFactor(modifier / 100);
                     input_DistanceEstimationFactor.Text = CurrentSettings.GetDistanceEstimationFactor().ToString();
                 }
-                if (inputState.keysDown[Keys.D9] && input_TextureBlend.Enabled)
+                if (inputState.keysDown[Keys.D9] && input_NormalsFactor.Enabled)
+                {
+                    CurrentSettings.AdjustNormalsFactor(modifier / 100);
+                    input_NormalsFactor.Text = CurrentSettings.GetNormalsFactor().ToString();
+                }
+                if (inputState.keysDown[Keys.D0] && input_TextureBlend.Enabled)
                 {
                     CurrentSettings.AdjustTextureBlend(modifier / 100);
                     input_TextureBlend.Text = CurrentSettings.GetTextureBlend().ToString();
                 }
-                if (inputState.keysDown[Keys.D0] && input_TextureScaleX.Enabled)
+                if (inputState.keysDown[Keys.OemMinus] && input_TextureScaleX.Enabled)
                 {
                     CurrentSettings.AdjustTextureScaleX(modifier / 10);
                     input_TextureScaleX.Text = CurrentSettings.GetTextureScaleX().ToString();
                 }
-                if (inputState.keysDown[Keys.OemMinus] && input_TextureScaleY.Enabled)
+                if (inputState.keysDown[Keys.Oemplus] && input_TextureScaleY.Enabled)
                 {
                     CurrentSettings.AdjustTextureScaleY(modifier / 10);
                     input_TextureScaleY.Text = CurrentSettings.GetTextureScaleY().ToString();
                 }
-                if (inputState.keysDown[Keys.Oemplus] && input_TextureDistortionFactor.Enabled)
+                if (inputState.keysDown[Keys.Back] && input_TextureDistortionFactor.Enabled)
                 {
                     CurrentSettings.AdjustTextureDistortion(modifier / 50);
                     input_TextureDistortionFactor.Text = CurrentSettings.GetTextureDistortion().ToString();
@@ -970,6 +976,8 @@ namespace FractalLive
                 inputState.keysDown[Keys.OemMinus] = true;
             else if (e.KeyCode == Keys.Oemplus)
                 inputState.keysDown[Keys.Oemplus] = true;
+            else if (e.KeyCode == Keys.Back)
+                inputState.keysDown[Keys.Back] = true;
         }
 
         private void glControl_KeyUp(object? sender, KeyEventArgs e)
@@ -1055,6 +1063,8 @@ namespace FractalLive
                 inputState.keysDown[Keys.OemMinus] = false;
             else if (e.KeyCode == Keys.Oemplus)
                 inputState.keysDown[Keys.Oemplus] = false;
+            else if (e.KeyCode == Keys.Back)
+                inputState.keysDown[Keys.Back] = false;
 
         }
 
@@ -1976,6 +1986,17 @@ namespace FractalLive
             CurrentSettings.SetUseNormals(checkBox_UseNormals.Checked);
 
             checkBox_UseRotatingNormals.Enabled = checkBox_UseNormals.Checked;
+        }
+
+        private void input_NormalsFactor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_NormalsFactor.Text))
+                e.Cancel = true;
+        }
+        private void input_NormalsFactor_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.SetNormalsFactor(float.Parse(input_NormalsFactor.Text));
+            input_NormalsFactor.Text = CurrentSettings.GetNormalsFactor().ToString();
         }
 
         private void checkBox_UseRotatingNormals_CheckedChanged(object sender, EventArgs e)
