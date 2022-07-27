@@ -136,6 +136,7 @@
             this.label_FractalZoom = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
             this.panel_ColorMenu = new System.Windows.Forms.Panel();
+            this.checkBox_UseNormals = new System.Windows.Forms.CheckBox();
             this.input_DistanceEstimationFactor2 = new System.Windows.Forms.TextBox();
             this.checkBox_UsePolarTextureCoordinates = new System.Windows.Forms.CheckBox();
             this.input_TextureDistortionFactor = new System.Windows.Forms.TextBox();
@@ -184,7 +185,7 @@
             this.input_CameraAngles = new System.Windows.Forms.TextBox();
             this.input_CameraPosition = new System.Windows.Forms.TextBox();
             this.input_CameraRoll = new System.Windows.Forms.TextBox();
-            this.checkBox_UseNormals = new System.Windows.Forms.CheckBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -202,6 +203,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_OrbitRange)).BeginInit();
             this.panel_ColorMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_MaxIterations
@@ -283,7 +285,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1104, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(696, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -527,11 +529,11 @@
             this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(717, 694);
+            this.LogTextBox.Location = new System.Drawing.Point(3, 808);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
-            this.LogTextBox.Size = new System.Drawing.Size(375, 59);
+            this.LogTextBox.Size = new System.Drawing.Size(152, 36);
             this.LogTextBox.TabIndex = 3;
             // 
             // glControl
@@ -547,7 +549,7 @@
             this.glControl.MinimumSize = new System.Drawing.Size(500, 309);
             this.glControl.Name = "glControl";
             this.glControl.Profile = OpenTK.Windowing.Common.ContextProfile.Compatability;
-            this.glControl.Size = new System.Drawing.Size(500, 664);
+            this.glControl.Size = new System.Drawing.Size(500, 316);
             this.glControl.TabIndex = 2;
             this.glControl.Text = "glControl1";
             // 
@@ -555,7 +557,7 @@
             // 
             this.button_Left.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Left.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Left.Location = new System.Drawing.Point(521, 728);
+            this.button_Left.Location = new System.Drawing.Point(521, 380);
             this.button_Left.Name = "button_Left";
             this.button_Left.Size = new System.Drawing.Size(50, 25);
             this.button_Left.TabIndex = 33;
@@ -566,7 +568,7 @@
             // 
             this.button_Right.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Right.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Right.Location = new System.Drawing.Point(624, 728);
+            this.button_Right.Location = new System.Drawing.Point(624, 380);
             this.button_Right.Name = "button_Right";
             this.button_Right.Size = new System.Drawing.Size(50, 25);
             this.button_Right.TabIndex = 22;
@@ -732,7 +734,7 @@
             // 
             this.button_Menu1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu1.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu1.Location = new System.Drawing.Point(521, 696);
+            this.button_Menu1.Location = new System.Drawing.Point(521, 348);
             this.button_Menu1.Name = "button_Menu1";
             this.button_Menu1.Size = new System.Drawing.Size(35, 25);
             this.button_Menu1.TabIndex = 34;
@@ -754,7 +756,7 @@
             // 
             this.button_Menu2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu2.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu2.Location = new System.Drawing.Point(560, 696);
+            this.button_Menu2.Location = new System.Drawing.Point(560, 348);
             this.button_Menu2.Name = "button_Menu2";
             this.button_Menu2.Size = new System.Drawing.Size(35, 25);
             this.button_Menu2.TabIndex = 35;
@@ -775,7 +777,7 @@
             // 
             this.button_Menu3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu3.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu3.Location = new System.Drawing.Point(599, 696);
+            this.button_Menu3.Location = new System.Drawing.Point(599, 348);
             this.button_Menu3.Name = "button_Menu3";
             this.button_Menu3.Size = new System.Drawing.Size(35, 25);
             this.button_Menu3.TabIndex = 36;
@@ -799,7 +801,7 @@
             // 
             this.button_Menu4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu4.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu4.Location = new System.Drawing.Point(639, 696);
+            this.button_Menu4.Location = new System.Drawing.Point(639, 348);
             this.button_Menu4.Name = "button_Menu4";
             this.button_Menu4.Size = new System.Drawing.Size(35, 25);
             this.button_Menu4.TabIndex = 37;
@@ -827,6 +829,7 @@
             this.panel_FormulaMenu.Controls.Add(this.input_MinIterations);
             this.panel_FormulaMenu.Controls.Add(label_MinIterations);
             this.panel_FormulaMenu.Controls.Add(this.label_BuddhabrotType);
+            this.panel_FormulaMenu.Controls.Add(this.LogTextBox);
             this.panel_FormulaMenu.Controls.Add(this.input_BuddhabrotType);
             this.panel_FormulaMenu.Controls.Add(this.checkBox_UseBuddhabrot);
             this.panel_FormulaMenu.Controls.Add(this.label_FormulaMenu);
@@ -843,7 +846,7 @@
             this.panel_FormulaMenu.Location = new System.Drawing.Point(518, 24);
             this.panel_FormulaMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_FormulaMenu.Name = "panel_FormulaMenu";
-            this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 664);
+            this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 316);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
             // label_JuliaPosition
@@ -1059,10 +1062,10 @@
             this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutY);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_Bailout);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrap);
-            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(717, 24);
+            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(518, 24);
             this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
-            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 664);
+            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 316);
             this.panel_OrbitTrapMenu.TabIndex = 33;
             // 
             // input_SecondValueFactor2
@@ -1319,9 +1322,8 @@
             // 
             // checkBox_LockZoomFactor
             // 
-            this.checkBox_LockZoomFactor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_LockZoomFactor.AutoSize = true;
-            this.checkBox_LockZoomFactor.Location = new System.Drawing.Point(353, 700);
+            this.checkBox_LockZoomFactor.Location = new System.Drawing.Point(343, 7);
             this.checkBox_LockZoomFactor.Name = "checkBox_LockZoomFactor";
             this.checkBox_LockZoomFactor.Size = new System.Drawing.Size(122, 19);
             this.checkBox_LockZoomFactor.TabIndex = 38;
@@ -1364,8 +1366,7 @@
             // 
             // input_Center
             // 
-            this.input_Center.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_Center.Location = new System.Drawing.Point(59, 698);
+            this.input_Center.Location = new System.Drawing.Point(49, 5);
             this.input_Center.Name = "input_Center";
             this.input_Center.Size = new System.Drawing.Size(145, 23);
             this.input_Center.TabIndex = 55;
@@ -1377,9 +1378,8 @@
             // 
             // label_FractalCenter
             // 
-            this.label_FractalCenter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_FractalCenter.AutoSize = true;
-            this.label_FractalCenter.Location = new System.Drawing.Point(13, 701);
+            this.label_FractalCenter.Location = new System.Drawing.Point(3, 8);
             this.label_FractalCenter.Name = "label_FractalCenter";
             this.label_FractalCenter.Size = new System.Drawing.Size(45, 15);
             this.label_FractalCenter.TabIndex = 56;
@@ -1388,9 +1388,8 @@
             // 
             // label_FractalZoom
             // 
-            this.label_FractalZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_FractalZoom.AutoSize = true;
-            this.label_FractalZoom.Location = new System.Drawing.Point(208, 703);
+            this.label_FractalZoom.Location = new System.Drawing.Point(198, 10);
             this.label_FractalZoom.Name = "label_FractalZoom";
             this.label_FractalZoom.Size = new System.Drawing.Size(45, 15);
             this.label_FractalZoom.TabIndex = 58;
@@ -1399,8 +1398,7 @@
             // 
             // input_Zoom
             // 
-            this.input_Zoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_Zoom.Location = new System.Drawing.Point(250, 698);
+            this.input_Zoom.Location = new System.Drawing.Point(240, 5);
             this.input_Zoom.Name = "input_Zoom";
             this.input_Zoom.Size = new System.Drawing.Size(45, 23);
             this.input_Zoom.TabIndex = 57;
@@ -1461,11 +1459,22 @@
             this.panel_ColorMenu.Controls.Add(this.label_ColorFactors);
             this.panel_ColorMenu.Controls.Add(this.input_ColorCycles);
             this.panel_ColorMenu.Controls.Add(this.input_ColorFactor);
-            this.panel_ColorMenu.Location = new System.Drawing.Point(915, 24);
+            this.panel_ColorMenu.Location = new System.Drawing.Point(518, 24);
             this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(177, 276);
             this.panel_ColorMenu.Name = "panel_ColorMenu";
-            this.panel_ColorMenu.Size = new System.Drawing.Size(177, 664);
+            this.panel_ColorMenu.Size = new System.Drawing.Size(177, 316);
             this.panel_ColorMenu.TabIndex = 59;
+            // 
+            // checkBox_UseNormals
+            // 
+            this.checkBox_UseNormals.AutoSize = true;
+            this.checkBox_UseNormals.Location = new System.Drawing.Point(8, 398);
+            this.checkBox_UseNormals.Name = "checkBox_UseNormals";
+            this.checkBox_UseNormals.Size = new System.Drawing.Size(93, 19);
+            this.checkBox_UseNormals.TabIndex = 104;
+            this.checkBox_UseNormals.Text = "Use Normals";
+            this.checkBox_UseNormals.UseVisualStyleBackColor = true;
+            this.checkBox_UseNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseNormals_CheckedChanged);
             // 
             // input_DistanceEstimationFactor2
             // 
@@ -1950,8 +1959,7 @@
             // 
             // input_LockedZoom
             // 
-            this.input_LockedZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_LockedZoom.Location = new System.Drawing.Point(298, 698);
+            this.input_LockedZoom.Location = new System.Drawing.Point(288, 5);
             this.input_LockedZoom.Name = "input_LockedZoom";
             this.input_LockedZoom.Size = new System.Drawing.Size(45, 23);
             this.input_LockedZoom.TabIndex = 60;
@@ -1968,9 +1976,8 @@
             // 
             // label_CameraOrientation
             // 
-            this.label_CameraOrientation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_CameraOrientation.AutoSize = true;
-            this.label_CameraOrientation.Location = new System.Drawing.Point(12, 728);
+            this.label_CameraOrientation.Location = new System.Drawing.Point(2, 35);
             this.label_CameraOrientation.Name = "label_CameraOrientation";
             this.label_CameraOrientation.Size = new System.Drawing.Size(70, 15);
             this.label_CameraOrientation.TabIndex = 62;
@@ -1979,8 +1986,7 @@
             // 
             // input_RiemannAngles
             // 
-            this.input_RiemannAngles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_RiemannAngles.Location = new System.Drawing.Point(368, 725);
+            this.input_RiemannAngles.Location = new System.Drawing.Point(358, 32);
             this.input_RiemannAngles.Name = "input_RiemannAngles";
             this.input_RiemannAngles.Size = new System.Drawing.Size(107, 23);
             this.input_RiemannAngles.TabIndex = 66;
@@ -1992,9 +1998,8 @@
             // 
             // label_RiemannAngles
             // 
-            this.label_RiemannAngles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_RiemannAngles.AutoSize = true;
-            this.label_RiemannAngles.Location = new System.Drawing.Point(312, 728);
+            this.label_RiemannAngles.Location = new System.Drawing.Point(302, 35);
             this.label_RiemannAngles.Name = "label_RiemannAngles";
             this.label_RiemannAngles.Size = new System.Drawing.Size(57, 15);
             this.label_RiemannAngles.TabIndex = 67;
@@ -2003,8 +2008,7 @@
             // 
             // input_CameraAngles
             // 
-            this.input_CameraAngles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_CameraAngles.Location = new System.Drawing.Point(178, 725);
+            this.input_CameraAngles.Location = new System.Drawing.Point(168, 32);
             this.input_CameraAngles.Name = "input_CameraAngles";
             this.input_CameraAngles.Size = new System.Drawing.Size(69, 23);
             this.input_CameraAngles.TabIndex = 65;
@@ -2016,8 +2020,7 @@
             // 
             // input_CameraPosition
             // 
-            this.input_CameraPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_CameraPosition.Location = new System.Drawing.Point(83, 725);
+            this.input_CameraPosition.Location = new System.Drawing.Point(73, 32);
             this.input_CameraPosition.Name = "input_CameraPosition";
             this.input_CameraPosition.Size = new System.Drawing.Size(91, 23);
             this.input_CameraPosition.TabIndex = 68;
@@ -2029,8 +2032,7 @@
             // 
             // input_CameraRoll
             // 
-            this.input_CameraRoll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.input_CameraRoll.Location = new System.Drawing.Point(250, 725);
+            this.input_CameraRoll.Location = new System.Drawing.Point(240, 32);
             this.input_CameraRoll.Name = "input_CameraRoll";
             this.input_CameraRoll.Size = new System.Drawing.Size(45, 23);
             this.input_CameraRoll.TabIndex = 69;
@@ -2040,37 +2042,35 @@
             this.input_CameraRoll.Validating += new System.ComponentModel.CancelEventHandler(this.input_CameraRoll_Validating);
             this.input_CameraRoll.Validated += new System.EventHandler(this.input_CameraRoll_Validated);
             // 
-            // checkBox_UseNormals
+            // panel1
             // 
-            this.checkBox_UseNormals.AutoSize = true;
-            this.checkBox_UseNormals.Location = new System.Drawing.Point(8, 398);
-            this.checkBox_UseNormals.Name = "checkBox_UseNormals";
-            this.checkBox_UseNormals.Size = new System.Drawing.Size(93, 19);
-            this.checkBox_UseNormals.TabIndex = 104;
-            this.checkBox_UseNormals.Text = "Use Normals";
-            this.checkBox_UseNormals.UseVisualStyleBackColor = true;
-            this.checkBox_UseNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseNormals_CheckedChanged);
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel1.Controls.Add(this.input_CameraRoll);
+            this.panel1.Controls.Add(this.label_FractalCenter);
+            this.panel1.Controls.Add(this.input_CameraPosition);
+            this.panel1.Controls.Add(this.label_FractalZoom);
+            this.panel1.Controls.Add(this.input_RiemannAngles);
+            this.panel1.Controls.Add(this.input_Zoom);
+            this.panel1.Controls.Add(this.label_RiemannAngles);
+            this.panel1.Controls.Add(this.input_LockedZoom);
+            this.panel1.Controls.Add(this.input_CameraAngles);
+            this.panel1.Controls.Add(this.checkBox_LockZoomFactor);
+            this.panel1.Controls.Add(this.label_CameraOrientation);
+            this.panel1.Controls.Add(this.input_Center);
+            this.panel1.Location = new System.Drawing.Point(12, 344);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(500, 71);
+            this.panel1.TabIndex = 70;
             // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1104, 762);
-            this.Controls.Add(this.input_CameraRoll);
-            this.Controls.Add(this.input_CameraPosition);
-            this.Controls.Add(this.input_RiemannAngles);
-            this.Controls.Add(this.label_RiemannAngles);
-            this.Controls.Add(this.input_CameraAngles);
-            this.Controls.Add(this.label_CameraOrientation);
-            this.Controls.Add(this.input_Center);
-            this.Controls.Add(this.checkBox_LockZoomFactor);
-            this.Controls.Add(this.input_LockedZoom);
-            this.Controls.Add(this.input_Zoom);
-            this.Controls.Add(this.label_FractalZoom);
-            this.Controls.Add(this.label_FractalCenter);
+            this.ClientSize = new System.Drawing.Size(696, 414);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel_ColorMenu);
             this.Controls.Add(this.glControl);
-            this.Controls.Add(this.LogTextBox);
             this.Controls.Add(this.button_Menu1);
             this.Controls.Add(this.button_Menu2);
             this.Controls.Add(this.button_Menu3);
@@ -2080,7 +2080,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.panel_FormulaMenu);
             this.Controls.Add(this.panel_OrbitTrapMenu);
-            this.MinimumSize = new System.Drawing.Size(712, 413);
+            this.MinimumSize = new System.Drawing.Size(712, 453);
             this.Name = "MainDlg";
             this.Text = "FractalLive";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainDlg_FormClosing);
@@ -2098,6 +2098,8 @@
             this.panel_ColorMenu.ResumeLayout(false);
             this.panel_ColorMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2253,6 +2255,7 @@
         private System.Windows.Forms.CheckBox checkBox_UsePolarTextureCoordinates;
         private System.Windows.Forms.TextBox input_DistanceEstimationFactor2;
         private System.Windows.Forms.CheckBox checkBox_UseNormals;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 
