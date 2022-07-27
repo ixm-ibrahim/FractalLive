@@ -145,7 +145,7 @@ void main()
 }
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment);
-vec2 ComputeFractal(vec2 z, vec2 c, bool withinDistance, inout vec2 dz, inout vec2 dz2);
+vec2 ComputeFractal(vec2 z, vec2 c, bool withinMaxDistance, inout vec2 dz, inout vec2 dz2);
 vec2 FoldZ(vec2 z);
 vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, bool escacped);
@@ -233,7 +233,7 @@ vec3 Mandelbrot()
     }
 
     z = MandelbrotLoop(c, iter, trap, domainZ, domainIter, distanceEstimation, stripes, riemannAdjustment);
-
+    
 	return GetColor(z, c, iter, trap, domainZ, domainIter, distanceEstimation, stripes);
 }
 
@@ -248,11 +248,11 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
     vec2 dz = vec2(1.0,0.0);
     vec2 dz2 = vec2(0.0,0.0);
     float m2 = dot(z,z);
-    bool withinDistance = true;
+    bool withinMaxDistance = true;
     
 	for (iter = 0; iter < maxIterations; ++iter)
 	{
-        z = ComputeFractal(z, c, withinDistance, dz, dz2);
+        z = ComputeFractal(z, c, withinMaxDistance, dz, dz2);
         
         if (IsWithinIteration(iter))
         {
@@ -269,12 +269,12 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
         }
 
         
-        if (withinDistance)
+        if (withinMaxDistance)
         {
             m2 = dot(z,z);
 
             if (m2 > maxDistanceEstimation)
-                withinDistance = false;
+                withinMaxDistance = false;
         }
         
         if (!IsBounded(iter, z)) break;
@@ -304,25 +304,22 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
         vec2 v = vec2(sqrt(2)/2, sqrt(2)/2);
         vec2 u = c_div(z,dz);
         u = normalize(u);  // normal vector: (u.re,u.im,1) 
-        float t = dot(u,v) + distanceEstimationFactor1;  // dot product with the incoming light
-        //t = sigmoid(t, distanceEstimationFactor2);
-        t = max(t/(1 + distanceEstimationFactor1), 0);  // rescale so that t does not get bigger than 1
+        float t = dot(u,v) + 1.0/distanceEstimationFactor1;  // dot product with the incoming light
+        t = max(t/(1 + 1.0/distanceEstimationFactor1), 0);  // rescale so that t does not get bigger than 1
         distanceEstimation = sigmoid(t, distanceEstimationFactor2);
     }
     else
     {
         float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
-        //distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor1, 2) * pow(2,lockedZoom) / riemannAdjustment, 0, 1));
         distanceEstimation = sqrt(sigmoid(d * pow(distanceEstimationFactor1, 2) * pow(2,lockedZoom) / riemannAdjustment, distanceEstimationFactor2));
-        //distanceEstimation = sqrt(sigmoid(t / riemannAdjustment, distanceEstimationFactor2));
     }
 
 	return z;
 }
 
-vec2 ComputeFractal(vec2 z, vec2 c, bool withinDistance, inout vec2 dz, inout vec2 dz2)
+vec2 ComputeFractal(vec2 z, vec2 c, bool withinMaxDistance, inout vec2 dz, inout vec2 dz2)
 {
-    if (withinDistance) 
+    if (withinMaxDistance || useNormals) 
         switch (formula)
         {
             case FRAC_MANDELBROT:

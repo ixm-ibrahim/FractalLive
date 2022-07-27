@@ -662,12 +662,12 @@ namespace FractalLive
                 }
                 if (inputState.keysDown[Keys.D8] && input_DistanceEstimationFactor1.Enabled)
                 {
-                    CurrentSettings.AdjustDistanceEstimationFactor1(modifier / 100);
+                    CurrentSettings.AdjustDistanceEstimationFactor1(modifier / 50);
                     input_DistanceEstimationFactor1.Text = CurrentSettings.GetDistanceEstimationFactor1().ToString();
                 }
                 if (inputState.keysDown[Keys.D9] && input_DistanceEstimationFactor2.Enabled)
                 {
-                    CurrentSettings.AdjustDistanceEstimationFactor2(modifier / 100);
+                    CurrentSettings.AdjustDistanceEstimationFactor2(modifier / 50);
                     input_DistanceEstimationFactor2.Text = CurrentSettings.GetDistanceEstimationFactor2().ToString();
                 }
                 if (inputState.keysDown[Keys.D0] && input_TextureBlend.Enabled)
