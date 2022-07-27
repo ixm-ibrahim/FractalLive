@@ -128,10 +128,9 @@ namespace FractalLive
                 UseDomainIteration = false;
                 UseDistanceEstimation = true;
                 MaxDistanceEstimation = 100;
-                DistanceEstimationFactor = 10;
+                DistanceEstimationFactor1 = 10;
+                DistanceEstimationFactor2 = 6;
                 UseNormals = false;
-                NormalsFactor = 1;
-                UseRotatingNormals = false;
                 Texture = "";
                 TextureBlend = 0.5f;
                 TextureScaleX = 1;
@@ -161,10 +160,9 @@ namespace FractalLive
                 I_UseDomainIteration = false;
                 I_UseDistanceEstimation = true;
                 I_MaxDistanceEstimation = 100;
-                I_DistanceEstimationFactor = 10;
+                I_DistanceEstimationFactor1 = 10;
+                I_DistanceEstimationFactor2 = 6;
                 I_UseNormals = false;
-                I_NormalsFactor = 1;
-                I_UseRotatingNormals = false;
                 I_Texture = "";
                 I_TextureBlend = 0.5f;
                 I_TextureScaleX = 1;
@@ -758,45 +756,88 @@ namespace FractalLive
                 }
             }
             
-            public float GetDistanceEstimationFactor()
+            public float GetDistanceEstimationFactor1()
             {
                 switch (EditingColor)
                 {
                     case Editing.Interior:
-                        return I_DistanceEstimationFactor;
+                        return I_DistanceEstimationFactor1;
                     case Editing.Exterior:
-                        return I_DistanceEstimationFactor;
+                        return I_DistanceEstimationFactor1;
                     default:
-                        return DistanceEstimationFactor;
+                        return DistanceEstimationFactor1;
                 }
             }
-            public void SetDistanceEstimationFactor(float distanceEstimationFactor)
+            public void SetDistanceEstimationFactor1(float distanceEstimationFactor1)
             {
                 switch (EditingColor)
                 {
                     case Editing.Interior:
-                        I_DistanceEstimationFactor = distanceEstimationFactor;
+                        I_DistanceEstimationFactor1 = distanceEstimationFactor1;
                         break;
                     case Editing.Exterior:
-                        I_DistanceEstimationFactor = distanceEstimationFactor;
+                        I_DistanceEstimationFactor1 = distanceEstimationFactor1;
                         break;
                     default:
-                        DistanceEstimationFactor = distanceEstimationFactor;
+                        DistanceEstimationFactor1 = distanceEstimationFactor1;
                         break;
                 }
             }
-            public void AdjustDistanceEstimationFactor(float offset)
+            public void AdjustDistanceEstimationFactor1(float offset)
             {
                 switch (EditingColor)
                 {
                     case Editing.Interior:
-                        I_DistanceEstimationFactor += offset;
+                        I_DistanceEstimationFactor1 += offset;
                         break;
                     case Editing.Exterior:
-                        I_DistanceEstimationFactor += offset;
+                        I_DistanceEstimationFactor1 += offset;
                         break;
                     default:
-                        DistanceEstimationFactor += offset;
+                        DistanceEstimationFactor1 += offset;
+                        break;
+                }
+            }
+            
+            public float GetDistanceEstimationFactor2()
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        return I_DistanceEstimationFactor2;
+                    case Editing.Exterior:
+                        return I_DistanceEstimationFactor2;
+                    default:
+                        return DistanceEstimationFactor2;
+                }
+            }
+            public void SetDistanceEstimationFactor2(float distanceEstimationFactor2)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_DistanceEstimationFactor2 = distanceEstimationFactor2;
+                        break;
+                    case Editing.Exterior:
+                        I_DistanceEstimationFactor2 = distanceEstimationFactor2;
+                        break;
+                    default:
+                        DistanceEstimationFactor2 = distanceEstimationFactor2;
+                        break;
+                }
+            }
+            public void AdjustDistanceEstimationFactor2(float offset)
+            {
+                switch (EditingColor)
+                {
+                    case Editing.Interior:
+                        I_DistanceEstimationFactor2 += offset;
+                        break;
+                    case Editing.Exterior:
+                        I_DistanceEstimationFactor2 += offset;
+                        break;
+                    default:
+                        DistanceEstimationFactor2 += offset;
                         break;
                 }
             }
@@ -825,77 +866,6 @@ namespace FractalLive
                         break;
                     default:
                         UseNormals = useNormals;
-                        break;
-                }
-            }
-
-            public float GetNormalsFactor()
-            {
-                switch (EditingColor)
-                {
-                    case Editing.Interior:
-                        return I_NormalsFactor;
-                    case Editing.Exterior:
-                        return I_NormalsFactor;
-                    default:
-                        return NormalsFactor;
-                }
-            }
-            public void SetNormalsFactor(float normalsFactor)
-            {
-                switch (EditingColor)
-                {
-                    case Editing.Interior:
-                        I_NormalsFactor = normalsFactor;
-                        break;
-                    case Editing.Exterior:
-                        I_NormalsFactor = normalsFactor;
-                        break;
-                    default:
-                        NormalsFactor = normalsFactor;
-                        break;
-                }
-            }
-            public void AdjustNormalsFactor(float offset)
-            {
-                switch (EditingColor)
-                {
-                    case Editing.Interior:
-                        I_NormalsFactor += offset;
-                        break;
-                    case Editing.Exterior:
-                        I_NormalsFactor += offset;
-                        break;
-                    default:
-                        NormalsFactor += offset;
-                        break;
-                }
-            }
-
-            public bool GetUseRotatingNormals()
-            {
-                switch (EditingColor)
-                {
-                    case Editing.Interior:
-                        return I_UseRotatingNormals;
-                    case Editing.Exterior:
-                        return I_UseRotatingNormals;
-                    default:
-                        return UseRotatingNormals;
-                }
-            }
-            public void SetUseRotatingNormals(bool useRotatingNormals)
-            {
-                switch (EditingColor)
-                {
-                    case Editing.Interior:
-                        I_UseRotatingNormals = useRotatingNormals;
-                        break;
-                    case Editing.Exterior:
-                        I_UseRotatingNormals = useRotatingNormals;
-                        break;
-                    default:
-                        UseRotatingNormals = useRotatingNormals;
                         break;
                 }
             }
@@ -1218,10 +1188,9 @@ namespace FractalLive
             public bool UseDomainIteration;
             public bool UseDistanceEstimation;
             public float MaxDistanceEstimation;
-            public float DistanceEstimationFactor;
+            public float DistanceEstimationFactor1;
+            public float DistanceEstimationFactor2;
             public bool UseNormals;
-            public float NormalsFactor;
-            public bool UseRotatingNormals;
             public string Texture;
             public float TextureBlend;
             public float TextureScaleX;
@@ -1245,10 +1214,9 @@ namespace FractalLive
             public bool I_UseDomainIteration;
             public bool I_UseDistanceEstimation;
             public float I_MaxDistanceEstimation;
-            public float I_DistanceEstimationFactor;
+            public float I_DistanceEstimationFactor1;
+            public float I_DistanceEstimationFactor2;
             public bool I_UseNormals;
-            public float I_NormalsFactor;
-            public bool I_UseRotatingNormals;
             public string I_Texture;
             public float I_TextureBlend;
             public float I_TextureScaleX;
@@ -1272,10 +1240,9 @@ namespace FractalLive
             public bool E_UseDomainIteration;
             //public bool I_UseDistanceEstimation;
             //public float I_MaxDistanceEstimation;
-            //public float I_DistanceEstimationFactor;
+            //public float I_DistanceEstimationFactor1;
+            //public float I_DistanceEstimationFactor2;
             //public bool I_UseNormals;
-            //public float I_NormalsFactor;
-            //public bool I_UseRotatingNormals;
             public string E_Texture;
             public float E_TextureBlend;
             public float E_TextureScaleX;

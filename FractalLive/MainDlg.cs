@@ -262,7 +262,9 @@ namespace FractalLive
             shader.SetBool("useDomainIteration", split ? fractalSettings.E_UseDomainIteration : fractalSettings.UseDomainIteration);
             shader.SetBool("useDistanceEstimation", split ? fractalSettings.I_UseDistanceEstimation : fractalSettings.UseDistanceEstimation);
             shader.SetFloat("maxDistanceEstimation", split ? fractalSettings.I_MaxDistanceEstimation : fractalSettings.MaxDistanceEstimation);
-            shader.SetFloat("distanceEstimationFactor", split ? fractalSettings.I_DistanceEstimationFactor : fractalSettings.DistanceEstimationFactor);
+            shader.SetFloat("distanceEstimationFactor1", split ? fractalSettings.I_DistanceEstimationFactor1 : fractalSettings.DistanceEstimationFactor1);
+            shader.SetFloat("distanceEstimationFactor2", split ? fractalSettings.I_DistanceEstimationFactor2 : fractalSettings.DistanceEstimationFactor2);
+            shader.SetBool("useNormals", split ? fractalSettings.I_UseNormals : fractalSettings.UseNormals);
             shader.SetBool("useTexture", (split ? fractalSettings.E_Texture : fractalSettings.Texture) != "");
             shader.SetInt("texture0", split ? 2 : 0);
             shader.SetFloat("textureBlend", split ? fractalSettings.E_TextureBlend : fractalSettings.TextureBlend);
@@ -658,15 +660,15 @@ namespace FractalLive
                     CurrentSettings.AdjustMaxDistanceEstimation(modifier / 10);
                     input_MaxDistanceEstimation.Text = CurrentSettings.GetMaxDistanceEstimation().ToString();
                 }
-                if (inputState.keysDown[Keys.D8] && input_DistanceEstimationFactor.Enabled)
+                if (inputState.keysDown[Keys.D8] && input_DistanceEstimationFactor1.Enabled)
                 {
-                    CurrentSettings.AdjustDistanceEstimationFactor(modifier / 100);
-                    input_DistanceEstimationFactor.Text = CurrentSettings.GetDistanceEstimationFactor().ToString();
+                    CurrentSettings.AdjustDistanceEstimationFactor1(modifier / 100);
+                    input_DistanceEstimationFactor1.Text = CurrentSettings.GetDistanceEstimationFactor1().ToString();
                 }
-                if (inputState.keysDown[Keys.D9] && input_NormalsFactor.Enabled)
+                if (inputState.keysDown[Keys.D9] && input_DistanceEstimationFactor2.Enabled)
                 {
-                    CurrentSettings.AdjustNormalsFactor(modifier / 100);
-                    input_NormalsFactor.Text = CurrentSettings.GetNormalsFactor().ToString();
+                    CurrentSettings.AdjustDistanceEstimationFactor2(modifier / 100);
+                    input_DistanceEstimationFactor2.Text = CurrentSettings.GetDistanceEstimationFactor2().ToString();
                 }
                 if (inputState.keysDown[Keys.D0] && input_TextureBlend.Enabled)
                 {
@@ -1731,11 +1733,7 @@ namespace FractalLive
             //checkBox_UseDistanceEstimation.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
             checkBox_UseDistanceEstimation.Checked = CurrentSettings.GetUseDistanceEstimation();
             input_MaxDistanceEstimation.Text = CurrentSettings.GetMaxDistanceEstimation().ToString();
-            input_DistanceEstimationFactor.Text = CurrentSettings.GetDistanceEstimationFactor().ToString();
-            //checkBox_UseNormals.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
-            checkBox_UseNormals.Checked = CurrentSettings.GetUseNormals();
-            //checkBox_UseRotatingNormals.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
-            checkBox_UseRotatingNormals.Checked = CurrentSettings.GetUseRotatingNormals();
+            input_DistanceEstimationFactor1.Text = CurrentSettings.GetDistanceEstimationFactor1().ToString();
             input_Texture.Text = CurrentSettings.GetTexture();
             input_TextureBlend.Value = (decimal)CurrentSettings.GetTextureBlend();
             input_TextureScaleX.Text = CurrentSettings.GetTextureScaleX().ToString();
@@ -1956,7 +1954,9 @@ namespace FractalLive
             CurrentSettings.SetUseDistanceEstimation(checkBox_UseDistanceEstimation.Checked);
 
             input_MaxDistanceEstimation.Enabled = checkBox_UseDistanceEstimation.Checked;
-            input_DistanceEstimationFactor.Enabled = checkBox_UseDistanceEstimation.Checked;
+            input_DistanceEstimationFactor1.Enabled = checkBox_UseDistanceEstimation.Checked;
+            input_DistanceEstimationFactor2.Enabled = checkBox_UseDistanceEstimation.Checked;
+            checkBox_UseNormals.Enabled = checkBox_UseDistanceEstimation.Checked;
         }
 
         private void input_MaxDistanceEstimation_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1970,38 +1970,31 @@ namespace FractalLive
             input_MaxDistanceEstimation.Text = CurrentSettings.GetMaxDistanceEstimation().ToString();
         }
 
-        private void input_DistanceEstimationFactor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void input_DistanceEstimationFactor1_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!TryParse1DFloat(input_DistanceEstimationFactor.Text))
+            if (!TryParse1DFloat(input_DistanceEstimationFactor1.Text))
                 e.Cancel = true;
         }
-        private void input_DistanceEstimationFactor_Validated(object sender, EventArgs e)
+        private void input_DistanceEstimationFactor1_Validated(object sender, EventArgs e)
         {
-            CurrentSettings.SetDistanceEstimationFactor(float.Parse(input_DistanceEstimationFactor.Text));
-            input_DistanceEstimationFactor.Text = CurrentSettings.GetDistanceEstimationFactor().ToString();
+            CurrentSettings.SetDistanceEstimationFactor1(float.Parse(input_DistanceEstimationFactor1.Text));
+            input_DistanceEstimationFactor1.Text = CurrentSettings.GetDistanceEstimationFactor1().ToString();
+        }
+
+        private void input_DistanceEstimationFactor2_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_DistanceEstimationFactor2.Text))
+                e.Cancel = true;
+        }
+        private void input_DistanceEstimationFactor2_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.SetDistanceEstimationFactor2(float.Parse(input_DistanceEstimationFactor2.Text));
+            input_DistanceEstimationFactor2.Text = CurrentSettings.GetDistanceEstimationFactor2().ToString();
         }
 
         private void checkBox_UseNormals_CheckedChanged(object sender, EventArgs e)
         {
             CurrentSettings.SetUseNormals(checkBox_UseNormals.Checked);
-
-            checkBox_UseRotatingNormals.Enabled = checkBox_UseNormals.Checked;
-        }
-
-        private void input_NormalsFactor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (!TryParse1DFloat(input_NormalsFactor.Text))
-                e.Cancel = true;
-        }
-        private void input_NormalsFactor_Validated(object sender, EventArgs e)
-        {
-            CurrentSettings.SetNormalsFactor(float.Parse(input_NormalsFactor.Text));
-            input_NormalsFactor.Text = CurrentSettings.GetNormalsFactor().ToString();
-        }
-
-        private void checkBox_UseRotatingNormals_CheckedChanged(object sender, EventArgs e)
-        {
-            CurrentSettings.SetUseRotatingNormals(checkBox_UseRotatingNormals.Checked);
         }
 
         private void button_ClearTexture_Click(object sender, EventArgs e)

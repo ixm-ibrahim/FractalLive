@@ -136,9 +136,8 @@
             this.label_FractalZoom = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
             this.panel_ColorMenu = new System.Windows.Forms.Panel();
+            this.input_DistanceEstimationFactor2 = new System.Windows.Forms.TextBox();
             this.checkBox_UsePolarTextureCoordinates = new System.Windows.Forms.CheckBox();
-            this.checkBox_UseRotatingNormals = new System.Windows.Forms.CheckBox();
-            this.checkBox_UseNormals = new System.Windows.Forms.CheckBox();
             this.input_TextureDistortionFactor = new System.Windows.Forms.TextBox();
             this.label_TextureDistortionFactor = new System.Windows.Forms.Label();
             this.checkBox_UseDistortedTexture = new System.Windows.Forms.CheckBox();
@@ -167,9 +166,9 @@
             this.input_TextureBlend = new System.Windows.Forms.NumericUpDown();
             this.button_ClearTexture = new System.Windows.Forms.Button();
             this.input_MaxDistanceEstimation = new System.Windows.Forms.TextBox();
-            this.input_DistanceEstimationFactor = new System.Windows.Forms.TextBox();
+            this.input_DistanceEstimationFactor1 = new System.Windows.Forms.TextBox();
             this.label_DistanceEstimationMax = new System.Windows.Forms.Label();
-            this.label_DistanceEstimationFineness = new System.Windows.Forms.Label();
+            this.label_DistanceEstimationFactors = new System.Windows.Forms.Label();
             this.checkBox_UseDistanceEstimation = new System.Windows.Forms.CheckBox();
             this.label_Coloring = new System.Windows.Forms.Label();
             this.label_ColorMenu = new System.Windows.Forms.Label();
@@ -185,8 +184,7 @@
             this.input_CameraAngles = new System.Windows.Forms.TextBox();
             this.input_CameraPosition = new System.Windows.Forms.TextBox();
             this.input_CameraRoll = new System.Windows.Forms.TextBox();
-            this.label_NormalsFactor = new System.Windows.Forms.Label();
-            this.input_NormalsFactor = new System.Windows.Forms.TextBox();
+            this.checkBox_UseNormals = new System.Windows.Forms.CheckBox();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -239,7 +237,7 @@
             // label_TextureBlend
             // 
             label_TextureBlend.AutoSize = true;
-            label_TextureBlend.Location = new System.Drawing.Point(3, 526);
+            label_TextureBlend.Location = new System.Drawing.Point(3, 479);
             label_TextureBlend.Name = "label_TextureBlend";
             label_TextureBlend.Size = new System.Drawing.Size(86, 15);
             label_TextureBlend.TabIndex = 70;
@@ -1302,7 +1300,7 @@
             // label_Texture
             // 
             this.label_Texture.AutoSize = true;
-            this.label_Texture.Location = new System.Drawing.Point(3, 501);
+            this.label_Texture.Location = new System.Drawing.Point(3, 454);
             this.label_Texture.Name = "label_Texture";
             this.label_Texture.Size = new System.Drawing.Size(48, 15);
             this.label_Texture.TabIndex = 40;
@@ -1311,7 +1309,7 @@
             // 
             // input_Texture
             // 
-            this.input_Texture.Location = new System.Drawing.Point(58, 498);
+            this.input_Texture.Location = new System.Drawing.Point(58, 451);
             this.input_Texture.Name = "input_Texture";
             this.input_Texture.Size = new System.Drawing.Size(98, 23);
             this.input_Texture.TabIndex = 41;
@@ -1333,7 +1331,7 @@
             // 
             // input_ColorCycles
             // 
-            this.input_ColorCycles.Location = new System.Drawing.Point(66, 132);
+            this.input_ColorCycles.Location = new System.Drawing.Point(68, 132);
             this.input_ColorCycles.Name = "input_ColorCycles";
             this.input_ColorCycles.Size = new System.Drawing.Size(40, 23);
             this.input_ColorCycles.TabIndex = 43;
@@ -1417,11 +1415,9 @@
             this.panel_ColorMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_ColorMenu.AutoScroll = true;
-            this.panel_ColorMenu.Controls.Add(this.label_NormalsFactor);
-            this.panel_ColorMenu.Controls.Add(this.input_NormalsFactor);
-            this.panel_ColorMenu.Controls.Add(this.checkBox_UsePolarTextureCoordinates);
-            this.panel_ColorMenu.Controls.Add(this.checkBox_UseRotatingNormals);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseNormals);
+            this.panel_ColorMenu.Controls.Add(this.input_DistanceEstimationFactor2);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UsePolarTextureCoordinates);
             this.panel_ColorMenu.Controls.Add(this.input_TextureDistortionFactor);
             this.panel_ColorMenu.Controls.Add(this.label_TextureDistortionFactor);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistortedTexture);
@@ -1451,9 +1447,9 @@
             this.panel_ColorMenu.Controls.Add(label_TextureBlend);
             this.panel_ColorMenu.Controls.Add(this.button_ClearTexture);
             this.panel_ColorMenu.Controls.Add(this.input_MaxDistanceEstimation);
-            this.panel_ColorMenu.Controls.Add(this.input_DistanceEstimationFactor);
+            this.panel_ColorMenu.Controls.Add(this.input_DistanceEstimationFactor1);
             this.panel_ColorMenu.Controls.Add(this.label_DistanceEstimationMax);
-            this.panel_ColorMenu.Controls.Add(this.label_DistanceEstimationFineness);
+            this.panel_ColorMenu.Controls.Add(this.label_DistanceEstimationFactors);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistanceEstimation);
             this.panel_ColorMenu.Controls.Add(this.label_Texture);
             this.panel_ColorMenu.Controls.Add(this.label_Coloring);
@@ -1471,10 +1467,22 @@
             this.panel_ColorMenu.Size = new System.Drawing.Size(177, 664);
             this.panel_ColorMenu.TabIndex = 59;
             // 
+            // input_DistanceEstimationFactor2
+            // 
+            this.input_DistanceEstimationFactor2.Location = new System.Drawing.Point(114, 373);
+            this.input_DistanceEstimationFactor2.Name = "input_DistanceEstimationFactor2";
+            this.input_DistanceEstimationFactor2.Size = new System.Drawing.Size(40, 23);
+            this.input_DistanceEstimationFactor2.TabIndex = 103;
+            this.input_DistanceEstimationFactor2.Text = "6";
+            this.input_DistanceEstimationFactor2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_DistanceEstimationFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_DistanceEstimationFactor2.Validating += new System.ComponentModel.CancelEventHandler(this.input_DistanceEstimationFactor2_Validating);
+            this.input_DistanceEstimationFactor2.Validated += new System.EventHandler(this.input_DistanceEstimationFactor2_Validated);
+            // 
             // checkBox_UsePolarTextureCoordinates
             // 
             this.checkBox_UsePolarTextureCoordinates.AutoSize = true;
-            this.checkBox_UsePolarTextureCoordinates.Location = new System.Drawing.Point(8, 577);
+            this.checkBox_UsePolarTextureCoordinates.Location = new System.Drawing.Point(8, 530);
             this.checkBox_UsePolarTextureCoordinates.Name = "checkBox_UsePolarTextureCoordinates";
             this.checkBox_UsePolarTextureCoordinates.Size = new System.Drawing.Size(120, 19);
             this.checkBox_UsePolarTextureCoordinates.TabIndex = 101;
@@ -1482,31 +1490,9 @@
             this.checkBox_UsePolarTextureCoordinates.UseVisualStyleBackColor = true;
             this.checkBox_UsePolarTextureCoordinates.CheckedChanged += new System.EventHandler(this.checkBox_UsePolarTextureCoordinates_CheckedChanged);
             // 
-            // checkBox_UseRotatingNormals
-            // 
-            this.checkBox_UseRotatingNormals.AutoSize = true;
-            this.checkBox_UseRotatingNormals.Location = new System.Drawing.Point(8, 445);
-            this.checkBox_UseRotatingNormals.Name = "checkBox_UseRotatingNormals";
-            this.checkBox_UseRotatingNormals.Size = new System.Drawing.Size(140, 19);
-            this.checkBox_UseRotatingNormals.TabIndex = 100;
-            this.checkBox_UseRotatingNormals.Text = "Rotating Light Source";
-            this.checkBox_UseRotatingNormals.UseVisualStyleBackColor = true;
-            this.checkBox_UseRotatingNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseRotatingNormals_CheckedChanged);
-            // 
-            // checkBox_UseNormals
-            // 
-            this.checkBox_UseNormals.AutoSize = true;
-            this.checkBox_UseNormals.Location = new System.Drawing.Point(8, 402);
-            this.checkBox_UseNormals.Name = "checkBox_UseNormals";
-            this.checkBox_UseNormals.Size = new System.Drawing.Size(148, 19);
-            this.checkBox_UseNormals.TabIndex = 99;
-            this.checkBox_UseNormals.Text = "Use Normals (Lighting)";
-            this.checkBox_UseNormals.UseVisualStyleBackColor = true;
-            this.checkBox_UseNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseNormals_CheckedChanged);
-            // 
             // input_TextureDistortionFactor
             // 
-            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(115, 616);
+            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(115, 569);
             this.input_TextureDistortionFactor.Name = "input_TextureDistortionFactor";
             this.input_TextureDistortionFactor.Size = new System.Drawing.Size(40, 23);
             this.input_TextureDistortionFactor.TabIndex = 97;
@@ -1519,7 +1505,7 @@
             // label_TextureDistortionFactor
             // 
             this.label_TextureDistortionFactor.AutoSize = true;
-            this.label_TextureDistortionFactor.Location = new System.Drawing.Point(3, 619);
+            this.label_TextureDistortionFactor.Location = new System.Drawing.Point(3, 572);
             this.label_TextureDistortionFactor.Name = "label_TextureDistortionFactor";
             this.label_TextureDistortionFactor.Size = new System.Drawing.Size(103, 15);
             this.label_TextureDistortionFactor.TabIndex = 98;
@@ -1529,7 +1515,7 @@
             // checkBox_UseDistortedTexture
             // 
             this.checkBox_UseDistortedTexture.AutoSize = true;
-            this.checkBox_UseDistortedTexture.Location = new System.Drawing.Point(8, 597);
+            this.checkBox_UseDistortedTexture.Location = new System.Drawing.Point(8, 550);
             this.checkBox_UseDistortedTexture.Name = "checkBox_UseDistortedTexture";
             this.checkBox_UseDistortedTexture.Size = new System.Drawing.Size(115, 19);
             this.checkBox_UseDistortedTexture.TabIndex = 96;
@@ -1560,7 +1546,7 @@
             // 
             // input_TextureScaleY
             // 
-            this.input_TextureScaleY.Location = new System.Drawing.Point(116, 550);
+            this.input_TextureScaleY.Location = new System.Drawing.Point(116, 503);
             this.input_TextureScaleY.Name = "input_TextureScaleY";
             this.input_TextureScaleY.Size = new System.Drawing.Size(40, 23);
             this.input_TextureScaleY.TabIndex = 93;
@@ -1573,7 +1559,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 553);
+            this.label1.Location = new System.Drawing.Point(3, 506);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 15);
             this.label1.TabIndex = 92;
@@ -1582,7 +1568,7 @@
             // 
             // input_TextureScaleX
             // 
-            this.input_TextureScaleX.Location = new System.Drawing.Point(67, 550);
+            this.input_TextureScaleX.Location = new System.Drawing.Point(69, 503);
             this.input_TextureScaleX.Name = "input_TextureScaleX";
             this.input_TextureScaleX.Size = new System.Drawing.Size(40, 23);
             this.input_TextureScaleX.TabIndex = 91;
@@ -1616,7 +1602,7 @@
             // 
             // input_SecondDomainValueFactor1
             // 
-            this.input_SecondDomainValueFactor1.Location = new System.Drawing.Point(66, 300);
+            this.input_SecondDomainValueFactor1.Location = new System.Drawing.Point(68, 300);
             this.input_SecondDomainValueFactor1.Name = "input_SecondDomainValueFactor1";
             this.input_SecondDomainValueFactor1.Size = new System.Drawing.Size(40, 23);
             this.input_SecondDomainValueFactor1.TabIndex = 88;
@@ -1799,7 +1785,7 @@
             0,
             0,
             131072});
-            this.input_TextureBlend.Location = new System.Drawing.Point(100, 524);
+            this.input_TextureBlend.Location = new System.Drawing.Point(100, 477);
             this.input_TextureBlend.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1824,7 +1810,7 @@
             // button_ClearTexture
             // 
             this.button_ClearTexture.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_ClearTexture.Location = new System.Drawing.Point(33, 470);
+            this.button_ClearTexture.Location = new System.Drawing.Point(33, 423);
             this.button_ClearTexture.Name = "button_ClearTexture";
             this.button_ClearTexture.Size = new System.Drawing.Size(96, 25);
             this.button_ClearTexture.TabIndex = 69;
@@ -1843,16 +1829,16 @@
             this.input_MaxDistanceEstimation.Validating += new System.ComponentModel.CancelEventHandler(this.input_MaxDistanceEstimation_Validating);
             this.input_MaxDistanceEstimation.Validated += new System.EventHandler(this.input_MaxDistanceEstimation_Validated);
             // 
-            // input_DistanceEstimationFactor
+            // input_DistanceEstimationFactor1
             // 
-            this.input_DistanceEstimationFactor.Location = new System.Drawing.Point(115, 373);
-            this.input_DistanceEstimationFactor.Name = "input_DistanceEstimationFactor";
-            this.input_DistanceEstimationFactor.Size = new System.Drawing.Size(40, 23);
-            this.input_DistanceEstimationFactor.TabIndex = 67;
-            this.input_DistanceEstimationFactor.Text = "10";
-            this.input_DistanceEstimationFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_DistanceEstimationFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_DistanceEstimationFactor_Validating);
-            this.input_DistanceEstimationFactor.Validated += new System.EventHandler(this.input_DistanceEstimationFactor_Validated);
+            this.input_DistanceEstimationFactor1.Location = new System.Drawing.Point(68, 373);
+            this.input_DistanceEstimationFactor1.Name = "input_DistanceEstimationFactor1";
+            this.input_DistanceEstimationFactor1.Size = new System.Drawing.Size(40, 23);
+            this.input_DistanceEstimationFactor1.TabIndex = 67;
+            this.input_DistanceEstimationFactor1.Text = "10";
+            this.input_DistanceEstimationFactor1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_DistanceEstimationFactor1.Validating += new System.ComponentModel.CancelEventHandler(this.input_DistanceEstimationFactor1_Validating);
+            this.input_DistanceEstimationFactor1.Validated += new System.EventHandler(this.input_DistanceEstimationFactor1_Validated);
             // 
             // label_DistanceEstimationMax
             // 
@@ -1864,15 +1850,15 @@
             this.label_DistanceEstimationMax.Text = "Max Distance:*";
             this.label_DistanceEstimationMax.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label_DistanceEstimationFineness
+            // label_DistanceEstimationFactors
             // 
-            this.label_DistanceEstimationFineness.AutoSize = true;
-            this.label_DistanceEstimationFineness.Location = new System.Drawing.Point(3, 376);
-            this.label_DistanceEstimationFineness.Name = "label_DistanceEstimationFineness";
-            this.label_DistanceEstimationFineness.Size = new System.Drawing.Size(96, 15);
-            this.label_DistanceEstimationFineness.TabIndex = 68;
-            this.label_DistanceEstimationFineness.Text = "Distance Factor:*";
-            this.label_DistanceEstimationFineness.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_DistanceEstimationFactors.AutoSize = true;
+            this.label_DistanceEstimationFactors.Location = new System.Drawing.Point(3, 376);
+            this.label_DistanceEstimationFactors.Name = "label_DistanceEstimationFactors";
+            this.label_DistanceEstimationFactors.Size = new System.Drawing.Size(53, 15);
+            this.label_DistanceEstimationFactors.TabIndex = 68;
+            this.label_DistanceEstimationFactors.Text = "Factors:*";
+            this.label_DistanceEstimationFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // checkBox_UseDistanceEstimation
             // 
@@ -2054,26 +2040,16 @@
             this.input_CameraRoll.Validating += new System.ComponentModel.CancelEventHandler(this.input_CameraRoll_Validating);
             this.input_CameraRoll.Validated += new System.EventHandler(this.input_CameraRoll_Validated);
             // 
-            // label_NormalsFactor
+            // checkBox_UseNormals
             // 
-            this.label_NormalsFactor.AutoSize = true;
-            this.label_NormalsFactor.Location = new System.Drawing.Point(3, 425);
-            this.label_NormalsFactor.Name = "label_NormalsFactor";
-            this.label_NormalsFactor.Size = new System.Drawing.Size(91, 15);
-            this.label_NormalsFactor.TabIndex = 102;
-            this.label_NormalsFactor.Text = "Normal Factor:*";
-            // 
-            // input_NormalsFactor
-            // 
-            this.input_NormalsFactor.Location = new System.Drawing.Point(115, 422);
-            this.input_NormalsFactor.Name = "input_NormalsFactor";
-            this.input_NormalsFactor.Size = new System.Drawing.Size(40, 23);
-            this.input_NormalsFactor.TabIndex = 103;
-            this.input_NormalsFactor.Text = "1";
-            this.input_NormalsFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_NormalsFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_NormalsFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_NormalsFactor_Validating);
-            this.input_NormalsFactor.Validated += new System.EventHandler(this.input_NormalsFactor_Validated);
+            this.checkBox_UseNormals.AutoSize = true;
+            this.checkBox_UseNormals.Location = new System.Drawing.Point(8, 398);
+            this.checkBox_UseNormals.Name = "checkBox_UseNormals";
+            this.checkBox_UseNormals.Size = new System.Drawing.Size(93, 19);
+            this.checkBox_UseNormals.TabIndex = 104;
+            this.checkBox_UseNormals.Text = "Use Normals";
+            this.checkBox_UseNormals.UseVisualStyleBackColor = true;
+            this.checkBox_UseNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseNormals_CheckedChanged);
             // 
             // MainDlg
             // 
@@ -2213,9 +2189,9 @@
         private System.Windows.Forms.ComboBox input_EditingColor;
         private System.Windows.Forms.Label label_EditingColor;
         private System.Windows.Forms.TextBox input_MaxDistanceEstimation;
-        private System.Windows.Forms.TextBox input_DistanceEstimationFactor;
+        private System.Windows.Forms.TextBox input_DistanceEstimationFactor1;
         private System.Windows.Forms.Label label_DistanceEstimationMax;
-        private System.Windows.Forms.Label label_DistanceEstimationFineness;
+        private System.Windows.Forms.Label label_DistanceEstimationFactors;
         private System.Windows.Forms.CheckBox checkBox_UseDistanceEstimation;
         private System.Windows.Forms.Button button_ClearTexture;
         private System.Windows.Forms.NumericUpDown input_TextureBlend;
@@ -2270,15 +2246,13 @@
         private System.Windows.Forms.TextBox input_TextureDistortionFactor;
         private System.Windows.Forms.Label label_TextureDistortionFactor;
         private System.Windows.Forms.CheckBox checkBox_UseDistortedTexture;
-        private System.Windows.Forms.CheckBox checkBox_UseRotatingNormals;
-        private System.Windows.Forms.CheckBox checkBox_UseNormals;
         private System.Windows.Forms.Label label_JuliaPosition;
         private System.Windows.Forms.TextBox input_JuliaX;
         private System.Windows.Forms.TextBox input_JuliaY;
         private System.Windows.Forms.TextBox input_CameraRoll;
         private System.Windows.Forms.CheckBox checkBox_UsePolarTextureCoordinates;
-        private System.Windows.Forms.Label label_NormalsFactor;
-        private System.Windows.Forms.TextBox input_NormalsFactor;
+        private System.Windows.Forms.TextBox input_DistanceEstimationFactor2;
+        private System.Windows.Forms.CheckBox checkBox_UseNormals;
     }
 }
 

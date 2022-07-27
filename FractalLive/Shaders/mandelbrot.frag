@@ -103,7 +103,9 @@ uniform float secondDomainValueFactor2;
 uniform bool useDomainIteration;
 uniform bool useDistanceEstimation;
 uniform float maxDistanceEstimation;
-uniform float distanceEstimationFactor;
+uniform float distanceEstimationFactor1;
+uniform float distanceEstimationFactor2;
+uniform bool useNormals;
 uniform bool useTexture;
 uniform sampler2D texture0;
 uniform float textureBlend;
@@ -143,7 +145,7 @@ void main()
 }
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment);
-vec2 ComputeFractal(vec2 z, vec2 c, bool withinDistance, inout vec2 dz);
+vec2 ComputeFractal(vec2 z, vec2 c, bool withinDistance, inout vec2 dz, inout vec2 dz2);
 vec2 FoldZ(vec2 z);
 vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes);
 vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, bool escacped);
@@ -170,6 +172,7 @@ vec2 c_div(vec2 a, vec2 b);
 vec2 c_pow(vec2 c, float p);
 vec2 c_invert(vec2 c);
 vec2 c_rotate(vec2 c, float a);
+float c_squared_modulus(vec2 c);
 float c_arg(vec2 c);
 
 vec3 Mandelbrot()
@@ -243,12 +246,13 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
     int stripesCount = 0;
 
     vec2 dz = vec2(1.0,0.0);
+    vec2 dz2 = vec2(0.0,0.0);
     float m2 = dot(z,z);
     bool withinDistance = true;
     
 	for (iter = 0; iter < maxIterations; ++iter)
 	{
-        z = ComputeFractal(z, c, withinDistance, dz);
+        z = ComputeFractal(z, c, withinDistance, dz, dz2);
         
         if (IsWithinIteration(iter))
         {
@@ -295,18 +299,34 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
 
     trap.x = sigmoid(pow( trap.x*pow(2,lockedZoom), bailoutFactor1 ), bailoutFactor2);
     
-    float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
-    distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor, 2) * pow(2,lockedZoom) / riemannAdjustment, 0, 1));
-    
+    if (useNormals)
+    {
+        vec2 v = vec2(sqrt(2)/2, sqrt(2)/2);
+        vec2 u = c_div(z,dz);
+        u = normalize(u);  // normal vector: (u.re,u.im,1) 
+        float t = dot(u,v) + distanceEstimationFactor1;  // dot product with the incoming light
+        //t = sigmoid(t, distanceEstimationFactor2);
+        t = max(t/(1 + distanceEstimationFactor1), 0);  // rescale so that t does not get bigger than 1
+        distanceEstimation = sigmoid(t, distanceEstimationFactor2);
+    }
+    else
+    {
+        float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
+        //distanceEstimation = sqrt(clamp(d * pow(distanceEstimationFactor1, 2) * pow(2,lockedZoom) / riemannAdjustment, 0, 1));
+        distanceEstimation = sqrt(sigmoid(d * pow(distanceEstimationFactor1, 2) * pow(2,lockedZoom) / riemannAdjustment, distanceEstimationFactor2));
+        //distanceEstimation = sqrt(sigmoid(t / riemannAdjustment, distanceEstimationFactor2));
+    }
+
 	return z;
 }
 
-vec2 ComputeFractal(vec2 z, vec2 c, bool withinDistance, inout vec2 dz)
+vec2 ComputeFractal(vec2 z, vec2 c, bool withinDistance, inout vec2 dz, inout vec2 dz2)
 {
     if (withinDistance) 
         switch (formula)
         {
             case FRAC_MANDELBROT:
+                dz2 = power * (dz2*z + c_pow(dz,power));
                 dz = power * c_mul(z,dz) + vec2(c_power,0.0);
                 break;
             case FRAC_LAMBDA:   // c^cp * (z - z^p)
@@ -462,7 +482,11 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
             case COL_SMOOTH:
                 float mu = (atan(z.y,z.x)+M_PI/2)/M_2PI;
                 //color = useCustomPalette ? ColorPalette(customPalette, GetSmoothIter(mu, z)/31) : Rainbow(GetSmoothIter(mu, z), colorCycles);
-                color = useCustomPalette ? ColorPalette(customPalette, mu) : Rainbow(mu*50, colorCycles);
+                
+                if (splitInteriorExterior)
+                    color = i_useCustomPalette ? ColorPalette(i_customPalette, mu) : Rainbow(mu*50, colorCycles);
+                else
+                    color = useCustomPalette ? ColorPalette(customPalette, mu) : Rainbow(mu*50, colorCycles);
                 
                 if (orbitTrap == TRAP_POINTS || orbitTrap == TRAP_LINES)
                     color = mix(Rainbow(orbitTrapFactor*trap.x, colorCycles), color, trap.x);
@@ -1294,6 +1318,10 @@ vec2 c_pow(vec2 c, float a)
 vec2 c_rotate(vec2 c, float a)
 {
    return c_mul(c, vec2(cos(a), sin(a)));
+}
+float c_squared_modulus(vec2 c)
+{
+    return dot(c,c);
 }
 
 float c_arg(vec2 c)
