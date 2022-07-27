@@ -136,46 +136,46 @@
             this.label_FractalZoom = new System.Windows.Forms.Label();
             this.input_Zoom = new System.Windows.Forms.TextBox();
             this.panel_ColorMenu = new System.Windows.Forms.Panel();
-            this.checkBox_UseNormals = new System.Windows.Forms.CheckBox();
-            this.input_DistanceEstimationFactor2 = new System.Windows.Forms.TextBox();
-            this.checkBox_UsePolarTextureCoordinates = new System.Windows.Forms.CheckBox();
-            this.input_TextureDistortionFactor = new System.Windows.Forms.TextBox();
-            this.label_TextureDistortionFactor = new System.Windows.Forms.Label();
-            this.checkBox_UseDistortedTexture = new System.Windows.Forms.CheckBox();
-            this.label_StripeDensity = new System.Windows.Forms.Label();
-            this.input_StripeDensity = new System.Windows.Forms.TextBox();
-            this.input_TextureScaleY = new System.Windows.Forms.TextBox();
-            this.label_TextureScale = new System.Windows.Forms.Label();
-            this.input_TextureScaleX = new System.Windows.Forms.TextBox();
-            this.input_SecondDomainValueFactor2 = new System.Windows.Forms.TextBox();
-            this.label_SecondDomainValueFactors = new System.Windows.Forms.Label();
-            this.input_SecondDomainValueFactor1 = new System.Windows.Forms.TextBox();
-            this.checkBox_MatchOrbitTrap = new System.Windows.Forms.CheckBox();
-            this.checkBox_UseSecondDomainValue = new System.Windows.Forms.CheckBox();
-            this.checkBox_UseDomainIteration = new System.Windows.Forms.CheckBox();
-            this.label_DomainCalculation = new System.Windows.Forms.Label();
-            this.input_DomainCalculation = new System.Windows.Forms.ComboBox();
-            this.button_Color6 = new System.Windows.Forms.Button();
-            this.button_Color5 = new System.Windows.Forms.Button();
-            this.button_Color4 = new System.Windows.Forms.Button();
-            this.button_Color3 = new System.Windows.Forms.Button();
-            this.button_Color2 = new System.Windows.Forms.Button();
-            this.button_Color1 = new System.Windows.Forms.Button();
+            this.label_ColorMenu = new System.Windows.Forms.Label();
+            this.label_EditingColor = new System.Windows.Forms.Label();
+            this.input_EditingColor = new System.Windows.Forms.ComboBox();
+            this.label_Coloring = new System.Windows.Forms.Label();
+            this.input_Coloring = new System.Windows.Forms.ComboBox();
             this.checkBox_UseCustomPalette = new System.Windows.Forms.CheckBox();
+            this.button_Color1 = new System.Windows.Forms.Button();
+            this.button_Color2 = new System.Windows.Forms.Button();
+            this.button_Color3 = new System.Windows.Forms.Button();
+            this.button_Color4 = new System.Windows.Forms.Button();
+            this.button_Color5 = new System.Windows.Forms.Button();
+            this.button_Color6 = new System.Windows.Forms.Button();
             this.label_OrbitTrapFactor = new System.Windows.Forms.Label();
             this.input_OrbitTrapFactor = new System.Windows.Forms.TextBox();
-            this.input_TextureBlend = new System.Windows.Forms.NumericUpDown();
-            this.button_ClearTexture = new System.Windows.Forms.Button();
-            this.input_MaxDistanceEstimation = new System.Windows.Forms.TextBox();
-            this.input_DistanceEstimationFactor1 = new System.Windows.Forms.TextBox();
-            this.label_DistanceEstimationMax = new System.Windows.Forms.Label();
-            this.label_DistanceEstimationFactors = new System.Windows.Forms.Label();
+            this.label_StripeDensity = new System.Windows.Forms.Label();
+            this.input_StripeDensity = new System.Windows.Forms.TextBox();
+            this.checkBox_MatchOrbitTrap = new System.Windows.Forms.CheckBox();
+            this.label_DomainCalculation = new System.Windows.Forms.Label();
+            this.input_DomainCalculation = new System.Windows.Forms.ComboBox();
+            this.checkBox_UseDomainIteration = new System.Windows.Forms.CheckBox();
+            this.checkBox_UseSecondDomainValue = new System.Windows.Forms.CheckBox();
+            this.label_SecondDomainValueFactors = new System.Windows.Forms.Label();
+            this.input_SecondDomainValueFactor1 = new System.Windows.Forms.TextBox();
+            this.input_SecondDomainValueFactor2 = new System.Windows.Forms.TextBox();
             this.checkBox_UseDistanceEstimation = new System.Windows.Forms.CheckBox();
-            this.label_Coloring = new System.Windows.Forms.Label();
-            this.label_ColorMenu = new System.Windows.Forms.Label();
-            this.input_Coloring = new System.Windows.Forms.ComboBox();
-            this.input_EditingColor = new System.Windows.Forms.ComboBox();
-            this.label_EditingColor = new System.Windows.Forms.Label();
+            this.label_DistanceEstimationMax = new System.Windows.Forms.Label();
+            this.input_MaxDistanceEstimation = new System.Windows.Forms.TextBox();
+            this.label_DistanceEstimationFactors = new System.Windows.Forms.Label();
+            this.input_DistanceEstimationFactor1 = new System.Windows.Forms.TextBox();
+            this.input_DistanceEstimationFactor2 = new System.Windows.Forms.TextBox();
+            this.checkBox_UseNormals = new System.Windows.Forms.CheckBox();
+            this.button_ClearTexture = new System.Windows.Forms.Button();
+            this.input_TextureBlend = new System.Windows.Forms.NumericUpDown();
+            this.input_TextureDistortionFactor = new System.Windows.Forms.TextBox();
+            this.label_TextureScale = new System.Windows.Forms.Label();
+            this.input_TextureScaleX = new System.Windows.Forms.TextBox();
+            this.input_TextureScaleY = new System.Windows.Forms.TextBox();
+            this.checkBox_UsePolarTextureCoordinates = new System.Windows.Forms.CheckBox();
+            this.checkBox_UseDistortedTexture = new System.Windows.Forms.CheckBox();
+            this.label_TextureDistortionFactor = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.input_LockedZoom = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -529,7 +529,7 @@
             this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(3, 1144);
+            this.LogTextBox.Location = new System.Drawing.Point(3, 1192);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
@@ -844,9 +844,9 @@
             this.panel_FormulaMenu.Controls.Add(this.input_BuddhabrotType);
             this.panel_FormulaMenu.Controls.Add(this.LogTextBox);
             this.panel_FormulaMenu.Location = new System.Drawing.Point(517, 24);
-            this.panel_FormulaMenu.MinimumSize = new System.Drawing.Size(177, 276);
+            this.panel_FormulaMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_FormulaMenu.Name = "panel_FormulaMenu";
-            this.panel_FormulaMenu.Size = new System.Drawing.Size(177, 316);
+            this.panel_FormulaMenu.Size = new System.Drawing.Size(178, 316);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
             // label_JuliaPosition
@@ -1063,9 +1063,9 @@
             this.panel_OrbitTrapMenu.Controls.Add(this.input_SecondValueFactor1);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_SecondValueFactor2);
             this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(517, 24);
-            this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(177, 276);
+            this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
-            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(177, 316);
+            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(178, 316);
             this.panel_OrbitTrapMenu.TabIndex = 33;
             // 
             // label_OrbitTrapMenu
@@ -1413,124 +1413,232 @@
             this.panel_ColorMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_ColorMenu.AutoScroll = true;
-            this.panel_ColorMenu.Controls.Add(this.checkBox_UseNormals);
+            this.panel_ColorMenu.Controls.Add(this.label_ColorMenu);
+            this.panel_ColorMenu.Controls.Add(this.label_EditingColor);
+            this.panel_ColorMenu.Controls.Add(this.input_EditingColor);
+            this.panel_ColorMenu.Controls.Add(this.label_Coloring);
+            this.panel_ColorMenu.Controls.Add(this.input_Coloring);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseCustomPalette);
             this.panel_ColorMenu.Controls.Add(this.button_Color1);
             this.panel_ColorMenu.Controls.Add(this.button_Color2);
             this.panel_ColorMenu.Controls.Add(this.button_Color3);
             this.panel_ColorMenu.Controls.Add(this.button_Color4);
             this.panel_ColorMenu.Controls.Add(this.button_Color5);
             this.panel_ColorMenu.Controls.Add(this.button_Color6);
-            this.panel_ColorMenu.Controls.Add(this.input_DistanceEstimationFactor2);
-            this.panel_ColorMenu.Controls.Add(this.checkBox_UsePolarTextureCoordinates);
-            this.panel_ColorMenu.Controls.Add(this.input_TextureDistortionFactor);
-            this.panel_ColorMenu.Controls.Add(this.label_TextureDistortionFactor);
-            this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistortedTexture);
-            this.panel_ColorMenu.Controls.Add(this.label_StripeDensity);
-            this.panel_ColorMenu.Controls.Add(this.input_StripeDensity);
-            this.panel_ColorMenu.Controls.Add(this.input_TextureScaleY);
-            this.panel_ColorMenu.Controls.Add(this.label_TextureScale);
-            this.panel_ColorMenu.Controls.Add(this.input_TextureScaleX);
-            this.panel_ColorMenu.Controls.Add(this.input_SecondDomainValueFactor2);
-            this.panel_ColorMenu.Controls.Add(this.label_SecondDomainValueFactors);
-            this.panel_ColorMenu.Controls.Add(this.input_SecondDomainValueFactor1);
-            this.panel_ColorMenu.Controls.Add(this.checkBox_MatchOrbitTrap);
-            this.panel_ColorMenu.Controls.Add(this.checkBox_UseSecondDomainValue);
-            this.panel_ColorMenu.Controls.Add(this.checkBox_UseDomainIteration);
-            this.panel_ColorMenu.Controls.Add(this.label_DomainCalculation);
-            this.panel_ColorMenu.Controls.Add(this.input_DomainCalculation);
-            this.panel_ColorMenu.Controls.Add(this.checkBox_UseCustomPalette);
-            this.panel_ColorMenu.Controls.Add(this.label_OrbitTrapFactor);
-            this.panel_ColorMenu.Controls.Add(this.input_OrbitTrapFactor);
-            this.panel_ColorMenu.Controls.Add(this.input_TextureBlend);
-            this.panel_ColorMenu.Controls.Add(label_TextureBlend);
-            this.panel_ColorMenu.Controls.Add(this.button_ClearTexture);
-            this.panel_ColorMenu.Controls.Add(this.input_MaxDistanceEstimation);
-            this.panel_ColorMenu.Controls.Add(this.input_DistanceEstimationFactor1);
-            this.panel_ColorMenu.Controls.Add(this.label_DistanceEstimationMax);
-            this.panel_ColorMenu.Controls.Add(this.label_DistanceEstimationFactors);
-            this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistanceEstimation);
-            this.panel_ColorMenu.Controls.Add(this.label_Texture);
-            this.panel_ColorMenu.Controls.Add(this.label_Coloring);
-            this.panel_ColorMenu.Controls.Add(this.label_ColorMenu);
-            this.panel_ColorMenu.Controls.Add(this.input_Texture);
-            this.panel_ColorMenu.Controls.Add(this.input_Coloring);
-            this.panel_ColorMenu.Controls.Add(this.input_EditingColor);
-            this.panel_ColorMenu.Controls.Add(this.label_EditingColor);
             this.panel_ColorMenu.Controls.Add(this.label_ColorFactors);
             this.panel_ColorMenu.Controls.Add(this.input_ColorCycles);
             this.panel_ColorMenu.Controls.Add(this.input_ColorFactor);
+            this.panel_ColorMenu.Controls.Add(this.label_OrbitTrapFactor);
+            this.panel_ColorMenu.Controls.Add(this.input_OrbitTrapFactor);
+            this.panel_ColorMenu.Controls.Add(this.label_StripeDensity);
+            this.panel_ColorMenu.Controls.Add(this.input_StripeDensity);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_MatchOrbitTrap);
+            this.panel_ColorMenu.Controls.Add(this.label_DomainCalculation);
+            this.panel_ColorMenu.Controls.Add(this.input_DomainCalculation);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseDomainIteration);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseSecondDomainValue);
+            this.panel_ColorMenu.Controls.Add(this.label_SecondDomainValueFactors);
+            this.panel_ColorMenu.Controls.Add(this.input_SecondDomainValueFactor1);
+            this.panel_ColorMenu.Controls.Add(this.input_SecondDomainValueFactor2);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistanceEstimation);
+            this.panel_ColorMenu.Controls.Add(this.label_DistanceEstimationMax);
+            this.panel_ColorMenu.Controls.Add(this.input_MaxDistanceEstimation);
+            this.panel_ColorMenu.Controls.Add(this.label_DistanceEstimationFactors);
+            this.panel_ColorMenu.Controls.Add(this.input_DistanceEstimationFactor1);
+            this.panel_ColorMenu.Controls.Add(this.input_DistanceEstimationFactor2);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseNormals);
+            this.panel_ColorMenu.Controls.Add(this.button_ClearTexture);
+            this.panel_ColorMenu.Controls.Add(this.label_Texture);
+            this.panel_ColorMenu.Controls.Add(this.input_Texture);
+            this.panel_ColorMenu.Controls.Add(label_TextureBlend);
+            this.panel_ColorMenu.Controls.Add(this.input_TextureBlend);
+            this.panel_ColorMenu.Controls.Add(this.input_TextureDistortionFactor);
+            this.panel_ColorMenu.Controls.Add(this.label_TextureScale);
+            this.panel_ColorMenu.Controls.Add(this.input_TextureScaleX);
+            this.panel_ColorMenu.Controls.Add(this.input_TextureScaleY);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UsePolarTextureCoordinates);
+            this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistortedTexture);
+            this.panel_ColorMenu.Controls.Add(this.label_TextureDistortionFactor);
             this.panel_ColorMenu.Location = new System.Drawing.Point(517, 24);
-            this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(177, 276);
+            this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_ColorMenu.Name = "panel_ColorMenu";
-            this.panel_ColorMenu.Size = new System.Drawing.Size(177, 316);
+            this.panel_ColorMenu.Size = new System.Drawing.Size(178, 316);
             this.panel_ColorMenu.TabIndex = 59;
             // 
-            // checkBox_UseNormals
+            // label_ColorMenu
             // 
-            this.checkBox_UseNormals.AutoSize = true;
-            this.checkBox_UseNormals.Location = new System.Drawing.Point(8, 398);
-            this.checkBox_UseNormals.Name = "checkBox_UseNormals";
-            this.checkBox_UseNormals.Size = new System.Drawing.Size(93, 19);
-            this.checkBox_UseNormals.TabIndex = 104;
-            this.checkBox_UseNormals.Text = "Use Normals";
-            this.checkBox_UseNormals.UseVisualStyleBackColor = true;
-            this.checkBox_UseNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseNormals_CheckedChanged);
+            this.label_ColorMenu.AutoSize = true;
+            this.label_ColorMenu.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_ColorMenu.Location = new System.Drawing.Point(30, 0);
+            this.label_ColorMenu.Name = "label_ColorMenu";
+            this.label_ColorMenu.Size = new System.Drawing.Size(83, 19);
+            this.label_ColorMenu.TabIndex = 60;
+            this.label_ColorMenu.Text = "Color Menu";
             // 
-            // input_DistanceEstimationFactor2
+            // label_EditingColor
             // 
-            this.input_DistanceEstimationFactor2.Location = new System.Drawing.Point(114, 373);
-            this.input_DistanceEstimationFactor2.Name = "input_DistanceEstimationFactor2";
-            this.input_DistanceEstimationFactor2.Size = new System.Drawing.Size(40, 23);
-            this.input_DistanceEstimationFactor2.TabIndex = 103;
-            this.input_DistanceEstimationFactor2.Text = "6";
-            this.input_DistanceEstimationFactor2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_DistanceEstimationFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_DistanceEstimationFactor2.Validating += new System.ComponentModel.CancelEventHandler(this.input_DistanceEstimationFactor2_Validating);
-            this.input_DistanceEstimationFactor2.Validated += new System.EventHandler(this.input_DistanceEstimationFactor2_Validated);
+            this.label_EditingColor.AutoSize = true;
+            this.label_EditingColor.Location = new System.Drawing.Point(3, 30);
+            this.label_EditingColor.Name = "label_EditingColor";
+            this.label_EditingColor.Size = new System.Drawing.Size(47, 15);
+            this.label_EditingColor.TabIndex = 60;
+            this.label_EditingColor.Text = "Editing:";
+            this.label_EditingColor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // checkBox_UsePolarTextureCoordinates
+            // input_EditingColor
             // 
-            this.checkBox_UsePolarTextureCoordinates.AutoSize = true;
-            this.checkBox_UsePolarTextureCoordinates.Location = new System.Drawing.Point(8, 530);
-            this.checkBox_UsePolarTextureCoordinates.Name = "checkBox_UsePolarTextureCoordinates";
-            this.checkBox_UsePolarTextureCoordinates.Size = new System.Drawing.Size(120, 19);
-            this.checkBox_UsePolarTextureCoordinates.TabIndex = 101;
-            this.checkBox_UsePolarTextureCoordinates.Text = "Polar Coordinates";
-            this.checkBox_UsePolarTextureCoordinates.UseVisualStyleBackColor = true;
-            this.checkBox_UsePolarTextureCoordinates.CheckedChanged += new System.EventHandler(this.checkBox_UsePolarTextureCoordinates_CheckedChanged);
+            this.input_EditingColor.CausesValidation = false;
+            this.input_EditingColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.input_EditingColor.FormattingEnabled = true;
+            this.input_EditingColor.Items.AddRange(new object[] {
+            "Both",
+            "Interior",
+            "Exterior"});
+            this.input_EditingColor.Location = new System.Drawing.Point(67, 27);
+            this.input_EditingColor.Name = "input_EditingColor";
+            this.input_EditingColor.Size = new System.Drawing.Size(87, 23);
+            this.input_EditingColor.TabIndex = 61;
+            this.input_EditingColor.SelectionChangeCommitted += new System.EventHandler(this.input_EditingColor_SelectionChangeCommitted);
             // 
-            // input_TextureDistortionFactor
+            // label_Coloring
             // 
-            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(114, 569);
-            this.input_TextureDistortionFactor.Name = "input_TextureDistortionFactor";
-            this.input_TextureDistortionFactor.Size = new System.Drawing.Size(40, 23);
-            this.input_TextureDistortionFactor.TabIndex = 97;
-            this.input_TextureDistortionFactor.Text = "5";
-            this.input_TextureDistortionFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_TextureDistortionFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_TextureDistortionFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureDistortionFactor_Validating);
-            this.input_TextureDistortionFactor.Validated += new System.EventHandler(this.input_TextureDistortionFactor_Validated);
+            this.label_Coloring.AutoSize = true;
+            this.label_Coloring.Location = new System.Drawing.Point(3, 56);
+            this.label_Coloring.Name = "label_Coloring";
+            this.label_Coloring.Size = new System.Drawing.Size(56, 15);
+            this.label_Coloring.TabIndex = 62;
+            this.label_Coloring.Text = "Coloring:";
+            this.label_Coloring.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label_TextureDistortionFactor
+            // input_Coloring
             // 
-            this.label_TextureDistortionFactor.AutoSize = true;
-            this.label_TextureDistortionFactor.Location = new System.Drawing.Point(3, 572);
-            this.label_TextureDistortionFactor.Name = "label_TextureDistortionFactor";
-            this.label_TextureDistortionFactor.Size = new System.Drawing.Size(103, 15);
-            this.label_TextureDistortionFactor.TabIndex = 98;
-            this.label_TextureDistortionFactor.Text = "Distortion Factor:*";
-            this.label_TextureDistortionFactor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.input_Coloring.CausesValidation = false;
+            this.input_Coloring.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.input_Coloring.FormattingEnabled = true;
+            this.input_Coloring.Items.AddRange(new object[] {
+            "Black",
+            "White",
+            "Interation",
+            "Smooth",
+            "Stripes 1",
+            "Stripes 2",
+            "Domain 1",
+            "Domain 2",
+            "Domain 3",
+            "Domain 4",
+            "Domain 5",
+            "Domain 6",
+            "Domain 7",
+            "Custom"});
+            this.input_Coloring.Location = new System.Drawing.Point(67, 53);
+            this.input_Coloring.Name = "input_Coloring";
+            this.input_Coloring.Size = new System.Drawing.Size(87, 23);
+            this.input_Coloring.TabIndex = 63;
+            this.input_Coloring.SelectionChangeCommitted += new System.EventHandler(this.input_Coloring_SelectionChangeCommitted);
             // 
-            // checkBox_UseDistortedTexture
+            // checkBox_UseCustomPalette
             // 
-            this.checkBox_UseDistortedTexture.AutoSize = true;
-            this.checkBox_UseDistortedTexture.Location = new System.Drawing.Point(8, 550);
-            this.checkBox_UseDistortedTexture.Name = "checkBox_UseDistortedTexture";
-            this.checkBox_UseDistortedTexture.Size = new System.Drawing.Size(115, 19);
-            this.checkBox_UseDistortedTexture.TabIndex = 96;
-            this.checkBox_UseDistortedTexture.Text = "Distorted Texture";
-            this.checkBox_UseDistortedTexture.UseVisualStyleBackColor = true;
-            this.checkBox_UseDistortedTexture.CheckedChanged += new System.EventHandler(this.checkBox_UseDistortedTexture_CheckedChanged);
+            this.checkBox_UseCustomPalette.AutoSize = true;
+            this.checkBox_UseCustomPalette.Location = new System.Drawing.Point(9, 82);
+            this.checkBox_UseCustomPalette.Name = "checkBox_UseCustomPalette";
+            this.checkBox_UseCustomPalette.Size = new System.Drawing.Size(129, 19);
+            this.checkBox_UseCustomPalette.TabIndex = 75;
+            this.checkBox_UseCustomPalette.Text = "Use Custom Palette";
+            this.checkBox_UseCustomPalette.UseVisualStyleBackColor = true;
+            this.checkBox_UseCustomPalette.CheckedChanged += new System.EventHandler(this.checkBox_UseCustomPalette_CheckedChanged);
+            // 
+            // button_Color1
+            // 
+            this.button_Color1.BackColor = System.Drawing.Color.Red;
+            this.button_Color1.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_Color1.Location = new System.Drawing.Point(3, 101);
+            this.button_Color1.Name = "button_Color1";
+            this.button_Color1.Size = new System.Drawing.Size(25, 25);
+            this.button_Color1.TabIndex = 60;
+            this.button_Color1.Text = "+";
+            this.button_Color1.UseVisualStyleBackColor = false;
+            this.button_Color1.Click += new System.EventHandler(this.button_Color1_Click);
+            // 
+            // button_Color2
+            // 
+            this.button_Color2.BackColor = System.Drawing.Color.Orange;
+            this.button_Color2.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_Color2.Location = new System.Drawing.Point(28, 101);
+            this.button_Color2.Name = "button_Color2";
+            this.button_Color2.Size = new System.Drawing.Size(25, 25);
+            this.button_Color2.TabIndex = 76;
+            this.button_Color2.Text = "+";
+            this.button_Color2.UseVisualStyleBackColor = false;
+            this.button_Color2.Click += new System.EventHandler(this.button_Color2_Click);
+            // 
+            // button_Color3
+            // 
+            this.button_Color3.BackColor = System.Drawing.Color.Yellow;
+            this.button_Color3.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_Color3.Location = new System.Drawing.Point(53, 101);
+            this.button_Color3.Name = "button_Color3";
+            this.button_Color3.Size = new System.Drawing.Size(25, 25);
+            this.button_Color3.TabIndex = 77;
+            this.button_Color3.Text = "+";
+            this.button_Color3.UseVisualStyleBackColor = false;
+            this.button_Color3.Click += new System.EventHandler(this.button_Color3_Click);
+            // 
+            // button_Color4
+            // 
+            this.button_Color4.BackColor = System.Drawing.Color.Green;
+            this.button_Color4.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_Color4.Location = new System.Drawing.Point(79, 101);
+            this.button_Color4.Name = "button_Color4";
+            this.button_Color4.Size = new System.Drawing.Size(25, 25);
+            this.button_Color4.TabIndex = 78;
+            this.button_Color4.Text = "+";
+            this.button_Color4.UseVisualStyleBackColor = false;
+            this.button_Color4.Click += new System.EventHandler(this.button_Color4_Click);
+            // 
+            // button_Color5
+            // 
+            this.button_Color5.BackColor = System.Drawing.Color.Blue;
+            this.button_Color5.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_Color5.Location = new System.Drawing.Point(104, 101);
+            this.button_Color5.Name = "button_Color5";
+            this.button_Color5.Size = new System.Drawing.Size(25, 25);
+            this.button_Color5.TabIndex = 79;
+            this.button_Color5.Text = "+";
+            this.button_Color5.UseVisualStyleBackColor = false;
+            this.button_Color5.Click += new System.EventHandler(this.button_Color5_Click);
+            // 
+            // button_Color6
+            // 
+            this.button_Color6.BackColor = System.Drawing.Color.Purple;
+            this.button_Color6.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_Color6.Location = new System.Drawing.Point(129, 101);
+            this.button_Color6.Name = "button_Color6";
+            this.button_Color6.Size = new System.Drawing.Size(25, 25);
+            this.button_Color6.TabIndex = 80;
+            this.button_Color6.Text = "+";
+            this.button_Color6.UseVisualStyleBackColor = false;
+            this.button_Color6.Click += new System.EventHandler(this.button_Color6_Click);
+            // 
+            // label_OrbitTrapFactor
+            // 
+            this.label_OrbitTrapFactor.AutoSize = true;
+            this.label_OrbitTrapFactor.Location = new System.Drawing.Point(2, 161);
+            this.label_OrbitTrapFactor.Name = "label_OrbitTrapFactor";
+            this.label_OrbitTrapFactor.Size = new System.Drawing.Size(103, 15);
+            this.label_OrbitTrapFactor.TabIndex = 72;
+            this.label_OrbitTrapFactor.Text = "Orbit Trap Factor:*";
+            // 
+            // input_OrbitTrapFactor
+            // 
+            this.input_OrbitTrapFactor.Location = new System.Drawing.Point(114, 158);
+            this.input_OrbitTrapFactor.Name = "input_OrbitTrapFactor";
+            this.input_OrbitTrapFactor.Size = new System.Drawing.Size(40, 23);
+            this.input_OrbitTrapFactor.TabIndex = 74;
+            this.input_OrbitTrapFactor.Text = "10";
+            this.input_OrbitTrapFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_OrbitTrapFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_OrbitTrapFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor_Validating);
+            this.input_OrbitTrapFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor_Validated);
             // 
             // label_StripeDensity
             // 
@@ -1553,74 +1661,6 @@
             this.input_StripeDensity.Validating += new System.ComponentModel.CancelEventHandler(this.input_StripeDensity_Validating);
             this.input_StripeDensity.Validated += new System.EventHandler(this.input_StripeDensity_Validated);
             // 
-            // input_TextureScaleY
-            // 
-            this.input_TextureScaleY.Location = new System.Drawing.Point(114, 503);
-            this.input_TextureScaleY.Name = "input_TextureScaleY";
-            this.input_TextureScaleY.Size = new System.Drawing.Size(40, 23);
-            this.input_TextureScaleY.TabIndex = 93;
-            this.input_TextureScaleY.Text = "1";
-            this.input_TextureScaleY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_TextureScaleY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_TextureScaleY.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureScaleY_Validating);
-            this.input_TextureScaleY.Validated += new System.EventHandler(this.input_TextureScaleY_Validated);
-            // 
-            // label_TextureScale
-            // 
-            this.label_TextureScale.AutoSize = true;
-            this.label_TextureScale.Location = new System.Drawing.Point(3, 506);
-            this.label_TextureScale.Name = "label_TextureScale";
-            this.label_TextureScale.Size = new System.Drawing.Size(42, 15);
-            this.label_TextureScale.TabIndex = 92;
-            this.label_TextureScale.Text = "Scale:*";
-            this.label_TextureScale.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // input_TextureScaleX
-            // 
-            this.input_TextureScaleX.Location = new System.Drawing.Point(69, 503);
-            this.input_TextureScaleX.Name = "input_TextureScaleX";
-            this.input_TextureScaleX.Size = new System.Drawing.Size(40, 23);
-            this.input_TextureScaleX.TabIndex = 91;
-            this.input_TextureScaleX.Text = "1";
-            this.input_TextureScaleX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_TextureScaleX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_TextureScaleX.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureScaleX_Validating);
-            this.input_TextureScaleX.Validated += new System.EventHandler(this.input_TextureScaleX_Validated);
-            // 
-            // input_SecondDomainValueFactor2
-            // 
-            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(114, 300);
-            this.input_SecondDomainValueFactor2.Name = "input_SecondDomainValueFactor2";
-            this.input_SecondDomainValueFactor2.Size = new System.Drawing.Size(40, 23);
-            this.input_SecondDomainValueFactor2.TabIndex = 90;
-            this.input_SecondDomainValueFactor2.Text = "7";
-            this.input_SecondDomainValueFactor2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_SecondDomainValueFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_SecondDomainValueFactor2.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondDomainValueFactor2_Validating);
-            this.input_SecondDomainValueFactor2.Validated += new System.EventHandler(this.input_SecondDomainValueFactor2_Validated);
-            // 
-            // label_SecondDomainValueFactors
-            // 
-            this.label_SecondDomainValueFactors.AutoSize = true;
-            this.label_SecondDomainValueFactors.Location = new System.Drawing.Point(3, 303);
-            this.label_SecondDomainValueFactors.Name = "label_SecondDomainValueFactors";
-            this.label_SecondDomainValueFactors.Size = new System.Drawing.Size(53, 15);
-            this.label_SecondDomainValueFactors.TabIndex = 89;
-            this.label_SecondDomainValueFactors.Text = "Factors:*";
-            this.label_SecondDomainValueFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // input_SecondDomainValueFactor1
-            // 
-            this.input_SecondDomainValueFactor1.Location = new System.Drawing.Point(68, 300);
-            this.input_SecondDomainValueFactor1.Name = "input_SecondDomainValueFactor1";
-            this.input_SecondDomainValueFactor1.Size = new System.Drawing.Size(40, 23);
-            this.input_SecondDomainValueFactor1.TabIndex = 88;
-            this.input_SecondDomainValueFactor1.Text = "10";
-            this.input_SecondDomainValueFactor1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_SecondDomainValueFactor1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_SecondDomainValueFactor1.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondDomainValueFactor1_Validating);
-            this.input_SecondDomainValueFactor1.Validated += new System.EventHandler(this.input_SecondDomainValueFactor1_Validated);
-            // 
             // checkBox_MatchOrbitTrap
             // 
             this.checkBox_MatchOrbitTrap.AutoSize = true;
@@ -1631,28 +1671,6 @@
             this.checkBox_MatchOrbitTrap.Text = "Match Orbit Trap";
             this.checkBox_MatchOrbitTrap.UseVisualStyleBackColor = true;
             this.checkBox_MatchOrbitTrap.CheckedChanged += new System.EventHandler(this.checkBox_MatchOrbitTrap_CheckedChanged);
-            // 
-            // checkBox_UseSecondDomainValue
-            // 
-            this.checkBox_UseSecondDomainValue.AutoSize = true;
-            this.checkBox_UseSecondDomainValue.Location = new System.Drawing.Point(8, 281);
-            this.checkBox_UseSecondDomainValue.Name = "checkBox_UseSecondDomainValue";
-            this.checkBox_UseSecondDomainValue.Size = new System.Drawing.Size(118, 19);
-            this.checkBox_UseSecondDomainValue.TabIndex = 84;
-            this.checkBox_UseSecondDomainValue.Text = "Use Second Value";
-            this.checkBox_UseSecondDomainValue.UseVisualStyleBackColor = true;
-            this.checkBox_UseSecondDomainValue.CheckedChanged += new System.EventHandler(this.checkBox_UseSecondDomainValue_CheckedChanged);
-            // 
-            // checkBox_UseDomainIteration
-            // 
-            this.checkBox_UseDomainIteration.AutoSize = true;
-            this.checkBox_UseDomainIteration.Location = new System.Drawing.Point(8, 261);
-            this.checkBox_UseDomainIteration.Name = "checkBox_UseDomainIteration";
-            this.checkBox_UseDomainIteration.Size = new System.Drawing.Size(137, 19);
-            this.checkBox_UseDomainIteration.TabIndex = 83;
-            this.checkBox_UseDomainIteration.Text = "Use Domain Iteration";
-            this.checkBox_UseDomainIteration.UseVisualStyleBackColor = true;
-            this.checkBox_UseDomainIteration.CheckedChanged += new System.EventHandler(this.checkBox_UseDomainIteration_CheckedChanged);
             // 
             // label_DomainCalculation
             // 
@@ -1681,109 +1699,148 @@
             this.input_DomainCalculation.TabIndex = 82;
             this.input_DomainCalculation.SelectionChangeCommitted += new System.EventHandler(this.input_DomainCalculation_SelectionChangeCommitted);
             // 
-            // button_Color6
+            // checkBox_UseDomainIteration
             // 
-            this.button_Color6.BackColor = System.Drawing.Color.Purple;
-            this.button_Color6.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Color6.Location = new System.Drawing.Point(129, 101);
-            this.button_Color6.Name = "button_Color6";
-            this.button_Color6.Size = new System.Drawing.Size(25, 25);
-            this.button_Color6.TabIndex = 80;
-            this.button_Color6.Text = "+";
-            this.button_Color6.UseVisualStyleBackColor = false;
-            this.button_Color6.Click += new System.EventHandler(this.button_Color6_Click);
+            this.checkBox_UseDomainIteration.AutoSize = true;
+            this.checkBox_UseDomainIteration.Location = new System.Drawing.Point(8, 261);
+            this.checkBox_UseDomainIteration.Name = "checkBox_UseDomainIteration";
+            this.checkBox_UseDomainIteration.Size = new System.Drawing.Size(137, 19);
+            this.checkBox_UseDomainIteration.TabIndex = 83;
+            this.checkBox_UseDomainIteration.Text = "Use Domain Iteration";
+            this.checkBox_UseDomainIteration.UseVisualStyleBackColor = true;
+            this.checkBox_UseDomainIteration.CheckedChanged += new System.EventHandler(this.checkBox_UseDomainIteration_CheckedChanged);
             // 
-            // button_Color5
+            // checkBox_UseSecondDomainValue
             // 
-            this.button_Color5.BackColor = System.Drawing.Color.Blue;
-            this.button_Color5.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Color5.Location = new System.Drawing.Point(104, 101);
-            this.button_Color5.Name = "button_Color5";
-            this.button_Color5.Size = new System.Drawing.Size(25, 25);
-            this.button_Color5.TabIndex = 79;
-            this.button_Color5.Text = "+";
-            this.button_Color5.UseVisualStyleBackColor = false;
-            this.button_Color5.Click += new System.EventHandler(this.button_Color5_Click);
+            this.checkBox_UseSecondDomainValue.AutoSize = true;
+            this.checkBox_UseSecondDomainValue.Location = new System.Drawing.Point(8, 281);
+            this.checkBox_UseSecondDomainValue.Name = "checkBox_UseSecondDomainValue";
+            this.checkBox_UseSecondDomainValue.Size = new System.Drawing.Size(118, 19);
+            this.checkBox_UseSecondDomainValue.TabIndex = 84;
+            this.checkBox_UseSecondDomainValue.Text = "Use Second Value";
+            this.checkBox_UseSecondDomainValue.UseVisualStyleBackColor = true;
+            this.checkBox_UseSecondDomainValue.CheckedChanged += new System.EventHandler(this.checkBox_UseSecondDomainValue_CheckedChanged);
             // 
-            // button_Color4
+            // label_SecondDomainValueFactors
             // 
-            this.button_Color4.BackColor = System.Drawing.Color.Green;
-            this.button_Color4.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Color4.Location = new System.Drawing.Point(79, 101);
-            this.button_Color4.Name = "button_Color4";
-            this.button_Color4.Size = new System.Drawing.Size(25, 25);
-            this.button_Color4.TabIndex = 78;
-            this.button_Color4.Text = "+";
-            this.button_Color4.UseVisualStyleBackColor = false;
-            this.button_Color4.Click += new System.EventHandler(this.button_Color4_Click);
+            this.label_SecondDomainValueFactors.AutoSize = true;
+            this.label_SecondDomainValueFactors.Location = new System.Drawing.Point(3, 303);
+            this.label_SecondDomainValueFactors.Name = "label_SecondDomainValueFactors";
+            this.label_SecondDomainValueFactors.Size = new System.Drawing.Size(53, 15);
+            this.label_SecondDomainValueFactors.TabIndex = 89;
+            this.label_SecondDomainValueFactors.Text = "Factors:*";
+            this.label_SecondDomainValueFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // button_Color3
+            // input_SecondDomainValueFactor1
             // 
-            this.button_Color3.BackColor = System.Drawing.Color.Yellow;
-            this.button_Color3.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Color3.Location = new System.Drawing.Point(53, 101);
-            this.button_Color3.Name = "button_Color3";
-            this.button_Color3.Size = new System.Drawing.Size(25, 25);
-            this.button_Color3.TabIndex = 77;
-            this.button_Color3.Text = "+";
-            this.button_Color3.UseVisualStyleBackColor = false;
-            this.button_Color3.Click += new System.EventHandler(this.button_Color3_Click);
+            this.input_SecondDomainValueFactor1.Location = new System.Drawing.Point(68, 300);
+            this.input_SecondDomainValueFactor1.Name = "input_SecondDomainValueFactor1";
+            this.input_SecondDomainValueFactor1.Size = new System.Drawing.Size(40, 23);
+            this.input_SecondDomainValueFactor1.TabIndex = 88;
+            this.input_SecondDomainValueFactor1.Text = "10";
+            this.input_SecondDomainValueFactor1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_SecondDomainValueFactor1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_SecondDomainValueFactor1.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondDomainValueFactor1_Validating);
+            this.input_SecondDomainValueFactor1.Validated += new System.EventHandler(this.input_SecondDomainValueFactor1_Validated);
             // 
-            // button_Color2
+            // input_SecondDomainValueFactor2
             // 
-            this.button_Color2.BackColor = System.Drawing.Color.Orange;
-            this.button_Color2.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Color2.Location = new System.Drawing.Point(28, 101);
-            this.button_Color2.Name = "button_Color2";
-            this.button_Color2.Size = new System.Drawing.Size(25, 25);
-            this.button_Color2.TabIndex = 76;
-            this.button_Color2.Text = "+";
-            this.button_Color2.UseVisualStyleBackColor = false;
-            this.button_Color2.Click += new System.EventHandler(this.button_Color2_Click);
+            this.input_SecondDomainValueFactor2.Location = new System.Drawing.Point(114, 300);
+            this.input_SecondDomainValueFactor2.Name = "input_SecondDomainValueFactor2";
+            this.input_SecondDomainValueFactor2.Size = new System.Drawing.Size(40, 23);
+            this.input_SecondDomainValueFactor2.TabIndex = 90;
+            this.input_SecondDomainValueFactor2.Text = "7";
+            this.input_SecondDomainValueFactor2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_SecondDomainValueFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_SecondDomainValueFactor2.Validating += new System.ComponentModel.CancelEventHandler(this.input_SecondDomainValueFactor2_Validating);
+            this.input_SecondDomainValueFactor2.Validated += new System.EventHandler(this.input_SecondDomainValueFactor2_Validated);
             // 
-            // button_Color1
+            // checkBox_UseDistanceEstimation
             // 
-            this.button_Color1.BackColor = System.Drawing.Color.Red;
-            this.button_Color1.Font = new System.Drawing.Font("Segoe MDL2 Assets", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Color1.Location = new System.Drawing.Point(3, 101);
-            this.button_Color1.Name = "button_Color1";
-            this.button_Color1.Size = new System.Drawing.Size(25, 25);
-            this.button_Color1.TabIndex = 60;
-            this.button_Color1.Text = "+";
-            this.button_Color1.UseVisualStyleBackColor = false;
-            this.button_Color1.Click += new System.EventHandler(this.button_Color1_Click);
+            this.checkBox_UseDistanceEstimation.AutoSize = true;
+            this.checkBox_UseDistanceEstimation.Location = new System.Drawing.Point(9, 327);
+            this.checkBox_UseDistanceEstimation.Name = "checkBox_UseDistanceEstimation";
+            this.checkBox_UseDistanceEstimation.Size = new System.Drawing.Size(152, 19);
+            this.checkBox_UseDistanceEstimation.TabIndex = 64;
+            this.checkBox_UseDistanceEstimation.Text = "Use Distance Estimation";
+            this.checkBox_UseDistanceEstimation.UseVisualStyleBackColor = true;
+            this.checkBox_UseDistanceEstimation.CheckedChanged += new System.EventHandler(this.checkBox_UseDistanceEstimation_CheckedChanged);
             // 
-            // checkBox_UseCustomPalette
+            // label_DistanceEstimationMax
             // 
-            this.checkBox_UseCustomPalette.AutoSize = true;
-            this.checkBox_UseCustomPalette.Location = new System.Drawing.Point(9, 82);
-            this.checkBox_UseCustomPalette.Name = "checkBox_UseCustomPalette";
-            this.checkBox_UseCustomPalette.Size = new System.Drawing.Size(129, 19);
-            this.checkBox_UseCustomPalette.TabIndex = 75;
-            this.checkBox_UseCustomPalette.Text = "Use Custom Palette";
-            this.checkBox_UseCustomPalette.UseVisualStyleBackColor = true;
-            this.checkBox_UseCustomPalette.CheckedChanged += new System.EventHandler(this.checkBox_UseCustomPalette_CheckedChanged);
+            this.label_DistanceEstimationMax.AutoSize = true;
+            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(3, 349);
+            this.label_DistanceEstimationMax.Name = "label_DistanceEstimationMax";
+            this.label_DistanceEstimationMax.Size = new System.Drawing.Size(86, 15);
+            this.label_DistanceEstimationMax.TabIndex = 66;
+            this.label_DistanceEstimationMax.Text = "Max Distance:*";
+            this.label_DistanceEstimationMax.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label_OrbitTrapFactor
+            // input_MaxDistanceEstimation
             // 
-            this.label_OrbitTrapFactor.AutoSize = true;
-            this.label_OrbitTrapFactor.Location = new System.Drawing.Point(2, 161);
-            this.label_OrbitTrapFactor.Name = "label_OrbitTrapFactor";
-            this.label_OrbitTrapFactor.Size = new System.Drawing.Size(103, 15);
-            this.label_OrbitTrapFactor.TabIndex = 72;
-            this.label_OrbitTrapFactor.Text = "Orbit Trap Factor:*";
+            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(114, 346);
+            this.input_MaxDistanceEstimation.Name = "input_MaxDistanceEstimation";
+            this.input_MaxDistanceEstimation.Size = new System.Drawing.Size(40, 23);
+            this.input_MaxDistanceEstimation.TabIndex = 65;
+            this.input_MaxDistanceEstimation.Text = "100";
+            this.input_MaxDistanceEstimation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_MaxDistanceEstimation.Validating += new System.ComponentModel.CancelEventHandler(this.input_MaxDistanceEstimation_Validating);
+            this.input_MaxDistanceEstimation.Validated += new System.EventHandler(this.input_MaxDistanceEstimation_Validated);
             // 
-            // input_OrbitTrapFactor
+            // label_DistanceEstimationFactors
             // 
-            this.input_OrbitTrapFactor.Location = new System.Drawing.Point(114, 158);
-            this.input_OrbitTrapFactor.Name = "input_OrbitTrapFactor";
-            this.input_OrbitTrapFactor.Size = new System.Drawing.Size(40, 23);
-            this.input_OrbitTrapFactor.TabIndex = 74;
-            this.input_OrbitTrapFactor.Text = "10";
-            this.input_OrbitTrapFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_OrbitTrapFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_OrbitTrapFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_OrbitTrapFactor_Validating);
-            this.input_OrbitTrapFactor.Validated += new System.EventHandler(this.input_OrbitTrapFactor_Validated);
+            this.label_DistanceEstimationFactors.AutoSize = true;
+            this.label_DistanceEstimationFactors.Location = new System.Drawing.Point(3, 376);
+            this.label_DistanceEstimationFactors.Name = "label_DistanceEstimationFactors";
+            this.label_DistanceEstimationFactors.Size = new System.Drawing.Size(53, 15);
+            this.label_DistanceEstimationFactors.TabIndex = 68;
+            this.label_DistanceEstimationFactors.Text = "Factors:*";
+            this.label_DistanceEstimationFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_DistanceEstimationFactor1
+            // 
+            this.input_DistanceEstimationFactor1.Location = new System.Drawing.Point(68, 373);
+            this.input_DistanceEstimationFactor1.Name = "input_DistanceEstimationFactor1";
+            this.input_DistanceEstimationFactor1.Size = new System.Drawing.Size(40, 23);
+            this.input_DistanceEstimationFactor1.TabIndex = 67;
+            this.input_DistanceEstimationFactor1.Text = "10";
+            this.input_DistanceEstimationFactor1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_DistanceEstimationFactor1.Validating += new System.ComponentModel.CancelEventHandler(this.input_DistanceEstimationFactor1_Validating);
+            this.input_DistanceEstimationFactor1.Validated += new System.EventHandler(this.input_DistanceEstimationFactor1_Validated);
+            // 
+            // input_DistanceEstimationFactor2
+            // 
+            this.input_DistanceEstimationFactor2.Location = new System.Drawing.Point(114, 373);
+            this.input_DistanceEstimationFactor2.Name = "input_DistanceEstimationFactor2";
+            this.input_DistanceEstimationFactor2.Size = new System.Drawing.Size(40, 23);
+            this.input_DistanceEstimationFactor2.TabIndex = 103;
+            this.input_DistanceEstimationFactor2.Text = "6";
+            this.input_DistanceEstimationFactor2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_DistanceEstimationFactor2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_DistanceEstimationFactor2.Validating += new System.ComponentModel.CancelEventHandler(this.input_DistanceEstimationFactor2_Validating);
+            this.input_DistanceEstimationFactor2.Validated += new System.EventHandler(this.input_DistanceEstimationFactor2_Validated);
+            // 
+            // checkBox_UseNormals
+            // 
+            this.checkBox_UseNormals.AutoSize = true;
+            this.checkBox_UseNormals.Location = new System.Drawing.Point(8, 398);
+            this.checkBox_UseNormals.Name = "checkBox_UseNormals";
+            this.checkBox_UseNormals.Size = new System.Drawing.Size(93, 19);
+            this.checkBox_UseNormals.TabIndex = 104;
+            this.checkBox_UseNormals.Text = "Use Normals";
+            this.checkBox_UseNormals.UseVisualStyleBackColor = true;
+            this.checkBox_UseNormals.CheckedChanged += new System.EventHandler(this.checkBox_UseNormals_CheckedChanged);
+            // 
+            // button_ClearTexture
+            // 
+            this.button_ClearTexture.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_ClearTexture.Location = new System.Drawing.Point(33, 423);
+            this.button_ClearTexture.Name = "button_ClearTexture";
+            this.button_ClearTexture.Size = new System.Drawing.Size(96, 25);
+            this.button_ClearTexture.TabIndex = 69;
+            this.button_ClearTexture.Text = "Clear Texture";
+            this.button_ClearTexture.UseVisualStyleBackColor = true;
+            this.button_ClearTexture.Click += new System.EventHandler(this.button_ClearTexture_Click);
             // 
             // input_TextureBlend
             // 
@@ -1816,140 +1873,83 @@
             this.input_TextureBlend.ValueChanged += new System.EventHandler(this.input_TextureBlend_ValueChanged);
             this.input_TextureBlend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
             // 
-            // button_ClearTexture
+            // input_TextureDistortionFactor
             // 
-            this.button_ClearTexture.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_ClearTexture.Location = new System.Drawing.Point(33, 423);
-            this.button_ClearTexture.Name = "button_ClearTexture";
-            this.button_ClearTexture.Size = new System.Drawing.Size(96, 25);
-            this.button_ClearTexture.TabIndex = 69;
-            this.button_ClearTexture.Text = "Clear Texture";
-            this.button_ClearTexture.UseVisualStyleBackColor = true;
-            this.button_ClearTexture.Click += new System.EventHandler(this.button_ClearTexture_Click);
+            this.input_TextureDistortionFactor.Location = new System.Drawing.Point(114, 569);
+            this.input_TextureDistortionFactor.Name = "input_TextureDistortionFactor";
+            this.input_TextureDistortionFactor.Size = new System.Drawing.Size(40, 23);
+            this.input_TextureDistortionFactor.TabIndex = 97;
+            this.input_TextureDistortionFactor.Text = "5";
+            this.input_TextureDistortionFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_TextureDistortionFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_TextureDistortionFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureDistortionFactor_Validating);
+            this.input_TextureDistortionFactor.Validated += new System.EventHandler(this.input_TextureDistortionFactor_Validated);
             // 
-            // input_MaxDistanceEstimation
+            // label_TextureScale
             // 
-            this.input_MaxDistanceEstimation.Location = new System.Drawing.Point(114, 346);
-            this.input_MaxDistanceEstimation.Name = "input_MaxDistanceEstimation";
-            this.input_MaxDistanceEstimation.Size = new System.Drawing.Size(40, 23);
-            this.input_MaxDistanceEstimation.TabIndex = 65;
-            this.input_MaxDistanceEstimation.Text = "100";
-            this.input_MaxDistanceEstimation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_MaxDistanceEstimation.Validating += new System.ComponentModel.CancelEventHandler(this.input_MaxDistanceEstimation_Validating);
-            this.input_MaxDistanceEstimation.Validated += new System.EventHandler(this.input_MaxDistanceEstimation_Validated);
+            this.label_TextureScale.AutoSize = true;
+            this.label_TextureScale.Location = new System.Drawing.Point(3, 506);
+            this.label_TextureScale.Name = "label_TextureScale";
+            this.label_TextureScale.Size = new System.Drawing.Size(42, 15);
+            this.label_TextureScale.TabIndex = 92;
+            this.label_TextureScale.Text = "Scale:*";
+            this.label_TextureScale.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // input_DistanceEstimationFactor1
+            // input_TextureScaleX
             // 
-            this.input_DistanceEstimationFactor1.Location = new System.Drawing.Point(68, 373);
-            this.input_DistanceEstimationFactor1.Name = "input_DistanceEstimationFactor1";
-            this.input_DistanceEstimationFactor1.Size = new System.Drawing.Size(40, 23);
-            this.input_DistanceEstimationFactor1.TabIndex = 67;
-            this.input_DistanceEstimationFactor1.Text = "10";
-            this.input_DistanceEstimationFactor1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_DistanceEstimationFactor1.Validating += new System.ComponentModel.CancelEventHandler(this.input_DistanceEstimationFactor1_Validating);
-            this.input_DistanceEstimationFactor1.Validated += new System.EventHandler(this.input_DistanceEstimationFactor1_Validated);
+            this.input_TextureScaleX.Location = new System.Drawing.Point(69, 503);
+            this.input_TextureScaleX.Name = "input_TextureScaleX";
+            this.input_TextureScaleX.Size = new System.Drawing.Size(40, 23);
+            this.input_TextureScaleX.TabIndex = 91;
+            this.input_TextureScaleX.Text = "1";
+            this.input_TextureScaleX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_TextureScaleX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_TextureScaleX.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureScaleX_Validating);
+            this.input_TextureScaleX.Validated += new System.EventHandler(this.input_TextureScaleX_Validated);
             // 
-            // label_DistanceEstimationMax
+            // input_TextureScaleY
             // 
-            this.label_DistanceEstimationMax.AutoSize = true;
-            this.label_DistanceEstimationMax.Location = new System.Drawing.Point(3, 349);
-            this.label_DistanceEstimationMax.Name = "label_DistanceEstimationMax";
-            this.label_DistanceEstimationMax.Size = new System.Drawing.Size(86, 15);
-            this.label_DistanceEstimationMax.TabIndex = 66;
-            this.label_DistanceEstimationMax.Text = "Max Distance:*";
-            this.label_DistanceEstimationMax.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.input_TextureScaleY.Location = new System.Drawing.Point(114, 503);
+            this.input_TextureScaleY.Name = "input_TextureScaleY";
+            this.input_TextureScaleY.Size = new System.Drawing.Size(40, 23);
+            this.input_TextureScaleY.TabIndex = 93;
+            this.input_TextureScaleY.Text = "1";
+            this.input_TextureScaleY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_TextureScaleY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_TextureScaleY.Validating += new System.ComponentModel.CancelEventHandler(this.input_TextureScaleY_Validating);
+            this.input_TextureScaleY.Validated += new System.EventHandler(this.input_TextureScaleY_Validated);
             // 
-            // label_DistanceEstimationFactors
+            // checkBox_UsePolarTextureCoordinates
             // 
-            this.label_DistanceEstimationFactors.AutoSize = true;
-            this.label_DistanceEstimationFactors.Location = new System.Drawing.Point(3, 376);
-            this.label_DistanceEstimationFactors.Name = "label_DistanceEstimationFactors";
-            this.label_DistanceEstimationFactors.Size = new System.Drawing.Size(53, 15);
-            this.label_DistanceEstimationFactors.TabIndex = 68;
-            this.label_DistanceEstimationFactors.Text = "Factors:*";
-            this.label_DistanceEstimationFactors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.checkBox_UsePolarTextureCoordinates.AutoSize = true;
+            this.checkBox_UsePolarTextureCoordinates.Location = new System.Drawing.Point(8, 530);
+            this.checkBox_UsePolarTextureCoordinates.Name = "checkBox_UsePolarTextureCoordinates";
+            this.checkBox_UsePolarTextureCoordinates.Size = new System.Drawing.Size(120, 19);
+            this.checkBox_UsePolarTextureCoordinates.TabIndex = 101;
+            this.checkBox_UsePolarTextureCoordinates.Text = "Polar Coordinates";
+            this.checkBox_UsePolarTextureCoordinates.UseVisualStyleBackColor = true;
+            this.checkBox_UsePolarTextureCoordinates.CheckedChanged += new System.EventHandler(this.checkBox_UsePolarTextureCoordinates_CheckedChanged);
             // 
-            // checkBox_UseDistanceEstimation
+            // checkBox_UseDistortedTexture
             // 
-            this.checkBox_UseDistanceEstimation.AutoSize = true;
-            this.checkBox_UseDistanceEstimation.Location = new System.Drawing.Point(9, 327);
-            this.checkBox_UseDistanceEstimation.Name = "checkBox_UseDistanceEstimation";
-            this.checkBox_UseDistanceEstimation.Size = new System.Drawing.Size(152, 19);
-            this.checkBox_UseDistanceEstimation.TabIndex = 64;
-            this.checkBox_UseDistanceEstimation.Text = "Use Distance Estimation";
-            this.checkBox_UseDistanceEstimation.UseVisualStyleBackColor = true;
-            this.checkBox_UseDistanceEstimation.CheckedChanged += new System.EventHandler(this.checkBox_UseDistanceEstimation_CheckedChanged);
+            this.checkBox_UseDistortedTexture.AutoSize = true;
+            this.checkBox_UseDistortedTexture.Location = new System.Drawing.Point(8, 550);
+            this.checkBox_UseDistortedTexture.Name = "checkBox_UseDistortedTexture";
+            this.checkBox_UseDistortedTexture.Size = new System.Drawing.Size(115, 19);
+            this.checkBox_UseDistortedTexture.TabIndex = 96;
+            this.checkBox_UseDistortedTexture.Text = "Distorted Texture";
+            this.checkBox_UseDistortedTexture.UseVisualStyleBackColor = true;
+            this.checkBox_UseDistortedTexture.CheckedChanged += new System.EventHandler(this.checkBox_UseDistortedTexture_CheckedChanged);
             // 
-            // label_Coloring
+            // label_TextureDistortionFactor
             // 
-            this.label_Coloring.AutoSize = true;
-            this.label_Coloring.Location = new System.Drawing.Point(3, 56);
-            this.label_Coloring.Name = "label_Coloring";
-            this.label_Coloring.Size = new System.Drawing.Size(56, 15);
-            this.label_Coloring.TabIndex = 62;
-            this.label_Coloring.Text = "Coloring:";
-            this.label_Coloring.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label_ColorMenu
-            // 
-            this.label_ColorMenu.AutoSize = true;
-            this.label_ColorMenu.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label_ColorMenu.Location = new System.Drawing.Point(30, 0);
-            this.label_ColorMenu.Name = "label_ColorMenu";
-            this.label_ColorMenu.Size = new System.Drawing.Size(83, 19);
-            this.label_ColorMenu.TabIndex = 60;
-            this.label_ColorMenu.Text = "Color Menu";
-            // 
-            // input_Coloring
-            // 
-            this.input_Coloring.CausesValidation = false;
-            this.input_Coloring.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.input_Coloring.FormattingEnabled = true;
-            this.input_Coloring.Items.AddRange(new object[] {
-            "Black",
-            "White",
-            "Interation",
-            "Smooth",
-            "Stripes 1",
-            "Stripes 2",
-            "Domain 1",
-            "Domain 2",
-            "Domain 3",
-            "Domain 4",
-            "Domain 5",
-            "Domain 6",
-            "Domain 7",
-            "Custom"});
-            this.input_Coloring.Location = new System.Drawing.Point(67, 53);
-            this.input_Coloring.Name = "input_Coloring";
-            this.input_Coloring.Size = new System.Drawing.Size(87, 23);
-            this.input_Coloring.TabIndex = 63;
-            this.input_Coloring.SelectionChangeCommitted += new System.EventHandler(this.input_Coloring_SelectionChangeCommitted);
-            // 
-            // input_EditingColor
-            // 
-            this.input_EditingColor.CausesValidation = false;
-            this.input_EditingColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.input_EditingColor.FormattingEnabled = true;
-            this.input_EditingColor.Items.AddRange(new object[] {
-            "Both",
-            "Interior",
-            "Exterior"});
-            this.input_EditingColor.Location = new System.Drawing.Point(67, 27);
-            this.input_EditingColor.Name = "input_EditingColor";
-            this.input_EditingColor.Size = new System.Drawing.Size(87, 23);
-            this.input_EditingColor.TabIndex = 61;
-            this.input_EditingColor.SelectionChangeCommitted += new System.EventHandler(this.input_EditingColor_SelectionChangeCommitted);
-            // 
-            // label_EditingColor
-            // 
-            this.label_EditingColor.AutoSize = true;
-            this.label_EditingColor.Location = new System.Drawing.Point(3, 30);
-            this.label_EditingColor.Name = "label_EditingColor";
-            this.label_EditingColor.Size = new System.Drawing.Size(47, 15);
-            this.label_EditingColor.TabIndex = 60;
-            this.label_EditingColor.Text = "Editing:";
-            this.label_EditingColor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_TextureDistortionFactor.AutoSize = true;
+            this.label_TextureDistortionFactor.Location = new System.Drawing.Point(3, 572);
+            this.label_TextureDistortionFactor.Name = "label_TextureDistortionFactor";
+            this.label_TextureDistortionFactor.Size = new System.Drawing.Size(103, 15);
+            this.label_TextureDistortionFactor.TabIndex = 98;
+            this.label_TextureDistortionFactor.Text = "Distortion Factor:*";
+            this.label_TextureDistortionFactor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // colorDialog1
             // 
