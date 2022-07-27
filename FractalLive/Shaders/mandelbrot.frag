@@ -1155,8 +1155,8 @@ float GetSmoothIter(float iter, vec2 z)
     //return iter + 1 - (log2(log2(length(z))));
     //return iter + 1 + log(log(bailout)/log(dot(z,z))) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power)));
     //return iter + 1 + log2(log(bailout)/log(dot(z,z)));
-    //return iter - log(log(dot(z,z))/log(bailout)) / log(power);
-    return iter - log(log(dot(z,z))/log(bailout)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power)));
+    //return iter - log(log(length(z))/log(bailout)) / log(power);
+    return iter - log(log(length(z))/log(bailout)) / (sign(power)*log(abs(power) == 1 ? 1.0000001 : abs(power)));
 }
 
 vec2 Fix(vec2 z)
