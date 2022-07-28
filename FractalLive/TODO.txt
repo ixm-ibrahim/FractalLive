@@ -36,4 +36,4 @@ other ifs fractals (weather one, etc.)
 post iterations (smooth coloring)
 animate textures, julia (circle, factor*fractal edge, etc), orbit traps, rotate normals
 
-julia set matings (different shader), animation menu, complex power, terrian, julia minimap, load save settings, doubles and quads
+julia set matings (different shader), animation menu, terrian, julia minimap, load save settings, doubles and quads

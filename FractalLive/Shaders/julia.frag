@@ -60,6 +60,7 @@ uniform vec2 center;
 uniform vec2 riemannAngles;
 
 uniform int formula;
+uniform vec2 julia;
 uniform int maxIterations;
 uniform int minIterations;
 uniform bool useConjugate;
@@ -173,9 +174,7 @@ vec2 c_2(vec2 c);
 vec2 c_mul(vec2 a, vec2 b);
 vec2 c_div(vec2 a, vec2 b);
 vec2 c_pow(vec2 c, float p);
-vec2 c_pow(float c, vec2 p);
 vec2 c_pow(vec2 c, vec2 p);
-vec2 c_exp(vec2 c);
 vec2 c_invert(vec2 c);
 vec2 c_rotate(vec2 c, float a);
 float c_squared_modulus(vec2 c);
@@ -247,20 +246,21 @@ vec3 Mandelbrot()
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment)
 {
-	vec2 z = startPosition + ((formula == FRAC_LAMBDA) ? c_div(c_1(), power) : vec2(0));
+	vec2 dz = vec2(1.0,0.0);
+    vec2 dz2 = vec2(0.0,0.0);
+    bool withinMaxDistance = true;
+    
+    vec2 z = ComputeFractal(startPosition + ((formula == FRAC_LAMBDA) ? c_div(c_1(), power) : vec2(0)), c, withinMaxDistance, dz, dz2);
     domainZ = vec4(c,c);
     trap = vec2(startOrbitDistance);
     vec4 lastAdded = vec4(0);
     int stripesCount = 0;
 
-    vec2 dz = vec2(1.0,0.0);
-    vec2 dz2 = vec2(0.0,0.0);
     float m2 = dot(z,z);
-    bool withinMaxDistance = true;
     
 	for (iter = 0; iter < maxIterations; ++iter)
 	{
-        z = ComputeFractal(z, c, withinMaxDistance, dz, dz2);
+        z = ComputeFractal(z, julia, withinMaxDistance, dz, dz2);
         
         if (IsWithinIteration(iter))
         {
@@ -331,8 +331,8 @@ vec2 ComputeFractal(vec2 z, vec2 c, bool withinMaxDistance, inout vec2 dz, inout
         switch (formula)
         {
             case FRAC_MANDELBROT:
-                dz2 = c_mul(power, (dz2*z + c_pow(dz,power)));
-                dz = c_mul(power, c_mul(z,dz)) + c_power;
+                dz2 = power * (dz2*z + c_pow(dz,power));
+                dz = power * c_mul(z,dz) + c_power;
                 break;
             case FRAC_LAMBDA:   // c^cp * (z - z^p)
                 dz = c_mul(c_power, dz - power * c_mul(z,dz));
@@ -1327,33 +1327,13 @@ vec2 c_pow(vec2 c, float p)
     c = c_to_polar(c);
     return isnan(c.x) || isnan(c.y) ? c : c_from_polar(pow(c.x, p), c.y * p);
 }
-vec2 c_pow(float c, vec2 p)
-{
-    float r = pow(c, p.x);
-	float theta = p.y * log(c);
-
-	return isnan(theta) || isnan(r) ? vec2(c,0) : vec2(r * cos(theta), r * sin(theta));
-}
 vec2 c_pow(vec2 c, vec2 p)
 {
-    if (c == vec2(0,0))
-        return c;
     if (p.y == 0)
-        return c_pow(c, p.x);
+        return  c_pow(c, p.x);
 
-    vec2 polar = c_to_polar(c);
-    return isnan(polar.x) || isnan(polar.y) ? c : c_from_polar(pow(polar.x, p.x) * exp(-p.y * polar.y), p.x * polar.y + p.y * log(polar.x));
-}
-vec2 c_exp(vec2 c)
-{
-    float r = exp(c.x);
-
-	if (c.x == 0)
-		return vec2(cos(c.y), sin(c.y));
-	if (c.y == 0)
-		return vec2(r, 0);
-
-	return isnan(c.x) || isnan(c.y) ? c : vec2(r * cos(c.y), r * sin(c.y));
+    c = c_to_polar(c);
+    return isnan(c.x) || isnan(c.y) ? c : c_from_polar(pow(c.x, p.x) * exp(-p.y * c.y), p.x * c.y + p.y * log(c.x));
 }
 vec2 c_rotate(vec2 c, float a)
 {

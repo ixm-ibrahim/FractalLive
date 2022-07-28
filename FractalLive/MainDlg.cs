@@ -228,8 +228,8 @@ namespace FractalLive
             shader.SetInt("minIterations", fractalSettings.MinIterations.Value);
             shader.SetBool("useConjugate", fractalSettings.UseConjugate);
             shader.SetVector2("startPosition", fractalSettings.StartPosition);
-            shader.SetFloat("power", fractalSettings.Power);
-            shader.SetFloat("c_power", fractalSettings.C_Power);
+            shader.SetVector2("power", fractalSettings.Power);
+            shader.SetVector2("c_power", fractalSettings.C_Power);
             shader.SetFloat("foldCount", fractalSettings.FoldCount);
             shader.SetFloat("foldAngle", MathHelper.DegreesToRadians(fractalSettings.FoldAngle));
             shader.SetVector2("foldOffset", fractalSettings.FoldOffset);
@@ -497,30 +497,40 @@ namespace FractalLive
                 }
                 if (inputState.keysDown[Keys.D5])
                 {
-                    CurrentSettings.Power += zoomedModifier / 1;
-                    input_Power.Text = CurrentSettings.Power.ToString();
+                    CurrentSettings.Power.X += zoomedModifier / 1;
+                    input_Power.Text = Replace2D(CurrentSettings.Power.X.ToString(), input_Power.Text, true);
                 }
                 if (inputState.keysDown[Keys.D6])
                 {
-                    CurrentSettings.C_Power += zoomedModifier / 1;
-                    input_CPower.Text = CurrentSettings.C_Power.ToString();
+                    CurrentSettings.Power.Y += zoomedModifier / 1;
+                    input_Power.Text = Replace2D(CurrentSettings.Power.Y.ToString(), input_Power.Text, false);
                 }
                 if (inputState.keysDown[Keys.D7])
+                {
+                    CurrentSettings.C_Power.X += zoomedModifier / 1;
+                    input_CPower.Text = Replace2D(CurrentSettings.C_Power.X.ToString(), input_CPower.Text, true);
+                }
+                if (inputState.keysDown[Keys.D8])
+                {
+                    CurrentSettings.C_Power.Y += zoomedModifier / 1;
+                    input_CPower.Text = Replace2D(CurrentSettings.C_Power.Y.ToString(), input_CPower.Text, false);
+                }
+                if (inputState.keysDown[Keys.D9])
                 {
                     CurrentSettings.FoldCount += modifier / 1;
                     input_FoldCount.Text = CurrentSettings.FoldCount.ToString();
                 }
-                if (inputState.keysDown[Keys.D8])
+                if (inputState.keysDown[Keys.D0])
                 {
                     CurrentSettings.FoldAngle = (CurrentSettings.FoldAngle + modifier + 360) % 360;
                     input_FoldAngle.Text = CurrentSettings.FoldAngle.ToString();
                 }
-                if (inputState.keysDown[Keys.D9])
+                if (inputState.keysDown[Keys.OemMinus])
                 {
                     CurrentSettings.FoldOffset.X += modifier / 1;
                     input_FoldOffsetX.Text = CurrentSettings.FoldOffset.X.ToString();
                 }
-                if (inputState.keysDown[Keys.D0])
+                if (inputState.keysDown[Keys.Oemplus])
                 {
                     CurrentSettings.FoldOffset.Y += modifier / 1;
                     input_FoldOffsetY.Text = CurrentSettings.FoldOffset.Y.ToString();
@@ -1289,8 +1299,8 @@ namespace FractalLive
             input_MinIterations.Value = CurrentSettings.MinIterations.Value;
             input_StartPositionX.Text = CurrentSettings.StartPosition.X.ToString();
             input_StartPositionY.Text = CurrentSettings.StartPosition.Y.ToString();
-            input_Power.Text = CurrentSettings.Power.ToString();
-            input_CPower.Text = CurrentSettings.C_Power.ToString();
+            input_Power.Text = Make2D(CurrentSettings.Power.X, CurrentSettings.Power.Y);
+            input_CPower.Text = Make2D(CurrentSettings.C_Power.X, CurrentSettings.C_Power.Y);
             input_FoldCount.Text = CurrentSettings.FoldCount.ToString();
             input_FoldAngle.Text = CurrentSettings.FoldAngle.ToString();
             input_FoldOffsetX.Text = CurrentSettings.FoldOffset.X.ToString();
@@ -1436,24 +1446,26 @@ namespace FractalLive
 
         private void input_Power_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!TryParse1DFloat(input_Power.Text))
+            if (!TryParse2DFloat(input_Power.Text))
                 e.Cancel = true;
         }
         private void input_Power_Validated(object sender, EventArgs e)
         {
-            CurrentSettings.Power = float.Parse(input_Power.Text);
-            input_Power.Text = CurrentSettings.Power.ToString();
+            CurrentSettings.Power.X = float.Parse(GetFrom2D(input_Power.Text, true));
+            CurrentSettings.Power.Y = float.Parse(GetFrom2D(input_Power.Text, false));
+            input_Power.Text = Make2D(CurrentSettings.Power.X, CurrentSettings.Power.Y);
         }
 
         private void input_CPower_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!TryParse1DFloat(input_CPower.Text))
+            if (!TryParse2DFloat(input_CPower.Text))
                 e.Cancel = true;
         }
         private void input_CPower_Validated(object sender, EventArgs e)
         {
-            CurrentSettings.C_Power = float.Parse(input_CPower.Text);
-            input_CPower.Text = CurrentSettings.C_Power.ToString();
+            CurrentSettings.C_Power.X = float.Parse(GetFrom2D(input_CPower.Text, true));
+            CurrentSettings.C_Power.Y = float.Parse(GetFrom2D(input_CPower.Text, false));
+            input_CPower.Text = Make2D(CurrentSettings.C_Power.X, CurrentSettings.C_Power.Y);
         }
 
         private void input_FoldCount_Validating(object sender, System.ComponentModel.CancelEventArgs e)

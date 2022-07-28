@@ -665,9 +665,9 @@
             this.input_Power.Name = "input_Power";
             this.input_Power.Size = new System.Drawing.Size(79, 23);
             this.input_Power.TabIndex = 28;
-            this.input_Power.Text = "2";
+            this.input_Power.Text = "2,  0";
             this.input_Power.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_Power.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_Power.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateMultipleDecimalChar);
             this.input_Power.Validating += new System.ComponentModel.CancelEventHandler(this.input_Power_Validating);
             this.input_Power.Validated += new System.EventHandler(this.input_Power_Validated);
             // 
@@ -697,9 +697,9 @@
             this.input_CPower.Name = "input_CPower";
             this.input_CPower.Size = new System.Drawing.Size(79, 23);
             this.input_CPower.TabIndex = 30;
-            this.input_CPower.Text = "1";
+            this.input_CPower.Text = "1, 0";
             this.input_CPower.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_CPower.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_CPower.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateMultipleDecimalChar);
             this.input_CPower.Validating += new System.ComponentModel.CancelEventHandler(this.input_CPower_Validating);
             this.input_CPower.Validated += new System.EventHandler(this.input_CPower_Validated);
             // 

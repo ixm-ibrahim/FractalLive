@@ -78,8 +78,8 @@ namespace FractalLive
                 MaxIterations = new IntBounds(100, 1, 9999);
                 MinIterations = new IntBounds(1, 1, 9999);
                 StartPosition = Vector2.Zero;
-                C_Power = 1;
-                Power = 2;
+                C_Power = new Vector2(1, 0);
+                Power = new Vector2(2, 0);
                 FoldCount = 0;
                 FoldAngle = 0;
                 FoldOffset = new Vector2(0,0);
@@ -127,7 +127,7 @@ namespace FractalLive
                 SecondDomainValueFactor2 = 7;
                 MatchOrbitTrap = false;
                 UseDomainIteration = false;
-                UseDistanceEstimation = true;
+                UseDistanceEstimation = false;
                 MaxDistanceEstimation = 100;
                 DistanceEstimationFactor1 = 10;
                 DistanceEstimationFactor2 = 6;
@@ -159,7 +159,7 @@ namespace FractalLive
                 I_SecondDomainValueFactor2 = 7;
                 I_MatchOrbitTrap = false;
                 I_UseDomainIteration = false;
-                I_UseDistanceEstimation = true;
+                I_UseDistanceEstimation = false;
                 I_MaxDistanceEstimation = 100;
                 I_DistanceEstimationFactor1 = 10;
                 I_DistanceEstimationFactor2 = 6;
@@ -1149,8 +1149,8 @@ namespace FractalLive
             public IntBounds MaxIterations;
             public IntBounds MinIterations;
             public Vector2 StartPosition;
-            public float Power;
-            public float C_Power;
+            public Vector2 Power;
+            public Vector2 C_Power;
             public float FoldCount;
             public float FoldAngle;
             public Vector2 FoldOffset;

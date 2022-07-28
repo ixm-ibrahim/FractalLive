@@ -11,14 +11,6 @@ namespace FractalLive
     // A simple class meant to help create shaders.
     public class Shader
     {
-        #region Enumerations
-        
-        #endregion
-
-        #region Structures
-
-        #endregion
-
         #region Constructors
         // This is how you create a simple shader.
         // Shaders are written in GLSL, which is a language very similar to C in its semantics.
@@ -66,6 +58,73 @@ namespace FractalLive
             GL.DetachShader(Handle, vertexShader);
             GL.DetachShader(Handle, fragmentShader);
             GL.DeleteShader(fragmentShader);
+            GL.DeleteShader(vertexShader);
+
+            // The shader is now ready to go, but first, we're going to cache all the shader uniform locations.
+            // Querying this from the shader is very slow, so we do it once on initialization and reuse those values
+            // later.
+
+            // First, we have to get the number of active uniforms in the shader.
+            GL.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out var numberOfUniforms);
+
+            // Next, allocate the dictionary to hold the locations.
+            _uniformLocations = new Dictionary<string, int>();
+
+            // Loop over all the uniforms,
+            for (var i = 0; i < numberOfUniforms; i++)
+            {
+                // get the name of this uniform,
+                var key = GL.GetActiveUniform(Handle, i, out _, out _);
+
+                // get the location,
+                var location = GL.GetUniformLocation(Handle, key);
+
+                // and then add it to the dictionary.
+                _uniformLocations.Add(key, location);
+            }
+        }
+        public Shader(string vertPath, string compPath, string fragPath)
+        {
+            // Load vertex shader and compile
+            var shaderSource = File.ReadAllText(vertPath);
+            // GL.CreateShader will create an empty shader (obviously). The ShaderType enum denotes which type of shader will be created.
+            var vertexShader = GL.CreateShader(ShaderType.VertexShader);
+            // Now, bind the GLSL source code
+            GL.ShaderSource(vertexShader, shaderSource);
+            // And then compile
+            CompileShader(vertexShader);
+
+            // We do the same for the fragment shader.
+            shaderSource = File.ReadAllText(compPath);
+            var computeShader = GL.CreateShader(ShaderType.ComputeShader);
+            GL.ShaderSource(computeShader, shaderSource);
+            CompileShader(computeShader);
+
+            // We do the same for the fragment shader.
+            shaderSource = File.ReadAllText(fragPath);
+            var fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
+            GL.ShaderSource(fragmentShader, shaderSource);
+            CompileShader(fragmentShader);
+
+            // These three shaders must then be merged into a shader program, which can then be used by OpenGL.
+            // To do this, create a program...
+            Handle = GL.CreateProgram();
+
+            // Attach all shaders...
+            GL.AttachShader(Handle, vertexShader);
+            GL.AttachShader(Handle, computeShader);
+            GL.AttachShader(Handle, fragmentShader);
+
+            // And then link them together.
+            LinkProgram(Handle);
+
+            // When the shader program is linked, it no longer needs the individual shaders attached to it; the compiled code is copied into the shader program.
+            // Detach them, and then delete them.
+            GL.DetachShader(Handle, vertexShader);
+            GL.DetachShader(Handle, computeShader);
+            GL.DetachShader(Handle, fragmentShader);
+            GL.DeleteShader(fragmentShader);
+            GL.DeleteShader(computeShader);
             GL.DeleteShader(vertexShader);
 
             // The shader is now ready to go, but first, we're going to cache all the shader uniform locations.
@@ -139,7 +198,7 @@ namespace FractalLive
 
         #endregion
 
-        // Uniform setters
+        #region Uniform Setters
         // Uniforms are variables that can be set by user code, instead of reading them from the VBO.
         // You use VBOs for vertex-related data, and uniforms for almost everything else.
 
@@ -320,19 +379,11 @@ namespace FractalLive
             GL.UseProgram(Handle);
             GL.Uniform4(_uniformLocations[name + "[0]"], data.Length, tmp);
         }
-
-        #region Properties
-
         #endregion
 
         #region Fields
         public readonly int Handle;
         private readonly Dictionary<string, int> _uniformLocations;
-        #endregion
-
-        #region Variables
-
-
         #endregion
     }
 }
