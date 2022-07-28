@@ -72,9 +72,9 @@ namespace FractalLive
                 IsJuliaCentered = false;
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating = new Vector2(0.285f, 0.01f);
-                IsConjugate = false;
-                IsBuddhabrot = false;
-                buddhabrot = Buddhabrot.Normal;
+                UseConjugate = false;
+                UseBuddhabrot = false;
+                buddhabrotType = Buddhabrot.Normal;
                 MaxIterations = new IntBounds(100, 1, 9999);
                 MinIterations = new IntBounds(1, 1, 9999);
                 C_Power = 1;
@@ -1142,9 +1142,9 @@ namespace FractalLive
             public bool IsJuliaCentered;
             public Vector2 Julia;
             public Vector2 JuliaMating;
-            public bool IsConjugate;
-            public bool IsBuddhabrot;
-            public Buddhabrot buddhabrot;
+            public bool UseConjugate;
+            public bool UseBuddhabrot;
+            public Buddhabrot buddhabrotType;
             public IntBounds MaxIterations;
             public IntBounds MinIterations;
             public float Power;

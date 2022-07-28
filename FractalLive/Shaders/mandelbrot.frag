@@ -170,10 +170,13 @@ vec2 c_2(vec2 c);
 vec2 c_mul(vec2 a, vec2 b);
 vec2 c_div(vec2 a, vec2 b);
 vec2 c_pow(vec2 c, float p);
+vec2 c_pow(vec2 c, vec2 p);
 vec2 c_invert(vec2 c);
 vec2 c_rotate(vec2 c, float a);
 float c_squared_modulus(vec2 c);
 float c_arg(vec2 c);
+vec2 c_from_polar(float r, float theta);
+vec2 c_to_polar(vec2 c);
 
 vec3 Mandelbrot()
 {
@@ -1286,31 +1289,38 @@ vec2 c_2(vec2 c)
 {
     return vec2(c.x*c.x - c.y*c.y, 2*c.x*c.y);
 }
-vec2 c_pow(vec2 c, float a)
+vec2 c_pow(vec2 c, float p)
 {
     if (c.x == 0 && c.y == 0)
         return c;
-	if (a == 1)
+	if (p == 1)
         return c;
-	if (a == 2)
+	if (p == 2)
         return c_2(c);
-    else if (int(a) == a)
+    else if (int(p) == p)
     {
         vec2 original = c;
-        float p = abs(a);
+        float ip = abs(p);
 
-        for (p; p - 1 > 0; p--)
+        for (ip; ip - 1 > 0; ip--)
             c = c_mul(c, original);
 
-        if (a < 0)
+        if (p < 0)
             return c_div(vec2(1,0), c);
         
         return c;
     }
     
-    float r = length(c);
-    float theta = atan(c.y, c.x);   
-    return isnan(r) || isnan(theta) ? c : pow(r, a) * vec2(cos(theta * a), sin(theta * a));
+    c = c_to_polar(c);
+    return isnan(c.x) || isnan(c.y) ? c : c_from_polar(pow(c.x, p), c.y * p);
+}
+vec2 c_pow(vec2 c, vec2 p)
+{
+    if (p.y == 0)
+        return  c_pow(c, p.x);
+
+    c = c_to_polar(c);
+    return isnan(c.x) || isnan(c.y) ? c : c_from_polar(pow(c.x, p.x) * exp(-p.y * c.y), p.x * c.y + p.y * log(c.x));
 }
 vec2 c_rotate(vec2 c, float a)
 {
@@ -1324,4 +1334,13 @@ float c_squared_modulus(vec2 c)
 float c_arg(vec2 c)
 {
     return atan(c.y,c.x);
+}
+
+vec2 c_from_polar(float r, float theta)
+{
+  return vec2(r * cos(theta), r * sin(theta));
+}
+vec2 c_to_polar(vec2 c)
+{
+  return vec2(length(c), atan(c.y, c.x));
 }
