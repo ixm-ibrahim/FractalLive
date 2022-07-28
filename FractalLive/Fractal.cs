@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -68,7 +69,6 @@ namespace FractalLive
                 Formula = formula;
                 InitialDisplayRadius = new FloatBounds(2, .01f, 100);
                 Projection = Projection.Cartesian;
-                IsJulia = false;
                 IsJuliaCentered = false;
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating = new Vector2(0.285f, 0.01f);
@@ -1139,7 +1139,6 @@ namespace FractalLive
             public Type Type;
             public Formula Formula;
             public FloatBounds InitialDisplayRadius;
-            public bool IsJulia;
             public bool IsJuliaCentered;
             public Vector2 Julia;
             public Vector2 JuliaMating;
@@ -1257,6 +1256,275 @@ namespace FractalLive
             public bool UseTerrainColor;
             public FloatBounds TerrainHeight;
 
+        }
+
+        // not gonna work for riemann sphere where faces are being culled
+        public struct ShaderData
+        {
+            int sbo;
+
+            public void UpdateShaderBuffer(Settings settings)
+            {
+                bool split = settings.EditingColor != Fractal.Editing.Both;
+                float[] data =
+                {
+                    settings.Center.X,
+                    settings.Center.Y,
+                    settings.Zoom,
+                    settings.LockedZoom,
+                    (float) settings.Projection,
+                    settings.RiemannAngles.X,
+                    settings.RiemannAngles.Y,
+
+                    (float) settings.Type,
+                    (float) settings.Formula,
+                    settings.InitialDisplayRadius.Value,
+                    settings.IsJuliaCentered ? 1 : 0,
+                    settings.Julia.X,
+                    settings.Julia.Y,
+                    settings.JuliaMating.X,
+                    settings.JuliaMating.Y,
+                    settings.MaxIterations.Value,
+                    settings.MinIterations.Value,
+                    settings.StartPosition.X,
+                    settings.StartPosition.Y,
+                    settings.Power.X,
+                    settings.Power.Y,
+                    settings.C_Power.X,
+                    settings.C_Power.Y,
+                    settings.FoldCount,
+                    settings.FoldAngle,
+                    settings.FoldOffset.X,
+                    settings.FoldOffset.Y,
+                    settings.UseConjugate ? 1 : 0,
+                    settings.UseBuddhabrot ? 1 : 0,
+                    (float) settings.buddhabrotType,
+
+
+                    (float) settings.OrbitTrap,
+                    (float) settings.OrbitTrapCalculation,
+                    settings.StartOrbit.Value,
+                    settings.OrbitRange.Value,
+                    settings.Bailout,
+                    settings.StartOrbitDistance.Value,
+                    settings.BailoutRectangle.X,
+                    settings.BailoutRectangle.Y,
+                    settings.BailoutPointsCount,
+                    settings.BailoutPoints[0].X,
+                    settings.BailoutPoints[0].Y,
+                    settings.BailoutPoints[1].X,
+                    settings.BailoutPoints[1].Y,
+                    settings.BailoutPoints[2].X,
+                    settings.BailoutPoints[2].Y,
+                    settings.BailoutPoints[3].X,
+                    settings.BailoutPoints[3].Y,
+                    settings.BailoutPoints[4].X,
+                    settings.BailoutPoints[4].Y,
+                    settings.BailoutPoints[5].X,
+                    settings.BailoutPoints[5].Y,
+                    settings.BailoutPoints[6].X,
+                    settings.BailoutPoints[6].Y,
+                    settings.BailoutPoints[7].X,
+                    settings.BailoutPoints[7].Y,
+                    settings.BailoutPoints[8].X,
+                    settings.BailoutPoints[8].Y,
+                    settings.BailoutPoints[9].X,
+                    settings.BailoutPoints[9].Y,
+                    settings.BailoutPoints[10].X,
+                    settings.BailoutPoints[10].Y,
+                    settings.BailoutPoints[11].X,
+                    settings.BailoutPoints[11].Y,
+                    settings.BailoutPoints[12].X,
+                    settings.BailoutPoints[12].Y,
+                    settings.BailoutPoints[13].X,
+                    settings.BailoutPoints[13].Y,
+                    settings.BailoutPoints[14].X,
+                    settings.BailoutPoints[14].Y,
+                    settings.BailoutPoints[15].X,
+                    settings.BailoutPoints[15].Y,
+                    settings.BailoutLinesCount,
+                    settings.BailoutLines[0].X,
+                    settings.BailoutLines[0].Y,
+                    settings.BailoutLines[0].Z,
+                    settings.BailoutLines[0].W,
+                    settings.BailoutLines[1].X,
+                    settings.BailoutLines[1].Y,
+                    settings.BailoutLines[1].Z,
+                    settings.BailoutLines[1].W,
+                    settings.BailoutLines[2].X,
+                    settings.BailoutLines[2].Y,
+                    settings.BailoutLines[2].Z,
+                    settings.BailoutLines[2].W,
+                    settings.BailoutLines[3].X,
+                    settings.BailoutLines[3].Y,
+                    settings.BailoutLines[3].Z,
+                    settings.BailoutLines[3].W,
+                    settings.BailoutLines[4].X,
+                    settings.BailoutLines[4].Y,
+                    settings.BailoutLines[4].Z,
+                    settings.BailoutLines[4].W,
+                    settings.BailoutLines[5].X,
+                    settings.BailoutLines[5].Y,
+                    settings.BailoutLines[5].Z,
+                    settings.BailoutLines[5].W,
+                    settings.BailoutLines[6].X,
+                    settings.BailoutLines[6].Y,
+                    settings.BailoutLines[6].Z,
+                    settings.BailoutLines[6].W,
+                    settings.BailoutLines[7].X,
+                    settings.BailoutLines[7].Y,
+                    settings.BailoutLines[7].Z,
+                    settings.BailoutLines[7].W,
+                    settings.BailoutLines[8].X,
+                    settings.BailoutLines[8].Y,
+                    settings.BailoutLines[8].Z,
+                    settings.BailoutLines[8].W,
+                    settings.BailoutLines[9].X,
+                    settings.BailoutLines[9].Y,
+                    settings.BailoutLines[9].Z,
+                    settings.BailoutLines[9].W,
+                    settings.BailoutLines[10].X,
+                    settings.BailoutLines[10].Y,
+                    settings.BailoutLines[10].Z,
+                    settings.BailoutLines[10].W,
+                    settings.BailoutLines[11].X,
+                    settings.BailoutLines[11].Y,
+                    settings.BailoutLines[11].Z,
+                    settings.BailoutLines[11].W,
+                    settings.BailoutLines[12].X,
+                    settings.BailoutLines[12].Y,
+                    settings.BailoutLines[12].Z,
+                    settings.BailoutLines[12].W,
+                    settings.BailoutLines[13].X,
+                    settings.BailoutLines[13].Y,
+                    settings.BailoutLines[13].Z,
+                    settings.BailoutLines[13].W,
+                    settings.BailoutLines[14].X,
+                    settings.BailoutLines[14].Y,
+                    settings.BailoutLines[14].Z,
+                    settings.BailoutLines[14].W,
+                    settings.BailoutLines[15].X,
+                    settings.BailoutLines[15].Y,
+                    settings.BailoutLines[15].Z,
+                    settings.BailoutLines[15].W,
+                    settings.BailoutFactor1,
+                    settings.BailoutFactor2,
+                    settings.UseSecondValue ? 1 : 0,
+                    settings.SecondValueFactor1,
+                    settings.SecondValueFactor2,
+
+                    split ? 1 : 0,
+                };
+                
+
+            }
+
+
+            /*
+            [FieldOffset(6 * sizeof(float))]
+            public float EditingColor;
+
+            [FieldOffset(6 * sizeof(float))]
+            public float Coloring;
+            [FieldOffset(6 * sizeof(float))]
+            public float UseCustomPalette;
+            [FieldOffset(6 * sizeof(float))]
+            public Color[] CustomPalette;
+            [FieldOffset(6 * sizeof(float))]
+            public float ColorCycles;
+            [FieldOffset(6 * sizeof(float))]
+            public float ColorFactor;
+            [FieldOffset(6 * sizeof(float))]
+            public float OrbitTrapFactor;
+            [FieldOffset(6 * sizeof(float))]
+            public float StripeDensity;
+            [FieldOffset(6 * sizeof(float))]
+            public float DomainCalculation;
+            [FieldOffset(6 * sizeof(float))]
+            public float UseSecondDomainValue;
+            [FieldOffset(6 * sizeof(float))]
+            public float SecondDomainValueFactor1;
+            [FieldOffset(6 * sizeof(float))]
+            public float SecondDomainValueFactor2;
+            [FieldOffset(6 * sizeof(float))]
+            public float MatchOrbitTrap;
+            [FieldOffset(6 * sizeof(float))]
+            public float UseDomainIteration;
+            [FieldOffset(6 * sizeof(float))]
+            public float UseDistanceEstimation;
+            [FieldOffset(6 * sizeof(float))]
+            public float MaxDistanceEstimation;
+            [FieldOffset(6 * sizeof(float))]
+            public float DistanceEstimationFactor1;
+            [FieldOffset(6 * sizeof(float))]
+            public float DistanceEstimationFactor2;
+            [FieldOffset(6 * sizeof(float))]
+            public float UseNormals;
+            [FieldOffset(6 * sizeof(float))]
+            public string Texture;
+            [FieldOffset(6 * sizeof(float))]
+            public float TextureBlend;
+            [FieldOffset(6 * sizeof(float))]
+            public float TextureScaleX;
+            [FieldOffset(6 * sizeof(float))]
+            public float TextureScaleY;
+            [FieldOffset(6 * sizeof(float))]
+            public float UsePolarTextureCoordinates;
+            [FieldOffset(6 * sizeof(float))]
+            public float UseTextureDistortion;
+            [FieldOffset(6 * sizeof(float))]
+            public float TextureDistortion;
+
+            [FieldOffset(6 * sizeof(float))]
+            public float I_Coloring;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_UseCustomPalette;
+            [FieldOffset(6 * sizeof(float))]
+            public Color[] I_CustomPalette;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_ColorCycles;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_ColorFactor;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_OrbitTrapFactor;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_StripeDensity;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_DomainCalculation;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_UseSecondDomainValue;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_SecondDomainValueFactor1;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_SecondDomainValueFactor2;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_MatchOrbitTrap;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_UseDomainIteration;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_UseDistanceEstimation;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_MaxDistanceEstimation;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_DistanceEstimationFactor1;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_DistanceEstimationFactor2;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_UseNormals;
+            [FieldOffset(6 * sizeof(float))]
+            public string I_Texture;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_TextureBlend;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_TextureScaleX;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_TextureScaleY;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_UsePolarTextureCoordinates;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_UseTextureDistortion;
+            [FieldOffset(6 * sizeof(float))]
+            public float I_TextureDistortion;*/
         }
         #endregion
 

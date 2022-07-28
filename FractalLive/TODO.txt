@@ -35,5 +35,7 @@ interior texture
 other ifs fractals (weather one, etc.)
 post iterations (smooth coloring)
 animate textures, julia (circle, factor*fractal edge, etc), orbit traps, rotate normals
+julia set distance estimation (use normals)
+press g to reset camera
 
 julia set matings (different shader), animation menu, terrian, julia minimap, load save settings, doubles and quads

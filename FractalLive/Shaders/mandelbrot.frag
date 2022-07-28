@@ -108,7 +108,7 @@ uniform float distanceEstimationFactor1;
 uniform float distanceEstimationFactor2;
 uniform bool useNormals;
 uniform bool useTexture;
-uniform sampler2D texture0;
+uniform sampler2D e_texture;
 uniform float textureBlend;
 uniform float textureScaleX;
 uniform float textureScaleY;
@@ -129,7 +129,7 @@ uniform float i_secondDomainValueFactor1;
 uniform float i_secondDomainValueFactor2;
 uniform bool i_useDomainIteration;
 uniform bool i_useTexture;
-uniform sampler2D texture1;
+uniform sampler2D i_texture;
 uniform float i_textureBlend;
 uniform float i_textureScaleX;
 uniform float i_textureScaleY;
@@ -318,7 +318,8 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
     }
     else
     {
-        float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
+        //float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
+        float d = log(m2) * length(z) / length(dz);
         distanceEstimation = sqrt(sigmoid(d * pow(distanceEstimationFactor1, 2) * pow(2,lockedZoom) / riemannAdjustment, distanceEstimationFactor2));
     }
 
@@ -604,7 +605,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
         else
             tex *= vec2(i_textureScaleX, i_textureScaleY);
 
-        color = mix(color, texture(texture1, tex).xyz, i_textureBlend);
+        color = mix(color, texture(i_texture, tex).xyz, i_textureBlend);
     }
     else if (useTexture)
     {
@@ -627,7 +628,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
         else
             tex *= vec2(textureScaleX, textureScaleY);
 
-        color = mix(color, texture(texture0, tex).xyz, textureBlend);
+        color = mix(color, texture(e_texture, tex).xyz, textureBlend);
     }
     
     return color;

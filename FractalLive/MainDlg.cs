@@ -181,7 +181,7 @@ namespace FractalLive
             julia = new Shader("Shaders/geometry.vert", "Shaders/julia.frag");
             julia.Use();
 
-            juliaMating = new Shader("Shaders/geometry.vert", "Shaders/julia.frag");
+            juliaMating = new Shader("Shaders/geometry.vert", "Shaders/julia_mating.frag");
             juliaMating.Use();
         }
 
@@ -200,6 +200,10 @@ namespace FractalLive
             ref Camera camera = ref CurrentCamera;
 
             camera.Render();
+
+            GL.DispatchCompute(glControl.Width, glControl.Height, 1);
+            GL.MemoryBarrier(MemoryBarrierFlags.ShaderImageAccessBarrierBit);
+
 
             shader.SetMatrix4("projection", camera.GetProjectionMatrix());
             shader.SetMatrix4("view", camera.GetViewMatrix());
@@ -276,7 +280,7 @@ namespace FractalLive
             shader.SetFloat("distanceEstimationFactor2", split ? fractalSettings.I_DistanceEstimationFactor2 : fractalSettings.DistanceEstimationFactor2);
             shader.SetBool("useNormals", split ? fractalSettings.I_UseNormals : fractalSettings.UseNormals);
             shader.SetBool("useTexture", (split ? fractalSettings.E_Texture : fractalSettings.Texture) != "");
-            shader.SetInt("texture0", split ? 2 : 0);
+            shader.SetInt("e_texture", split ? 3 : 1);
             shader.SetFloat("textureBlend", split ? fractalSettings.E_TextureBlend : fractalSettings.TextureBlend);
             shader.SetFloat("textureScaleX", split ? fractalSettings.E_TextureScaleX : fractalSettings.TextureScaleX);
             shader.SetFloat("textureScaleY", split ? fractalSettings.E_TextureScaleY : fractalSettings.TextureScaleY);
@@ -296,7 +300,7 @@ namespace FractalLive
             shader.SetFloat("i_secondDomainValueFactor2", fractalSettings.I_SecondDomainValueFactor2);
             shader.SetBool("i_useDomainIteration", fractalSettings.I_UseDomainIteration);
             shader.SetBool("i_useTexture", fractalSettings.I_Texture != "");
-            shader.SetInt("texture1", 1);
+            shader.SetInt("i_texture", 2);
             shader.SetFloat("i_textureBlend", fractalSettings.I_TextureBlend);
             shader.SetFloat("i_textureScaleX", fractalSettings.I_TextureScaleX);
             shader.SetFloat("i_textureScaleY", fractalSettings.I_TextureScaleY);
@@ -1328,7 +1332,6 @@ namespace FractalLive
             input_TextureDistortionFactor.Enabled = CurrentSettings.GetTexture() != "" && checkBox_UseDistortedTexture.Checked;
             checkBox_UseCustomPalette_CheckedChanged(null, null);
             input_EditingColor_SelectionChangeCommitted(null, null);
-            input_Coloring_SelectionChangeCommitted(null, null);
 
         }
 
@@ -1860,6 +1863,7 @@ namespace FractalLive
             input_SecondDomainValueFactor2.Text = CurrentSettings.GetSecondDomainValueFactor2().ToString();
             //checkBox_UseDistanceEstimation.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
             checkBox_UseDistanceEstimation.Checked = CurrentSettings.GetUseDistanceEstimation();
+            checkBox_UseNormals.Checked = CurrentSettings.GetUseNormals();
             input_MaxDistanceEstimation.Text = CurrentSettings.GetMaxDistanceEstimation().ToString();
             input_DistanceEstimationFactor1.Text = CurrentSettings.GetDistanceEstimationFactor1().ToString();
             input_Texture.Text = CurrentSettings.GetTexture();
@@ -2138,18 +2142,18 @@ namespace FractalLive
             if (enabled)
                 if (CurrentSettings.EditingColor == Fractal.Editing.Interior)
                 {
-                    texture1 = Texture.LoadFromFile(input_Texture.Text);
-                    texture1.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture1);
-                }
-                else if (CurrentSettings.EditingColor == Fractal.Editing.Exterior)
-                {
                     texture2 = Texture.LoadFromFile(input_Texture.Text);
                     texture2.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture2);
                 }
+                else if (CurrentSettings.EditingColor == Fractal.Editing.Exterior)
+                {
+                    texture3 = Texture.LoadFromFile(input_Texture.Text);
+                    texture3.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture3);
+                }
                 else
                 {
-                    texture0 = Texture.LoadFromFile(input_Texture.Text);
-                    texture0.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture0);
+                    texture1 = Texture.LoadFromFile(input_Texture.Text);
+                    texture1.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture1);
                 }
 
             input_TextureBlend.Enabled = enabled;
@@ -2306,11 +2310,13 @@ namespace FractalLive
         private Shader custom;
         private Camera customCamera;
 
+        private int sboCompute;
+
         private int vboPlane, vaoPlane;
         private int vboSphere, vaoSphere;
         TexturedVertex[] sphereVertices = new IcoSphere().Create(5, 1, true);
 
-        Texture texture0, texture1, texture2;
+        Texture texture1, texture2, texture3;
 
         #endregion
 

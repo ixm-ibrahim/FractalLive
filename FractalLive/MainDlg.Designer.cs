@@ -288,7 +288,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1064, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(696, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -541,8 +541,9 @@
             // 
             // glControl
             // 
-            this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.glControl.API = OpenTK.Windowing.Common.ContextAPI.OpenGL;
             this.glControl.APIVersion = new System.Version(3, 3, 0, 0);
             this.glControl.Flags = OpenTK.Windowing.Common.ContextFlags.Default;
@@ -557,7 +558,7 @@
             // 
             // button_Left
             // 
-            this.button_Left.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Left.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Left.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Left.Location = new System.Drawing.Point(521, 485);
             this.button_Left.Name = "button_Left";
@@ -568,7 +569,7 @@
             // 
             // button_Right
             // 
-            this.button_Right.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Right.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Right.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Right.Location = new System.Drawing.Point(624, 485);
             this.button_Right.Name = "button_Right";
@@ -735,7 +736,7 @@
             // 
             // button_Menu1
             // 
-            this.button_Menu1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Menu1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu1.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Menu1.Location = new System.Drawing.Point(521, 453);
             this.button_Menu1.Name = "button_Menu1";
@@ -757,7 +758,7 @@
             // 
             // button_Menu2
             // 
-            this.button_Menu2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Menu2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu2.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Menu2.Location = new System.Drawing.Point(560, 453);
             this.button_Menu2.Name = "button_Menu2";
@@ -778,7 +779,7 @@
             // 
             // button_Menu3
             // 
-            this.button_Menu3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Menu3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu3.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Menu3.Location = new System.Drawing.Point(599, 453);
             this.button_Menu3.Name = "button_Menu3";
@@ -802,7 +803,7 @@
             // 
             // button_Menu4
             // 
-            this.button_Menu4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_Menu4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu4.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Menu4.Location = new System.Drawing.Point(639, 453);
             this.button_Menu4.Name = "button_Menu4";
@@ -815,7 +816,7 @@
             // panel_FormulaMenu
             // 
             this.panel_FormulaMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_FormulaMenu.AutoScroll = true;
             this.panel_FormulaMenu.CausesValidation = false;
             this.panel_FormulaMenu.Controls.Add(this.input_StartPositionY);
@@ -1081,7 +1082,7 @@
             // panel_OrbitTrapMenu
             // 
             this.panel_OrbitTrapMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_OrbitTrapMenu.AutoScroll = true;
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapMenu);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_EditingOrbitBailout);
@@ -1110,7 +1111,7 @@
             this.panel_OrbitTrapMenu.Controls.Add(this.label_SecondValueFactors);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_SecondValueFactor1);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_SecondValueFactor2);
-            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(700, 24);
+            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(517, 24);
             this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
             this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(178, 421);
@@ -1459,7 +1460,7 @@
             // panel_ColorMenu
             // 
             this.panel_ColorMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_ColorMenu.AutoScroll = true;
             this.panel_ColorMenu.Controls.Add(this.label_ColorMenu);
             this.panel_ColorMenu.Controls.Add(this.label_EditingColor);
@@ -1507,7 +1508,7 @@
             this.panel_ColorMenu.Controls.Add(this.checkBox_UsePolarTextureCoordinates);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistortedTexture);
             this.panel_ColorMenu.Controls.Add(this.label_TextureDistortionFactor);
-            this.panel_ColorMenu.Location = new System.Drawing.Point(883, 24);
+            this.panel_ColorMenu.Location = new System.Drawing.Point(517, 24);
             this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_ColorMenu.Name = "panel_ColorMenu";
             this.panel_ColorMenu.Size = new System.Drawing.Size(178, 421);
@@ -2115,7 +2116,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1064, 519);
+            this.ClientSize = new System.Drawing.Size(696, 519);
             this.Controls.Add(this.panel_GeneralMenu);
             this.Controls.Add(this.panel_ColorMenu);
             this.Controls.Add(this.glControl);

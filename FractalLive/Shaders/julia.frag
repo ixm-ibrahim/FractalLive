@@ -109,7 +109,7 @@ uniform float distanceEstimationFactor1;
 uniform float distanceEstimationFactor2;
 uniform bool useNormals;
 uniform bool useTexture;
-uniform sampler2D texture0;
+uniform sampler2D e_texture;
 uniform float textureBlend;
 uniform float textureScaleX;
 uniform float textureScaleY;
@@ -130,7 +130,7 @@ uniform float i_secondDomainValueFactor1;
 uniform float i_secondDomainValueFactor2;
 uniform bool i_useDomainIteration;
 uniform bool i_useTexture;
-uniform sampler2D texture1;
+uniform sampler2D i_texture;
 uniform float i_textureBlend;
 uniform float i_textureScaleX;
 uniform float i_textureScaleY;
@@ -138,15 +138,15 @@ uniform bool i_usePolarTextureCoordinates;
 uniform bool i_useDistortedTexture;
 uniform float i_textureDistortionFactor;
 
-vec3 Mandelbrot();
+vec3 Julia();
 
 void main()
 {
-	//FragColor = vec4(Mandelbrot() * vec3(TexCoords,1), 1.0);
-	FragColor = vec4(Mandelbrot(), 1.0);FragPosWorld;
+	//FragColor = vec4(Julia() * vec3(TexCoords,1), 1.0);
+	FragColor = vec4(Julia(), 1.0);FragPosWorld;
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment);
+vec2 JuliaLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment);
 vec2 ComputeFractal(vec2 z, vec2 c, bool withinMaxDistance, inout vec2 dz, inout vec2 dz2);
 vec2 FoldZ(vec2 z);
 vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes);
@@ -182,7 +182,7 @@ float c_arg(vec2 c);
 vec2 c_from_polar(float r, float theta);
 vec2 c_to_polar(vec2 c);
 
-vec3 Mandelbrot()
+vec3 Julia()
 {
 	int iter = 0;
     vec2 trap = vec2(startOrbitDistance);
@@ -239,12 +239,12 @@ vec3 Mandelbrot()
         c = vec2(r + center.x, i + center.y);
     }
 
-    z = MandelbrotLoop(c, iter, trap, domainZ, domainIter, distanceEstimation, stripes, riemannAdjustment);
+    z = JuliaLoop(c, iter, trap, domainZ, domainIter, distanceEstimation, stripes, riemannAdjustment);
     
 	return GetColor(z, c, iter, trap, domainZ, domainIter, distanceEstimation, stripes);
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment)
+vec2 JuliaLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment)
 {
 	vec2 dz = vec2(1.0,0.0);
     vec2 dz2 = vec2(0.0,0.0);
@@ -255,7 +255,9 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
     trap = vec2(startOrbitDistance);
     vec4 lastAdded = vec4(0);
     int stripesCount = 0;
-
+    
+	dz = vec2(1.0,0.0);
+    dz2 = vec2(0.0,0.0);
     float m2 = dot(z,z);
     
 	for (iter = 0; iter < maxIterations; ++iter)
@@ -318,7 +320,8 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
     }
     else
     {
-        float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
+        //float d = sqrt(m2 / dot(dz,dz)) * .5 * log(m2);
+        float d = log(m2) * length(z) / length(dz);
         distanceEstimation = sqrt(sigmoid(d * pow(distanceEstimationFactor1, 2) * pow(2,lockedZoom) / riemannAdjustment, distanceEstimationFactor2));
     }
 
@@ -331,8 +334,8 @@ vec2 ComputeFractal(vec2 z, vec2 c, bool withinMaxDistance, inout vec2 dz, inout
         switch (formula)
         {
             case FRAC_MANDELBROT:
-                dz2 = power * (dz2*z + c_pow(dz,power));
-                dz = power * c_mul(z,dz) + c_power;
+                dz2 = c_mul(power, (dz2*z + c_pow(dz,power)));
+                dz = c_mul(power, c_mul(z,dz));
                 break;
             case FRAC_LAMBDA:   // c^cp * (z - z^p)
                 dz = c_mul(c_power, dz - power * c_mul(z,dz));
@@ -604,7 +607,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
         else
             tex *= vec2(i_textureScaleX, i_textureScaleY);
 
-        color = mix(color, texture(texture1, tex).xyz, i_textureBlend);
+        color = mix(color, texture(i_texture, tex).xyz, i_textureBlend);
     }
     else if (useTexture)
     {
@@ -627,7 +630,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
         else
             tex *= vec2(textureScaleX, textureScaleY);
 
-        color = mix(color, texture(texture0, tex).xyz, textureBlend);
+        color = mix(color, texture(e_texture, tex).xyz, textureBlend);
     }
     
     return color;
@@ -1327,13 +1330,33 @@ vec2 c_pow(vec2 c, float p)
     c = c_to_polar(c);
     return isnan(c.x) || isnan(c.y) ? c : c_from_polar(pow(c.x, p), c.y * p);
 }
+vec2 c_pow(float c, vec2 p)
+{
+    float r = pow(c, p.x);
+	float theta = p.y * log(c);
+
+	return isnan(theta) || isnan(r) ? vec2(c,0) : vec2(r * cos(theta), r * sin(theta));
+}
 vec2 c_pow(vec2 c, vec2 p)
 {
+    if (c == vec2(0,0))
+        return c;
     if (p.y == 0)
-        return  c_pow(c, p.x);
+        return c_pow(c, p.x);
 
-    c = c_to_polar(c);
-    return isnan(c.x) || isnan(c.y) ? c : c_from_polar(pow(c.x, p.x) * exp(-p.y * c.y), p.x * c.y + p.y * log(c.x));
+    vec2 polar = c_to_polar(c);
+    return isnan(polar.x) || isnan(polar.y) ? c : c_from_polar(pow(polar.x, p.x) * exp(-p.y * polar.y), p.x * polar.y + p.y * log(polar.x));
+}
+vec2 c_exp(vec2 c)
+{
+    float r = exp(c.x);
+
+	if (c.x == 0)
+		return vec2(cos(c.y), sin(c.y));
+	if (c.y == 0)
+		return vec2(r, 0);
+
+	return isnan(c.x) || isnan(c.y) ? c : vec2(r * cos(c.y), r * sin(c.y));
 }
 vec2 c_rotate(vec2 c, float a)
 {
