@@ -63,6 +63,7 @@ uniform int formula;
 uniform int maxIterations;
 uniform int minIterations;
 uniform bool useConjugate;
+uniform vec2 startPosition;
 uniform float power;
 uniform float c_power;
 uniform float foldCount;
@@ -242,7 +243,7 @@ vec3 Mandelbrot()
 
 vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment)
 {
-	vec2 z = (formula == FRAC_LAMBDA) ? vec2(1.0/power,0) : vec2(0);
+	vec2 z = startPosition + ((formula == FRAC_LAMBDA) ? vec2(1.0/power,0) : vec2(0));
     domainZ = vec4(c,c);
     trap = vec2(startOrbitDistance);
     vec4 lastAdded = vec4(0);

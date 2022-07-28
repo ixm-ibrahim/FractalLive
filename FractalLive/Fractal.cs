@@ -77,6 +77,7 @@ namespace FractalLive
                 buddhabrotType = Buddhabrot.Normal;
                 MaxIterations = new IntBounds(100, 1, 9999);
                 MinIterations = new IntBounds(1, 1, 9999);
+                StartPosition = Vector2.Zero;
                 C_Power = 1;
                 Power = 2;
                 FoldCount = 0;
@@ -1147,6 +1148,7 @@ namespace FractalLive
             public Buddhabrot buddhabrotType;
             public IntBounds MaxIterations;
             public IntBounds MinIterations;
+            public Vector2 StartPosition;
             public float Power;
             public float C_Power;
             public float FoldCount;

@@ -227,6 +227,7 @@ namespace FractalLive
             shader.SetInt("maxIterations", fractalSettings.MaxIterations.Value);
             shader.SetInt("minIterations", fractalSettings.MinIterations.Value);
             shader.SetBool("useConjugate", fractalSettings.UseConjugate);
+            shader.SetVector2("startPosition", fractalSettings.StartPosition);
             shader.SetFloat("power", fractalSettings.Power);
             shader.SetFloat("c_power", fractalSettings.C_Power);
             shader.SetFloat("foldCount", fractalSettings.FoldCount);
@@ -464,7 +465,7 @@ namespace FractalLive
             if (!pauseTime) fractalTime += deltaTime;
 
             // input
-            float modifier = inputState.keysDown[Keys.Oemtilde] ? -1 : 1;
+            float modifier = inputState.keysDown[Keys.Oemtilde] ? -deltaTime : deltaTime;
             if (inputState.ShiftDown)
                 modifier *= 5;
             if (inputState.ControlDown)
@@ -476,43 +477,37 @@ namespace FractalLive
             {
                 if (inputState.keysDown[Keys.D1] && currentFractalType == Fractal.Type.Julia)
                 {
-                    CurrentSettings.Julia.X += zoomedModifier / 100;
+                    CurrentSettings.Julia.X += zoomedModifier / 2;
                     input_JuliaX.Text = CurrentSettings.Julia.X.ToString();
                 }
                 if (inputState.keysDown[Keys.D2] && currentFractalType == Fractal.Type.Julia)
                 {
-                    CurrentSettings.Julia.Y += zoomedModifier / 100;
+                    CurrentSettings.Julia.Y += zoomedModifier / 2;
                     input_JuliaY.Text = CurrentSettings.Julia.Y.ToString();
                 }
                 if (inputState.keysDown[Keys.D3])
                 {
-                    if (CurrentSettings.MaxIterations.Value == CurrentSettings.OrbitRange.Value)
-                    {
-                        CurrentSettings.OrbitRange += (int)(modifier * 2);
-                        input_OrbitRange.Value = CurrentSettings.OrbitRange.Value;
-                    }
-
-                    CurrentSettings.MaxIterations += (int)(modifier * 2);
-                    input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
+                    CurrentSettings.StartPosition.X += zoomedModifier / 2;
+                    input_StartPositionX.Text = CurrentSettings.StartPosition.X.ToString();
                 }
                 if (inputState.keysDown[Keys.D4])
                 {
-                    CurrentSettings.MinIterations += (int)(modifier * 2);
-                    input_MinIterations.Value = CurrentSettings.MinIterations.Value;
+                    CurrentSettings.StartPosition.Y += zoomedModifier / 2;
+                    input_StartPositionY.Text = CurrentSettings.StartPosition.Y.ToString();
                 }
                 if (inputState.keysDown[Keys.D5])
                 {
-                    CurrentSettings.Power += zoomedModifier / 50;
+                    CurrentSettings.Power += zoomedModifier / 1;
                     input_Power.Text = CurrentSettings.Power.ToString();
                 }
                 if (inputState.keysDown[Keys.D6])
                 {
-                    CurrentSettings.C_Power += zoomedModifier / 50;
+                    CurrentSettings.C_Power += zoomedModifier / 1;
                     input_CPower.Text = CurrentSettings.C_Power.ToString();
                 }
                 if (inputState.keysDown[Keys.D7])
                 {
-                    CurrentSettings.FoldCount += modifier / 50;
+                    CurrentSettings.FoldCount += modifier / 1;
                     input_FoldCount.Text = CurrentSettings.FoldCount.ToString();
                 }
                 if (inputState.keysDown[Keys.D8])
@@ -522,12 +517,12 @@ namespace FractalLive
                 }
                 if (inputState.keysDown[Keys.D9])
                 {
-                    CurrentSettings.FoldOffset.X += modifier / 10;
+                    CurrentSettings.FoldOffset.X += modifier / 1;
                     input_FoldOffsetX.Text = CurrentSettings.FoldOffset.X.ToString();
                 }
                 if (inputState.keysDown[Keys.D0])
                 {
-                    CurrentSettings.FoldOffset.Y += modifier / 10;
+                    CurrentSettings.FoldOffset.Y += modifier / 1;
                     input_FoldOffsetY.Text = CurrentSettings.FoldOffset.Y.ToString();
                 }
             }
@@ -537,24 +532,24 @@ namespace FractalLive
 
                 if (inputState.keysDown[Keys.D1])
                 {
-                    CurrentSettings.Bailout += modifier / 5;
+                    CurrentSettings.Bailout += modifier * 10;
                     input_Bailout.Text = CurrentSettings.Bailout.ToString();
                 }
                 if (inputState.keysDown[Keys.D2])
                 {
                     if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
                     {
-                        CurrentSettings.BailoutRectangle.X += modifier / 10;
+                        CurrentSettings.BailoutRectangle.X += modifier / 1;
                         input_BailoutX.Text = CurrentSettings.BailoutRectangle.X.ToString();
                     }
                     else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
                     {
-                        CurrentSettings.BailoutPoints[editingBailoutTrapIndex].X += modifier / 10;
+                        CurrentSettings.BailoutPoints[editingBailoutTrapIndex].X += modifier / 1;
                         input_BailoutX.Text = CurrentSettings.BailoutPoints[editingBailoutTrapIndex].X.ToString();
                     }
                     else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
                     {
-                        CurrentSettings.BailoutLines[editingBailoutTrapIndex].X += modifier / 10;
+                        CurrentSettings.BailoutLines[editingBailoutTrapIndex].X += modifier / 1;
                         input_BailoutX.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrapIndex].X.ToString(), input_BailoutX.Text, true);
                     }
                 }
@@ -562,17 +557,17 @@ namespace FractalLive
                 {
                     if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
                     {
-                        CurrentSettings.BailoutRectangle.Y += modifier / 10;
+                        CurrentSettings.BailoutRectangle.Y += modifier / 1;
                         input_BailoutY.Text = CurrentSettings.BailoutRectangle.Y.ToString();
                     }
                     else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
                     {
-                        CurrentSettings.BailoutPoints[editingBailoutTrapIndex].Y += modifier / 10;
+                        CurrentSettings.BailoutPoints[editingBailoutTrapIndex].Y += modifier / 1;
                         input_BailoutY.Text = CurrentSettings.BailoutPoints[editingBailoutTrapIndex].Y.ToString();
                     }
                     else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
                     {
-                        CurrentSettings.BailoutLines[editingBailoutTrapIndex].Y += modifier / 10;
+                        CurrentSettings.BailoutLines[editingBailoutTrapIndex].Y += modifier / 1;
                         input_BailoutX.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrapIndex].Y.ToString(), input_BailoutX.Text, false);
                     }
                 }
@@ -580,7 +575,7 @@ namespace FractalLive
                 {
                     if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
                     {
-                        CurrentSettings.BailoutLines[editingBailoutTrapIndex].Z += modifier / 10;
+                        CurrentSettings.BailoutLines[editingBailoutTrapIndex].Z += modifier / 1;
                         input_BailoutY.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrapIndex].Z.ToString(), input_BailoutY.Text, true);
                     }
                 }
@@ -588,7 +583,7 @@ namespace FractalLive
                 {
                     if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines)
                     {
-                        CurrentSettings.BailoutLines[editingBailoutTrapIndex].W += modifier / 10;
+                        CurrentSettings.BailoutLines[editingBailoutTrapIndex].W += modifier / 1;
                         input_BailoutY.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrapIndex].W.ToString(), input_BailoutY.Text, false);
                     }
                 }
@@ -599,22 +594,22 @@ namespace FractalLive
                 }
                 if (inputState.keysDown[Keys.D7] && input_OrbitTrapBlendingFactor.Enabled)
                 {
-                    CurrentSettings.BailoutFactor1 += modifier / 100;
+                    CurrentSettings.BailoutFactor1 += modifier / 2;
                     input_OrbitTrapBlendingFactor.Text = CurrentSettings.BailoutFactor1.ToString();
                 }
                 if (inputState.keysDown[Keys.D8] && input_OrbitTrapThicknessFactor.Enabled)
                 {
-                    CurrentSettings.BailoutFactor2 += modifier / 10;
+                    CurrentSettings.BailoutFactor2 += modifier * 5;
                     input_OrbitTrapThicknessFactor.Text = CurrentSettings.BailoutFactor2.ToString();
                 }
                 if (inputState.keysDown[Keys.D9] && input_SecondValueFactor1.Enabled)
                 {
-                    CurrentSettings.SecondValueFactor1 += modifier / 10;
+                    CurrentSettings.SecondValueFactor1 += modifier * 5;
                     input_SecondValueFactor1.Text = CurrentSettings.SecondValueFactor1.ToString();
                 }
                 if (inputState.keysDown[Keys.D0] && input_SecondValueFactor2.Enabled)
                 {
-                    CurrentSettings.SecondValueFactor2 += modifier / 10;
+                    CurrentSettings.SecondValueFactor2 += modifier * 5;
                     input_SecondValueFactor2.Text = CurrentSettings.SecondValueFactor2.ToString();
                 }
             }
@@ -622,67 +617,67 @@ namespace FractalLive
             {
                 if (inputState.keysDown[Keys.D1])
                 {
-                    CurrentSettings.AdjustColorCycles(modifier / 100);
+                    CurrentSettings.AdjustColorCycles(modifier / 2);
                     input_ColorCycles.Text = CurrentSettings.GetColorCycles().ToString();
                 }
                 if (inputState.keysDown[Keys.D2])
                 {
-                    CurrentSettings.AdjustColorFactor(modifier / 10);
+                    CurrentSettings.AdjustColorFactor(modifier * 5);
                     input_ColorFactor.Text = CurrentSettings.GetColorFactor().ToString();
                 }
                 if (inputState.keysDown[Keys.D3])
                 {
-                    CurrentSettings.AdjustOrbitTrapFactor(modifier / 10);
+                    CurrentSettings.AdjustOrbitTrapFactor(modifier * 5);
                     input_OrbitTrapFactor.Text = CurrentSettings.GetOrbitTrapFactor().ToString();
                 }
                 if (inputState.keysDown[Keys.D4] && input_StripeDensity.Enabled)
                 {
-                    CurrentSettings.AdjustStripeDensity(modifier / 50);
+                    CurrentSettings.AdjustStripeDensity(modifier / 1);
                     input_StripeDensity.Text = CurrentSettings.GetStripeDensity().ToString();
                 }
                 if (inputState.keysDown[Keys.D5] && input_SecondDomainValueFactor1.Enabled)
                 {
-                    CurrentSettings.AdjustSecondDomainValueFactor1(modifier / 10);
+                    CurrentSettings.AdjustSecondDomainValueFactor1(modifier * 5);
                     input_SecondDomainValueFactor1.Text = CurrentSettings.GetSecondDomainValueFactor1().ToString();
                 }
                 if (inputState.keysDown[Keys.D6] && input_SecondDomainValueFactor2.Enabled)
                 {
-                    CurrentSettings.AdjustSecondDomainValueFactor2(modifier / 10);
+                    CurrentSettings.AdjustSecondDomainValueFactor2(modifier * 5);
                     input_SecondDomainValueFactor2.Text = CurrentSettings.GetSecondDomainValueFactor2().ToString();
                 }
                 if (inputState.keysDown[Keys.D7] && input_MaxDistanceEstimation.Enabled)
                 {
-                    CurrentSettings.AdjustMaxDistanceEstimation(modifier / 10);
+                    CurrentSettings.AdjustMaxDistanceEstimation(modifier * 5);
                     input_MaxDistanceEstimation.Text = CurrentSettings.GetMaxDistanceEstimation().ToString();
                 }
                 if (inputState.keysDown[Keys.D8] && input_DistanceEstimationFactor1.Enabled)
                 {
-                    CurrentSettings.AdjustDistanceEstimationFactor1(modifier / 50);
+                    CurrentSettings.AdjustDistanceEstimationFactor1(modifier / 1);
                     input_DistanceEstimationFactor1.Text = CurrentSettings.GetDistanceEstimationFactor1().ToString();
                 }
                 if (inputState.keysDown[Keys.D9] && input_DistanceEstimationFactor2.Enabled)
                 {
-                    CurrentSettings.AdjustDistanceEstimationFactor2(modifier / 50);
+                    CurrentSettings.AdjustDistanceEstimationFactor2(modifier / 1);
                     input_DistanceEstimationFactor2.Text = CurrentSettings.GetDistanceEstimationFactor2().ToString();
                 }
                 if (inputState.keysDown[Keys.D0] && input_TextureBlend.Enabled)
                 {
-                    CurrentSettings.AdjustTextureBlend(modifier / 100);
+                    CurrentSettings.AdjustTextureBlend(modifier / 2);
                     input_TextureBlend.Text = CurrentSettings.GetTextureBlend().ToString();
                 }
                 if (inputState.keysDown[Keys.OemMinus] && input_TextureScaleX.Enabled)
                 {
-                    CurrentSettings.AdjustTextureScaleX(modifier / 10);
+                    CurrentSettings.AdjustTextureScaleX(modifier * 5);
                     input_TextureScaleX.Text = CurrentSettings.GetTextureScaleX().ToString();
                 }
                 if (inputState.keysDown[Keys.Oemplus] && input_TextureScaleY.Enabled)
                 {
-                    CurrentSettings.AdjustTextureScaleY(modifier / 10);
+                    CurrentSettings.AdjustTextureScaleY(modifier * 5);
                     input_TextureScaleY.Text = CurrentSettings.GetTextureScaleY().ToString();
                 }
                 if (inputState.keysDown[Keys.Back] && input_TextureDistortionFactor.Enabled)
                 {
-                    CurrentSettings.AdjustTextureDistortion(modifier / 50);
+                    CurrentSettings.AdjustTextureDistortion(modifier / 1);
                     input_TextureDistortionFactor.Text = CurrentSettings.GetTextureDistortion().ToString();
                 }
             }
@@ -698,7 +693,7 @@ namespace FractalLive
                         float rad90 = rad + MathHelper.Pi / 2;
                         float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2, CurrentSettings.Zoom);
 
-                        float delta = modifier * 3;
+                        float delta = modifier * 50;
                         float deltaX = inputState.keysDown[Keys.D] ? delta : (inputState.keysDown[Keys.A] ? -delta : 0);
                         float deltaY = inputState.keysDown[Keys.W] ? delta : (inputState.keysDown[Keys.S] ? -delta : 0);
 
@@ -709,12 +704,12 @@ namespace FractalLive
                     }
                     if (inputState.keysDown[Keys.Q] || inputState.keysDown[Keys.E])
                     {
-                        CurrentCamera.Roll -= modifier / 2 * (inputState.keysDown[Keys.Q] ? 1 : -1);
+                        CurrentCamera.Roll -= modifier * 20 * (inputState.keysDown[Keys.Q] ? 1 : -1);
                         input_CameraRoll.Text = CurrentCamera.Roll.ToString();
                     }
                     if (inputState.keysDown[Keys.R] || inputState.keysDown[Keys.F])
                     {
-                        CurrentSettings.Zoom += modifier / 40 * (inputState.keysDown[Keys.R] ? 1 : -1);
+                        CurrentSettings.Zoom += modifier / 1 * (inputState.keysDown[Keys.R] ? 1 : -1);
                         input_Zoom.Text = CurrentSettings.Zoom.ToString();
 
                         if (!checkBox_LockZoomFactor.Checked)
@@ -727,9 +722,9 @@ namespace FractalLive
                     if (CurrentSettings.Projection == Fractal.Projection.Riemann_Flat && inputState.IsSecondaryMovementKeyDown())
                     {
                         if (inputState.keysDown[Keys.I] || inputState.keysDown[Keys.K])
-                            CurrentSettings.RiemannAngles.X -= modifier / 50 * (inputState.keysDown[Keys.I] ? 1 : -1);
+                            CurrentSettings.RiemannAngles.X -= modifier / 1 * (inputState.keysDown[Keys.I] ? 1 : -1);
                         if (inputState.keysDown[Keys.J] || inputState.keysDown[Keys.L])
-                            CurrentSettings.RiemannAngles.Y -= modifier / 50 * (inputState.keysDown[Keys.J] ? 1 : -1);
+                            CurrentSettings.RiemannAngles.Y -= modifier / 1 * (inputState.keysDown[Keys.J] ? 1 : -1);
                         
                         input_RiemannAngles.Text = Make2D(MathHelper.RadiansToDegrees(CurrentSettings.RiemannAngles.X), MathHelper.RadiansToDegrees(CurrentSettings.RiemannAngles.Y));
                     }
@@ -800,9 +795,9 @@ namespace FractalLive
 
             // time
             if (inputState.keysDown[Keys.OemQuestion])
-                fractalTime += deltaTime * modifier * 5;
+                fractalTime += modifier * 5;
             if (inputState.keysDown[Keys.Oemcomma])
-                fractalTime -= deltaTime * modifier * (pauseTime ? 5 : 6);
+                fractalTime -= modifier * (pauseTime ? 5 : 6);
 
             // update controls
             //Log(CurrentSettings.Texture + " - " + CurrentSettings.I_Texture + " - " + CurrentSettings.E_Texture);
@@ -1285,12 +1280,15 @@ namespace FractalLive
             input_RiemannAngles.Enabled = CurrentSettings.Projection == Fractal.Projection.Riemann_Flat;
 
             input_FractalFormula.SelectedIndex = (int)CurrentSettings.Formula;
+            label_JuliaPosition.Text = currentFractalType == Fractal.Type.Julia_Mating ? "Julia:" : "Julia*";
             input_JuliaX.Enabled = currentFractalType == Fractal.Type.Julia || currentFractalType == Fractal.Type.Julia_Mating;
             input_JuliaY.Enabled = currentFractalType == Fractal.Type.Julia || currentFractalType == Fractal.Type.Julia_Mating;
             input_JuliaX.Text = currentFractalType == Fractal.Type.Julia_Mating ? Make2D(CurrentSettings.Julia.X, CurrentSettings.Julia.Y) : CurrentSettings.Julia.X.ToString();
             input_JuliaY.Text = currentFractalType == Fractal.Type.Julia_Mating ? Make2D(CurrentSettings.JuliaMating.X, CurrentSettings.JuliaMating.Y) : CurrentSettings.Julia.Y.ToString();
             input_MaxIterations.Value = CurrentSettings.MaxIterations.Value;
             input_MinIterations.Value = CurrentSettings.MinIterations.Value;
+            input_StartPositionX.Text = CurrentSettings.StartPosition.X.ToString();
+            input_StartPositionY.Text = CurrentSettings.StartPosition.Y.ToString();
             input_Power.Text = CurrentSettings.Power.ToString();
             input_CPower.Text = CurrentSettings.C_Power.ToString();
             input_FoldCount.Text = CurrentSettings.FoldCount.ToString();
@@ -1412,6 +1410,28 @@ namespace FractalLive
         private void checkBox_UseConjugate_CheckedChanged(object sender, EventArgs e)
         {
             CurrentSettings.UseConjugate = checkBox_UseConjugate.Checked;
+        }
+
+        private void input_StartPositionX_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_StartPositionX.Text))
+                e.Cancel = true;
+        }
+        private void input_StartPositionX_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.StartPosition.X = float.Parse(input_StartPositionX.Text);
+            input_StartPositionX.Text = CurrentSettings.StartPosition.X.ToString();
+        }
+
+        private void input_StartPositionY_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_StartPositionY.Text))
+                e.Cancel = true;
+        }
+        private void input_StartPositionY_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.StartPosition.Y = float.Parse(input_StartPositionY.Text);
+            input_StartPositionY.Text = CurrentSettings.StartPosition.Y.ToString();
         }
 
         private void input_Power_Validating(object sender, System.ComponentModel.CancelEventArgs e)
