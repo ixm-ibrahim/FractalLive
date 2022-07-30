@@ -73,7 +73,9 @@ namespace FractalLive
                 IsJuliaCentered = false;
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating1 = new Vector2(-1, 0);
-                JuliaMating2 = new Vector2(0, -1);
+                JuliaMating2 = new Vector2(-.123f, .745f);
+                //JuliaMating1 = new Vector2(-.835046398f, -.231926809f);
+                //JuliaMating2 = new Vector2(.284884537f, -.011121822f);
                 //JuliaMating2 = new Vector2(0.285f, 0.01f);
                 MatingIterations = 25;
                 IntermediateMatingSteps = 16;

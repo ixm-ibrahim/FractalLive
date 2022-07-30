@@ -41,5 +41,11 @@ exiting the form while mating steps fails bug
 julia mating update on another thread
 distance estimation on riemann sphere bug
 no riemann adjustment for julia mating?
+you can resize color dialogue
+custom colors
+change initial radius on corner resize
+replace julia textboxes with combooxes with included nice julia locations
+conslidate input_EditingColor_SelectionChangeCommitted
+pause and continue julia matings
 
-julia set matings (different shader), misc menu (terrain and animation), terrian, julia minimap, load save settings, doubles and quads
+misc menu (terrain and animation), terrian, julia minimap, load save settings, doubles and quads

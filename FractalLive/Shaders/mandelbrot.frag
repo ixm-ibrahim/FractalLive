@@ -232,9 +232,9 @@ vec3 Mandelbrot()
     else if (proj == PROJ_RIEMANN_SPHERE)
     {
         vec3 pos = normalize(vec3(FragPosModel.x, FragPosModel.y, FragPosModel.z));
-        riemannAdjustment = (1 + (pos.z + 1)/(1 - pos.z)) / 2.0 / pow(2,zoom);
+        riemannAdjustment = (1 + (pos.y + 1)/(1 - pos.y)) / 2.0 / pow(2,zoom);
         float r = pos.x*riemannAdjustment;
-        float i = pos.y*riemannAdjustment;
+        float i = pos.z*riemannAdjustment;
     
         // Initialize image center
         c = vec2(r + center.x, i + center.y);
@@ -757,7 +757,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, b
         default:
             //color = mix(outerColor1, outerColor2, theta);
             //float test = log(length(c_invert(z)));
-            color = HSVtoRGB(vec3(theta, 1, 1-fract(GetSmoothIter(iter.x, z.xy))));
+            color = HSVtoRGB(vec3(theta, 1, 1));
             break;
     }
 

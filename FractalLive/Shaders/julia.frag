@@ -758,7 +758,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, b
         default:
             //color = mix(outerColor1, outerColor2, theta);
             //float test = log(length(c_invert(z)));
-            color = HSVtoRGB(vec3(theta, 1, 1-fract(GetSmoothIter(iter.x, z.xy))));
+            color = HSVtoRGB(vec3(theta, 1, 1));
             break;
     }
 

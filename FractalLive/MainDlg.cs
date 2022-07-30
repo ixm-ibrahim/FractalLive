@@ -237,10 +237,10 @@ namespace FractalLive
                 }
 
                 shader.SetInt("currentMatingIteration", n);
-                shader.SetDouble("R_t", juliaMating.R[s]);
                 shader.SetVector2("p", fractalSettings.JuliaMating1);
                 shader.SetVector2("q", fractalSettings.JuliaMating2);
 
+                shader.SetDouble("R_t", juliaMating.R_t);
                 shader.SetVector2Array("ma", juliaMating.Ma_Step);
                 shader.SetVector2Array("mb", juliaMating.Mb_Step);
                 shader.SetVector2Array("mc", juliaMating.Mc_Step);
@@ -823,9 +823,7 @@ namespace FractalLive
                     }
                     if (inputState.IsSecondaryMovementKeyDown())
                     {
-                        float factor = CurrentCamera.CurrentPanSpeed / (float)Math.Pow(2, CurrentSettings.Zoom);
-
-                        float delta = zoomedModifier * 30 * factor;
+                        float delta = zoomedModifier * 30 * CurrentCamera.CurrentPanSpeed;
                         float deltaX = inputState.keysDown[Keys.J] ? delta : (inputState.keysDown[Keys.L] ? -delta : 0);
                         float deltaY = inputState.keysDown[Keys.I] ? delta : (inputState.keysDown[Keys.K] ? -delta : 0);
 
@@ -1963,6 +1961,7 @@ namespace FractalLive
             input_SecondDomainValueFactor2.Text = CurrentSettings.GetSecondDomainValueFactor2().ToString();
             //checkBox_UseDistanceEstimation.Enabled = CurrentSettings.EditingColor != Fractal.Editing.Interior;
             checkBox_UseDistanceEstimation.Checked = CurrentSettings.GetUseDistanceEstimation();
+            checkBox_UseNormals.Enabled = checkBox_UseDistanceEstimation.Checked;
             checkBox_UseNormals.Checked = CurrentSettings.GetUseNormals();
             input_MaxDistanceEstimation.Text = CurrentSettings.GetMaxDistanceEstimation().ToString();
             input_DistanceEstimationFactor1.Text = CurrentSettings.GetDistanceEstimationFactor1().ToString();

@@ -86,7 +86,7 @@ namespace FractalLive
             IsInitialized = true;
         }
 
-        void SetMnStep()
+        void SetStepValues()
         {
             int s = (int)currentStep % IntermediateSteps;
             int n = ((int)currentStep - s) / IntermediateSteps;
@@ -97,17 +97,19 @@ namespace FractalLive
                 s = IntermediateSteps - 1;
             }
 
-            ma_step = new Vector2d[n + 1];
-            mb_step = new Vector2d[n + 1];
-            mc_step = new Vector2d[n + 1];
-            md_step = new Vector2d[n + 1];
+            R_t = R[s];
+
+            Ma_Step = new Vector2d[n + 1];
+            Mb_Step = new Vector2d[n + 1];
+            Mc_Step = new Vector2d[n + 1];
+            Md_Step = new Vector2d[n + 1];
 
             for (int k = 0; k <= n; k++)
             {
-                ma_step[k] = Ma[IntermediateSteps * k + s];
-                mb_step[k] = Mb[IntermediateSteps * k + s];
-                mc_step[k] = Mc[IntermediateSteps * k + s];
-                md_step[k] = Md[IntermediateSteps * k + s];
+                Ma_Step[k] = Ma[IntermediateSteps * k + s];
+                Mb_Step[k] = Mb[IntermediateSteps * k + s];
+                Mc_Step[k] = Mc[IntermediateSteps * k + s];
+                Md_Step[k] = Md[IntermediateSteps * k + s];
             }
         }
 
@@ -179,7 +181,7 @@ namespace FractalLive
                 Mc[(int)currentStep] = new Vector2d(c.R.ToDouble(), c.I.ToDouble());
                 Md[(int)currentStep] = new Vector2d(d.R.ToDouble(), d.I.ToDouble());
 
-                SetMnStep();
+                SetStepValues();
             }
         }
 
@@ -192,7 +194,7 @@ namespace FractalLive
             set
             {
                 currentStep = value;
-                SetMnStep();
+                SetStepValues();
             }
         }
 
@@ -210,19 +212,16 @@ namespace FractalLive
         public Vector2d[] Mb { get; private set; }
         public Vector2d[] Mc { get; private set; }
         public Vector2d[] Md { get; private set; }
-        public Vector2d[] Ma_Step => ma_step;
-        public Vector2d[] Mb_Step => mb_step;
-        public Vector2d[] Mc_Step => mc_step;
-        public Vector2d[] Md_Step => md_step;
+        public double R_t { get; private set; }
+        public Vector2d[] Ma_Step { get; private set; }
+        public Vector2d[] Mb_Step { get; private set; }
+        public Vector2d[] Mc_Step { get; private set; }
+        public Vector2d[] Md_Step { get; private set; }
 
         const double R1 = 1e10;
         public const int MAX_MATING_ITER = 200;
         public const int MAX_STEPS = 5000;
 
         private int currentStep;
-        private Vector2d[] ma_step;
-        private Vector2d[] mb_step;
-        private Vector2d[] mc_step;
-        private Vector2d[] md_step;
     }
 }
