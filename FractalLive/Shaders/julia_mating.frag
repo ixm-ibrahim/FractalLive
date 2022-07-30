@@ -1,8 +1,13 @@
 ﻿#version 450 core
 
+#define MAX_FLOAT       3.402823466e+38
 #define M_PI            3.141592653589793238462643383279
 #define M_2PI           6.283185307179586476925286766559
 #define MAX_LENGTH      1e15
+#define MAX_MATING_ITER 475
+
+// Only works with GLSL 4 and above
+const float infinity = 1.0 / 0.0;
 
 #define PROJ_CARTESIAN                  0
 #define PROJ_RIEMANN_FLAT               1
@@ -60,6 +65,14 @@ uniform vec2 center;
 uniform vec2 riemannAngles;
 
 uniform int formula;
+uniform int currentMatingIteration;
+uniform double R_t;
+uniform vec2 p;
+uniform vec2 q;
+uniform vec2[MAX_MATING_ITER] ma;
+uniform vec2[MAX_MATING_ITER] mb;
+uniform vec2[MAX_MATING_ITER] mc;
+uniform vec2[MAX_MATING_ITER] md;
 uniform int maxIterations;
 uniform int minIterations;
 uniform bool useConjugate;
@@ -137,15 +150,15 @@ uniform bool i_usePolarTextureCoordinates;
 uniform bool i_useDistortedTexture;
 uniform float i_textureDistortionFactor;
 
-vec3 Mandelbrot();
+vec3 JuliaMating();
 
 void main()
 {
-	//FragColor = vec4(Mandelbrot() * vec3(TexCoords,1), 1.0);
-	FragColor = vec4(Mandelbrot(), 1.0);FragPosWorld;
+	//FragColor = vec4(Julia() * vec3(TexCoords,1), 1.0);
+	FragColor = vec4(JuliaMating(), 1.0);FragPosWorld;
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment);
+vec2 JuliaMatingLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment);
 vec2 ComputeFractal(vec2 z, vec2 c, bool withinMaxDistance, inout vec2 dz, inout vec2 dz2);
 vec2 FoldZ(vec2 z);
 vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes);
@@ -173,19 +186,23 @@ vec2 c_2(vec2 c);
 vec2 c_mul(vec2 a, vec2 b);
 vec2 c_div(vec2 a, vec2 b);
 vec2 c_pow(vec2 c, float p);
-vec2 c_pow(float c, vec2 p);
 vec2 c_pow(vec2 c, vec2 p);
-vec2 c_exp(vec2 c);
 vec2 c_invert(vec2 c);
 vec2 c_rotate(vec2 c, float a);
 float c_squared_modulus(vec2 c);
+vec2 c_proj(vec2 c);
 float c_arg(vec2 c);
 vec2 c_from_polar(float r, float theta);
 vec2 c_to_polar(vec2 c);
 
-vec3 Mandelbrot()
+dvec2 dc_proj(dvec2 c);
+dvec2 dc_mul(dvec2 a, dvec2 b);
+dvec2 dc_div(dvec2 a, dvec2 b);
+dvec2 dc_2(dvec2 c);
+
+vec3 JuliaMating()
 {
-	int iter = 0;
+    int iter = 0;
     vec2 trap = vec2(startOrbitDistance);
 	vec2 z;
 	vec4 domainZ;
@@ -222,45 +239,72 @@ vec3 Mandelbrot()
         
         // Riemann projection
         vec3 pos = normalize(vec3(rotatedY.x, rotatedY.y, rotatedY.z));
-        riemannAdjustment = (1 + (pos.z + 1)/(1 - pos.z)) / 2.0;
-        float r = pos.x*riemannAdjustment / pow(2,zoom);
+        float tmp = (1 + (pos.z + 1)/(1 - pos.z)) / 2.0;
+        float r = pos.x*tmp / pow(2,zoom);
 
-        float i = pos.y*riemannAdjustment / pow(2,zoom);
+        float i = pos.y*tmp / pow(2,zoom);
     
         c = vec2(r + center.x, i + center.y);
     }
     else if (proj == PROJ_RIEMANN_SPHERE)
     {
         vec3 pos = normalize(vec3(FragPosModel.x, FragPosModel.y, FragPosModel.z));
-        riemannAdjustment = (1 + (pos.z + 1)/(1 - pos.z)) / 2.0 / pow(2,zoom);
-        float r = pos.x*riemannAdjustment;
-        float i = pos.y*riemannAdjustment;
+        float tmp = (1 + (pos.y + 1)/(1 - pos.y)) / 2.0 / pow(2,zoom);
+        float r = pos.x*tmp;
+        float i = pos.z*tmp;
     
         // Initialize image center
         c = vec2(r + center.x, i + center.y);
     }
 
-    z = MandelbrotLoop(c, iter, trap, domainZ, domainIter, distanceEstimation, stripes, riemannAdjustment);
+    z = JuliaMatingLoop(c, iter, trap, domainZ, domainIter, distanceEstimation, stripes, riemannAdjustment);
     
 	return GetColor(z, c, iter, trap, domainZ, domainIter, distanceEstimation, stripes);
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment)
+vec2 JuliaMatingLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment)
 {
-	vec2 z = startPosition + ((formula == FRAC_LAMBDA) ? c_div(c_1(), power) : vec2(0));
+    vec2 julia;
+    dvec2 dc = dvec2(c + startPosition);
+    
+    // orbit push forward
+    for (int k = currentMatingIteration; k >= 0; --k)
+    {
+        //z = c_proj(c_2(z));
+        //z = c_proj(c_div(c_mul(ma[k], z) + mb[k], c_mul(mc[k], z) + md[k]));
+        dc = dc_proj(dc_2(dc));
+        dc = dc_proj(dc_div(dc_mul(ma[k], dc) + mb[k], dc_mul(mc[k], dc) + md[k]));
+    
+    }
+
+    // Decide which hemisphere we're in
+    vec2 z;
+    if (length(dc) <= 1)
+    {
+        //color = pow(normalize(FragPosModel),vec3(1));
+        julia = vec2(p);
+        z = vec2(R_t * dc);
+    }
+    else
+    {
+        //color = pow(1 - normalize(FragPosModel),vec3(1));
+        julia = vec2(q);
+        z = c_proj(vec2(dc_div(dvec2(R_t,0), dc)));
+    }
+
+	vec2 dz = c_1();
+    vec2 dz2 = vec2(0);
+    float m2 = dot(z,z);
+    bool withinMaxDistance = true;
+    
     domainZ = vec4(c,c);
     trap = vec2(startOrbitDistance);
     vec4 lastAdded = vec4(0);
     int stripesCount = 0;
-
-    vec2 dz = vec2(1.0,0.0);
-    vec2 dz2 = vec2(0.0,0.0);
-    float m2 = dot(z,z);
-    bool withinMaxDistance = true;
     
 	for (iter = 0; iter < maxIterations; ++iter)
 	{
-        z = ComputeFractal(z, c, withinMaxDistance, dz, dz2);
+        z = ComputeFractal(z, julia, withinMaxDistance, dz, dz2);
         
         if (IsWithinIteration(iter))
         {
@@ -322,7 +366,7 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
         float d = log(m2) * length(z) / length(dz);
         distanceEstimation = sqrt(sigmoid(d * pow(distanceEstimationFactor1, 2) * pow(2,lockedZoom) / riemannAdjustment, distanceEstimationFactor2));
     }
-
+    
 	return z;
 }
 
@@ -333,10 +377,10 @@ vec2 ComputeFractal(vec2 z, vec2 c, bool withinMaxDistance, inout vec2 dz, inout
         {
             case FRAC_MANDELBROT:
                 dz2 = c_mul(power, (dz2*z + c_pow(dz,power)));
-                dz = c_mul(power, c_mul(z,dz)) + c_power;
+                dz = c_mul(power, c_mul(c_pow(z,power-c_1()),dz));
                 break;
             case FRAC_LAMBDA:   // c^cp * (z - z^p)
-                dz = c_mul(c_power, dz - power * c_mul(z,dz));
+                dz = c_mul(c_power, dz - power * c_mul(c_pow(z,power-c_1()),dz));
                 break;
             case FRAC_CUSTOM:
             default:
@@ -357,14 +401,13 @@ vec2 ComputeFractal(vec2 z, vec2 c, bool withinMaxDistance, inout vec2 dz, inout
             break;
         case FRAC_LAMBDA:
             //z = c_pow(z, power);
-            //new_z = c_mul(c_pow(c, c_power), c_mul(z, vec2(1,0) - z));
+            //new_z = c_mul(c_pow(c, c_power), c_mul(z, c_1() - z));
             new_z = c_mul(c_pow(c, c_power), z - c_pow(z, power));
             break;
         case FRAC_CUSTOM:
         default:
             
-            new_z = c_pow(z, z) + c_pow(c, c);
-            //new_z = c_pow(z, power) - z - 1 + c_pow(c, c_power);
+            new_z = c_pow(z, power) - z - 1 + c_pow(c, c_power);
             break;
     }
 
@@ -1321,7 +1364,7 @@ vec2 c_pow(vec2 c, float p)
             c = c_mul(c, original);
 
         if (p < 0)
-            return c_div(vec2(1,0), c);
+            return c_div(c_1(), c);
         
         return c;
     }
@@ -1365,12 +1408,17 @@ float c_squared_modulus(vec2 c)
 {
     return dot(c,c);
 }
-
+vec2 c_proj(vec2 c)
+{
+    if (!isinf(c.x) && !isinf(c.y) && !isnan(c.x) && !isnan(c.y))
+        return c;
+        
+    return vec2(MAX_FLOAT, 0);
+}
 float c_arg(vec2 c)
 {
     return atan(c.y,c.x);
 }
-
 vec2 c_from_polar(float r, float theta)
 {
   return vec2(r * cos(theta), r * sin(theta));
@@ -1378,4 +1426,57 @@ vec2 c_from_polar(float r, float theta)
 vec2 c_to_polar(vec2 c)
 {
   return vec2(length(c), atan(c.y, c.x));
+}
+
+dvec2 dc_proj(dvec2 c)
+{
+    if (!isinf(c.x) && !isinf(c.y) && !isnan(c.x) && !isnan(c.y))
+        return c;
+        
+    return dvec2(infinity, 0);
+}
+dvec2 dc_mul(dvec2 a, dvec2 b)
+{
+    return dvec2(a.x*b.x - a.y*b.y, a.x*b.y + a.y*b.x);
+}
+void dc_improved_internal(double a, double b, double c, double d, out double e, out double f)
+{
+    double r = d / c;
+    double t = 1 / (c + d * r);
+
+    if (r != 0)
+    {
+        e = (a + b * r) * t;
+        f = (b - a * r) * t;
+    }
+    else
+    {
+        e = (a + d * (b / c)) * t;
+        f = (b - d * (a / c)) * t;
+    }
+}
+dvec2 dc_div(dvec2 x, dvec2 y)
+{
+    double a = x.x;
+    double b = x.y;
+    double c = y.x;
+    double d = y.y;
+
+    double e;
+    double f;
+
+    if (abs(d) <= abs(c))
+        dc_improved_internal(a, b, c, d, e, f);
+    else
+    {
+        dc_improved_internal(b, a, d, c, e, f);
+
+        f = -f;
+    }
+
+    return dvec2(e,f);
+}
+dvec2 dc_2(dvec2 c)
+{
+    return dvec2(c.x*c.x - c.y*c.y, 2*c.x*c.y);
 }

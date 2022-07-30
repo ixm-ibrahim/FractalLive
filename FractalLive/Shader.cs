@@ -248,7 +248,7 @@ namespace FractalLive
         public void SetDouble(string name, double data)
         {
             GL.UseProgram(Handle);
-            GL.Uniform1(_uniformLocations[name], (float)data);
+            GL.Uniform1(_uniformLocations[name], data);
         }
 
         /// <summary>
@@ -301,6 +301,23 @@ namespace FractalLive
             {
                 tmp[2*i] = data[i].X;
                 tmp[2*i + 1] = data[i].Y;
+            }
+
+            GL.UseProgram(Handle);
+            GL.Uniform2(_uniformLocations[name + "[0]"], data.Length, tmp);
+        }
+        /// <summary>
+        /// Set a uniform Vector2 array on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetVector2Array(string name, Vector2d[] data)
+        {
+            float[] tmp = new float[data.Length * 2];
+            for (int i = 0; i < data.Length; i++)
+            {
+                tmp[2 * i] = (float)data[i].X;
+                tmp[2 * i + 1] = (float)data[i].Y;
             }
 
             GL.UseProgram(Handle);

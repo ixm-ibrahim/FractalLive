@@ -35,7 +35,11 @@ interior texture
 other ifs fractals (weather one, etc.)
 post iterations (smooth coloring)
 animate textures, julia (circle, factor*fractal edge, etc), orbit traps, rotate normals
-julia set distance estimation (use normals)
 press g to reset camera
+hide controls that aren't relevant altogether
+exiting the form while mating steps fails bug
+julia mating update on another thread
+distance estimation on riemann sphere bug
+no riemann adjustment for julia mating?
 
-julia set matings (different shader), animation menu, terrian, julia minimap, load save settings, doubles and quads
+julia set matings (different shader), misc menu (terrain and animation), terrian, julia minimap, load save settings, doubles and quads

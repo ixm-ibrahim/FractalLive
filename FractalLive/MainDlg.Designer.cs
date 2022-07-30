@@ -91,6 +91,10 @@
             this.input_Bailout = new System.Windows.Forms.TextBox();
             this.button_Menu4 = new System.Windows.Forms.Button();
             this.panel_FormulaMenu = new System.Windows.Forms.Panel();
+            this.label_CurrentMatingStep = new System.Windows.Forms.Label();
+            this.label_MatingSteps = new System.Windows.Forms.Label();
+            this.input_CurrentMatingStep = new System.Windows.Forms.NumericUpDown();
+            this.input_MatingSteps = new System.Windows.Forms.TextBox();
             this.input_StartPositionY = new System.Windows.Forms.TextBox();
             this.input_StartPositionX = new System.Windows.Forms.TextBox();
             this.label_StartPosition = new System.Windows.Forms.Label();
@@ -189,6 +193,7 @@
             this.input_CameraPosition = new System.Windows.Forms.TextBox();
             this.input_CameraRoll = new System.Windows.Forms.TextBox();
             this.panel_GeneralMenu = new System.Windows.Forms.Panel();
+            this.panel_MenuSelect = new System.Windows.Forms.Panel();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -199,6 +204,7 @@
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).BeginInit();
             this.panel_FormulaMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_CurrentMatingStep)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_MinIterations)).BeginInit();
             this.panel_OrbitTrapMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_EditingBailoutTrap)).BeginInit();
@@ -207,12 +213,13 @@
             this.panel_ColorMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).BeginInit();
             this.panel_GeneralMenu.SuspendLayout();
+            this.panel_MenuSelect.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_MaxIterations
             // 
             label_MaxIterations.AutoSize = true;
-            label_MaxIterations.Location = new System.Drawing.Point(3, 111);
+            label_MaxIterations.Location = new System.Drawing.Point(3, 165);
             label_MaxIterations.Name = "label_MaxIterations";
             label_MaxIterations.Size = new System.Drawing.Size(85, 15);
             label_MaxIterations.TabIndex = 6;
@@ -262,7 +269,7 @@
             // label_MinIterations
             // 
             label_MinIterations.AutoSize = true;
-            label_MinIterations.Location = new System.Drawing.Point(3, 137);
+            label_MinIterations.Location = new System.Drawing.Point(3, 191);
             label_MinIterations.Name = "label_MinIterations";
             label_MinIterations.Size = new System.Drawing.Size(83, 15);
             label_MinIterations.TabIndex = 85;
@@ -272,7 +279,7 @@
             // label_FoldCount
             // 
             label_FoldCount.AutoSize = true;
-            label_FoldCount.Location = new System.Drawing.Point(3, 263);
+            label_FoldCount.Location = new System.Drawing.Point(3, 317);
             label_FoldCount.Name = "label_FoldCount";
             label_FoldCount.Size = new System.Drawing.Size(74, 15);
             label_FoldCount.TabIndex = 88;
@@ -532,11 +539,11 @@
             this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(3, 1681);
+            this.LogTextBox.Location = new System.Drawing.Point(8, 284);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
-            this.LogTextBox.Size = new System.Drawing.Size(152, 36);
+            this.LogTextBox.Size = new System.Drawing.Size(156, 71);
             this.LogTextBox.TabIndex = 3;
             // 
             // glControl
@@ -552,15 +559,14 @@
             this.glControl.MinimumSize = new System.Drawing.Size(500, 309);
             this.glControl.Name = "glControl";
             this.glControl.Profile = OpenTK.Windowing.Common.ContextProfile.Compatability;
-            this.glControl.Size = new System.Drawing.Size(500, 421);
+            this.glControl.Size = new System.Drawing.Size(500, 316);
             this.glControl.TabIndex = 2;
             this.glControl.Text = "glControl1";
             // 
             // button_Left
             // 
-            this.button_Left.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Left.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Left.Location = new System.Drawing.Point(521, 485);
+            this.button_Left.Location = new System.Drawing.Point(3, 36);
             this.button_Left.Name = "button_Left";
             this.button_Left.Size = new System.Drawing.Size(50, 25);
             this.button_Left.TabIndex = 33;
@@ -569,9 +575,8 @@
             // 
             // button_Right
             // 
-            this.button_Right.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Right.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Right.Location = new System.Drawing.Point(624, 485);
+            this.button_Right.Location = new System.Drawing.Point(107, 36);
             this.button_Right.Name = "button_Right";
             this.button_Right.Size = new System.Drawing.Size(50, 25);
             this.button_Right.TabIndex = 22;
@@ -662,7 +667,7 @@
             // 
             // input_Power
             // 
-            this.input_Power.Location = new System.Drawing.Point(76, 207);
+            this.input_Power.Location = new System.Drawing.Point(76, 261);
             this.input_Power.Name = "input_Power";
             this.input_Power.Size = new System.Drawing.Size(79, 23);
             this.input_Power.TabIndex = 28;
@@ -685,7 +690,7 @@
             // label_Power
             // 
             this.label_Power.AutoSize = true;
-            this.label_Power.Location = new System.Drawing.Point(3, 210);
+            this.label_Power.Location = new System.Drawing.Point(3, 264);
             this.label_Power.Name = "label_Power";
             this.label_Power.Size = new System.Drawing.Size(48, 15);
             this.label_Power.TabIndex = 29;
@@ -694,7 +699,7 @@
             // 
             // input_CPower
             // 
-            this.input_CPower.Location = new System.Drawing.Point(76, 233);
+            this.input_CPower.Location = new System.Drawing.Point(76, 287);
             this.input_CPower.Name = "input_CPower";
             this.input_CPower.Size = new System.Drawing.Size(79, 23);
             this.input_CPower.TabIndex = 30;
@@ -707,7 +712,7 @@
             // label_CPower
             // 
             this.label_CPower.AutoSize = true;
-            this.label_CPower.Location = new System.Drawing.Point(3, 236);
+            this.label_CPower.Location = new System.Drawing.Point(3, 290);
             this.label_CPower.Name = "label_CPower";
             this.label_CPower.Size = new System.Drawing.Size(59, 15);
             this.label_CPower.TabIndex = 31;
@@ -717,7 +722,7 @@
             // input_MaxIterations
             // 
             this.input_MaxIterations.CausesValidation = false;
-            this.input_MaxIterations.Location = new System.Drawing.Point(100, 108);
+            this.input_MaxIterations.Location = new System.Drawing.Point(100, 162);
             this.input_MaxIterations.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -736,9 +741,8 @@
             // 
             // button_Menu1
             // 
-            this.button_Menu1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu1.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu1.Location = new System.Drawing.Point(521, 453);
+            this.button_Menu1.Location = new System.Drawing.Point(4, 5);
             this.button_Menu1.Name = "button_Menu1";
             this.button_Menu1.Size = new System.Drawing.Size(35, 25);
             this.button_Menu1.TabIndex = 34;
@@ -758,9 +762,8 @@
             // 
             // button_Menu2
             // 
-            this.button_Menu2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu2.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu2.Location = new System.Drawing.Point(560, 453);
+            this.button_Menu2.Location = new System.Drawing.Point(42, 5);
             this.button_Menu2.Name = "button_Menu2";
             this.button_Menu2.Size = new System.Drawing.Size(35, 25);
             this.button_Menu2.TabIndex = 35;
@@ -779,9 +782,8 @@
             // 
             // button_Menu3
             // 
-            this.button_Menu3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu3.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu3.Location = new System.Drawing.Point(599, 453);
+            this.button_Menu3.Location = new System.Drawing.Point(81, 5);
             this.button_Menu3.Name = "button_Menu3";
             this.button_Menu3.Size = new System.Drawing.Size(35, 25);
             this.button_Menu3.TabIndex = 36;
@@ -803,9 +805,8 @@
             // 
             // button_Menu4
             // 
-            this.button_Menu4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Menu4.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Menu4.Location = new System.Drawing.Point(639, 453);
+            this.button_Menu4.Location = new System.Drawing.Point(122, 5);
             this.button_Menu4.Name = "button_Menu4";
             this.button_Menu4.Size = new System.Drawing.Size(35, 25);
             this.button_Menu4.TabIndex = 37;
@@ -819,6 +820,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel_FormulaMenu.AutoScroll = true;
             this.panel_FormulaMenu.CausesValidation = false;
+            this.panel_FormulaMenu.Controls.Add(this.label_CurrentMatingStep);
+            this.panel_FormulaMenu.Controls.Add(this.label_MatingSteps);
+            this.panel_FormulaMenu.Controls.Add(this.input_CurrentMatingStep);
+            this.panel_FormulaMenu.Controls.Add(this.input_MatingSteps);
             this.panel_FormulaMenu.Controls.Add(this.input_StartPositionY);
             this.panel_FormulaMenu.Controls.Add(this.input_StartPositionX);
             this.panel_FormulaMenu.Controls.Add(this.label_StartPosition);
@@ -849,16 +854,62 @@
             this.panel_FormulaMenu.Controls.Add(this.checkBox_UseBuddhabrot);
             this.panel_FormulaMenu.Controls.Add(this.label_BuddhabrotType);
             this.panel_FormulaMenu.Controls.Add(this.input_BuddhabrotType);
-            this.panel_FormulaMenu.Controls.Add(this.LogTextBox);
             this.panel_FormulaMenu.Location = new System.Drawing.Point(517, 24);
             this.panel_FormulaMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_FormulaMenu.Name = "panel_FormulaMenu";
-            this.panel_FormulaMenu.Size = new System.Drawing.Size(178, 421);
+            this.panel_FormulaMenu.Size = new System.Drawing.Size(178, 316);
             this.panel_FormulaMenu.TabIndex = 32;
+            // 
+            // label_CurrentMatingStep
+            // 
+            this.label_CurrentMatingStep.AutoSize = true;
+            this.label_CurrentMatingStep.Location = new System.Drawing.Point(3, 135);
+            this.label_CurrentMatingStep.Name = "label_CurrentMatingStep";
+            this.label_CurrentMatingStep.Size = new System.Drawing.Size(81, 15);
+            this.label_CurrentMatingStep.TabIndex = 110;
+            this.label_CurrentMatingStep.Text = "Current Step:*";
+            this.label_CurrentMatingStep.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label_MatingSteps
+            // 
+            this.label_MatingSteps.AutoSize = true;
+            this.label_MatingSteps.Location = new System.Drawing.Point(3, 109);
+            this.label_MatingSteps.Name = "label_MatingSteps";
+            this.label_MatingSteps.Size = new System.Drawing.Size(79, 15);
+            this.label_MatingSteps.TabIndex = 109;
+            this.label_MatingSteps.Text = "Mating Steps:";
+            this.label_MatingSteps.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_CurrentMatingStep
+            // 
+            this.input_CurrentMatingStep.CausesValidation = false;
+            this.input_CurrentMatingStep.Location = new System.Drawing.Point(99, 133);
+            this.input_CurrentMatingStep.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.input_CurrentMatingStep.Name = "input_CurrentMatingStep";
+            this.input_CurrentMatingStep.Size = new System.Drawing.Size(55, 23);
+            this.input_CurrentMatingStep.TabIndex = 108;
+            this.input_CurrentMatingStep.ValueChanged += new System.EventHandler(this.input_CurrentMatingStep_ValueChanged);
+            this.input_CurrentMatingStep.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            // 
+            // input_MatingSteps
+            // 
+            this.input_MatingSteps.Location = new System.Drawing.Point(99, 106);
+            this.input_MatingSteps.Name = "input_MatingSteps";
+            this.input_MatingSteps.Size = new System.Drawing.Size(56, 23);
+            this.input_MatingSteps.TabIndex = 107;
+            this.input_MatingSteps.Text = "25, 16";
+            this.input_MatingSteps.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_MatingSteps.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateMultipleUintChar);
+            this.input_MatingSteps.Validating += new System.ComponentModel.CancelEventHandler(this.input_MatingSteps_Validating);
+            this.input_MatingSteps.Validated += new System.EventHandler(this.input_MatingSteps_Validated);
             // 
             // input_StartPositionY
             // 
-            this.input_StartPositionY.Location = new System.Drawing.Point(117, 181);
+            this.input_StartPositionY.Location = new System.Drawing.Point(117, 235);
             this.input_StartPositionY.Name = "input_StartPositionY";
             this.input_StartPositionY.Size = new System.Drawing.Size(38, 23);
             this.input_StartPositionY.TabIndex = 103;
@@ -870,7 +921,7 @@
             // 
             // input_StartPositionX
             // 
-            this.input_StartPositionX.Location = new System.Drawing.Point(76, 181);
+            this.input_StartPositionX.Location = new System.Drawing.Point(76, 235);
             this.input_StartPositionX.Name = "input_StartPositionX";
             this.input_StartPositionX.Size = new System.Drawing.Size(38, 23);
             this.input_StartPositionX.TabIndex = 102;
@@ -883,7 +934,7 @@
             // label_StartPosition
             // 
             this.label_StartPosition.AutoSize = true;
-            this.label_StartPosition.Location = new System.Drawing.Point(3, 184);
+            this.label_StartPosition.Location = new System.Drawing.Point(3, 238);
             this.label_StartPosition.Name = "label_StartPosition";
             this.label_StartPosition.Size = new System.Drawing.Size(47, 15);
             this.label_StartPosition.TabIndex = 101;
@@ -927,7 +978,7 @@
             // input_MinIterations
             // 
             this.input_MinIterations.CausesValidation = false;
-            this.input_MinIterations.Location = new System.Drawing.Point(100, 135);
+            this.input_MinIterations.Location = new System.Drawing.Point(100, 189);
             this.input_MinIterations.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -947,7 +998,7 @@
             // checkBox_UseConjugate
             // 
             this.checkBox_UseConjugate.AutoSize = true;
-            this.checkBox_UseConjugate.Location = new System.Drawing.Point(8, 160);
+            this.checkBox_UseConjugate.Location = new System.Drawing.Point(8, 214);
             this.checkBox_UseConjugate.Name = "checkBox_UseConjugate";
             this.checkBox_UseConjugate.Size = new System.Drawing.Size(103, 19);
             this.checkBox_UseConjugate.TabIndex = 87;
@@ -957,7 +1008,7 @@
             // 
             // input_FoldCount
             // 
-            this.input_FoldCount.Location = new System.Drawing.Point(99, 260);
+            this.input_FoldCount.Location = new System.Drawing.Point(99, 314);
             this.input_FoldCount.Name = "input_FoldCount";
             this.input_FoldCount.Size = new System.Drawing.Size(56, 23);
             this.input_FoldCount.TabIndex = 95;
@@ -969,7 +1020,7 @@
             // 
             // input_FoldOffsetY
             // 
-            this.input_FoldOffsetY.Location = new System.Drawing.Point(117, 314);
+            this.input_FoldOffsetY.Location = new System.Drawing.Point(117, 368);
             this.input_FoldOffsetY.Name = "input_FoldOffsetY";
             this.input_FoldOffsetY.Size = new System.Drawing.Size(38, 23);
             this.input_FoldOffsetY.TabIndex = 93;
@@ -982,7 +1033,7 @@
             // label_FoldOffset
             // 
             this.label_FoldOffset.AutoSize = true;
-            this.label_FoldOffset.Location = new System.Drawing.Point(3, 317);
+            this.label_FoldOffset.Location = new System.Drawing.Point(3, 371);
             this.label_FoldOffset.Name = "label_FoldOffset";
             this.label_FoldOffset.Size = new System.Drawing.Size(73, 15);
             this.label_FoldOffset.TabIndex = 94;
@@ -991,7 +1042,7 @@
             // 
             // input_FoldOffsetX
             // 
-            this.input_FoldOffsetX.Location = new System.Drawing.Point(76, 314);
+            this.input_FoldOffsetX.Location = new System.Drawing.Point(76, 368);
             this.input_FoldOffsetX.Name = "input_FoldOffsetX";
             this.input_FoldOffsetX.Size = new System.Drawing.Size(38, 23);
             this.input_FoldOffsetX.TabIndex = 92;
@@ -1003,7 +1054,7 @@
             // 
             // input_FoldAngle
             // 
-            this.input_FoldAngle.Location = new System.Drawing.Point(99, 287);
+            this.input_FoldAngle.Location = new System.Drawing.Point(99, 341);
             this.input_FoldAngle.Name = "input_FoldAngle";
             this.input_FoldAngle.Size = new System.Drawing.Size(56, 23);
             this.input_FoldAngle.TabIndex = 90;
@@ -1016,7 +1067,7 @@
             // label_FoldAngle
             // 
             this.label_FoldAngle.AutoSize = true;
-            this.label_FoldAngle.Location = new System.Drawing.Point(3, 290);
+            this.label_FoldAngle.Location = new System.Drawing.Point(3, 344);
             this.label_FoldAngle.Name = "label_FoldAngle";
             this.label_FoldAngle.Size = new System.Drawing.Size(72, 15);
             this.label_FoldAngle.TabIndex = 91;
@@ -1026,7 +1077,7 @@
             // checkBox_UseBuddhabrot
             // 
             this.checkBox_UseBuddhabrot.AutoSize = true;
-            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(8, 344);
+            this.checkBox_UseBuddhabrot.Location = new System.Drawing.Point(8, 398);
             this.checkBox_UseBuddhabrot.Name = "checkBox_UseBuddhabrot";
             this.checkBox_UseBuddhabrot.Size = new System.Drawing.Size(111, 19);
             this.checkBox_UseBuddhabrot.TabIndex = 65;
@@ -1036,7 +1087,7 @@
             // label_BuddhabrotType
             // 
             this.label_BuddhabrotType.AutoSize = true;
-            this.label_BuddhabrotType.Location = new System.Drawing.Point(3, 366);
+            this.label_BuddhabrotType.Location = new System.Drawing.Point(3, 420);
             this.label_BuddhabrotType.Name = "label_BuddhabrotType";
             this.label_BuddhabrotType.Size = new System.Drawing.Size(34, 15);
             this.label_BuddhabrotType.TabIndex = 83;
@@ -1052,7 +1103,7 @@
             "Normal",
             "Inverse",
             "Nebulabrot"});
-            this.input_BuddhabrotType.Location = new System.Drawing.Point(69, 363);
+            this.input_BuddhabrotType.Location = new System.Drawing.Point(69, 417);
             this.input_BuddhabrotType.Name = "input_BuddhabrotType";
             this.input_BuddhabrotType.Size = new System.Drawing.Size(86, 23);
             this.input_BuddhabrotType.TabIndex = 84;
@@ -1091,6 +1142,7 @@
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_Bailout);
+            this.panel_OrbitTrapMenu.Controls.Add(this.LogTextBox);
             this.panel_OrbitTrapMenu.Controls.Add(this.button_AddBailoutTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.button_RemoveBailoutTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapPosition);
@@ -1114,7 +1166,7 @@
             this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(517, 24);
             this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
-            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(178, 421);
+            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(178, 316);
             this.panel_OrbitTrapMenu.TabIndex = 33;
             // 
             // label_OrbitTrapMenu
@@ -1511,7 +1563,7 @@
             this.panel_ColorMenu.Location = new System.Drawing.Point(517, 24);
             this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_ColorMenu.Name = "panel_ColorMenu";
-            this.panel_ColorMenu.Size = new System.Drawing.Size(178, 421);
+            this.panel_ColorMenu.Size = new System.Drawing.Size(178, 316);
             this.panel_ColorMenu.TabIndex = 59;
             // 
             // label_ColorMenu
@@ -2107,28 +2159,37 @@
             this.panel_GeneralMenu.Controls.Add(this.checkBox_LockZoomFactor);
             this.panel_GeneralMenu.Controls.Add(this.label_CameraOrientation);
             this.panel_GeneralMenu.Controls.Add(this.input_Center);
-            this.panel_GeneralMenu.Location = new System.Drawing.Point(12, 449);
+            this.panel_GeneralMenu.Location = new System.Drawing.Point(12, 344);
             this.panel_GeneralMenu.Name = "panel_GeneralMenu";
             this.panel_GeneralMenu.Size = new System.Drawing.Size(500, 71);
             this.panel_GeneralMenu.TabIndex = 70;
+            // 
+            // panel_MenuSelect
+            // 
+            this.panel_MenuSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel_MenuSelect.Controls.Add(this.button_Menu1);
+            this.panel_MenuSelect.Controls.Add(this.button_Menu2);
+            this.panel_MenuSelect.Controls.Add(this.button_Menu3);
+            this.panel_MenuSelect.Controls.Add(this.button_Right);
+            this.panel_MenuSelect.Controls.Add(this.button_Left);
+            this.panel_MenuSelect.Controls.Add(this.button_Menu4);
+            this.panel_MenuSelect.Location = new System.Drawing.Point(517, 344);
+            this.panel_MenuSelect.Name = "panel_MenuSelect";
+            this.panel_MenuSelect.Size = new System.Drawing.Size(161, 71);
+            this.panel_MenuSelect.TabIndex = 71;
             // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(696, 519);
+            this.ClientSize = new System.Drawing.Size(696, 414);
             this.Controls.Add(this.panel_GeneralMenu);
             this.Controls.Add(this.panel_ColorMenu);
             this.Controls.Add(this.glControl);
-            this.Controls.Add(this.button_Menu1);
-            this.Controls.Add(this.button_Menu2);
-            this.Controls.Add(this.button_Menu3);
-            this.Controls.Add(this.button_Menu4);
-            this.Controls.Add(this.button_Left);
-            this.Controls.Add(this.button_Right);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.panel_FormulaMenu);
             this.Controls.Add(this.panel_OrbitTrapMenu);
+            this.Controls.Add(this.panel_MenuSelect);
             this.MinimumSize = new System.Drawing.Size(712, 453);
             this.Name = "MainDlg";
             this.Text = "FractalLive";
@@ -2138,6 +2199,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).EndInit();
             this.panel_FormulaMenu.ResumeLayout(false);
             this.panel_FormulaMenu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_CurrentMatingStep)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_MinIterations)).EndInit();
             this.panel_OrbitTrapMenu.ResumeLayout(false);
             this.panel_OrbitTrapMenu.PerformLayout();
@@ -2149,6 +2211,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).EndInit();
             this.panel_GeneralMenu.ResumeLayout(false);
             this.panel_GeneralMenu.PerformLayout();
+            this.panel_MenuSelect.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2308,6 +2371,11 @@
         private System.Windows.Forms.TextBox input_StartPositionY;
         private System.Windows.Forms.TextBox input_StartPositionX;
         private System.Windows.Forms.Label label_StartPosition;
+        private System.Windows.Forms.Panel panel_MenuSelect;
+        private System.Windows.Forms.NumericUpDown input_CurrentMatingStep;
+        private System.Windows.Forms.TextBox input_MatingSteps;
+        private System.Windows.Forms.Label label_MatingSteps;
+        private System.Windows.Forms.Label label_CurrentMatingStep;
     }
 }
 

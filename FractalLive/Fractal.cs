@@ -65,24 +65,30 @@ namespace FractalLive
                 Center = Vector2.Zero;
                 RiemannAngles = Vector2.Zero;
 
+                InitialDisplayRadius = new FloatBounds(2, .01f, 100);
+
                 Type = type;
                 Formula = formula;
-                InitialDisplayRadius = new FloatBounds(2, .01f, 100);
                 Projection = Projection.Cartesian;
                 IsJuliaCentered = false;
                 Julia = new Vector2(-0.4f, 0.6f);
-                JuliaMating = new Vector2(0.285f, 0.01f);
-                UseConjugate = false;
-                UseBuddhabrot = false;
-                buddhabrotType = Buddhabrot.Normal;
+                JuliaMating1 = new Vector2(-1, 0);
+                JuliaMating2 = new Vector2(0, -1);
+                //JuliaMating2 = new Vector2(0.285f, 0.01f);
+                MatingIterations = 25;
+                IntermediateMatingSteps = 16;
+                CurrentMatingStep = -1;
                 MaxIterations = new IntBounds(100, 1, 9999);
                 MinIterations = new IntBounds(1, 1, 9999);
+                UseConjugate = false;
                 StartPosition = Vector2.Zero;
                 C_Power = new Vector2(1, 0);
                 Power = new Vector2(2, 0);
                 FoldCount = 0;
                 FoldAngle = 0;
                 FoldOffset = new Vector2(0,0);
+                UseBuddhabrot = false;
+                buddhabrotType = Buddhabrot.Normal;
 
                 OrbitTrap = OrbitTrap.Circle;
                 Bailout = 2;
@@ -1136,23 +1142,27 @@ namespace FractalLive
             public float LockedZoom;
             public Vector2 RiemannAngles;
 
+            public FloatBounds InitialDisplayRadius;
+
             public Type Type;
             public Formula Formula;
-            public FloatBounds InitialDisplayRadius;
-            public bool IsJuliaCentered;
             public Vector2 Julia;
-            public Vector2 JuliaMating;
-            public bool UseConjugate;
-            public bool UseBuddhabrot;
-            public Buddhabrot buddhabrotType;
+            public Vector2 JuliaMating1;
+            public Vector2 JuliaMating2;
+            public int MatingIterations;
+            public int IntermediateMatingSteps;
+            public int CurrentMatingStep;
             public IntBounds MaxIterations;
             public IntBounds MinIterations;
+            public bool UseConjugate;
             public Vector2 StartPosition;
             public Vector2 Power;
             public Vector2 C_Power;
             public float FoldCount;
             public float FoldAngle;
             public Vector2 FoldOffset;
+            public bool UseBuddhabrot;
+            public Buddhabrot buddhabrotType;
 
             public OrbitTrap OrbitTrap;
             public Projection Projection;
@@ -1256,6 +1266,8 @@ namespace FractalLive
             public bool UseTerrainColor;
             public FloatBounds TerrainHeight;
 
+            public bool IsJuliaCentered;
+
         }
 
         // not gonna work for riemann sphere where faces are being culled
@@ -1282,8 +1294,8 @@ namespace FractalLive
                     settings.IsJuliaCentered ? 1 : 0,
                     settings.Julia.X,
                     settings.Julia.Y,
-                    settings.JuliaMating.X,
-                    settings.JuliaMating.Y,
+                    settings.JuliaMating1.X,
+                    settings.JuliaMating1.Y,
                     settings.MaxIterations.Value,
                     settings.MinIterations.Value,
                     settings.StartPosition.X,

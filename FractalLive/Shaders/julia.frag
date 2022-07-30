@@ -231,9 +231,9 @@ vec3 Julia()
     else if (proj == PROJ_RIEMANN_SPHERE)
     {
         vec3 pos = normalize(vec3(FragPosModel.x, FragPosModel.y, FragPosModel.z));
-        float tmp = (1 + (pos.y + 1)/(1 - pos.y)) / 2.0 / pow(2,zoom);
-        float r = pos.x*tmp;
-        float i = pos.z*tmp;
+        riemannAdjustment = (1 + (pos.y + 1)/(1 - pos.y)) / 2.0 / pow(2,zoom);
+        float r = pos.x*riemannAdjustment;
+        float i = pos.z*riemannAdjustment;
     
         // Initialize image center
         c = vec2(r + center.x, i + center.y);
@@ -335,10 +335,10 @@ vec2 ComputeFractal(vec2 z, vec2 c, bool withinMaxDistance, inout vec2 dz, inout
         {
             case FRAC_MANDELBROT:
                 dz2 = c_mul(power, (dz2*z + c_pow(dz,power)));
-                dz = c_mul(power, c_mul(z,dz));
+                dz = c_mul(power, c_mul(c_pow(z,power-vec2(1,0)),dz));
                 break;
             case FRAC_LAMBDA:   // c^cp * (z - z^p)
-                dz = c_mul(c_power, dz - power * c_mul(z,dz));
+                dz = c_mul(c_power, dz - power * c_mul(c_pow(z,power-vec2(1,0)),dz));
                 break;
             case FRAC_CUSTOM:
             default:
