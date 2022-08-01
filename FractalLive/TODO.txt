@@ -37,7 +37,7 @@ post iterations (smooth coloring)
 animate textures, julia (circle, factor*fractal edge, etc), orbit traps, rotate normals
 press g to reset camera
 hide controls that aren't relevant altogether
-exiting the form while mating steps fails bug
+exiting the form while mating steps fails or fail textbox validating bug
 julia mating update on another thread
 distance estimation on riemann sphere bug
 no riemann adjustment for julia mating?
@@ -47,5 +47,8 @@ change initial radius on corner resize
 replace julia textboxes with combooxes with included nice julia locations
 conslidate input_EditingColor_SelectionChangeCommitted
 pause and continue julia matings
+raytraced mandelbulb and quaternions
+interior julia -1,0 orbit trap bug
+array of whatever orbit trap I want
 
 misc menu (terrain and animation), terrian, julia minimap, load save settings, doubles and quads

@@ -35,7 +35,7 @@ namespace FractalLive
 
         public enum OrbitTrap
         {
-            Circle = 0, Square = 1, Real = 2, Imaginary = 3, Rectangle = 4, Points = 5, Lines = 6, Custom = 7
+            Circle = 0, Square = 1, Real = 2, Imaginary = 3, Rectangle = 4, Spiral = 5, Points = 6, Lines = 7, Custom = 8
         }
 
         public enum Projection
@@ -88,20 +88,21 @@ namespace FractalLive
                 Power = new Vector2(2, 0);
                 FoldCount = 0;
                 FoldAngle = 0;
-                FoldOffset = new Vector2(0,0);
+                FoldOffset = new Vector2(0, 0);
                 UseBuddhabrot = false;
                 buddhabrotType = Buddhabrot.Normal;
 
                 OrbitTrap = OrbitTrap.Circle;
                 Bailout = 2;
                 OrbitTrapCalculation = Calculation.Minimum;
-                BailoutRectangle = new Vector2(2,2);
+                BailoutRectangle = new Vector2(2, 2);
+                BailoutSpiral = new Vector4(0, 0, 0, 1);
                 BailoutPoints = new Vector2[16];
                 BailoutPoints[0] = Vector2.Zero;
                 BailoutPointsCount = 1;
                 BailoutLines = new Vector4[16];
-                BailoutLines[0] = new Vector4(0,0,0,1);
-                BailoutLines[1] = new Vector4(0,0,1,0);
+                BailoutLines[0] = new Vector4(0, 0, 0, 1);
+                BailoutLines[1] = new Vector4(0, 0, 1, 0);
                 //BailoutLine = new Vector4(-8,-9.5f,-2,-3);
                 BailoutLinesCount = 2;
                 BailoutFactor1 = 0.25f;
@@ -109,7 +110,7 @@ namespace FractalLive
                 UseSecondValue = false;
                 SecondValueFactor1 = 4;
                 SecondValueFactor2 = 20;
-                
+
                 StartOrbitDistance = new FloatBounds(2, 0, (float)maxVal);
                 StartOrbit = new IntBounds(1, 1, 9999);
                 OrbitRange = new IntBounds(MaxIterations.Value, 1, 9999);
@@ -211,10 +212,9 @@ namespace FractalLive
             }
 
             public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
-            public bool Is2DBailout => OrbitTrap >= OrbitTrap.Rectangle && OrbitTrap <= OrbitTrap.Points;
+            public bool Is2DBailout => OrbitTrap == OrbitTrap.Rectangle || OrbitTrap == OrbitTrap.Points;
+            public bool Is3DBailout => OrbitTrap == OrbitTrap.Spiral;
             public bool IsDistanceBailout => OrbitTrap >= OrbitTrap.Points && OrbitTrap <= OrbitTrap.Lines;
-            //public bool Is3DBailout => OrbitTrap >= OrbitTrap.Triangle && OrbitTrap <= OrbitTrap.Triangle;
-            //public bool Is4DBailout => OrbitTrap >= OrbitTrap.Line && OrbitTrap <= OrbitTrap.Line;
             
             public void AddPoint(Vector2 point)
             {
@@ -1174,6 +1174,7 @@ namespace FractalLive
             public float Bailout;
             public FloatBounds StartOrbitDistance;
             public Vector2 BailoutRectangle;
+            public Vector4 BailoutSpiral;
             public Vector2[] BailoutPoints;
             public int BailoutPointsCount;
             public Vector4[] BailoutLines;

@@ -91,18 +91,18 @@
             this.input_Bailout = new System.Windows.Forms.TextBox();
             this.button_Menu4 = new System.Windows.Forms.Button();
             this.panel_FormulaMenu = new System.Windows.Forms.Panel();
-            this.label_CurrentMatingStep = new System.Windows.Forms.Label();
-            this.label_MatingSteps = new System.Windows.Forms.Label();
-            this.input_CurrentMatingStep = new System.Windows.Forms.NumericUpDown();
-            this.input_MatingSteps = new System.Windows.Forms.TextBox();
-            this.input_StartPositionY = new System.Windows.Forms.TextBox();
-            this.input_StartPositionX = new System.Windows.Forms.TextBox();
-            this.label_StartPosition = new System.Windows.Forms.Label();
             this.label_JuliaPosition = new System.Windows.Forms.Label();
             this.input_JuliaX = new System.Windows.Forms.TextBox();
             this.input_JuliaY = new System.Windows.Forms.TextBox();
+            this.label_MatingSteps = new System.Windows.Forms.Label();
+            this.input_MatingSteps = new System.Windows.Forms.TextBox();
+            this.label_CurrentMatingStep = new System.Windows.Forms.Label();
+            this.input_CurrentMatingStep = new System.Windows.Forms.NumericUpDown();
             this.input_MinIterations = new System.Windows.Forms.NumericUpDown();
             this.checkBox_UseConjugate = new System.Windows.Forms.CheckBox();
+            this.label_StartPosition = new System.Windows.Forms.Label();
+            this.input_StartPositionX = new System.Windows.Forms.TextBox();
+            this.input_StartPositionY = new System.Windows.Forms.TextBox();
             this.input_FoldCount = new System.Windows.Forms.TextBox();
             this.input_FoldOffsetY = new System.Windows.Forms.TextBox();
             this.label_FoldOffset = new System.Windows.Forms.Label();
@@ -295,7 +295,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(696, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(937, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -539,7 +539,7 @@
             this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(8, 308);
+            this.LogTextBox.Location = new System.Drawing.Point(722, 295);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
@@ -548,9 +548,8 @@
             // 
             // glControl
             // 
-            this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.glControl.API = OpenTK.Windowing.Common.ContextAPI.OpenGL;
             this.glControl.APIVersion = new System.Version(3, 3, 0, 0);
             this.glControl.Flags = OpenTK.Windowing.Common.ContextFlags.Default;
@@ -626,8 +625,10 @@
             "Real",
             "Imaginary",
             "Rectangle",
+            "Spiral",
             "Points",
             "Lines",
+            "RBGA Texture",
             "Custom"});
             this.input_OrbitTrap.Location = new System.Drawing.Point(69, 27);
             this.input_OrbitTrap.Name = "input_OrbitTrap";
@@ -817,7 +818,7 @@
             // panel_FormulaMenu
             // 
             this.panel_FormulaMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_FormulaMenu.AutoScroll = true;
             this.panel_FormulaMenu.CausesValidation = false;
             this.panel_FormulaMenu.Controls.Add(this.label_FormulaMenu);
@@ -860,87 +861,6 @@
             this.panel_FormulaMenu.Size = new System.Drawing.Size(178, 316);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
-            // label_CurrentMatingStep
-            // 
-            this.label_CurrentMatingStep.AutoSize = true;
-            this.label_CurrentMatingStep.Location = new System.Drawing.Point(3, 135);
-            this.label_CurrentMatingStep.Name = "label_CurrentMatingStep";
-            this.label_CurrentMatingStep.Size = new System.Drawing.Size(81, 15);
-            this.label_CurrentMatingStep.TabIndex = 110;
-            this.label_CurrentMatingStep.Text = "Current Step:*";
-            this.label_CurrentMatingStep.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label_MatingSteps
-            // 
-            this.label_MatingSteps.AutoSize = true;
-            this.label_MatingSteps.Location = new System.Drawing.Point(3, 109);
-            this.label_MatingSteps.Name = "label_MatingSteps";
-            this.label_MatingSteps.Size = new System.Drawing.Size(79, 15);
-            this.label_MatingSteps.TabIndex = 109;
-            this.label_MatingSteps.Text = "Mating Steps:";
-            this.label_MatingSteps.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // input_CurrentMatingStep
-            // 
-            this.input_CurrentMatingStep.CausesValidation = false;
-            this.input_CurrentMatingStep.Location = new System.Drawing.Point(99, 133);
-            this.input_CurrentMatingStep.Maximum = new decimal(new int[] {
-            9999,
-            0,
-            0,
-            0});
-            this.input_CurrentMatingStep.Name = "input_CurrentMatingStep";
-            this.input_CurrentMatingStep.Size = new System.Drawing.Size(55, 23);
-            this.input_CurrentMatingStep.TabIndex = 108;
-            this.input_CurrentMatingStep.ValueChanged += new System.EventHandler(this.input_CurrentMatingStep_ValueChanged);
-            this.input_CurrentMatingStep.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            // 
-            // input_MatingSteps
-            // 
-            this.input_MatingSteps.Location = new System.Drawing.Point(99, 106);
-            this.input_MatingSteps.Name = "input_MatingSteps";
-            this.input_MatingSteps.Size = new System.Drawing.Size(56, 23);
-            this.input_MatingSteps.TabIndex = 107;
-            this.input_MatingSteps.Text = "25, 16";
-            this.input_MatingSteps.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_MatingSteps.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateMultipleUintChar);
-            this.input_MatingSteps.Validating += new System.ComponentModel.CancelEventHandler(this.input_MatingSteps_Validating);
-            this.input_MatingSteps.Validated += new System.EventHandler(this.input_MatingSteps_Validated);
-            // 
-            // input_StartPositionY
-            // 
-            this.input_StartPositionY.Location = new System.Drawing.Point(117, 235);
-            this.input_StartPositionY.Name = "input_StartPositionY";
-            this.input_StartPositionY.Size = new System.Drawing.Size(38, 23);
-            this.input_StartPositionY.TabIndex = 103;
-            this.input_StartPositionY.Text = "0";
-            this.input_StartPositionY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_StartPositionY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_StartPositionY.Validating += new System.ComponentModel.CancelEventHandler(this.input_StartPositionY_Validating);
-            this.input_StartPositionY.Validated += new System.EventHandler(this.input_StartPositionY_Validated);
-            // 
-            // input_StartPositionX
-            // 
-            this.input_StartPositionX.Location = new System.Drawing.Point(76, 235);
-            this.input_StartPositionX.Name = "input_StartPositionX";
-            this.input_StartPositionX.Size = new System.Drawing.Size(38, 23);
-            this.input_StartPositionX.TabIndex = 102;
-            this.input_StartPositionX.Text = "0";
-            this.input_StartPositionX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_StartPositionX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_StartPositionX.Validating += new System.ComponentModel.CancelEventHandler(this.input_StartPositionX_Validating);
-            this.input_StartPositionX.Validated += new System.EventHandler(this.input_StartPositionX_Validated);
-            // 
-            // label_StartPosition
-            // 
-            this.label_StartPosition.AutoSize = true;
-            this.label_StartPosition.Location = new System.Drawing.Point(3, 238);
-            this.label_StartPosition.Name = "label_StartPosition";
-            this.label_StartPosition.Size = new System.Drawing.Size(47, 15);
-            this.label_StartPosition.TabIndex = 101;
-            this.label_StartPosition.Text = "Start at:";
-            this.label_StartPosition.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // label_JuliaPosition
             // 
             this.label_JuliaPosition.AutoSize = true;
@@ -975,6 +895,53 @@
             this.input_JuliaY.Validating += new System.ComponentModel.CancelEventHandler(this.input_JuliaY_Validating);
             this.input_JuliaY.Validated += new System.EventHandler(this.input_JuliaY_Validated);
             // 
+            // label_MatingSteps
+            // 
+            this.label_MatingSteps.AutoSize = true;
+            this.label_MatingSteps.Location = new System.Drawing.Point(3, 109);
+            this.label_MatingSteps.Name = "label_MatingSteps";
+            this.label_MatingSteps.Size = new System.Drawing.Size(79, 15);
+            this.label_MatingSteps.TabIndex = 109;
+            this.label_MatingSteps.Text = "Mating Steps:";
+            this.label_MatingSteps.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_MatingSteps
+            // 
+            this.input_MatingSteps.Location = new System.Drawing.Point(99, 106);
+            this.input_MatingSteps.Name = "input_MatingSteps";
+            this.input_MatingSteps.Size = new System.Drawing.Size(56, 23);
+            this.input_MatingSteps.TabIndex = 107;
+            this.input_MatingSteps.Text = "25, 16";
+            this.input_MatingSteps.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_MatingSteps.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateMultipleUintChar);
+            this.input_MatingSteps.Validating += new System.ComponentModel.CancelEventHandler(this.input_MatingSteps_Validating);
+            this.input_MatingSteps.Validated += new System.EventHandler(this.input_MatingSteps_Validated);
+            // 
+            // label_CurrentMatingStep
+            // 
+            this.label_CurrentMatingStep.AutoSize = true;
+            this.label_CurrentMatingStep.Location = new System.Drawing.Point(3, 135);
+            this.label_CurrentMatingStep.Name = "label_CurrentMatingStep";
+            this.label_CurrentMatingStep.Size = new System.Drawing.Size(81, 15);
+            this.label_CurrentMatingStep.TabIndex = 110;
+            this.label_CurrentMatingStep.Text = "Current Step:*";
+            this.label_CurrentMatingStep.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_CurrentMatingStep
+            // 
+            this.input_CurrentMatingStep.CausesValidation = false;
+            this.input_CurrentMatingStep.Location = new System.Drawing.Point(99, 133);
+            this.input_CurrentMatingStep.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.input_CurrentMatingStep.Name = "input_CurrentMatingStep";
+            this.input_CurrentMatingStep.Size = new System.Drawing.Size(55, 23);
+            this.input_CurrentMatingStep.TabIndex = 108;
+            this.input_CurrentMatingStep.ValueChanged += new System.EventHandler(this.input_CurrentMatingStep_ValueChanged);
+            this.input_CurrentMatingStep.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            // 
             // input_MinIterations
             // 
             this.input_MinIterations.CausesValidation = false;
@@ -1005,6 +972,40 @@
             this.checkBox_UseConjugate.Text = "Use Conjugate";
             this.checkBox_UseConjugate.UseVisualStyleBackColor = true;
             this.checkBox_UseConjugate.CheckedChanged += new System.EventHandler(this.checkBox_UseConjugate_CheckedChanged);
+            // 
+            // label_StartPosition
+            // 
+            this.label_StartPosition.AutoSize = true;
+            this.label_StartPosition.Location = new System.Drawing.Point(3, 238);
+            this.label_StartPosition.Name = "label_StartPosition";
+            this.label_StartPosition.Size = new System.Drawing.Size(47, 15);
+            this.label_StartPosition.TabIndex = 101;
+            this.label_StartPosition.Text = "Start at:";
+            this.label_StartPosition.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_StartPositionX
+            // 
+            this.input_StartPositionX.Location = new System.Drawing.Point(76, 235);
+            this.input_StartPositionX.Name = "input_StartPositionX";
+            this.input_StartPositionX.Size = new System.Drawing.Size(38, 23);
+            this.input_StartPositionX.TabIndex = 102;
+            this.input_StartPositionX.Text = "0";
+            this.input_StartPositionX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_StartPositionX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_StartPositionX.Validating += new System.ComponentModel.CancelEventHandler(this.input_StartPositionX_Validating);
+            this.input_StartPositionX.Validated += new System.EventHandler(this.input_StartPositionX_Validated);
+            // 
+            // input_StartPositionY
+            // 
+            this.input_StartPositionY.Location = new System.Drawing.Point(117, 235);
+            this.input_StartPositionY.Name = "input_StartPositionY";
+            this.input_StartPositionY.Size = new System.Drawing.Size(38, 23);
+            this.input_StartPositionY.TabIndex = 103;
+            this.input_StartPositionY.Text = "0";
+            this.input_StartPositionY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_StartPositionY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_StartPositionY.Validating += new System.ComponentModel.CancelEventHandler(this.input_StartPositionY_Validating);
+            this.input_StartPositionY.Validated += new System.EventHandler(this.input_StartPositionY_Validated);
             // 
             // input_FoldCount
             // 
@@ -1133,7 +1134,7 @@
             // panel_OrbitTrapMenu
             // 
             this.panel_OrbitTrapMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_OrbitTrapMenu.AutoScroll = true;
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapMenu);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_EditingOrbitBailout);
@@ -1142,7 +1143,6 @@
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_OrbitTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_Bailout);
-            this.panel_OrbitTrapMenu.Controls.Add(this.LogTextBox);
             this.panel_OrbitTrapMenu.Controls.Add(this.button_AddBailoutTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.button_RemoveBailoutTrap);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapPosition);
@@ -1512,7 +1512,7 @@
             // panel_ColorMenu
             // 
             this.panel_ColorMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_ColorMenu.AutoScroll = true;
             this.panel_ColorMenu.Controls.Add(this.label_ColorMenu);
             this.panel_ColorMenu.Controls.Add(this.label_EditingColor);
@@ -2166,7 +2166,7 @@
             // 
             // panel_MenuSelect
             // 
-            this.panel_MenuSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel_MenuSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_MenuSelect.Controls.Add(this.button_Menu1);
             this.panel_MenuSelect.Controls.Add(this.button_Menu2);
             this.panel_MenuSelect.Controls.Add(this.button_Menu3);
@@ -2182,7 +2182,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(696, 414);
+            this.ClientSize = new System.Drawing.Size(937, 414);
             this.Controls.Add(this.glControl);
             this.Controls.Add(this.panel_GeneralMenu);
             this.Controls.Add(this.panel_ColorMenu);
@@ -2190,6 +2190,7 @@
             this.Controls.Add(this.panel_FormulaMenu);
             this.Controls.Add(this.panel_OrbitTrapMenu);
             this.Controls.Add(this.panel_MenuSelect);
+            this.Controls.Add(this.LogTextBox);
             this.MinimumSize = new System.Drawing.Size(712, 453);
             this.Name = "MainDlg";
             this.Text = "FractalLive";
