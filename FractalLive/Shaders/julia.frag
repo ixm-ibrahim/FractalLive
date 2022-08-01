@@ -168,6 +168,7 @@ vec3 Rainbow(float mu, float colorCycles);
 vec3 ColorPalette(vec4[6] customPalette, float ratio);
 float DistanceToPoint(vec2 z, vec2 p);
 float DistanceToLine(vec2 z, vec2 a, vec2 b);
+float DistanceToRectangle(vec2 z, float a, float b);
 float DistanceToSpiral(vec2 z);
 float sigmoid(float x, float factor);
 vec3 sigmoid(vec3 v, float factor);
@@ -662,6 +663,31 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, b
             vec2 trap;
             switch (orbitTrap)
             {
+                case TRAP_CIRCLE:
+                    r = length(z.xy);
+                    r2 = length(z.zw);
+
+                    break;
+                case TRAP_SQUARE:
+                    r = DistanceToRectangle(z.xy, bailout, bailout);
+                    r2 = DistanceToRectangle(z.zw, bailout, bailout);
+
+                    break;
+                case TRAP_REAL:
+                    r = DistanceToLine(z.xy, vec2(0,0), vec2(0,1));
+                    r2 = DistanceToLine(z.zw, vec2(0,0), vec2(0,1));
+
+                    break;
+                case TRAP_IMAG:
+                    r = DistanceToLine(z.xy, vec2(0,0), vec2(1,0));
+                    r2 = DistanceToLine(z.zw, vec2(0,0), vec2(1,0));
+
+                    break;
+                case TRAP_RECTANGLE:
+                    r = DistanceToRectangle(z.xy, bailoutRectangle.x, bailoutRectangle.y);
+                    r2 = DistanceToRectangle(z.zw, bailoutRectangle.x, bailoutRectangle.y);
+
+                    break;
                 case TRAP_SPIRAL:
                     r = DistanceToSpiral(z.xy);
                     r2 = DistanceToSpiral(z.zw);
@@ -812,6 +838,31 @@ vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
             vec2 trap;
             switch (orbitTrap)
             {
+                case TRAP_CIRCLE:
+                    r = length(z.xy);
+                    r2 = length(z.zw);
+
+                    break;
+                case TRAP_SQUARE:
+                    r = DistanceToRectangle(z.xy, bailout, bailout);
+                    r2 = DistanceToRectangle(z.zw, bailout, bailout);
+
+                    break;
+                case TRAP_REAL:
+                    r = DistanceToLine(z.xy, vec2(0,0), vec2(0,1));
+                    r2 = DistanceToLine(z.zw, vec2(0,0), vec2(0,1));
+
+                    break;
+                case TRAP_IMAG:
+                    r = DistanceToLine(z.xy, vec2(0,0), vec2(1,0));
+                    r2 = DistanceToLine(z.zw, vec2(0,0), vec2(1,0));
+
+                    break;
+                case TRAP_RECTANGLE:
+                    r = DistanceToRectangle(z.xy, bailoutRectangle.x, bailoutRectangle.y);
+                    r2 = DistanceToRectangle(z.zw, bailoutRectangle.x, bailoutRectangle.y);
+
+                    break;
                 case TRAP_SPIRAL:
                     r = DistanceToSpiral(z.xy);
                     r2 = DistanceToSpiral(z.zw);
@@ -975,8 +1026,24 @@ vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout i
     if (IsWithinIteration(iter))
         switch (orbitTrap)
         {
+            case TRAP_CIRCLE:
+                trap = CalculateOrbitTrapDistance(trap, length(z), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
+            case TRAP_SQUARE:
+                trap = CalculateOrbitTrapDistance(trap, DistanceToRectangle(z, bailout, bailout), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
+            case TRAP_REAL:
+                trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, vec2(0,0), vec2(0,1)), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
+            case TRAP_IMAG:
+                trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, vec2(0,0), vec2(1,0)), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
+            case TRAP_RECTANGLE:
+                trap = CalculateOrbitTrapDistance(trap, DistanceToRectangle(z, bailoutRectangle.x, bailoutRectangle.y), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
             case TRAP_SPIRAL:
                 trap = CalculateOrbitTrapDistance(trap, DistanceToSpiral(z), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
             case TRAP_POINTS:
                 for (int i = 0; i < bailoutPointsCount; i++)
                     trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z, bailoutPoints[i]), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter); 
@@ -1280,6 +1347,12 @@ float DistanceToPoint(vec2 z, vec2 p)
 float DistanceToLine(vec2 z, vec2 a, vec2 b)
 {
     return abs((b.x-a.x)*(a.y-z.y) - (a.x-z.x)*(b.y-a.y)) / sqrt(pow(b.x-a.x,2) + pow(b.y-a.y,2));
+}
+float DistanceToRectangle(vec2 z, float a, float b)
+{
+    float dx = max(abs(z.x) - a / 2, 0);
+    float dy = max(abs(z.y) - b / 2, 0);
+    return dx * dx + dy * dy;
 }
 float DistanceToSpiral(vec2 z)
 {

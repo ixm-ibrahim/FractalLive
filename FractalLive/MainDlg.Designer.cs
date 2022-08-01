@@ -1619,7 +1619,7 @@
             this.input_Coloring.Items.AddRange(new object[] {
             "Black",
             "White",
-            "Interation",
+            "Banded",
             "Smooth",
             "Stripes 1",
             "Stripes 2",

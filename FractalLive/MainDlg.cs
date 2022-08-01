@@ -1649,9 +1649,11 @@ namespace FractalLive
         {
             CurrentSettings.OrbitTrap = (Fractal.OrbitTrap)input_OrbitTrap.SelectedIndex;
 
+               input_OrbitTrapCalculation.Enabled = true;
+                input_Bailout.Enabled = true;
+
             if (CurrentSettings.Is1DBailout)
             {
-                input_Bailout.Enabled = true;
                 input_BailoutX.Enabled = false;
                 input_BailoutY.Enabled = false;
 
@@ -1659,7 +1661,7 @@ namespace FractalLive
                 button_RemoveBailoutTrap.Enabled = false;
                 input_EditingBailoutTrap.Enabled = false;
 
-                input_OrbitTrapCalculation.Enabled = false;
+                //input_OrbitTrapCalculation.Enabled = false;
                 checkBox_UseSecondValue.Enabled = false;
                 input_SecondValueFactor1.Enabled = false;
                 input_SecondValueFactor2.Enabled = false;
@@ -1676,7 +1678,7 @@ namespace FractalLive
                 bool pointsOnly = CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points;
                 bool pointsOrSpiral = pointsOnly || CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Spiral;
 
-                input_Bailout.Enabled = pointsOrSpiral;
+                //input_Bailout.Enabled = pointsOrSpiral;
                 input_BailoutX.Enabled = true;
                 input_BailoutY.Enabled = true;
 
@@ -1684,7 +1686,6 @@ namespace FractalLive
                 button_RemoveBailoutTrap.Enabled = pointsOnly;
                 input_EditingBailoutTrap.Enabled = pointsOnly;
 
-                input_OrbitTrapCalculation.Enabled = pointsOrSpiral;
                 checkBox_UseSecondValue.Enabled = pointsOrSpiral;
                 input_SecondValueFactor1.Enabled = pointsOrSpiral && checkBox_UseSecondValue.Checked;
                 input_SecondValueFactor2.Enabled = pointsOrSpiral && checkBox_UseSecondValue.Checked;
@@ -1718,7 +1719,7 @@ namespace FractalLive
             }
             else // lines
             {
-                input_Bailout.Enabled = true;
+                //input_Bailout.Enabled = true;
                 input_BailoutX.Enabled = true;
                 input_BailoutY.Enabled = true;
 
@@ -1726,7 +1727,7 @@ namespace FractalLive
                 button_RemoveBailoutTrap.Enabled = true;
                 input_EditingBailoutTrap.Enabled = true;
 
-                input_OrbitTrapCalculation.Enabled = true;
+                //input_OrbitTrapCalculation.Enabled = true;
                 checkBox_UseSecondValue.Enabled = true;
                 input_SecondValueFactor1.Enabled = checkBox_UseSecondValue.Checked;
                 input_SecondValueFactor2.Enabled = checkBox_UseSecondValue.Checked;
@@ -1867,7 +1868,7 @@ namespace FractalLive
 
         private void input_BailoutY_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = !IsDecimalChar(e, CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines);
+            e.Handled = !IsDecimalChar(e, CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Spiral || CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines);
         }
         private void input_BailoutY_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {

@@ -167,6 +167,7 @@ vec3 Rainbow(float mu, float colorCycles);
 vec3 ColorPalette(vec4[6] customPalette, float ratio);
 float DistanceToPoint(vec2 z, vec2 p);
 float DistanceToLine(vec2 z, vec2 a, vec2 b);
+float DistanceToRectangle(vec2 z, float a, float b);
 float DistanceToSpiral(vec2 z);
 float sigmoid(float x, float factor);
 vec3 sigmoid(vec3 v, float factor);
@@ -468,21 +469,21 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
 
                 color = mix(outerColor1, outerColor2, theta);
 
-                if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
+                //if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
                     color = mix(Rainbow(orbitTrapFactor*trap.x, colorCycles), color, trap.x);
 
                 break;
             case COL_BLACK:
                 color = vec3(0);
                 
-                if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
+                //if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
                     color = mix(1-vec3(pow(trap.x,orbitTrapFactor)), color, trap.x);
 
                 break;
             case COL_WHITE:
                 color = vec3(1);
                 
-                if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
+                //if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
                     color = mix(vec3(pow(trap.x,orbitTrapFactor)), color, trap.x);
 
                 break;
@@ -499,7 +500,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
                 else
                     color = useCustomPalette ? ColorPalette(customPalette, mu) : Rainbow(mu*50, colorCycles);
                 
-                if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
+                //if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
                     color = mix(Rainbow(orbitTrapFactor*trap.x, colorCycles), color, trap.x);
 
                 break;
@@ -528,7 +529,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
                 //color = mix(outerColor1, outerColor2, dist);
                 color = mix(outerColor1, outerColor2, fract(GetSmoothIter(iter, z)));
                 
-                if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
+                //if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
                     color = mix(Rainbow(orbitTrapFactor*trap.x, colorCycles), color, trap.x);
 
                 break;
@@ -537,7 +538,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
             {
                 color = vec3(0);
                 
-                if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
+                //if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
                     color = mix(1-vec3(pow(trap.x,orbitTrapFactor)), color, trap.x);
 
                 break;
@@ -546,19 +547,21 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
             {
                 color = vec3(1);
                 
-                if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
+               // if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
                     color = mix(vec3(pow(trap.x,orbitTrapFactor)), color, trap.x);
 
                 break;
             }
             case COL_ITERATION:
             {
-                color = (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES) ? mix(orbitColor, iterColor, trap.x) : iterColor;
+                //color = (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES) ? mix(orbitColor, iterColor, trap.x) : iterColor;
+                color = mix(orbitColor, iterColor, trap.x);
                 break;
             }
             case COL_SMOOTH:
             {
-                color = (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES) ? mix(orbitColor, muColor, trap.x) : muColor;
+                //color = (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES) ? mix(orbitColor, muColor, trap.x) : muColor;
+                color = mix(orbitColor, muColor, trap.x);
                 break;
             }
             case COL_STRIPES:
@@ -566,7 +569,8 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
                 //color = vec3(stripes);
                 //color = useCustomPalette ? ColorPalette(customPalette, stripes*colorFactor) : Rainbow(stripes, 1*colorFactor);
                 color = muColor * sigmoid(stripes.x, colorFactor);
-                color = (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES) ? mix(orbitColor, color, trap.x) : color;
+                //color = (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES) ? mix(orbitColor, color, trap.x) : color;
+                color = mix(orbitColor, color, trap.x);
                 break;
             }
             default:
@@ -661,6 +665,31 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, b
             vec2 trap;
             switch (orbitTrap)
             {
+                case TRAP_CIRCLE:
+                    r = length(z.xy);
+                    r2 = length(z.zw);
+
+                    break;
+                case TRAP_SQUARE:
+                    r = DistanceToRectangle(z.xy, bailout, bailout);
+                    r2 = DistanceToRectangle(z.zw, bailout, bailout);
+
+                    break;
+                case TRAP_REAL:
+                    r = DistanceToLine(z.xy, vec2(0,0), vec2(0,1));
+                    r2 = DistanceToLine(z.zw, vec2(0,0), vec2(0,1));
+
+                    break;
+                case TRAP_IMAG:
+                    r = DistanceToLine(z.xy, vec2(0,0), vec2(1,0));
+                    r2 = DistanceToLine(z.zw, vec2(0,0), vec2(1,0));
+
+                    break;
+                case TRAP_RECTANGLE:
+                    r = DistanceToRectangle(z.xy, bailoutRectangle.x, bailoutRectangle.y);
+                    r2 = DistanceToRectangle(z.zw, bailoutRectangle.x, bailoutRectangle.y);
+
+                    break;
                 case TRAP_SPIRAL:
                     r = DistanceToSpiral(z.xy);
                     r2 = DistanceToSpiral(z.zw);
@@ -783,7 +812,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, b
             color = c;
     }
 
-    if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
+    //if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
         color = mix(color, color*sigmoid(trap.x,orbitTrapFactor), trap.x);
         //color = mix(color, vec3(0), trap);
 
@@ -811,6 +840,31 @@ vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
             vec2 trap;
             switch (orbitTrap)
             {
+                case TRAP_CIRCLE:
+                    r = length(z.xy);
+                    r2 = length(z.zw);
+
+                    break;
+                case TRAP_SQUARE:
+                    r = DistanceToRectangle(z.xy, bailout, bailout);
+                    r2 = DistanceToRectangle(z.zw, bailout, bailout);
+
+                    break;
+                case TRAP_REAL:
+                    r = DistanceToLine(z.xy, vec2(0,0), vec2(0,1));
+                    r2 = DistanceToLine(z.zw, vec2(0,0), vec2(0,1));
+
+                    break;
+                case TRAP_IMAG:
+                    r = DistanceToLine(z.xy, vec2(0,0), vec2(1,0));
+                    r2 = DistanceToLine(z.zw, vec2(0,0), vec2(1,0));
+
+                    break;
+                case TRAP_RECTANGLE:
+                    r = DistanceToRectangle(z.xy, bailoutRectangle.x, bailoutRectangle.y);
+                    r2 = DistanceToRectangle(z.zw, bailoutRectangle.x, bailoutRectangle.y);
+
+                    break;
                 case TRAP_SPIRAL:
                     r = DistanceToSpiral(z.xy);
                     r2 = DistanceToSpiral(z.zw);
@@ -929,7 +983,7 @@ vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
             color = c;
     }
 
-    if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
+    //if (orbitTrap >= TRAP_SPIRAL && orbitTrap <= TRAP_LINES)
         if (i_coloring <= COL_SMOOTH)
             color = mix(Rainbow(i_orbitTrapFactor*trap.x, i_colorCycles), color, trap.x);
         else
@@ -974,8 +1028,24 @@ vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout i
     if (IsWithinIteration(iter))
         switch (orbitTrap)
         {
+            case TRAP_CIRCLE:
+                trap = CalculateOrbitTrapDistance(trap, length(z), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
+            case TRAP_SQUARE:
+                trap = CalculateOrbitTrapDistance(trap, DistanceToRectangle(z, bailout, bailout), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
+            case TRAP_REAL:
+                trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, vec2(0,0), vec2(0,1)), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
+            case TRAP_IMAG:
+                trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, vec2(0,0), vec2(1,0)), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
+            case TRAP_RECTANGLE:
+                trap = CalculateOrbitTrapDistance(trap, DistanceToRectangle(z, bailoutRectangle.x, bailoutRectangle.y), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
             case TRAP_SPIRAL:
                 trap = CalculateOrbitTrapDistance(trap, DistanceToSpiral(z), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                break;
             case TRAP_POINTS:
                 for (int i = 0; i < bailoutPointsCount; i++)
                     trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z, bailoutPoints[i]), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter); 
@@ -1279,6 +1349,14 @@ float DistanceToPoint(vec2 z, vec2 p)
 float DistanceToLine(vec2 z, vec2 a, vec2 b)
 {
     return abs((b.x-a.x)*(a.y-z.y) - (a.x-z.x)*(b.y-a.y)) / sqrt(pow(b.x-a.x,2) + pow(b.y-a.y,2));
+}
+float DistanceToRectangle(vec2 z, float a, float b)
+{
+    float dx = max(abs(z.x) - a, 0);
+    float dy = max(abs(z.y) - b, 0);
+    //float dx = abs(abs(z.x) - a);
+    //float dy = abs(abs(z.y) - b);
+    return dx * dx + dy * dy;
 }
 float DistanceToSpiral(vec2 z)
 {
