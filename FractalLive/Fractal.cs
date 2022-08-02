@@ -35,7 +35,7 @@ namespace FractalLive
 
         public enum OrbitTrap
         {
-            Circle = 0, Square = 1, Real = 2, Imaginary = 3, Rectangle = 4, Spiral = 5, Points = 6, Lines = 7, Custom = 8
+            Circle = 0, Square = 1, Real = 2, Imaginary = 3, Rectangle = 4, Spiral = 5, Points = 6, Lines = 7, Texture = 8, Custom = 9
         }
 
         public enum Projection
@@ -104,6 +104,13 @@ namespace FractalLive
                 BailoutLines[0] = new Vector4(0, 0, 0, 1);
                 BailoutLines[1] = new Vector4(0, 0, 1, 0);
                 //BailoutLine = new Vector4(-8,-9.5f,-2,-3);
+                BailoutTexture = "";
+                BailoutTextureEscapeColor = Vector4.Zero;
+                BailoutTextureUseAlpha = false;
+                BailoutTextureBlend = 0.5f;
+                BailoutTextureScaleX = 1;
+                BailoutTextureScaleY = 1;
+                BailoutUsePolarTextureCoordinates = false;
                 BailoutLinesCount = 2;
                 BailoutFactor1 = 0.25f;
                 BailoutFactor2 = 7;
@@ -1179,6 +1186,13 @@ namespace FractalLive
             public int BailoutPointsCount;
             public Vector4[] BailoutLines;
             public int BailoutLinesCount;
+            public string BailoutTexture;
+            public Vector4 BailoutTextureEscapeColor;
+            public bool BailoutTextureUseAlpha;
+            public float BailoutTextureBlend;
+            public float BailoutTextureScaleX;
+            public float BailoutTextureScaleY;
+            public bool BailoutUsePolarTextureCoordinates;
             public float BailoutFactor1;
             public float BailoutFactor2;
             public bool UseSecondValue;

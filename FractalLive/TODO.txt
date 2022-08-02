@@ -50,5 +50,11 @@ pause and continue julia matings
 raytraced mandelbulb and quaternions
 interior julia -1,0 orbit trap bug
 array of whatever orbit trap I want
+match orbit trap with normal orbit traps bug
+interior with rectangle orbit traps bug
+mandelbrot/julia orbit trap
+adding too many lines (points too?) bug
+match orbit trap for texture
+
 
 misc menu (terrain and animation), terrian, julia minimap, load save settings, doubles and quads
