@@ -35,7 +35,7 @@
             System.Windows.Forms.Label label_StartDistance;
             System.Windows.Forms.Label label_MinIterations;
             System.Windows.Forms.Label label_FoldCount;
-            System.Windows.Forms.Label label_BailoutTextureEscapeColor;
+            System.Windows.Forms.Label label_BailoutTextureBlend;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainDlg));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -116,7 +116,11 @@
             this.label_OrbitTrapPosition = new System.Windows.Forms.Label();
             this.input_BailoutX = new System.Windows.Forms.TextBox();
             this.panel_OrbitTrapMenu = new System.Windows.Forms.Panel();
-            this.input_BailoutTextureEscapeColor = new System.Windows.Forms.TextBox();
+            this.input_BailoutTextureBlend = new System.Windows.Forms.NumericUpDown();
+            this.label_BailoutTextureScale = new System.Windows.Forms.Label();
+            this.input_BailoutTextureScaleX = new System.Windows.Forms.TextBox();
+            this.input_BailoutTextureScaleY = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.label_OrbitTrapMenu = new System.Windows.Forms.Label();
             this.label_EditingOrbitBailout = new System.Windows.Forms.Label();
             this.input_EditingBailoutTrapList = new System.Windows.Forms.NumericUpDown();
@@ -206,13 +210,14 @@
             label_StartDistance = new System.Windows.Forms.Label();
             label_MinIterations = new System.Windows.Forms.Label();
             label_FoldCount = new System.Windows.Forms.Label();
-            label_BailoutTextureEscapeColor = new System.Windows.Forms.Label();
+            label_BailoutTextureBlend = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_MaxIterations)).BeginInit();
             this.panel_FormulaMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.input_CurrentMatingStep)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_MinIterations)).BeginInit();
             this.panel_OrbitTrapMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_BailoutTextureBlend)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_EditingBailoutTrapList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_OrbitRange)).BeginInit();
@@ -292,15 +297,15 @@
             label_FoldCount.Text = "Fold Count:*";
             label_FoldCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label_BailoutTextureEscapeColor
+            // label_BailoutTextureBlend
             // 
-            label_BailoutTextureEscapeColor.AutoSize = true;
-            label_BailoutTextureEscapeColor.Location = new System.Drawing.Point(3, 375);
-            label_BailoutTextureEscapeColor.Name = "label_BailoutTextureEscapeColor";
-            label_BailoutTextureEscapeColor.Size = new System.Drawing.Size(78, 15);
-            label_BailoutTextureEscapeColor.TabIndex = 110;
-            label_BailoutTextureEscapeColor.Text = "Escape Color:";
-            label_BailoutTextureEscapeColor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            label_BailoutTextureBlend.AutoSize = true;
+            label_BailoutTextureBlend.Location = new System.Drawing.Point(3, 400);
+            label_BailoutTextureBlend.Name = "label_BailoutTextureBlend";
+            label_BailoutTextureBlend.Size = new System.Drawing.Size(86, 15);
+            label_BailoutTextureBlend.TabIndex = 113;
+            label_BailoutTextureBlend.Text = "Texture Blend:*";
+            label_BailoutTextureBlend.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // menuStrip1
             // 
@@ -555,7 +560,7 @@
             this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LogTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Location = new System.Drawing.Point(899, 524);
+            this.LogTextBox.Location = new System.Drawing.Point(899, 568);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
@@ -574,7 +579,7 @@
             this.glControl.MinimumSize = new System.Drawing.Size(500, 309);
             this.glControl.Name = "glControl";
             this.glControl.Profile = OpenTK.Windowing.Common.ContextProfile.Compatability;
-            this.glControl.Size = new System.Drawing.Size(500, 491);
+            this.glControl.Size = new System.Drawing.Size(500, 535);
             this.glControl.TabIndex = 2;
             this.glControl.Text = "glControl1";
             // 
@@ -644,7 +649,6 @@
             "Spiral",
             "Points",
             "Lines",
-            "Texture",
             "Custom"});
             this.input_OrbitTrap.Location = new System.Drawing.Point(69, 27);
             this.input_OrbitTrap.Name = "input_OrbitTrap";
@@ -874,7 +878,7 @@
             this.panel_FormulaMenu.Location = new System.Drawing.Point(517, 24);
             this.panel_FormulaMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_FormulaMenu.Name = "panel_FormulaMenu";
-            this.panel_FormulaMenu.Size = new System.Drawing.Size(178, 491);
+            this.panel_FormulaMenu.Size = new System.Drawing.Size(178, 535);
             this.panel_FormulaMenu.TabIndex = 32;
             // 
             // label_JuliaPosition
@@ -1152,8 +1156,12 @@
             this.panel_OrbitTrapMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_OrbitTrapMenu.AutoScroll = true;
-            this.panel_OrbitTrapMenu.Controls.Add(label_BailoutTextureEscapeColor);
-            this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutTextureEscapeColor);
+            this.panel_OrbitTrapMenu.Controls.Add(label_BailoutTextureBlend);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutTextureBlend);
+            this.panel_OrbitTrapMenu.Controls.Add(this.label_BailoutTextureScale);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutTextureScaleX);
+            this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutTextureScaleY);
+            this.panel_OrbitTrapMenu.Controls.Add(this.button1);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_OrbitTrapMenu);
             this.panel_OrbitTrapMenu.Controls.Add(this.label_EditingOrbitBailout);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_EditingBailoutTrapList);
@@ -1187,20 +1195,83 @@
             this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(701, 24);
             this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
-            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(178, 491);
+            this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(178, 535);
             this.panel_OrbitTrapMenu.TabIndex = 33;
             // 
-            // input_BailoutTextureEscapeColor
+            // input_BailoutTextureBlend
             // 
-            this.input_BailoutTextureEscapeColor.Location = new System.Drawing.Point(92, 372);
-            this.input_BailoutTextureEscapeColor.Name = "input_BailoutTextureEscapeColor";
-            this.input_BailoutTextureEscapeColor.Size = new System.Drawing.Size(64, 23);
-            this.input_BailoutTextureEscapeColor.TabIndex = 111;
-            this.input_BailoutTextureEscapeColor.Text = "2";
-            this.input_BailoutTextureEscapeColor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_BailoutTextureEscapeColor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.input_BailoutTextureEscapeColor_KeyPress);
-            this.input_BailoutTextureEscapeColor.Validating += new System.ComponentModel.CancelEventHandler(this.input_BailoutTextureEscapeColor_Validating);
-            this.input_BailoutTextureEscapeColor.Validated += new System.EventHandler(this.input_BailoutTextureEscapeColor_Validated);
+            this.input_BailoutTextureBlend.CausesValidation = false;
+            this.input_BailoutTextureBlend.DecimalPlaces = 2;
+            this.input_BailoutTextureBlend.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.input_BailoutTextureBlend.Location = new System.Drawing.Point(99, 398);
+            this.input_BailoutTextureBlend.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.input_BailoutTextureBlend.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.input_BailoutTextureBlend.Name = "input_BailoutTextureBlend";
+            this.input_BailoutTextureBlend.Size = new System.Drawing.Size(56, 23);
+            this.input_BailoutTextureBlend.TabIndex = 114;
+            this.input_BailoutTextureBlend.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.input_BailoutTextureBlend.ValueChanged += new System.EventHandler(this.input_BailoutTextureBlend_ValueChanged);
+            // 
+            // label_BailoutTextureScale
+            // 
+            this.label_BailoutTextureScale.AutoSize = true;
+            this.label_BailoutTextureScale.Location = new System.Drawing.Point(3, 426);
+            this.label_BailoutTextureScale.Name = "label_BailoutTextureScale";
+            this.label_BailoutTextureScale.Size = new System.Drawing.Size(37, 15);
+            this.label_BailoutTextureScale.TabIndex = 116;
+            this.label_BailoutTextureScale.Text = "Scale:";
+            this.label_BailoutTextureScale.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_BailoutTextureScaleX
+            // 
+            this.input_BailoutTextureScaleX.Location = new System.Drawing.Point(69, 423);
+            this.input_BailoutTextureScaleX.Name = "input_BailoutTextureScaleX";
+            this.input_BailoutTextureScaleX.Size = new System.Drawing.Size(40, 23);
+            this.input_BailoutTextureScaleX.TabIndex = 115;
+            this.input_BailoutTextureScaleX.Text = "1";
+            this.input_BailoutTextureScaleX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_BailoutTextureScaleX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_BailoutTextureScaleX.Validating += new System.ComponentModel.CancelEventHandler(this.input_BailoutTextureScaleX_Validating);
+            this.input_BailoutTextureScaleX.Validated += new System.EventHandler(this.input_BailoutTextureScaleX_Validated);
+            // 
+            // input_BailoutTextureScaleY
+            // 
+            this.input_BailoutTextureScaleY.Location = new System.Drawing.Point(115, 423);
+            this.input_BailoutTextureScaleY.Name = "input_BailoutTextureScaleY";
+            this.input_BailoutTextureScaleY.Size = new System.Drawing.Size(40, 23);
+            this.input_BailoutTextureScaleY.TabIndex = 117;
+            this.input_BailoutTextureScaleY.Text = "1";
+            this.input_BailoutTextureScaleY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_BailoutTextureScaleY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_BailoutTextureScaleY.Validating += new System.ComponentModel.CancelEventHandler(this.input_BailoutTextureScaleY_Validating);
+            this.input_BailoutTextureScaleY.Validated += new System.EventHandler(this.input_BailoutTextureScaleY_Validated);
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button1.Location = new System.Drawing.Point(30, 346);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(96, 25);
+            this.button1.TabIndex = 112;
+            this.button1.Text = "Clear Texture";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label_OrbitTrapMenu
             // 
@@ -1437,7 +1508,7 @@
             // label_BailoutTexture
             // 
             this.label_BailoutTexture.AutoSize = true;
-            this.label_BailoutTexture.Location = new System.Drawing.Point(3, 349);
+            this.label_BailoutTexture.Location = new System.Drawing.Point(3, 376);
             this.label_BailoutTexture.Name = "label_BailoutTexture";
             this.label_BailoutTexture.Size = new System.Drawing.Size(48, 15);
             this.label_BailoutTexture.TabIndex = 102;
@@ -1446,7 +1517,7 @@
             // 
             // input_BailoutTexture
             // 
-            this.input_BailoutTexture.Location = new System.Drawing.Point(57, 346);
+            this.input_BailoutTexture.Location = new System.Drawing.Point(57, 373);
             this.input_BailoutTexture.Name = "input_BailoutTexture";
             this.input_BailoutTexture.Size = new System.Drawing.Size(98, 23);
             this.input_BailoutTexture.TabIndex = 103;
@@ -1457,7 +1528,7 @@
             // checkBox_BailoutUsePolarTextureCoordinates
             // 
             this.checkBox_BailoutUsePolarTextureCoordinates.AutoSize = true;
-            this.checkBox_BailoutUsePolarTextureCoordinates.Location = new System.Drawing.Point(8, 398);
+            this.checkBox_BailoutUsePolarTextureCoordinates.Location = new System.Drawing.Point(8, 448);
             this.checkBox_BailoutUsePolarTextureCoordinates.Name = "checkBox_BailoutUsePolarTextureCoordinates";
             this.checkBox_BailoutUsePolarTextureCoordinates.Size = new System.Drawing.Size(120, 19);
             this.checkBox_BailoutUsePolarTextureCoordinates.TabIndex = 109;
@@ -1627,7 +1698,7 @@
             this.panel_ColorMenu.Location = new System.Drawing.Point(896, 24);
             this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_ColorMenu.Name = "panel_ColorMenu";
-            this.panel_ColorMenu.Size = new System.Drawing.Size(178, 491);
+            this.panel_ColorMenu.Size = new System.Drawing.Size(178, 535);
             this.panel_ColorMenu.TabIndex = 59;
             // 
             // label_ColorMenu
@@ -2223,7 +2294,7 @@
             this.panel_GeneralMenu.Controls.Add(this.checkBox_LockZoomFactor);
             this.panel_GeneralMenu.Controls.Add(this.label_CameraOrientation);
             this.panel_GeneralMenu.Controls.Add(this.input_Center);
-            this.panel_GeneralMenu.Location = new System.Drawing.Point(12, 519);
+            this.panel_GeneralMenu.Location = new System.Drawing.Point(12, 563);
             this.panel_GeneralMenu.Name = "panel_GeneralMenu";
             this.panel_GeneralMenu.Size = new System.Drawing.Size(500, 71);
             this.panel_GeneralMenu.TabIndex = 70;
@@ -2237,7 +2308,7 @@
             this.panel_MenuSelect.Controls.Add(this.button_Right);
             this.panel_MenuSelect.Controls.Add(this.button_Left);
             this.panel_MenuSelect.Controls.Add(this.button_Menu4);
-            this.panel_MenuSelect.Location = new System.Drawing.Point(517, 519);
+            this.panel_MenuSelect.Location = new System.Drawing.Point(517, 563);
             this.panel_MenuSelect.Name = "panel_MenuSelect";
             this.panel_MenuSelect.Size = new System.Drawing.Size(161, 71);
             this.panel_MenuSelect.TabIndex = 71;
@@ -2246,7 +2317,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1236, 589);
+            this.ClientSize = new System.Drawing.Size(1236, 633);
             this.Controls.Add(this.glControl);
             this.Controls.Add(this.panel_GeneralMenu);
             this.Controls.Add(this.panel_ColorMenu);
@@ -2268,6 +2339,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_MinIterations)).EndInit();
             this.panel_OrbitTrapMenu.ResumeLayout(false);
             this.panel_OrbitTrapMenu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_BailoutTextureBlend)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_EditingBailoutTrapList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_StartOrbit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.input_OrbitRange)).EndInit();
@@ -2444,7 +2516,11 @@
         private System.Windows.Forms.Label label_BailoutTexture;
         private System.Windows.Forms.TextBox input_BailoutTexture;
         private System.Windows.Forms.CheckBox checkBox_BailoutUsePolarTextureCoordinates;
-        private System.Windows.Forms.TextBox input_BailoutTextureEscapeColor;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.NumericUpDown input_BailoutTextureBlend;
+        private System.Windows.Forms.Label label_BailoutTextureScale;
+        private System.Windows.Forms.TextBox input_BailoutTextureScaleX;
+        private System.Windows.Forms.TextBox input_BailoutTextureScaleY;
     }
 }
 

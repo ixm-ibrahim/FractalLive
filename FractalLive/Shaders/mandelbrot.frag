@@ -21,8 +21,7 @@
 #define TRAP_SPIRAL					    5
 #define TRAP_POINTS						6
 #define TRAP_LINES						7
-#define TRAP_TEXTURE					8
-#define TRAP_CUSTOM						9
+#define TRAP_CUSTOM						8
 
 #define COL_BLACK						0
 #define COL_WHITE						1
@@ -91,7 +90,10 @@ uniform float bailoutFactor1;
 uniform float bailoutFactor2;
 uniform float secondValueFactor1;
 uniform float secondValueFactor2;
+uniform bool useBailoutTexture;
+uniform float bailoutTextureBlend;
 uniform vec2 bailoutTextureScale;
+uniform bool bailoutUsePolarTextureCoordinates;
 
 uniform bool splitInteriorExterior;
 
@@ -151,16 +153,16 @@ void main()
 	FragColor = vec4(Mandelbrot(), 1.0);FragPosWorld;
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment);
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment, out vec3 texCoords);
 vec2 ComputeFractal(vec2 z, vec2 c, bool withinMaxDistance, inout vec2 dz, inout vec2 dz2);
 vec2 FoldZ(vec2 z);
-vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes);
-vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, bool escacped);
-vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes);
+vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes, vec3 texCoords);
+vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, bool escacped, inout vec3 texCoords);
+vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, inout vec3 texCoords);
 bool IsBounded(int iter, vec2 z);
 bool IsWithinIteration(int iter);
-vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout ivec2 domainIter);
-vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, bool matchOrbitTrap, inout vec4 domainZ, inout ivec2 domainIter);
+vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout ivec2 domainIter, inout vec3 texCoords);
+vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, bool matchOrbitTrap, inout vec4 domainZ, inout ivec2 domainIter, inout vec3 texCoords);
 vec4 CalculateDomainZ(vec4 domainZ, vec2 newZ, int iter, inout ivec2 domainIter);
 float GetSmoothIter(float iter, vec2 z);
 vec2 Fix(vec2 z);
@@ -200,6 +202,7 @@ vec3 Mandelbrot()
     ivec2 domainIter;
     float distanceEstimation;
     vec4 stripes = vec4(0);
+    vec3 texCoords;
     
     vec2 c = FragPosModel.xy;
     float riemannAdjustment = 1;
@@ -248,12 +251,12 @@ vec3 Mandelbrot()
         c = vec2(r + center.x, i + center.y);
     }
 
-    z = MandelbrotLoop(c, iter, trap, domainZ, domainIter, distanceEstimation, stripes, riemannAdjustment);
+    z = MandelbrotLoop(c, iter, trap, domainZ, domainIter, distanceEstimation, stripes, riemannAdjustment, texCoords);
     
-	return GetColor(z, c, iter, trap, domainZ, domainIter, distanceEstimation, stripes);
+	return GetColor(z, c, iter, trap, domainZ, domainIter, distanceEstimation, stripes, texCoords);
 }
 
-vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment)
+vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, out ivec2 domainIter, inout float distanceEstimation, inout vec4 stripesAddend, float riemannAdjustment, out vec3 texCoords)
 {
 	vec2 z = startPosition + ((formula == FRAC_LAMBDA) ? c_div(c_1(), power) : vec2(0));
     domainZ = vec4(c,c);
@@ -265,6 +268,8 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
     vec2 dz2 = vec2(0.0,0.0);
     float m2 = dot(z,z);
     bool withinMaxDistance = true;
+
+    texCoords = vec3(0);
     
 	for (iter = 0; iter < maxIterations; ++iter)
 	{
@@ -281,17 +286,14 @@ vec2 MandelbrotLoop(vec2 c, inout int iter, inout vec2 trap, out vec4 domainZ, o
             if (!matchOrbitTrap)
                 domainZ = CalculateDomainZ(domainZ, z, iter, domainIter);
 
-            trap = GetOrbitTrap(z, iter, trap, domainZ, domainIter);
+            trap = GetOrbitTrap(z, iter, trap, domainZ, domainIter, texCoords);
         }
-
-        //if (orbitTrap == TRAP_TEXTURE && trap.y != 0)
-            //break;
         
         if (withinMaxDistance)
         {
             m2 = dot(z,z);
 
-            if (m2 > maxDistanceEstimation || (orbitTrap == TRAP_TEXTURE && trap.y != 0))
+            if (m2 > maxDistanceEstimation)
                 withinMaxDistance = false;
         }
         
@@ -455,14 +457,14 @@ vec2 FoldZ(vec2 z)
     return z;
 }
 
-vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes)
+vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIter, float distanceEstimation, vec4 stripes, vec3 texCoords)
 {
     // Decide the color based on the number of iterations
     vec3 color;
     if (iter >= maxIterations)
     {
         int c = splitInteriorExterior ? i_coloring : coloring;
-        vec3 domColor = splitInteriorExterior ? I_DomainColoring(i_coloring, domainZ, domainIter, trap, stripes) : DomainColoring(coloring, domainZ, domainIter, trap, stripes, iter < maxIterations);
+        vec3 domColor = splitInteriorExterior ? I_DomainColoring(i_coloring, domainZ, domainIter, trap, stripes, texCoords) : DomainColoring(coloring, domainZ, domainIter, trap, stripes, iter < maxIterations, texCoords);
         
         switch (c)
         {
@@ -557,6 +559,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
             case COL_SMOOTH:
             {
                 color = mix(orbitColor, muColor, trap.x);
+
                 break;
             }
             case COL_STRIPES:
@@ -569,7 +572,7 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
             }
             default:
             {
-                color = DomainColoring(coloring, domainZ, domainIter, trap, stripes, iter < maxIterations);
+                color = DomainColoring(coloring, domainZ, domainIter, trap, stripes, iter < maxIterations, texCoords);
                 break;
             }
         }
@@ -634,10 +637,11 @@ vec3 GetColor(vec2 z, vec2 c, int iter, vec2 trap, vec4 domainZ, ivec2 domainIte
         color = mix(color, texture(e_texture, tex).xyz, textureBlend);
     }
     
-    return color;
+    //return useBailoutTexture ? mix(color, texture(bailoutTexture, texCoords.xy).xyz, bailoutTextureBlend) : color;
+    return useBailoutTexture ? mix(color, texture(bailoutTexture, texCoords.xy).xyz, bailoutTextureBlend) : color;
 }
 
-vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, bool escaped)
+vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, bool escaped, inout vec3 texCoords)
 {
     //float t = (time + trap) * 20;
     float t = time * 20;
@@ -648,7 +652,7 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, b
 	//float r = sigmoid(length(z.xy), orbitTrapFactor);
 	float r = length(z.xy);
 
-    if (useDomainSecondValue && orbitTrap != TRAP_TEXTURE)
+    if (useDomainSecondValue)
     {
         float r2 = length(z.zw);
         
@@ -692,24 +696,24 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, b
                 case TRAP_POINTS:
                     trap.x = DistanceToPoint(z.xy, bailoutPoints[0]);
                     for (int i = 1; i < bailoutPointsCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.xy, bailoutPoints[i]), iter.x, z.xy, matchOrbitTrap, dummyDomainZ, dummyDomainIter);
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.xy, bailoutPoints[i]), iter.x, z.xy, matchOrbitTrap, dummyDomainZ, dummyDomainIter, texCoords);
                     r = trap.x;
 
                     trap.x = DistanceToPoint(z.zw, bailoutPoints[0]);
                     for (int i = 1; i < bailoutPointsCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.zw, bailoutPoints[i]), iter.x, z.zw, matchOrbitTrap, dummyDomainZ, dummyDomainIter); 
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.zw, bailoutPoints[i]), iter.x, z.zw, matchOrbitTrap, dummyDomainZ, dummyDomainIter, texCoords); 
                     r2 = trap.x;
 
                     break;
                 case TRAP_LINES:
                     trap.x = DistanceToLine(z.xy, bailoutLines[0].xy, bailoutLines[0].zw);
                     for (int i = 1; i < bailoutLinesCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.xy, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.xy, matchOrbitTrap, dummyDomainZ, dummyDomainIter);
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.xy, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.xy, matchOrbitTrap, dummyDomainZ, dummyDomainIter, texCoords);
                     r = trap.x;
 
                     trap.x = DistanceToLine(z.zw, bailoutLines[0].xy, bailoutLines[0].zw);
                     for (int i = 1; i < bailoutLinesCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.zw, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.zw, matchOrbitTrap, dummyDomainZ, dummyDomainIter); 
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.zw, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.zw, matchOrbitTrap, dummyDomainZ, dummyDomainIter, texCoords); 
                     r2 = trap.x;
 
                     break;
@@ -805,14 +809,14 @@ vec3 DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, b
         else
             color = c;
     }
-
+    
     color = mix(color, color*sigmoid(trap.x,orbitTrapFactor), trap.x);
     //color = mix(color, vec3(0), trap);
 
     return color;
 }
 
-vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
+vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes, inout vec3 texCoords)
 {
     //float t = (time + trap) * 20;
     float t = time * 20;
@@ -822,7 +826,7 @@ vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
     float theta = (atan(z.y, z.x) + M_PI) / M_2PI;
 	float r = length(z.xy);
 
-    if (i_useDomainSecondValue && orbitTrap != TRAP_TEXTURE)
+    if (i_useDomainSecondValue)
     {
         float r2 = length(z.zw);
         
@@ -866,24 +870,24 @@ vec3 I_DomainColoring(int coloring, vec4 z, ivec2 iter, vec2 trap, vec4 stripes)
                 case TRAP_POINTS:
                     trap.x = DistanceToPoint(z.xy, bailoutPoints[0]);
                     for (int i = 1; i < bailoutPointsCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.xy, bailoutPoints[i]), iter.x, z.xy, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter);
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.xy, bailoutPoints[i]), iter.x, z.xy, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter, texCoords);
                     r = trap.x;
 
                     trap.x = DistanceToPoint(z.zw, bailoutPoints[0]);
                     for (int i = 1; i < bailoutPointsCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.zw, bailoutPoints[i]), iter.x, z.zw, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter); 
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z.zw, bailoutPoints[i]), iter.x, z.zw, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter, texCoords); 
                     r2 = trap.x;
 
                     break;
                 case TRAP_LINES:
                     trap.x = DistanceToLine(z.xy, bailoutLines[0].xy, bailoutLines[0].zw);
                     for (int i = 1; i < bailoutLinesCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.xy, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.xy, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter);
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.xy, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.xy, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter, texCoords);
                     r = trap.x;
 
                     trap.x = DistanceToLine(z.zw, bailoutLines[0].xy, bailoutLines[0].zw);
                     for (int i = 1; i < bailoutLinesCount; i++)
-                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.zw, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.zw, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter); 
+                        trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z.zw, bailoutLines[i].xy, bailoutLines[i].zw), iter.x, z.zw, i_matchOrbitTrap, dummyDomainZ, dummyDomainIter, texCoords); 
                     r2 = trap.x;
 
                     break;
@@ -1015,37 +1019,36 @@ bool IsWithinIteration(int iter)
     return iter+1 >= startOrbit && iter+1 <= startOrbit + orbitRange - 1 && iter > minIterations;
 }
 
-vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout ivec2 domainIter)
+vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout ivec2 domainIter, inout vec3 texCoords)
 {
     if (IsWithinIteration(iter))
         switch (orbitTrap)
         {
-            case TRAP_TEXTURE:
             case TRAP_CIRCLE:
-                trap = CalculateOrbitTrapDistance(trap, length(z), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                trap = CalculateOrbitTrapDistance(trap, length(z), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter, texCoords);
                 break;
             case TRAP_SQUARE:
-                trap = CalculateOrbitTrapDistance(trap, DistanceToRectangle(z, bailout, bailout), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                trap = CalculateOrbitTrapDistance(trap, DistanceToRectangle(z, bailout, bailout), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter, texCoords);
                 break;
             case TRAP_REAL:
-                trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, vec2(0,0), vec2(0,1)), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, vec2(0,0), vec2(0,1)), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter, texCoords);
                 break;
             case TRAP_IMAG:
-                trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, vec2(0,0), vec2(1,0)), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, vec2(0,0), vec2(1,0)), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter, texCoords);
                 break;
             case TRAP_RECTANGLE:
-                trap = CalculateOrbitTrapDistance(trap, DistanceToRectangle(z, bailoutRectangle.x, bailoutRectangle.y), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                trap = CalculateOrbitTrapDistance(trap, DistanceToRectangle(z, bailoutRectangle.x, bailoutRectangle.y), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter, texCoords);
                 break;
             case TRAP_SPIRAL:
-                trap = CalculateOrbitTrapDistance(trap, DistanceToSpiral(z), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                trap = CalculateOrbitTrapDistance(trap, DistanceToSpiral(z), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter, texCoords);
                 break;
             case TRAP_POINTS:
                 for (int i = 0; i < bailoutPointsCount; i++)
-                    trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z, bailoutPoints[i]), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter); 
+                    trap = CalculateOrbitTrapDistance(trap, DistanceToPoint(z, bailoutPoints[i]), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter, texCoords); 
                 break;
             case TRAP_LINES:
                 for (int i = 0; i < bailoutLinesCount; i++)
-                    trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter);
+                    trap = CalculateOrbitTrapDistance(trap, DistanceToLine(z, bailoutLines[i].xy, bailoutLines[i].zw), iter, z, (splitInteriorExterior ? i_matchOrbitTrap : matchOrbitTrap), domainZ, domainIter, texCoords);
                 break;
             case TRAP_CUSTOM:
             default:
@@ -1055,27 +1058,24 @@ vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout i
     return trap;
 }
 
-vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, bool matchOrbitTrap, inout vec4 domainZ, inout ivec2 domainIter)
+vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, bool matchOrbitTrap, inout vec4 domainZ, inout ivec2 domainIter, inout vec3 texCoords)
 {
     if (!IsWithinIteration(iter))
         return trap;
+       
+    vec2 texZ = newZ * bailoutTextureScale;
+    bool testTex = useBailoutTexture && texCoords.z == 0;
 
-    if (orbitTrap == TRAP_TEXTURE && trap.y == 0)
-    {
-        newZ *= bailoutTextureScale;
-        if (abs(newZ.x) >= 0 && abs(newZ.x) <= 1 && abs(newZ.y) >= 0 && abs(newZ.y) <= 1 && texture(bailoutTexture, newZ).x < .9)
-        //if (abs(newZ.x) >= 0 && abs(newZ.x) <= 1 && abs(newZ.y) >= 0 && abs(newZ.y) <= 1)
-        //if (texture(bailoutTexture, newZ*2).xyz != vec3(1))
-        //if (texture(bailoutTexture, newZ/4).x < 0.5)
-        //if (!(newZ.x >= 0 && newZ.x <= 1 && newZ.y >= 0 && newZ.y <= 1 && texture(bailoutTexture, newZ).xyz != vec3(1)))
-        {
-            domainZ = texture(bailoutTexture, newZ*2);
-            trap.y = 1;
-        }
+    if (testTex && bailoutUsePolarTextureCoordinates)
+        texZ = vec2(newZ.x*cos(newZ.y * bailoutTextureScale.y), newZ.x*sin(newZ.y * bailoutTextureScale.y)) * bailoutTextureScale.x;
 
-        return trap;
-    }
-    
+    //bool trappedTex = abs(texZ.x) >= 0 && abs(texZ.x) <= 1 && abs(texZ.y) >= 0 && abs(texZ.y) <= 1 && texture(bailoutTexture, texZ).x < 0.5;
+    bool trappedTex = abs(texZ.x) >= 0 && abs(texZ.x) <= 1 && abs(texZ.y) >= 0 && abs(texZ.y) <= 1;
+
+
+    vec2 retTrap = trap;
+    bool trapped = false;
+
     if (matchOrbitTrap)
     {
         switch (orbitTrapCalculation)
@@ -1086,40 +1086,47 @@ vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, b
                     domainIter.x = iter;
                     domainZ = vec4(newZ,domainZ.xy);
 
-                    return vec2(newDist, trap.x);
+                    retTrap = vec2(newDist, trap.x);
+                    trapped = true;
                 }
                 else if (newDist < trap.y)
                 {
                     domainIter.y = iter;
                     domainZ = vec4(domainZ.xy,newZ);
 
-                    return vec2(trap.x, newDist);
+                    retTrap = vec2(trap.x, newDist);
+                    trapped = true;
                 }
 
-                return trap;
+                break;
             case CALC_MAX:
                 if (newDist > trap.x)
                 {
                     domainIter.x = iter;
                     domainZ = vec4(newZ,domainZ.xy);
 
-                    return vec2(newDist, trap.x);
+                    retTrap = vec2(newDist, trap.x);
+                    trapped = true;
                 }
                 else if (newDist > trap.y)
                 {
                     domainIter.y = iter;
                     domainZ = vec4(domainZ.xy,newZ);
-                    
-                    return vec2(trap.x, newDist);
-                }
 
-                return trap;
+                    retTrap = vec2(trap.x, newDist);
+                    trapped = true;
+                }
+                
+                break;
             case CALC_AVG:
                 domainIter.x = iter;
                 domainIter.x = iter-1;
                 domainZ = vec4((domainZ.xy + newZ) / 2, domainZ.xy);
+                
+                retTrap = vec2((trap.x + newDist) / 2, trap.x);
+                trapped = true;
 
-                return vec2((trap.x + newDist) / 2, trap.x);
+                break;
             case CALC_FIRST:
                 int start = (minIterations > startOrbit) ? minIterations : startOrbit;
 
@@ -1129,7 +1136,8 @@ vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, b
                     domainIter.x = iter;
                     domainZ = vec4(newZ,domainZ.xy);
                     
-                    return vec2(newDist, trap.x);
+                    retTrap = vec2(newDist, trap.x);
+                    trapped = true;
                 }
                 // second
                 if (iter+1 == start+1)
@@ -1137,18 +1145,24 @@ vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, b
                     domainIter.y = iter;
                     domainZ = vec4(domainZ.xy,newZ);
                     
-                    vec2(trap.x, newDist);
+                    retTrap = vec2(trap.x, newDist);
+                    trapped = true;
                 }
-
-                return trap;
+                
+                break;
             case CALC_LAST:
                 domainIter.x = iter;
                 domainIter.y = iter-1;
                 domainZ = vec4(newZ, domainZ.xy);
+                
+                retTrap = vec2(newDist, trap.x);
 
-                return vec2(newDist, trap.x);
+                if (testTex && trappedTex)
+                    texCoords = vec3(texZ, 1);
+                    
+                break;
             default:
-                return vec2(0);
+                break;
         }
     }
     else
@@ -1157,35 +1171,58 @@ vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, b
         {
             case CALC_MIN:
                 if (newDist < trap.x)
-                    return vec2(newDist, trap.x);
-                else if (newDist < trap.y)
-                    return vec2(trap.x, newDist);
-
-                return trap;
+                {
+                    retTrap = vec2(newDist, trap.x);
+                    trapped = true;
+                }
+                
+                break;
             case CALC_MAX:
                 if (newDist > trap.x)
-                    return vec2(newDist, trap.x);
+                {
+                    retTrap = vec2(newDist, trap.x);
+                    trapped = true;
+                }
 
-                return trap;
+                break;
             case CALC_AVG:
-                return vec2((trap.x + newDist) / 2, trap.x);
+                retTrap = vec2((trap.x + newDist) / 2, trap.x);
+                trapped = true;
+
+                break;
             case CALC_FIRST:
                 int start = (minIterations > startOrbit) ? minIterations : startOrbit;
 
                 // first
                 if (iter+1 == start)
-                    return vec2(newDist, trap.x);
+                {
+                    retTrap = vec2(newDist, trap.x);
+                    trapped = true;
+                }
                 // second
-                if (iter+1 == start+1)
-                    vec2(trap.x, newDist);
+                else if (iter+1 == start+1)
+                {
+                    retTrap = vec2(trap.x, newDist);
+                    trapped = true;
+                }
 
-                return trap;
+                break;
             case CALC_LAST:
-                return vec2(newDist, trap.x);
+                retTrap = vec2(newDist, trap.x);
+
+                if (testTex && trappedTex)
+                    texCoords = vec3(texZ, 1);
+
+                break;
             default:
-                return vec2(0);
+                break;
         }
     }
+    
+    if (trapped && testTex && trappedTex)
+        texCoords = vec3(texZ, 1);
+
+    return retTrap;
 }
 
 vec4 CalculateDomainZ(vec4 domainZ, vec2 newZ, int iter, inout ivec2 domainIter)

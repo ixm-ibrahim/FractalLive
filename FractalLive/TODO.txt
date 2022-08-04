@@ -55,6 +55,7 @@ interior with rectangle orbit traps bug
 mandelbrot/julia orbit trap
 adding too many lines (points too?) bug
 match orbit trap for texture
+bailout texture bailout cutoff bug
 
 
 misc menu (terrain and animation), terrian, julia minimap, load save settings, doubles and quads

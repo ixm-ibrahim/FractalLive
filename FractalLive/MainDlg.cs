@@ -272,7 +272,10 @@ namespace FractalLive
             shader.SetFloat("bailoutFactor2", fractalSettings.BailoutFactor2);
             shader.SetFloat("secondValueFactor1", fractalSettings.SecondValueFactor1);
             shader.SetFloat("secondValueFactor2", fractalSettings.SecondValueFactor2);
+            shader.SetBool("useBailoutTexture", fractalSettings.BailoutTexture != "");
+            shader.SetFloat("bailoutTextureBlend", fractalSettings.BailoutTextureBlend);
             shader.SetVector2("bailoutTextureScale", new Vector2(fractalSettings.BailoutTextureScaleX, fractalSettings.BailoutTextureScaleY));
+            shader.SetBool("bailoutUsePolarTextureCoordinates", fractalSettings.BailoutUsePolarTextureCoordinates);
 
             // Menu 3
             shader.SetFloat("time", fractalTime + 150);
@@ -612,11 +615,6 @@ namespace FractalLive
                         CurrentSettings.BailoutLines[editingBailoutTrapIndex].X += zoomedModifier / 1;
                         input_BailoutX.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrapIndex].X.ToString(), input_BailoutX.Text, true);
                     }
-                    else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Texture)
-                    {
-                        CurrentSettings.BailoutTextureScaleX += zoomedModifier / 1;
-                        input_BailoutX.Text = Replace2D(CurrentSettings.BailoutTextureScaleX.ToString(), input_BailoutX.Text, true);
-                    }
                 }
                 if (inputState.keysDown[Keys.D3])
                 {
@@ -639,11 +637,6 @@ namespace FractalLive
                     {
                         CurrentSettings.BailoutLines[editingBailoutTrapIndex].Y += zoomedModifier / 1;
                         input_BailoutX.Text = Replace2D(CurrentSettings.BailoutLines[editingBailoutTrapIndex].Y.ToString(), input_BailoutX.Text, false);
-                    }
-                    else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Texture)
-                    {
-                        CurrentSettings.BailoutTextureScaleY += zoomedModifier / 1;
-                        input_BailoutX.Text = Replace2D(CurrentSettings.BailoutTextureScaleY.ToString(), input_BailoutX.Text, false);
                     }
                 }
                 if (inputState.keysDown[Keys.D4])
@@ -1390,6 +1383,7 @@ namespace FractalLive
             input_StartOrbit.Maximum = CurrentSettings.MaxIterations.Maximum;
             input_OrbitRange.Value = CurrentSettings.MaxIterations.Value;
             input_OrbitRange.Maximum = CurrentSettings.MaxIterations.Maximum;
+            input_BailoutTexture.Text = CurrentSettings.BailoutTexture;
             input_OrbitTrap_SelectionChangeCommitted(null, null);
 
 
@@ -1398,12 +1392,7 @@ namespace FractalLive
             input_DomainCalculation.SelectedIndex = (int)CurrentSettings.GetDomainCalculation();
             input_SecondDomainValueFactor1.Enabled = CurrentSettings.GetUseSecondDomainValue();
             input_SecondDomainValueFactor2.Enabled = CurrentSettings.GetUseSecondDomainValue();
-            input_TextureBlend.Enabled = CurrentSettings.GetTexture() != "";
-            input_TextureScaleX.Enabled = CurrentSettings.GetTexture() != "";
-            input_TextureScaleY.Enabled = CurrentSettings.GetTexture() != "";
-            checkBox_UsePolarTextureCoordinates.Enabled = CurrentSettings.GetTexture() != "";
-            checkBox_UseDistortedTexture.Enabled = CurrentSettings.GetTexture() != "";
-            input_TextureDistortionFactor.Enabled = CurrentSettings.GetTexture() != "" && checkBox_UseDistortedTexture.Checked;
+            input_Texture.Text = CurrentSettings.GetTexture();
             checkBox_UseCustomPalette_CheckedChanged(null, null);
             input_EditingColor_SelectionChangeCommitted(null, null);
 
@@ -1656,102 +1645,72 @@ namespace FractalLive
             input_OrbitTrapBlendingFactor.Enabled = true;
             input_OrbitTrapThicknessFactor.Enabled = true;
 
-            if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Texture)
+            input_OrbitTrapCalculation.Enabled = true;
+            input_Bailout.Enabled = true;
+            checkBox_UseSecondValue.Enabled = true;
+            input_SecondValueFactor1.Enabled = checkBox_UseSecondValue.Checked;
+            input_SecondValueFactor2.Enabled = checkBox_UseSecondValue.Checked;
+            input_StartDistance.Enabled = true;
+
+            if (CurrentSettings.Is1DBailout)
             {
-                label_OrbitTrapPosition.Text = "Scale:*";
-
-                input_OrbitTrapCalculation.Enabled = false;
-                input_Bailout.Enabled = true;
-                checkBox_UseSecondValue.Enabled = false;
-                input_SecondValueFactor1.Enabled = false;
-                input_SecondValueFactor2.Enabled = false;
-                input_StartDistance.Enabled = false;
-
-                input_BailoutX.Enabled = true;
-                input_BailoutY.Enabled = true;
+                input_BailoutX.Enabled = false;
+                input_BailoutY.Enabled = false;
 
                 button_AddBailoutTrap.Enabled = false;
                 button_RemoveBailoutTrap.Enabled = false;
                 input_EditingBailoutTrapList.Enabled = false;
 
-                input_BailoutX.Text = Make2D(CurrentSettings.BailoutTextureScaleX, CurrentSettings.BailoutTextureScaleY);
-                input_BailoutY.Text = CurrentSettings.BailoutTextureBlend.ToString();
-
-                input_BailoutTexture.Text = CurrentSettings.BailoutTexture;
-                input_BailoutTextureEscapeColor.Text = CurrentSettings.BailoutTextureUseAlpha ? Make3D(CurrentSettings.BailoutTextureEscapeColor.Xyz) : Make4D(CurrentSettings.BailoutTextureEscapeColor);
-                checkBox_BailoutUsePolarTextureCoordinates.Checked = CurrentSettings.BailoutUsePolarTextureCoordinates;
+                input_Bailout.Text = CurrentSettings.Bailout.ToString();
             }
-            else
+            else if (CurrentSettings.Is2DBailout || CurrentSettings.Is3DBailout)
             {
-                label_OrbitTrapPosition.Text = "Position:*";
+                bool pointsOnly = CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points;
 
-                input_OrbitTrapCalculation.Enabled = true;
-                input_Bailout.Enabled = true;
-                checkBox_UseSecondValue.Enabled = true;
-                input_SecondValueFactor1.Enabled = checkBox_UseSecondValue.Checked;
-                input_SecondValueFactor2.Enabled = checkBox_UseSecondValue.Checked;
-                input_StartDistance.Enabled = true;
+                input_BailoutX.Enabled = true;
+                input_BailoutY.Enabled = true;
 
-                if (CurrentSettings.Is1DBailout)
+                button_AddBailoutTrap.Enabled = pointsOnly;
+                button_RemoveBailoutTrap.Enabled = pointsOnly;
+                input_EditingBailoutTrapList.Enabled = pointsOnly;
+
+                if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
                 {
-                    input_BailoutX.Enabled = false;
-                    input_BailoutY.Enabled = false;
-
-                    button_AddBailoutTrap.Enabled = false;
-                    button_RemoveBailoutTrap.Enabled = false;
-                    input_EditingBailoutTrapList.Enabled = false;
-
-                    input_Bailout.Text = CurrentSettings.Bailout.ToString();
+                    input_BailoutX.Text = CurrentSettings.BailoutRectangle.X.ToString();
+                    input_BailoutY.Text = CurrentSettings.BailoutRectangle.Y.ToString();
                 }
-                else if (CurrentSettings.Is2DBailout || CurrentSettings.Is3DBailout)
+                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Spiral)
                 {
-                    bool pointsOnly = CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points;
-
-                    input_BailoutX.Enabled = true;
-                    input_BailoutY.Enabled = true;
-
-                    button_AddBailoutTrap.Enabled = pointsOnly;
-                    button_RemoveBailoutTrap.Enabled = pointsOnly;
-                    input_EditingBailoutTrapList.Enabled = pointsOnly;
-
-                    if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Rectangle)
-                    {
-                        input_BailoutX.Text = CurrentSettings.BailoutRectangle.X.ToString();
-                        input_BailoutY.Text = CurrentSettings.BailoutRectangle.Y.ToString();
-                    }
-                    else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Spiral)
-                    {
-                        input_EditingBailoutTrapList.Maximum = CurrentSettings.BailoutPointsCount;
-                        input_EditingBailoutTrapList.Value = input_EditingBailoutTrapList.Maximum;
-                        label_EditingOrbitBailout.Text = "Editing Spiral";
-
-                        input_BailoutX.Text = Make2D(CurrentSettings.BailoutSpiral.X, CurrentSettings.BailoutSpiral.Y);
-                        input_BailoutY.Text = Make2D(MathHelper.RadiansToDegrees(CurrentSettings.BailoutSpiral.Z), CurrentSettings.BailoutSpiral.W);
-                    }
-                    else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
-                    {
-                        label_EditingOrbitBailout.Text = "Editing Point";
-
-                        input_BailoutX.Text = CurrentSettings.BailoutPoints[CurrentSettings.BailoutPointsCount - 1].X.ToString();
-                        input_BailoutY.Text = CurrentSettings.BailoutPoints[CurrentSettings.BailoutPointsCount - 1].Y.ToString();
-                    }
-                }
-                else // lines
-                {
-                    input_BailoutX.Enabled = true;
-                    input_BailoutY.Enabled = true;
-
-                    button_AddBailoutTrap.Enabled = true;
-                    button_RemoveBailoutTrap.Enabled = true;
-                    input_EditingBailoutTrapList.Enabled = true;
-
-                    input_EditingBailoutTrapList.Maximum = CurrentSettings.BailoutLinesCount;
+                    input_EditingBailoutTrapList.Maximum = CurrentSettings.BailoutPointsCount;
                     input_EditingBailoutTrapList.Value = input_EditingBailoutTrapList.Maximum;
-                    label_EditingOrbitBailout.Text = "Editing Line";
+                    label_EditingOrbitBailout.Text = "Editing Spiral";
 
-                    input_BailoutX.Text = Make2D(CurrentSettings.BailoutLines[CurrentSettings.BailoutLinesCount - 1].X, CurrentSettings.BailoutLines[CurrentSettings.BailoutLinesCount - 1].Y);
-                    input_BailoutY.Text = Make2D(CurrentSettings.BailoutLines[CurrentSettings.BailoutLinesCount - 1].Z, CurrentSettings.BailoutLines[CurrentSettings.BailoutLinesCount - 1].W);
+                    input_BailoutX.Text = Make2D(CurrentSettings.BailoutSpiral.X, CurrentSettings.BailoutSpiral.Y);
+                    input_BailoutY.Text = Make2D(MathHelper.RadiansToDegrees(CurrentSettings.BailoutSpiral.Z), CurrentSettings.BailoutSpiral.W);
                 }
+                else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Points)
+                {
+                    label_EditingOrbitBailout.Text = "Editing Point";
+
+                    input_BailoutX.Text = CurrentSettings.BailoutPoints[CurrentSettings.BailoutPointsCount - 1].X.ToString();
+                    input_BailoutY.Text = CurrentSettings.BailoutPoints[CurrentSettings.BailoutPointsCount - 1].Y.ToString();
+                }
+            }
+            else // lines
+            {
+                input_BailoutX.Enabled = true;
+                input_BailoutY.Enabled = true;
+
+                button_AddBailoutTrap.Enabled = true;
+                button_RemoveBailoutTrap.Enabled = true;
+                input_EditingBailoutTrapList.Enabled = true;
+
+                input_EditingBailoutTrapList.Maximum = CurrentSettings.BailoutLinesCount;
+                input_EditingBailoutTrapList.Value = input_EditingBailoutTrapList.Maximum;
+                label_EditingOrbitBailout.Text = "Editing Line";
+
+                input_BailoutX.Text = Make2D(CurrentSettings.BailoutLines[CurrentSettings.BailoutLinesCount - 1].X, CurrentSettings.BailoutLines[CurrentSettings.BailoutLinesCount - 1].Y);
+                input_BailoutY.Text = Make2D(CurrentSettings.BailoutLines[CurrentSettings.BailoutLinesCount - 1].Z, CurrentSettings.BailoutLines[CurrentSettings.BailoutLinesCount - 1].W);
             }
         }
 
@@ -1839,11 +1798,11 @@ namespace FractalLive
 
         private void input_BailoutX_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = !IsDecimalChar(e, CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Spiral || CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines || CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Texture);
+            e.Handled = !IsDecimalChar(e, CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Spiral || CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines);
         }
         private void input_BailoutX_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if ((CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Lines && CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Spiral && CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Texture && !TryParse1DFloat(input_BailoutX.Text)) || ((CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Spiral || CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines || CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Texture) && !TryParse2DFloat(input_BailoutX.Text)))
+            if ((CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Lines && CurrentSettings.OrbitTrap != Fractal.OrbitTrap.Spiral && !TryParse1DFloat(input_BailoutX.Text)) || ((CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Spiral || CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Lines) && !TryParse2DFloat(input_BailoutX.Text)))
                 e.Cancel = true;
         }
         private void input_BailoutX_Validated(object sender, EventArgs e)
@@ -1871,12 +1830,6 @@ namespace FractalLive
                 CurrentSettings.BailoutLines[editingBailoutTrap].X = float.Parse(GetFrom2D(input_BailoutX.Text, true));
                 CurrentSettings.BailoutLines[editingBailoutTrap].Y = float.Parse(GetFrom2D(input_BailoutX.Text, false));
                 input_BailoutX.Text = Make2D(CurrentSettings.BailoutLines[editingBailoutTrap].X, CurrentSettings.BailoutLines[editingBailoutTrap].Y);
-            }
-            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Texture)
-            {
-                CurrentSettings.BailoutTextureScaleX = float.Parse(GetFrom2D(input_BailoutX.Text, true));
-                CurrentSettings.BailoutTextureScaleY = float.Parse(GetFrom2D(input_BailoutX.Text, false));
-                input_BailoutX.Text = Make2D(CurrentSettings.BailoutTextureScaleX, CurrentSettings.BailoutTextureScaleY);
             }
         }
 
@@ -1914,11 +1867,6 @@ namespace FractalLive
                 CurrentSettings.BailoutLines[editingBailoutTrap].Z = float.Parse(GetFrom2D(input_BailoutY.Text, true));
                 CurrentSettings.BailoutLines[editingBailoutTrap].W = float.Parse(GetFrom2D(input_BailoutY.Text, false));
                 input_BailoutY.Text = Make2D(CurrentSettings.BailoutLines[editingBailoutTrap].Z, CurrentSettings.BailoutLines[editingBailoutTrap].W);
-            }
-            else if (CurrentSettings.OrbitTrap == Fractal.OrbitTrap.Texture)
-            {
-                CurrentSettings.BailoutTextureBlend = float.Parse(input_BailoutY.Text);
-                input_BailoutY.Text = CurrentSettings.BailoutTextureBlend.ToString();
             }
         }
 
@@ -2008,6 +1956,17 @@ namespace FractalLive
             input_SecondValueFactor2.Text = CurrentSettings.SecondValueFactor2.ToString();
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            input_BailoutTexture.Text = "";
+        }
+
+        private void input_BailoutTexture_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.FileName = input_BailoutTexture.Text;
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                input_BailoutTexture.Text = openFileDialog1.FileName;
+        }
         private void input_BailoutTexture_TextChanged(object sender, EventArgs e)
         {
             CurrentSettings.BailoutTexture = input_BailoutTexture.Text;
@@ -2019,51 +1978,37 @@ namespace FractalLive
                 texture0.Use(OpenTK.Graphics.OpenGL4.TextureUnit.Texture0);
             }
 
-            input_BailoutX.Enabled = enabled;
-            input_BailoutY.Enabled = enabled;
-            input_BailoutTextureEscapeColor.Enabled = enabled;
+            input_BailoutTextureBlend.Enabled = enabled;
+            input_BailoutTextureScaleX.Enabled = enabled;
+            input_TextureScaleY.Enabled = enabled;
             checkBox_BailoutUsePolarTextureCoordinates.Enabled = enabled;
         }
-        private void input_BailoutTexture_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.FileName = input_BailoutTexture.Text;
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                input_BailoutTexture.Text = openFileDialog1.FileName;
 
-            }
+        private void input_BailoutTextureBlend_ValueChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.BailoutTextureBlend = (float)input_BailoutTextureBlend.Value;
         }
 
-        private void input_BailoutTextureEscapeColor_KeyPress(object sender, KeyPressEventArgs e)
+        private void input_BailoutTextureScaleX_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.Handled = !IsUintChar(e, true);
-        }
-        private void input_BailoutTextureEscapeColor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            bool useAlpha = TryParse4DFloat(input_BailoutX.Text);
-
-            if (!useAlpha && !TryParse3DFloat(input_BailoutX.Text))
+            if (!TryParse1DFloat(input_BailoutTextureScaleX.Text))
                 e.Cancel = true;
-            else
-                CurrentSettings.BailoutTextureUseAlpha = useAlpha;
         }
-        private void input_BailoutTextureEscapeColor_Validated(object sender, EventArgs e)
+        private void input_BailoutTextureScaleX_Validated(object sender, EventArgs e)
         {
-            if (CurrentSettings.BailoutTextureUseAlpha)
-            {
-                CurrentSettings.BailoutTextureEscapeColor.X = float.Parse(GetFromND(input_BailoutTextureEscapeColor.Text, 0));
-                CurrentSettings.BailoutTextureEscapeColor.Y = float.Parse(GetFromND(input_BailoutTextureEscapeColor.Text, 1));
-                CurrentSettings.BailoutTextureEscapeColor.Z = float.Parse(GetFromND(input_BailoutTextureEscapeColor.Text, 2));
-                CurrentSettings.BailoutTextureEscapeColor.W = float.Parse(GetFromND(input_BailoutTextureEscapeColor.Text, 3));
-                input_BailoutTextureEscapeColor.Text = Make4D(CurrentSettings.BailoutTextureEscapeColor);
-            }
-            else
-            {
-                CurrentSettings.BailoutTextureEscapeColor.X = float.Parse(GetFromND(input_BailoutTextureEscapeColor.Text, 0));
-                CurrentSettings.BailoutTextureEscapeColor.Y = float.Parse(GetFromND(input_BailoutTextureEscapeColor.Text, 1));
-                CurrentSettings.BailoutTextureEscapeColor.Z = float.Parse(GetFromND(input_BailoutTextureEscapeColor.Text, 2));
-                input_BailoutTextureEscapeColor.Text = Make3D(CurrentSettings.BailoutTextureEscapeColor.Xyz);
-            }
+            CurrentSettings.BailoutTextureScaleX = float.Parse(input_BailoutTextureScaleX.Text);
+            input_BailoutTextureScaleX.Text = CurrentSettings.BailoutTextureScaleX.ToString();
+        }
+
+        private void input_BailoutTextureScaleY_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_BailoutTextureScaleY.Text))
+                e.Cancel = true;
+        }
+        private void input_BailoutTextureScaleY_Validated(object sender, EventArgs e)
+        {
+            CurrentSettings.BailoutTextureScaleY = float.Parse(input_BailoutTextureScaleY.Text);
+            input_BailoutTextureScaleY.Text = CurrentSettings.BailoutTextureScaleY.ToString();
         }
 
         private void checkBox_BailoutUsePolarTextureCoordinates_CheckedChanged(object sender, EventArgs e)
@@ -2392,7 +2337,7 @@ namespace FractalLive
             input_TextureScaleY.Enabled = enabled;
             checkBox_UsePolarTextureCoordinates.Enabled = enabled;
             checkBox_UseDistortedTexture.Enabled = enabled;
-            input_TextureDistortionFactor.Enabled = checkBox_UseDistortedTexture.Checked;
+            input_TextureDistortionFactor.Enabled = enabled && checkBox_UseDistortedTexture.Checked;
         }
         private void input_Texture_Click(object sender, EventArgs e)
         {
