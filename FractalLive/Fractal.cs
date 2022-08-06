@@ -53,6 +53,16 @@ namespace FractalLive
             Minimum = 0, Maximum = 1, Average = 2, First = 3, Last = 4
         }
 
+        public enum Animation
+        {
+            Julia, Julia_Mating, OrbitTrap, Texture, Normals, Custom
+        }
+
+        public enum JuliaAnimation
+        {
+            Circle, Main_Cardioid, Main_Disk, Period_3_Cardioid, Period_3_Disk, Custom
+        }
+
         #endregion
 
         #region Structures
@@ -70,7 +80,6 @@ namespace FractalLive
                 Type = type;
                 Formula = formula;
                 Projection = Projection.Cartesian;
-                IsJuliaCentered = false;
                 Julia = new Vector2(-0.4f, 0.6f);
                 JuliaMating1 = new Vector2(-1, 0);
                 JuliaMating2 = new Vector2(-.123f, .745f);
@@ -211,9 +220,13 @@ namespace FractalLive
                 E_UseTextureDistortion = false;
                 E_TextureDistortion = 5;
 
-                UseLighting = false;
                 UseTerrainColor = false;
                 TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
+
+                EditingAnimation = Animation.Julia;
+                IsJuliaAnimationEnabled = false;
+                JuliaAnimationSpeed = 1;
+                UsePeriodicPoint = false;
             }
 
             public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
@@ -245,6 +258,7 @@ namespace FractalLive
                 BailoutLinesCount--;
             }
 
+            #region Color Menu
             public Coloring GetColoring()
             {
                 switch (EditingColor)
@@ -1142,7 +1156,7 @@ namespace FractalLive
                         break;
                 }
             }
-
+            #endregion
 
             public Vector2 Center;
             public float Zoom;
@@ -1275,11 +1289,13 @@ namespace FractalLive
             public bool E_UseTextureDistortion;
             public float E_TextureDistortion;
 
-            public bool UseLighting;
             public bool UseTerrainColor;
             public FloatBounds TerrainHeight;
 
-            public bool IsJuliaCentered;
+            public Animation EditingAnimation;
+            public bool IsJuliaAnimationEnabled;
+            public float JuliaAnimationSpeed;
+            public bool UsePeriodicPoint;
 
         }
 
@@ -1304,7 +1320,7 @@ namespace FractalLive
                     (float) settings.Type,
                     (float) settings.Formula,
                     settings.InitialDisplayRadius.Value,
-                    settings.IsJuliaCentered ? 1 : 0,
+                    settings.UsePeriodicPoint ? 1 : 0,
                     settings.Julia.X,
                     settings.Julia.Y,
                     settings.JuliaMating1.X,

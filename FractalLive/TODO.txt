@@ -44,7 +44,7 @@ no riemann adjustment for julia mating?
 you can resize color dialogue
 custom colors
 change initial radius on corner resize
-replace julia textboxes with combooxes with included nice julia locations
+replace julia textboxes with comboxes with included nice julia locations
 conslidate input_EditingColor_SelectionChangeCommitted
 pause and continue julia matings
 raytraced mandelbulb and quaternions
@@ -55,7 +55,7 @@ interior with rectangle orbit traps bug
 mandelbrot/julia orbit trap
 adding too many lines (points too?) bug
 match orbit trap for texture
-bailout texture bailout cutoff bug
+bailout texture cutoff bug
 
 
-misc menu (terrain and animation), terrian, julia minimap, load save settings, doubles and quads
+misc menu (animations), terrian (misc menu), julia minimap, load save settings, doubles and quads

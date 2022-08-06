@@ -203,6 +203,15 @@
             this.input_CameraRoll = new System.Windows.Forms.TextBox();
             this.panel_GeneralMenu = new System.Windows.Forms.Panel();
             this.panel_MenuSelect = new System.Windows.Forms.Panel();
+            this.panel_MiscMenu = new System.Windows.Forms.Panel();
+            this.checkBox_UsePeriodicPoint = new System.Windows.Forms.CheckBox();
+            this.label_AnimationSpeed = new System.Windows.Forms.Label();
+            this.input_AnimationSpeed = new System.Windows.Forms.TextBox();
+            this.checkBox_AnimationEnabled = new System.Windows.Forms.CheckBox();
+            this.label_EditingAnimation = new System.Windows.Forms.Label();
+            this.input_EditingAnimation = new System.Windows.Forms.ComboBox();
+            this.label_Animation = new System.Windows.Forms.Label();
+            this.label_MiscMenu = new System.Windows.Forms.Label();
             label_MaxIterations = new System.Windows.Forms.Label();
             label_StartOrbit = new System.Windows.Forms.Label();
             label_OrbitRange = new System.Windows.Forms.Label();
@@ -225,6 +234,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.input_TextureBlend)).BeginInit();
             this.panel_GeneralMenu.SuspendLayout();
             this.panel_MenuSelect.SuspendLayout();
+            this.panel_MiscMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_MaxIterations
@@ -316,7 +326,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1236, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(893, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1192,7 +1202,7 @@
             this.panel_OrbitTrapMenu.Controls.Add(this.label_BailoutTexture);
             this.panel_OrbitTrapMenu.Controls.Add(this.input_BailoutTexture);
             this.panel_OrbitTrapMenu.Controls.Add(this.checkBox_BailoutUsePolarTextureCoordinates);
-            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(701, 24);
+            this.panel_OrbitTrapMenu.Location = new System.Drawing.Point(517, 24);
             this.panel_OrbitTrapMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_OrbitTrapMenu.Name = "panel_OrbitTrapMenu";
             this.panel_OrbitTrapMenu.Size = new System.Drawing.Size(178, 535);
@@ -1695,7 +1705,7 @@
             this.panel_ColorMenu.Controls.Add(this.checkBox_UsePolarTextureCoordinates);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistortedTexture);
             this.panel_ColorMenu.Controls.Add(this.label_TextureDistortionFactor);
-            this.panel_ColorMenu.Location = new System.Drawing.Point(896, 24);
+            this.panel_ColorMenu.Location = new System.Drawing.Point(517, 24);
             this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_ColorMenu.Name = "panel_ColorMenu";
             this.panel_ColorMenu.Size = new System.Drawing.Size(178, 535);
@@ -2313,11 +2323,120 @@
             this.panel_MenuSelect.Size = new System.Drawing.Size(161, 71);
             this.panel_MenuSelect.TabIndex = 71;
             // 
+            // panel_MiscMenu
+            // 
+            this.panel_MiscMenu.AutoScroll = true;
+            this.panel_MiscMenu.Controls.Add(this.checkBox_UsePeriodicPoint);
+            this.panel_MiscMenu.Controls.Add(this.label_AnimationSpeed);
+            this.panel_MiscMenu.Controls.Add(this.input_AnimationSpeed);
+            this.panel_MiscMenu.Controls.Add(this.checkBox_AnimationEnabled);
+            this.panel_MiscMenu.Controls.Add(this.label_EditingAnimation);
+            this.panel_MiscMenu.Controls.Add(this.input_EditingAnimation);
+            this.panel_MiscMenu.Controls.Add(this.label_Animation);
+            this.panel_MiscMenu.Controls.Add(this.label_MiscMenu);
+            this.panel_MiscMenu.Location = new System.Drawing.Point(701, 24);
+            this.panel_MiscMenu.MinimumSize = new System.Drawing.Size(178, 276);
+            this.panel_MiscMenu.Name = "panel_MiscMenu";
+            this.panel_MiscMenu.Size = new System.Drawing.Size(178, 535);
+            this.panel_MiscMenu.TabIndex = 72;
+            // 
+            // checkBox_UsePeriodicPoint
+            // 
+            this.checkBox_UsePeriodicPoint.AutoSize = true;
+            this.checkBox_UsePeriodicPoint.Location = new System.Drawing.Point(13, 115);
+            this.checkBox_UsePeriodicPoint.Name = "checkBox_UsePeriodicPoint";
+            this.checkBox_UsePeriodicPoint.Size = new System.Drawing.Size(122, 19);
+            this.checkBox_UsePeriodicPoint.TabIndex = 77;
+            this.checkBox_UsePeriodicPoint.Text = "Use Periodic Point";
+            this.checkBox_UsePeriodicPoint.UseVisualStyleBackColor = true;
+            this.checkBox_UsePeriodicPoint.CheckedChanged += new System.EventHandler(this.checkBox_UsePeriodicPoint_CheckedChanged);
+            // 
+            // label_AnimationSpeed
+            // 
+            this.label_AnimationSpeed.AutoSize = true;
+            this.label_AnimationSpeed.Location = new System.Drawing.Point(8, 93);
+            this.label_AnimationSpeed.Name = "label_AnimationSpeed";
+            this.label_AnimationSpeed.Size = new System.Drawing.Size(47, 15);
+            this.label_AnimationSpeed.TabIndex = 75;
+            this.label_AnimationSpeed.Text = "Speed:*";
+            // 
+            // input_AnimationSpeed
+            // 
+            this.input_AnimationSpeed.Location = new System.Drawing.Point(99, 90);
+            this.input_AnimationSpeed.Name = "input_AnimationSpeed";
+            this.input_AnimationSpeed.Size = new System.Drawing.Size(51, 23);
+            this.input_AnimationSpeed.TabIndex = 76;
+            this.input_AnimationSpeed.Text = "1";
+            this.input_AnimationSpeed.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_AnimationSpeed.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_AnimationSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.input_AnimationSpeed_Validating);
+            this.input_AnimationSpeed.Validated += new System.EventHandler(this.input_AnimationSpeed_Validated);
+            // 
+            // checkBox_AnimationEnabled
+            // 
+            this.checkBox_AnimationEnabled.AutoSize = true;
+            this.checkBox_AnimationEnabled.Location = new System.Drawing.Point(13, 73);
+            this.checkBox_AnimationEnabled.Name = "checkBox_AnimationEnabled";
+            this.checkBox_AnimationEnabled.Size = new System.Drawing.Size(68, 19);
+            this.checkBox_AnimationEnabled.TabIndex = 65;
+            this.checkBox_AnimationEnabled.Text = "Enabled";
+            this.checkBox_AnimationEnabled.UseVisualStyleBackColor = true;
+            this.checkBox_AnimationEnabled.CheckedChanged += new System.EventHandler(this.checkBox_AnimationEnabled_CheckedChanged);
+            // 
+            // label_EditingAnimation
+            // 
+            this.label_EditingAnimation.AutoSize = true;
+            this.label_EditingAnimation.Location = new System.Drawing.Point(8, 50);
+            this.label_EditingAnimation.Name = "label_EditingAnimation";
+            this.label_EditingAnimation.Size = new System.Drawing.Size(47, 15);
+            this.label_EditingAnimation.TabIndex = 62;
+            this.label_EditingAnimation.Text = "Editing:";
+            this.label_EditingAnimation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_EditingAnimation
+            // 
+            this.input_EditingAnimation.CausesValidation = false;
+            this.input_EditingAnimation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.input_EditingAnimation.FormattingEnabled = true;
+            this.input_EditingAnimation.Items.AddRange(new object[] {
+            "Julia",
+            "Julia Mating",
+            "Orbit Trap",
+            "Texture",
+            "Normals",
+            "Custom"});
+            this.input_EditingAnimation.Location = new System.Drawing.Point(68, 47);
+            this.input_EditingAnimation.Name = "input_EditingAnimation";
+            this.input_EditingAnimation.Size = new System.Drawing.Size(82, 23);
+            this.input_EditingAnimation.TabIndex = 63;
+            this.input_EditingAnimation.SelectionChangeCommitted += new System.EventHandler(this.input_EditingAnimation_SelectionChangeCommitted);
+            // 
+            // label_Animation
+            // 
+            this.label_Animation.AutoSize = true;
+            this.label_Animation.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+            this.label_Animation.Location = new System.Drawing.Point(3, 27);
+            this.label_Animation.Name = "label_Animation";
+            this.label_Animation.Size = new System.Drawing.Size(62, 15);
+            this.label_Animation.TabIndex = 36;
+            this.label_Animation.Text = "Animation";
+            // 
+            // label_MiscMenu
+            // 
+            this.label_MiscMenu.AutoSize = true;
+            this.label_MiscMenu.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label_MiscMenu.Location = new System.Drawing.Point(35, 0);
+            this.label_MiscMenu.Name = "label_MiscMenu";
+            this.label_MiscMenu.Size = new System.Drawing.Size(79, 19);
+            this.label_MiscMenu.TabIndex = 35;
+            this.label_MiscMenu.Text = "Misc Menu";
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1236, 633);
+            this.ClientSize = new System.Drawing.Size(893, 633);
+            this.Controls.Add(this.panel_MiscMenu);
             this.Controls.Add(this.glControl);
             this.Controls.Add(this.panel_GeneralMenu);
             this.Controls.Add(this.panel_ColorMenu);
@@ -2349,6 +2468,8 @@
             this.panel_GeneralMenu.ResumeLayout(false);
             this.panel_GeneralMenu.PerformLayout();
             this.panel_MenuSelect.ResumeLayout(false);
+            this.panel_MiscMenu.ResumeLayout(false);
+            this.panel_MiscMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2521,6 +2642,15 @@
         private System.Windows.Forms.Label label_BailoutTextureScale;
         private System.Windows.Forms.TextBox input_BailoutTextureScaleX;
         private System.Windows.Forms.TextBox input_BailoutTextureScaleY;
+        private System.Windows.Forms.Panel panel_MiscMenu;
+        private System.Windows.Forms.Label label_MiscMenu;
+        private System.Windows.Forms.Label label_EditingAnimation;
+        private System.Windows.Forms.ComboBox input_EditingAnimation;
+        private System.Windows.Forms.Label label_Animation;
+        private System.Windows.Forms.CheckBox checkBox_UsePeriodicPoint;
+        private System.Windows.Forms.Label label_AnimationSpeed;
+        private System.Windows.Forms.TextBox input_AnimationSpeed;
+        private System.Windows.Forms.CheckBox checkBox_AnimationEnabled;
     }
 }
 

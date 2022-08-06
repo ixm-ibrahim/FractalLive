@@ -10,10 +10,6 @@ namespace FractalLive
 {
     public partial class MainDlg : Form
     {
-        #region Enumerations
-
-        #endregion
-
         #region Structures
         public struct InputState
         {
@@ -190,6 +186,37 @@ namespace FractalLive
             LogTextBox.AppendText(message + "\r\n");
         }
 
+        private Vector2 GetCenter()
+        {
+            if (CurrentSettings.IsJuliaAnimationEnabled && CurrentSettings.UsePeriodicPoint)
+            {
+                float theta = (float)Math.Atan2(CurrentSettings.Julia.Y, CurrentSettings.Julia.X) + fractalTime * CurrentSettings.JuliaAnimationSpeed;
+                bool switchSign = theta % (4*Math.PI) <= 2*Math.PI;
+
+                Vector2 julia = GetJulia();
+                Complex sqrt = Complex.Sqrt(new Complex(1,0) - 4 * new Complex(julia.X, julia.Y), switchSign);
+                Vector2 center = new Vector2(1 - (float)sqrt.R, (float)-sqrt.I) / 2;
+
+                input_Center.Text = Make2D(center.X, center.Y);
+
+                return center;
+            }
+
+            return CurrentSettings.Center;
+        }
+
+        private Vector2 GetJulia()
+        {
+            if (CurrentSettings.IsJuliaAnimationEnabled)
+            {
+                float theta = (float)Math.Atan2(CurrentSettings.Julia.Y, CurrentSettings.Julia.X) + fractalTime * CurrentSettings.JuliaAnimationSpeed;
+                Log(theta.ToString());
+                return new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) * CurrentSettings.Julia.Length;
+            }
+
+            return CurrentSettings.Julia;
+        }
+
         private void Render()
         {
             GL.ClearColor(Color4.Black);
@@ -217,13 +244,13 @@ namespace FractalLive
             shader.SetFloat("normalizedCoordsWidth", (float)glControl.Width / Math.Max(minGLWidth, minGLHeight));
             shader.SetFloat("normalizedCoordsHeight", (float)glControl.Height / Math.Max(minGLWidth, minGLHeight));
 
-            shader.SetVector2("center", fractalSettings.Center);
+            shader.SetVector2("center", GetCenter());
             shader.SetFloat("rollAngle", camera.Roll);
             shader.SetVector2("riemannAngles", fractalSettings.RiemannAngles);
 
             if (currentFractalType == Fractal.Type.Julia)
             {
-                shader.SetVector2("julia", fractalSettings.Julia);
+                shader.SetVector2("julia", GetJulia());
             }
             else if (currentFractalType == Fractal.Type.Julia_Mating)
             {
@@ -759,9 +786,25 @@ namespace FractalLive
                     input_TextureDistortionFactor.Text = CurrentSettings.GetTextureDistortion().ToString();
                 }
             }
+            else if (panel_MiscMenu.Enabled)
+            {
+                if (inputState.keysDown[Keys.D1] && currentFractalType == Fractal.Type.Julia)
+                {
 
-            // keyboard controls
-            switch (CurrentCamera.CurrentMode)
+                    switch (CurrentSettings.EditingAnimation)
+                    {
+                        case Fractal.Animation.Julia:
+                            juliaSettings.JuliaAnimationSpeed += zoomedModifier / 2;
+                            input_AnimationSpeed.Text = juliaSettings.JuliaAnimationSpeed.ToString();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+                // keyboard controls
+                switch (CurrentCamera.CurrentMode)
             {
                 case Camera.Mode.Flat:
                 {
@@ -876,7 +919,7 @@ namespace FractalLive
                 fractalTime -= modifier * (pauseTime ? 5 : 6);
 
             // update controls
-            Log(CurrentSettings.OrbitTrap.ToString());
+            //Log(CurrentSettings.OrbitTrap.ToString());
             //Log(CurrentCamera.TargetDistance.ToString());
             //Log((applicationTime.ElapsedMilliseconds / 1000f).ToString());
 
@@ -1200,8 +1243,8 @@ namespace FractalLive
             panel_OrbitTrapMenu.Enabled = false;
             panel_ColorMenu.Hide();
             panel_ColorMenu.Enabled = false;
-
-
+            panel_MiscMenu.Hide();
+            panel_MiscMenu.Enabled = false;
         }
         private void button_Menu2_Click(object sender, EventArgs e)
         {
@@ -1211,8 +1254,8 @@ namespace FractalLive
             panel_OrbitTrapMenu.Enabled = true;
             panel_ColorMenu.Hide();
             panel_ColorMenu.Enabled = false;
-
-
+            panel_MiscMenu.Hide();
+            panel_MiscMenu.Enabled = false;
         }
         private void button_Menu3_Click(object sender, EventArgs e)
         {
@@ -1222,8 +1265,8 @@ namespace FractalLive
             panel_OrbitTrapMenu.Enabled = false;
             panel_ColorMenu.Show();
             panel_ColorMenu.Enabled = true;
-
-
+            panel_MiscMenu.Hide();
+            panel_MiscMenu.Enabled = false;
         }
         private void button_Menu4_Click(object sender, EventArgs e)
         {
@@ -1233,8 +1276,8 @@ namespace FractalLive
             panel_OrbitTrapMenu.Enabled = false;
             panel_ColorMenu.Hide();
             panel_ColorMenu.Enabled = false;
-
-
+            panel_MiscMenu.Show();
+            panel_MiscMenu.Enabled = true;
         }
 
         private void input_Center_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1405,6 +1448,10 @@ namespace FractalLive
             }
             else
                 label_CurrentMatingStep.Text = "Current Step:*";
+
+            input_EditingAnimation.SelectedIndex = (int)CurrentSettings.EditingAnimation;
+            input_EditingAnimation_SelectionChangeCommitted(null, null);
+            checkBox_AnimationEnabled_CheckedChanged(null, null);
         }
 
         private void input_FractalFormula_SelectionChangeCommitted(object sender, EventArgs e)
@@ -2399,6 +2446,66 @@ namespace FractalLive
 
         #endregion
 
+        #region Menu 4 Controls
+
+        private void input_EditingAnimation_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            CurrentSettings.EditingAnimation = (Fractal.Animation)input_EditingAnimation.SelectedIndex;
+
+            switch (CurrentSettings.EditingAnimation)
+            {
+                case Fractal.Animation.Julia:
+                    checkBox_AnimationEnabled.Checked = juliaSettings.IsJuliaAnimationEnabled;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void checkBox_AnimationEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            switch (CurrentSettings.EditingAnimation)
+            {
+                case Fractal.Animation.Julia:
+                    juliaSettings.IsJuliaAnimationEnabled = checkBox_AnimationEnabled.Checked;
+
+                    input_AnimationSpeed.Enabled = juliaSettings.IsJuliaAnimationEnabled;
+                    input_AnimationSpeed.Text = juliaSettings.JuliaAnimationSpeed.ToString();
+                    checkBox_UsePeriodicPoint.Enabled = juliaSettings.IsJuliaAnimationEnabled;
+                    checkBox_UsePeriodicPoint.Checked = juliaSettings.UsePeriodicPoint;
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void input_AnimationSpeed_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_AnimationSpeed.Text))
+                e.Cancel = true;
+        }
+        private void input_AnimationSpeed_Validated(object sender, EventArgs e)
+        {
+            switch (CurrentSettings.EditingAnimation)
+            {
+                case Fractal.Animation.Julia:
+                    juliaSettings.JuliaAnimationSpeed = float.Parse(input_AnimationSpeed.Text);
+                    input_AnimationSpeed.Text = juliaSettings.JuliaAnimationSpeed.ToString();
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void checkBox_UsePeriodicPoint_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.UsePeriodicPoint = checkBox_UsePeriodicPoint.Checked;
+        }
+
+        #endregion
+
         #region Properties
         private ref Camera CurrentCamera
         {
@@ -2494,10 +2601,6 @@ namespace FractalLive
         TexturedVertex[] sphereVertices = new IcoSphere().Create(5, 1, true);
 
         Texture texture0, texture1, texture2, texture3;
-
-        #endregion
-
-        #region Constants
 
         #endregion
 
@@ -2620,6 +2723,8 @@ namespace FractalLive
         {
             e.Handled = !IsDecimalChar(e, true);
         }
+
+
         #endregion
     }
 }
