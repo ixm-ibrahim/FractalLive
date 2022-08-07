@@ -516,6 +516,11 @@ namespace FractalLive
 			return Double.IsNegativeInfinity(z.R) || Double.IsNegativeInfinity(z.I);
 		}
 
+		public static bool IsFinite(Complex z)
+        {
+			return !IsNaN(z) && !IsInfinity(z);
+        }
+
 		public static Complex Inverse(Complex z)
 		{
 			double x = z.R * z.R + z.I * z.I;

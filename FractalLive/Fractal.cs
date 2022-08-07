@@ -58,9 +58,9 @@ namespace FractalLive
             Julia, Julia_Mating, OrbitTrap, Texture, Normals, Custom
         }
 
-        public enum JuliaAnimation
+        public enum JuliaAnimationPath
         {
-            Circle, Main_Cardioid, Main_Disk, Period_3_Cardioid, Period_3_Disk, Custom
+            Circle, Period_1, Period_2, Period_3_1, Period_3_2, Custom
         }
 
         #endregion
@@ -224,9 +224,11 @@ namespace FractalLive
                 TerrainHeight = new FloatBounds(0, (float)-maxVal, (float)maxVal);
 
                 EditingAnimation = Animation.Julia;
+                AnimationSpeed = 1;
                 IsJuliaAnimationEnabled = false;
-                JuliaAnimationSpeed = 1;
                 UsePeriodicPoint = false;
+                JuliaAnimationPath = JuliaAnimationPath.Circle;
+                JuliaAnimationFactor = (float)Math.PI / 4;
             }
 
             public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
@@ -1293,9 +1295,11 @@ namespace FractalLive
             public FloatBounds TerrainHeight;
 
             public Animation EditingAnimation;
+            public float AnimationSpeed;
             public bool IsJuliaAnimationEnabled;
-            public float JuliaAnimationSpeed;
             public bool UsePeriodicPoint;
+            public JuliaAnimationPath JuliaAnimationPath;
+            public float JuliaAnimationFactor;
 
         }
 

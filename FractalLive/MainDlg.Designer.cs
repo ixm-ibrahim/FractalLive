@@ -204,6 +204,10 @@
             this.panel_GeneralMenu = new System.Windows.Forms.Panel();
             this.panel_MenuSelect = new System.Windows.Forms.Panel();
             this.panel_MiscMenu = new System.Windows.Forms.Panel();
+            this.label_JuliaAnimationFactor = new System.Windows.Forms.Label();
+            this.input_JuliaAnimationFactor = new System.Windows.Forms.TextBox();
+            this.label_JuliaAnimationPath = new System.Windows.Forms.Label();
+            this.input_JuliaAnimationPath = new System.Windows.Forms.ComboBox();
             this.checkBox_UsePeriodicPoint = new System.Windows.Forms.CheckBox();
             this.label_AnimationSpeed = new System.Windows.Forms.Label();
             this.input_AnimationSpeed = new System.Windows.Forms.TextBox();
@@ -2326,6 +2330,10 @@
             // panel_MiscMenu
             // 
             this.panel_MiscMenu.AutoScroll = true;
+            this.panel_MiscMenu.Controls.Add(this.label_JuliaAnimationFactor);
+            this.panel_MiscMenu.Controls.Add(this.input_JuliaAnimationFactor);
+            this.panel_MiscMenu.Controls.Add(this.label_JuliaAnimationPath);
+            this.panel_MiscMenu.Controls.Add(this.input_JuliaAnimationPath);
             this.panel_MiscMenu.Controls.Add(this.checkBox_UsePeriodicPoint);
             this.panel_MiscMenu.Controls.Add(this.label_AnimationSpeed);
             this.panel_MiscMenu.Controls.Add(this.input_AnimationSpeed);
@@ -2340,14 +2348,63 @@
             this.panel_MiscMenu.Size = new System.Drawing.Size(178, 535);
             this.panel_MiscMenu.TabIndex = 72;
             // 
+            // label_JuliaAnimationFactor
+            // 
+            this.label_JuliaAnimationFactor.AutoSize = true;
+            this.label_JuliaAnimationFactor.Location = new System.Drawing.Point(8, 164);
+            this.label_JuliaAnimationFactor.Name = "label_JuliaAnimationFactor";
+            this.label_JuliaAnimationFactor.Size = new System.Drawing.Size(50, 15);
+            this.label_JuliaAnimationFactor.TabIndex = 80;
+            this.label_JuliaAnimationFactor.Text = "Radius:*";
+            // 
+            // input_JuliaAnimationFactor
+            // 
+            this.input_JuliaAnimationFactor.Location = new System.Drawing.Point(99, 161);
+            this.input_JuliaAnimationFactor.Name = "input_JuliaAnimationFactor";
+            this.input_JuliaAnimationFactor.Size = new System.Drawing.Size(51, 23);
+            this.input_JuliaAnimationFactor.TabIndex = 81;
+            this.input_JuliaAnimationFactor.Text = "0.7584";
+            this.input_JuliaAnimationFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_JuliaAnimationFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_JuliaAnimationFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_JuliaAnimationFactor_Validating);
+            this.input_JuliaAnimationFactor.Validated += new System.EventHandler(this.input_JuliaAnimationFactor_Validated);
+            // 
+            // label_JuliaAnimationPath
+            // 
+            this.label_JuliaAnimationPath.AutoSize = true;
+            this.label_JuliaAnimationPath.Location = new System.Drawing.Point(8, 138);
+            this.label_JuliaAnimationPath.Name = "label_JuliaAnimationPath";
+            this.label_JuliaAnimationPath.Size = new System.Drawing.Size(34, 15);
+            this.label_JuliaAnimationPath.TabIndex = 78;
+            this.label_JuliaAnimationPath.Text = "Path:";
+            this.label_JuliaAnimationPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_JuliaAnimationPath
+            // 
+            this.input_JuliaAnimationPath.CausesValidation = false;
+            this.input_JuliaAnimationPath.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.input_JuliaAnimationPath.FormattingEnabled = true;
+            this.input_JuliaAnimationPath.Items.AddRange(new object[] {
+            "Circle",
+            "Period 1",
+            "Period 2",
+            "Period 3/1",
+            "Period 3/2",
+            "Custom"});
+            this.input_JuliaAnimationPath.Location = new System.Drawing.Point(68, 135);
+            this.input_JuliaAnimationPath.Name = "input_JuliaAnimationPath";
+            this.input_JuliaAnimationPath.Size = new System.Drawing.Size(82, 23);
+            this.input_JuliaAnimationPath.TabIndex = 79;
+            this.input_JuliaAnimationPath.SelectionChangeCommitted += new System.EventHandler(this.input_JuliaAnimationPath_SelectionChangeCommitted);
+            // 
             // checkBox_UsePeriodicPoint
             // 
             this.checkBox_UsePeriodicPoint.AutoSize = true;
             this.checkBox_UsePeriodicPoint.Location = new System.Drawing.Point(13, 115);
             this.checkBox_UsePeriodicPoint.Name = "checkBox_UsePeriodicPoint";
-            this.checkBox_UsePeriodicPoint.Size = new System.Drawing.Size(122, 19);
+            this.checkBox_UsePeriodicPoint.Size = new System.Drawing.Size(135, 19);
             this.checkBox_UsePeriodicPoint.TabIndex = 77;
-            this.checkBox_UsePeriodicPoint.Text = "Use Periodic Point";
+            this.checkBox_UsePeriodicPoint.Text = "Zoom Periodic Point";
             this.checkBox_UsePeriodicPoint.UseVisualStyleBackColor = true;
             this.checkBox_UsePeriodicPoint.CheckedChanged += new System.EventHandler(this.checkBox_UsePeriodicPoint_CheckedChanged);
             // 
@@ -2651,6 +2708,10 @@
         private System.Windows.Forms.Label label_AnimationSpeed;
         private System.Windows.Forms.TextBox input_AnimationSpeed;
         private System.Windows.Forms.CheckBox checkBox_AnimationEnabled;
+        private System.Windows.Forms.Label label_JuliaAnimationPath;
+        private System.Windows.Forms.ComboBox input_JuliaAnimationPath;
+        private System.Windows.Forms.Label label_JuliaAnimationFactor;
+        private System.Windows.Forms.TextBox input_JuliaAnimationFactor;
     }
 }
 

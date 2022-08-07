@@ -186,17 +186,86 @@ namespace FractalLive
             LogTextBox.AppendText(message + "\r\n");
         }
 
+        // https://math.stackexchange.com/questions/3763732/finding-periodic-fixed-points-in-the-julia-sets-close-to-the-period-3-cardioid
+        Complex guess = Complex.Zero;
+        private bool m_d_attractor_step(ref Complex z, Complex z_guess, Complex c, int period)
+        {
+            Complex zz = z_guess;
+            Complex dzz = new Complex(1,0);
+            double epsilon2 = 1.9721522630525295e-31;
+
+            for (int i = 0; i < period; ++i)
+            {
+                dzz = 2 * zz * dzz;
+                zz = zz * zz + c;
+            }
+
+            if ((zz - z_guess).RadiusSquared <= epsilon2)
+            {
+                z = z_guess;
+                return true;
+            }
+            Complex z_new = z_guess - (zz - z_guess) / (dzz - 1);
+            Complex d = z_new - z_guess;
+            if (d.RadiusSquared <= epsilon2)
+            {
+                z = z_new;
+                return true;
+            }
+            if (Complex.IsFinite(d))
+            {
+                z = z_new;
+                return false;
+            }
+            else
+            {
+                z = z_guess;
+                return true;
+            }
+        }
+        private bool m_d_attractor(out Complex z_out, Complex z_guess, Complex c, int period, int maxsteps)
+        {
+            bool result = false;
+            Complex z = z_guess;
+
+            for (int i = 0; i < maxsteps; ++i)
+                if (false != (result = m_d_attractor_step(ref z, z_guess, c, period)))
+                    break;
+
+            z_out = z;
+            return result;
+        }
+
         private Vector2 GetCenter()
         {
             if (CurrentSettings.IsJuliaAnimationEnabled && CurrentSettings.UsePeriodicPoint)
             {
-                float theta = (float)Math.Atan2(CurrentSettings.Julia.Y, CurrentSettings.Julia.X) + fractalTime * CurrentSettings.JuliaAnimationSpeed;
-                bool switchSign = theta % (4*Math.PI) <= 2*Math.PI;
+                //float theta = (float)Math.Atan2(juliaSettings.Julia.Y, juliaSettings.Julia.X) + fractalTime * juliaSettings.AnimationSpeed;
+                float theta = animationTime;
+                Vector2 j = GetJulia();
+                Complex julia = new Complex(j.X, j.Y);
 
-                Vector2 julia = GetJulia();
-                Complex sqrt = Complex.Sqrt(new Complex(1,0) - 4 * new Complex(julia.X, julia.Y), switchSign);
-                Vector2 center = new Vector2(1 - (float)sqrt.R, (float)-sqrt.I) / 2;
+                bool switchSign = false;
 
+                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Circle || (juliaSettings.JuliaAnimationFactor > 1 && juliaSettings.JuliaAnimationPath != Fractal.JuliaAnimationPath.Period_2 && juliaSettings.JuliaAnimationPath != Fractal.JuliaAnimationPath.Period_3_2))
+                    switchSign = (theta % (float)(4*Math.PI)) < 2*Math.PI;
+
+                Complex sqrt = Complex.Sqrt(new Complex(1,0) - 4 * julia, switchSign);
+                Complex c = (1 - sqrt) / 2;
+                    
+                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Custom)
+                {
+
+                }
+                else if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Period_3_1)
+                {
+                    //var guess = new Complex(juliaSettings.Center.X, juliaSettings.Center.Y);
+                    m_d_attractor(out c, guess, julia, 3, 10);
+                    guess = c;
+                }
+                
+                Vector2 center = new Vector2((float)c.R, (float)c.I);
+                juliaSettings.Center = center;
                 input_Center.Text = Make2D(center.X, center.Y);
 
                 return center;
@@ -209,9 +278,39 @@ namespace FractalLive
         {
             if (CurrentSettings.IsJuliaAnimationEnabled)
             {
-                float theta = (float)Math.Atan2(CurrentSettings.Julia.Y, CurrentSettings.Julia.X) + fractalTime * CurrentSettings.JuliaAnimationSpeed;
-                Log(theta.ToString());
-                return new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) * CurrentSettings.Julia.Length;
+                //float theta = (float)Math.Atan2(CurrentSettings.Julia.Y, CurrentSettings.Julia.X) + fractalTime * CurrentSettings.AnimationSpeed;
+                float theta = animationTime % (float)(4*Math.PI);
+
+                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Circle)
+                    return new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) * juliaSettings.JuliaAnimationFactor;
+                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Period_1)
+                    return new Vector2((float)(.5 * Math.Cos(theta) - .25 * Math.Cos(2 * theta)), (float)(.5 * Math.Sin(theta) - .25 * Math.Sin(2 * theta))) * juliaSettings.JuliaAnimationFactor;
+                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Period_2)
+                    return (new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) / 4 * juliaSettings.JuliaAnimationFactor) - new Vector2(1, 0);
+                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Custom)
+                {
+                    return juliaSettings.Julia;
+                }
+
+                var c = new Complex();
+                var unitCircle = new Complex(Math.Cos(theta), Math.Sin(theta));
+                var w = Complex.Asinh((88 - 27 * unitCircle) / (80 * Math.Sqrt(5))) / 3;
+                var w0 = Complex.Asinh(new Complex(88 / (80 * Math.Sqrt(5)), 0)) / 3;
+
+                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Period_3_1)
+                {
+                    var z = -1.75 - 20 * (Complex.Sinh(w) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
+                    var z0 = -1.75 - 20 * (Complex.Sinh(w0) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
+                    c = juliaSettings.JuliaAnimationFactor * (z - z0) + z0;
+                }
+                else if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Period_3_2)
+                {
+                    var zp = -1.75 - 20 * (Complex.Sinh(w + 2 * Math.PI * Complex.i / 3.0) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
+                    var zp0 = -1.75 - 20 * (Complex.Sinh(w0 + 2 * Math.PI * Complex.i / 3.0) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
+                    c = juliaSettings.JuliaAnimationFactor * (zp - zp0) + zp0;
+                }
+                
+                return new Vector2((float)c.R, (float)c.I);
             }
 
             return CurrentSettings.Julia;
@@ -387,6 +486,7 @@ namespace FractalLive
 
             applicationTime = new Stopwatch();
             fractalTime = 0;
+            animationTime = 0;
             currentFractalType = Fractal.Type.Mandelbrot;
 
             mandelbrotSettings = new Fractal.Settings(Fractal.Type.Mandelbrot);
@@ -531,8 +631,6 @@ namespace FractalLive
             deltaTime = (currentFrame - lastFrame) / 1000;
             lastFrame = currentFrame;
 
-            if (!pauseTime) fractalTime += deltaTime;
-
             // input
             float modifier = inputState.keysDown[Keys.Oemtilde] ? -deltaTime : deltaTime;
             if (inputState.ShiftDown)
@@ -540,6 +638,15 @@ namespace FractalLive
             if (inputState.ControlDown)
                 modifier /= 5;
             float zoomedModifier = modifier / (float)Math.Pow(2, Math.Max(0, CurrentSettings.Zoom));
+
+            // time
+            float timeFactor = inputState.keysDown[Keys.OemQuestion] ? modifier*5 : (inputState.keysDown[Keys.Oemcomma] ? -modifier*5 : 1);
+
+            if (!pauseTime || timeFactor != 1)
+            {
+                fractalTime += deltaTime * timeFactor;
+                animationTime += deltaTime * timeFactor * CurrentSettings.AnimationSpeed / (float)Math.Pow(2, CurrentSettings.Formula == Fractal.Formula.Lambda ? CurrentSettings.Zoom + 2 : CurrentSettings.Zoom);
+            }
 
             // menu controls
             if (panel_FormulaMenu.Enabled)
@@ -788,23 +895,20 @@ namespace FractalLive
             }
             else if (panel_MiscMenu.Enabled)
             {
-                if (inputState.keysDown[Keys.D1] && currentFractalType == Fractal.Type.Julia)
+                if (inputState.keysDown[Keys.D1])
                 {
-
-                    switch (CurrentSettings.EditingAnimation)
-                    {
-                        case Fractal.Animation.Julia:
-                            juliaSettings.JuliaAnimationSpeed += zoomedModifier / 2;
-                            input_AnimationSpeed.Text = juliaSettings.JuliaAnimationSpeed.ToString();
-                            break;
-                        default:
-                            break;
-                    }
+                    juliaSettings.AnimationSpeed += zoomedModifier / 2;
+                    input_AnimationSpeed.Text = juliaSettings.AnimationSpeed.ToString();
+                }
+                if (inputState.keysDown[Keys.D2] && currentFractalType == Fractal.Type.Julia)
+                {
+                    juliaSettings.JuliaAnimationFactor += zoomedModifier / 2;
+                    input_JuliaAnimationFactor.Text = juliaSettings.JuliaAnimationFactor.ToString();
                 }
             }
 
                 // keyboard controls
-                switch (CurrentCamera.CurrentMode)
+            switch (CurrentCamera.CurrentMode)
             {
                 case Camera.Mode.Flat:
                 {
@@ -912,12 +1016,6 @@ namespace FractalLive
                 }
             }
 
-            // time
-            if (inputState.keysDown[Keys.OemQuestion])
-                fractalTime += modifier * 5;
-            if (inputState.keysDown[Keys.Oemcomma])
-                fractalTime -= modifier * (pauseTime ? 5 : 6);
-
             // update controls
             //Log(CurrentSettings.OrbitTrap.ToString());
             //Log(CurrentCamera.TargetDistance.ToString());
@@ -936,12 +1034,15 @@ namespace FractalLive
             inputState.GLMousePositionX = e.X;
             inputState.GLMousePositionY = e.Y;
 
-            int deltaX = inputState.PreviousMouseX - MousePosition.X;
-            int deltaY = inputState.PreviousMouseY - MousePosition.Y;
+            inputState.GLMousePositionX = Math.Clamp(inputState.GLMousePositionX, 0, glControl.Width);
+            inputState.GLMousePositionY = Math.Clamp(inputState.GLMousePositionY, 0, glControl.Height);
 
+            int deltaX = inputState.PreviousMouseX - inputState.GLMousePositionX;
+            int deltaY = inputState.PreviousMouseY - inputState.GLMousePositionY;
+            
             if (inputState.MouseRightDown)
             {
-                Cursor.Position = new System.Drawing.Point(inputState.PreviousMouseX, inputState.PreviousMouseY);
+                Cursor.Position = glControl.PointToScreen(e.Location);
 
                 if (CurrentCamera.CurrentMode == Camera.Mode.Flat)
                 {
@@ -963,9 +1064,23 @@ namespace FractalLive
 
                 input_Center.Text = Make2D(CurrentSettings.Center.X, CurrentSettings.Center.Y);
             }
+            if (inputState.MouseLeftDown/* && CurrentSettings.Type == Fractal.Type.Julia && juliaSettings.UsePeriodicPoint*/)
+            {
+                float theta = MathHelper.DegreesToRadians(CurrentCamera.Roll);
 
-            inputState.PreviousMouseX = MousePosition.X;
-            inputState.PreviousMouseY = MousePosition.Y;
+                Vector2 normalized = new Vector2(inputState.GLMousePositionX/(float)glControl.Width - 0.5f, inputState.GLMousePositionY/(float)glControl.Height - 0.5f) * new Vector2(2,-2);
+                Vector2 rolled = new Vector2((float)(normalized.X*Math.Cos(theta) - normalized.Y*Math.Sin(theta)), (float)(normalized.X*Math.Sin(theta) + normalized.Y*Math.Cos(theta)));
+                Vector2 zoomed = rolled * CurrentSettings.InitialDisplayRadius.Value / (float)Math.Pow(2, CurrentSettings.Zoom);
+                Vector2 centered = zoomed + CurrentSettings.Center;
+
+                if (CurrentCamera.CurrentMode == Camera.Mode.Flat)
+                {
+                    guess = new Complex(centered.X, centered.Y);
+                }
+            }
+
+            inputState.PreviousMouseX = inputState.GLMousePositionX;
+            inputState.PreviousMouseY = inputState.GLMousePositionY;
         }
 
         private void glControl_MouseWheel(object? sender, MouseEventArgs e)
@@ -2456,6 +2571,9 @@ namespace FractalLive
             {
                 case Fractal.Animation.Julia:
                     checkBox_AnimationEnabled.Checked = juliaSettings.IsJuliaAnimationEnabled;
+                    checkBox_UsePeriodicPoint.Checked = juliaSettings.UsePeriodicPoint;
+                    input_JuliaAnimationPath.SelectedIndex = (int)CurrentSettings.JuliaAnimationPath;
+                    input_JuliaAnimationFactor.Text = juliaSettings.JuliaAnimationFactor.ToString();
                     break;
                 default:
                     break;
@@ -2464,18 +2582,26 @@ namespace FractalLive
 
         private void checkBox_AnimationEnabled_CheckedChanged(object sender, EventArgs e)
         {
+            input_AnimationSpeed.Text = juliaSettings.AnimationSpeed.ToString();
+
             switch (CurrentSettings.EditingAnimation)
             {
                 case Fractal.Animation.Julia:
                     juliaSettings.IsJuliaAnimationEnabled = checkBox_AnimationEnabled.Checked;
 
                     input_AnimationSpeed.Enabled = juliaSettings.IsJuliaAnimationEnabled;
-                    input_AnimationSpeed.Text = juliaSettings.JuliaAnimationSpeed.ToString();
                     checkBox_UsePeriodicPoint.Enabled = juliaSettings.IsJuliaAnimationEnabled;
                     checkBox_UsePeriodicPoint.Checked = juliaSettings.UsePeriodicPoint;
+                    input_JuliaAnimationPath.Enabled = juliaSettings.IsJuliaAnimationEnabled;
 
                     break;
                 default:
+
+                    input_AnimationSpeed.Enabled = false;
+                    checkBox_UsePeriodicPoint.Enabled = false;
+                    checkBox_UsePeriodicPoint.Checked = false;
+                    input_JuliaAnimationPath.Enabled = false;
+
                     break;
             }
         }
@@ -2487,21 +2613,29 @@ namespace FractalLive
         }
         private void input_AnimationSpeed_Validated(object sender, EventArgs e)
         {
-            switch (CurrentSettings.EditingAnimation)
-            {
-                case Fractal.Animation.Julia:
-                    juliaSettings.JuliaAnimationSpeed = float.Parse(input_AnimationSpeed.Text);
-                    input_AnimationSpeed.Text = juliaSettings.JuliaAnimationSpeed.ToString();
-
-                    break;
-                default:
-                    break;
-            }
+            juliaSettings.AnimationSpeed = float.Parse(input_AnimationSpeed.Text);
+            input_AnimationSpeed.Text = juliaSettings.AnimationSpeed.ToString();
         }
 
         private void checkBox_UsePeriodicPoint_CheckedChanged(object sender, EventArgs e)
         {
             CurrentSettings.UsePeriodicPoint = checkBox_UsePeriodicPoint.Checked;
+        }
+
+        private void input_JuliaAnimationPath_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            CurrentSettings.JuliaAnimationPath = (Fractal.JuliaAnimationPath)input_JuliaAnimationPath.SelectedIndex;
+        }
+
+        private void input_JuliaAnimationFactor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_JuliaAnimationFactor.Text))
+                e.Cancel = true;
+        }
+        private void input_JuliaAnimationFactor_Validated(object sender, EventArgs e)
+        {
+            juliaSettings.JuliaAnimationFactor = float.Parse(input_JuliaAnimationFactor.Text);
+            input_JuliaAnimationFactor.Text = juliaSettings.JuliaAnimationFactor.ToString();
         }
 
         #endregion
@@ -2564,6 +2698,7 @@ namespace FractalLive
         private OpenTK.WinForms.INativeInput _nativeInput;
         internal static Stopwatch? applicationTime;
         float fractalTime;
+        float animationTime;
         bool pauseTime = false;
         private Timer _timer = null!;
         private int fps = 60;

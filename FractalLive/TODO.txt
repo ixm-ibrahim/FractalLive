@@ -56,6 +56,10 @@ mandelbrot/julia orbit trap
 adding too many lines (points too?) bug
 match orbit trap for texture
 bailout texture cutoff bug
+stripes zooming bug
+uses closest periodic point rather than fixed
+julia matings middle ground bug
+orbit path on left click (new shader)
 
 
-misc menu (animations), terrian (misc menu), julia minimap, load save settings, doubles and quads
+terrian (misc menu), julia minimap, load save settings, doubles and quads
