@@ -247,7 +247,7 @@ namespace FractalLive
 
                 bool switchSign = false;
 
-                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Circle || (juliaSettings.JuliaAnimationFactor > 1 && juliaSettings.JuliaAnimationPath != Fractal.JuliaAnimationPath.Period_2 && juliaSettings.JuliaAnimationPath != Fractal.JuliaAnimationPath.Period_3_2))
+                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Circle || (juliaSettings.JuliaAnimationRadius > 1 && juliaSettings.JuliaAnimationPath != Fractal.JuliaAnimationPath.Period_2 && juliaSettings.JuliaAnimationPath != Fractal.JuliaAnimationPath.Period_3_2))
                     switchSign = (theta % (float)(4*Math.PI)) < 2*Math.PI;
 
                 Complex sqrt = Complex.Sqrt(new Complex(1,0) - 4 * julia, switchSign);
@@ -276,44 +276,61 @@ namespace FractalLive
 
         private Vector2 GetJulia()
         {
-            if (CurrentSettings.IsJuliaAnimationEnabled)
+            if (currentFractalType == Fractal.Type.Julia)
+                return GetJulia(juliaSettings.JuliaAnimationPath, juliaSettings.JuliaAnimationRadius, juliaSettings.Julia);
+
+            return juliaSettings.Julia;
+        }
+        private Vector2 GetJulia(Fractal.JuliaAnimationPath animationPath, float radius, Vector2 defaultJulia, float offset = 0, bool reverseTheta = false)
+        {
+            float theta = (animationTime + offset*2*(float)Math.PI) % (float)(4*Math.PI);
+
+            if (reverseTheta)
+                theta = -theta;
+
+            if (animationPath == Fractal.JuliaAnimationPath.Circle)
+                return new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) * radius;
+            if (animationPath == Fractal.JuliaAnimationPath.Period_1)
+                return new Vector2((float)(.5 * Math.Cos(theta) - .25 * Math.Cos(2 * theta)), (float)(.5 * Math.Sin(theta) - .25 * Math.Sin(2 * theta))) * radius;
+            if (animationPath == Fractal.JuliaAnimationPath.Period_2)
+                return (new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) / 4 * radius) - new Vector2(1, 0);
+            if (animationPath == Fractal.JuliaAnimationPath.Custom)
             {
-                //float theta = (float)Math.Atan2(CurrentSettings.Julia.Y, CurrentSettings.Julia.X) + fractalTime * CurrentSettings.AnimationSpeed;
-                float theta = animationTime % (float)(4*Math.PI);
-
-                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Circle)
-                    return new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) * juliaSettings.JuliaAnimationFactor;
-                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Period_1)
-                    return new Vector2((float)(.5 * Math.Cos(theta) - .25 * Math.Cos(2 * theta)), (float)(.5 * Math.Sin(theta) - .25 * Math.Sin(2 * theta))) * juliaSettings.JuliaAnimationFactor;
-                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Period_2)
-                    return (new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta)) / 4 * juliaSettings.JuliaAnimationFactor) - new Vector2(1, 0);
-                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Custom)
-                {
-                    return juliaSettings.Julia;
-                }
-
-                var c = new Complex();
-                var unitCircle = new Complex(Math.Cos(theta), Math.Sin(theta));
-                var w = Complex.Asinh((88 - 27 * unitCircle) / (80 * Math.Sqrt(5))) / 3;
-                var w0 = Complex.Asinh(new Complex(88 / (80 * Math.Sqrt(5)), 0)) / 3;
-
-                if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Period_3_1)
-                {
-                    var z = -1.75 - 20 * (Complex.Sinh(w) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
-                    var z0 = -1.75 - 20 * (Complex.Sinh(w0) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
-                    c = juliaSettings.JuliaAnimationFactor * (z - z0) + z0;
-                }
-                else if (juliaSettings.JuliaAnimationPath == Fractal.JuliaAnimationPath.Period_3_2)
-                {
-                    var zp = -1.75 - 20 * (Complex.Sinh(w + 2 * Math.PI * Complex.i / 3.0) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
-                    var zp0 = -1.75 - 20 * (Complex.Sinh(w0 + 2 * Math.PI * Complex.i / 3.0) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
-                    c = juliaSettings.JuliaAnimationFactor * (zp - zp0) + zp0;
-                }
-                
-                return new Vector2((float)c.R, (float)c.I);
+                return defaultJulia;
             }
 
-            return CurrentSettings.Julia;
+            var c = new Complex();
+            var unitCircle = new Complex(Math.Cos(theta), Math.Sin(theta));
+            var w = Complex.Asinh((88 - 27 * unitCircle) / (80 * Math.Sqrt(5))) / 3;
+            var w0 = Complex.Asinh(new Complex(88 / (80 * Math.Sqrt(5)), 0)) / 3;
+
+            if (animationPath == Fractal.JuliaAnimationPath.Period_3_1)
+            {
+                var z = -1.75 - 20 * (Complex.Sinh(w) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
+                var z0 = -1.75 - 20 * (Complex.Sinh(w0) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
+                c = radius * (z - z0) + z0;
+            }
+            else if (animationPath == Fractal.JuliaAnimationPath.Period_3_2)
+            {
+                var zp = -1.75 - 20 * (Complex.Sinh(w + 2 * Math.PI * Complex.i / 3.0) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
+                var zp0 = -1.75 - 20 * (Complex.Sinh(w0 + 2 * Math.PI * Complex.i / 3.0) - 1.0 / (4 * Math.Sqrt(5))).Pow(2) / 9;
+                c = radius * (zp - zp0) + zp0;
+            }
+                
+            return new Vector2((float)c.R, (float)c.I);
+        }
+
+        private void GetJuliaMating()
+        {
+            if (CurrentSettings.IsJuliaMatingAnimationEnabled)
+                juliaMating.InitializeMating
+                (
+                    GetJulia(juliaMatingSettings.JuliaMatingAnimationPath1, juliaMatingSettings.JuliaMatingAnimationRadius1, juliaMatingSettings.JuliaMating1),
+                    GetJulia(juliaMatingSettings.JuliaMatingAnimationPath2, juliaMatingSettings.JuliaMatingAnimationRadius2, juliaMatingSettings.JuliaMating2, juliaMatingSettings.JuliaMatingAnimationOffset.Value, juliaMatingSettings.UseJuliaMatingAnimationReverse),
+                    juliaMatingSettings.MatingIterations,
+                    1,
+                    true
+                );
         }
 
         private void Render()
@@ -353,12 +370,12 @@ namespace FractalLive
             }
             else if (currentFractalType == Fractal.Type.Julia_Mating)
             {
-                int s = (int)fractalSettings.CurrentMatingStep % fractalSettings.IntermediateMatingSteps;
-                int n = ((int)fractalSettings.CurrentMatingStep - s) / fractalSettings.IntermediateMatingSteps;
+                int s = (int)juliaMating.CurrentStep % juliaMating.IntermediateSteps;
+                int n = ((int)juliaMating.CurrentStep - s) / juliaMating.IntermediateSteps;
 
                 shader.SetInt("currentMatingIteration", n);
-                shader.SetVector2("p", fractalSettings.JuliaMating1);
-                shader.SetVector2("q", fractalSettings.JuliaMating2);
+                shader.SetVector2("p", juliaMating.P.ToComplex());
+                shader.SetVector2("q", juliaMating.Q.ToComplex());
 
                 shader.SetDouble("R_t", juliaMating.R_t);
                 shader.SetVector2Array("ma", juliaMating.Ma_Step);
@@ -612,7 +629,13 @@ namespace FractalLive
                 return;
 
             if (currentFractalType == Fractal.Type.Julia_Mating)
-                if (juliaMating.IsInitialized && !juliaMating.Completed)
+                if (juliaMatingSettings.IsJuliaMatingAnimationEnabled)
+                {
+                    GetJuliaMating();
+                    input_CurrentMatingStep.Enabled = false;
+                    label_CurrentMatingStep.Text = "GENERATING:";
+                }
+                else if (juliaMating.IsInitialized && !juliaMating.Completed)
                 {
                     juliaMating.UpdateMating();
                     input_CurrentMatingStep.Value = (int)juliaMating.CurrentStep;
@@ -647,7 +670,7 @@ namespace FractalLive
                 fractalTime += deltaTime * timeFactor;
                 animationTime += deltaTime * timeFactor * CurrentSettings.AnimationSpeed / (float)Math.Pow(2, CurrentSettings.Formula == Fractal.Formula.Lambda ? CurrentSettings.Zoom + 2 : CurrentSettings.Zoom);
             }
-
+            Log(CurrentSettings.AnimationSpeed.ToString());
             // menu controls
             if (panel_FormulaMenu.Enabled)
             {
@@ -900,14 +923,27 @@ namespace FractalLive
                     juliaSettings.AnimationSpeed += zoomedModifier / 2;
                     input_AnimationSpeed.Text = juliaSettings.AnimationSpeed.ToString();
                 }
-                if (inputState.keysDown[Keys.D2] && currentFractalType == Fractal.Type.Julia)
+                if (inputState.keysDown[Keys.D2])
                 {
-                    juliaSettings.JuliaAnimationFactor += zoomedModifier / 2;
-                    input_JuliaAnimationFactor.Text = juliaSettings.JuliaAnimationFactor.ToString();
+                    if (currentFractalType == Fractal.Type.Julia)
+                    {
+                        juliaSettings.JuliaAnimationRadius += zoomedModifier / 2;
+                        input_JuliaAnimationRadius.Text = juliaSettings.JuliaAnimationRadius.ToString();
+                    }
+                    else if (currentFractalType == Fractal.Type.Julia_Mating)
+                    {
+                        juliaSettings.JuliaMatingAnimationRadius1 += zoomedModifier / 2;
+                        input_JuliaAnimationRadius.Text = juliaSettings.JuliaMatingAnimationRadius1.ToString();
+                    }
+                }
+                if (inputState.keysDown[Keys.D3] && currentFractalType == Fractal.Type.Julia_Mating)
+                {
+                    juliaSettings.JuliaMatingAnimationRadius1 += zoomedModifier / 2;
+                    input_JuliaAnimationRadius.Text = juliaSettings.JuliaMatingAnimationRadius1.ToString();
                 }
             }
 
-                // keyboard controls
+            // keyboard controls
             switch (CurrentCamera.CurrentMode)
             {
                 case Camera.Mode.Flat:
@@ -1566,7 +1602,6 @@ namespace FractalLive
 
             input_EditingAnimation.SelectedIndex = (int)CurrentSettings.EditingAnimation;
             input_EditingAnimation_SelectionChangeCommitted(null, null);
-            checkBox_AnimationEnabled_CheckedChanged(null, null);
         }
 
         private void input_FractalFormula_SelectionChangeCommitted(object sender, EventArgs e)
@@ -2573,11 +2608,22 @@ namespace FractalLive
                     checkBox_AnimationEnabled.Checked = juliaSettings.IsJuliaAnimationEnabled;
                     checkBox_UsePeriodicPoint.Checked = juliaSettings.UsePeriodicPoint;
                     input_JuliaAnimationPath.SelectedIndex = (int)CurrentSettings.JuliaAnimationPath;
-                    input_JuliaAnimationFactor.Text = juliaSettings.JuliaAnimationFactor.ToString();
+                    input_JuliaAnimationRadius.Text = juliaSettings.JuliaAnimationRadius.ToString();
+                    break;
+                case Fractal.Animation.Julia_Mating:
+                    checkBox_AnimationEnabled.Checked = juliaSettings.IsJuliaMatingAnimationEnabled;
+                    input_JuliaAnimationPath.SelectedIndex = (int)CurrentSettings.JuliaMatingAnimationPath1;
+                    input_JuliaAnimationRadius.Text = juliaSettings.JuliaMatingAnimationRadius1.ToString();
+                    input_JuliaMatingAnimationPath.SelectedIndex = (int)CurrentSettings.JuliaMatingAnimationPath2;
+                    input_JuliaMatingAnimationRadius.Text = juliaSettings.JuliaMatingAnimationRadius2.ToString();
+                    input_JuliaMatingAnimationOffset.Value = (decimal)juliaSettings.JuliaMatingAnimationOffset.Value;
+                    checkBox_UseJuliaMatingAnimationReverse.Checked = juliaSettings.UseJuliaMatingAnimationReverse;
                     break;
                 default:
                     break;
             }
+
+            checkBox_AnimationEnabled_CheckedChanged(null, null);
         }
 
         private void checkBox_AnimationEnabled_CheckedChanged(object sender, EventArgs e)
@@ -2591,16 +2637,27 @@ namespace FractalLive
 
                     input_AnimationSpeed.Enabled = juliaSettings.IsJuliaAnimationEnabled;
                     checkBox_UsePeriodicPoint.Enabled = juliaSettings.IsJuliaAnimationEnabled;
-                    checkBox_UsePeriodicPoint.Checked = juliaSettings.UsePeriodicPoint;
                     input_JuliaAnimationPath.Enabled = juliaSettings.IsJuliaAnimationEnabled;
+                    input_JuliaAnimationRadius.Enabled = juliaSettings.IsJuliaAnimationEnabled;
+
+                    input_JuliaMatingAnimationPath.Enabled = false;
+                    input_JuliaMatingAnimationRadius.Enabled = false;
+                    input_JuliaMatingAnimationOffset.Enabled = false;
+                    checkBox_UseJuliaMatingAnimationReverse.Enabled = false;
 
                     break;
-                default:
+                case Fractal.Animation.Julia_Mating:
+                    juliaMatingSettings.IsJuliaMatingAnimationEnabled = checkBox_AnimationEnabled.Checked;
 
-                    input_AnimationSpeed.Enabled = false;
                     checkBox_UsePeriodicPoint.Enabled = false;
-                    checkBox_UsePeriodicPoint.Checked = false;
-                    input_JuliaAnimationPath.Enabled = false;
+
+                    input_AnimationSpeed.Enabled = juliaMatingSettings.IsJuliaMatingAnimationEnabled;
+                    input_JuliaAnimationPath.Enabled = juliaMatingSettings.IsJuliaMatingAnimationEnabled;
+                    input_JuliaAnimationRadius.Enabled = juliaMatingSettings.IsJuliaMatingAnimationEnabled;
+                    input_JuliaMatingAnimationPath.Enabled = juliaMatingSettings.IsJuliaMatingAnimationEnabled;
+                    input_JuliaMatingAnimationRadius.Enabled = juliaMatingSettings.IsJuliaMatingAnimationEnabled;
+                    input_JuliaMatingAnimationOffset.Enabled = juliaMatingSettings.IsJuliaMatingAnimationEnabled;
+                    checkBox_UseJuliaMatingAnimationReverse.Enabled = juliaMatingSettings.IsJuliaMatingAnimationEnabled;
 
                     break;
             }
@@ -2613,8 +2670,8 @@ namespace FractalLive
         }
         private void input_AnimationSpeed_Validated(object sender, EventArgs e)
         {
-            juliaSettings.AnimationSpeed = float.Parse(input_AnimationSpeed.Text);
-            input_AnimationSpeed.Text = juliaSettings.AnimationSpeed.ToString();
+            CurrentSettings.AnimationSpeed = float.Parse(input_AnimationSpeed.Text);
+            input_AnimationSpeed.Text = CurrentSettings.AnimationSpeed.ToString();
         }
 
         private void checkBox_UsePeriodicPoint_CheckedChanged(object sender, EventArgs e)
@@ -2624,18 +2681,55 @@ namespace FractalLive
 
         private void input_JuliaAnimationPath_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            CurrentSettings.JuliaAnimationPath = (Fractal.JuliaAnimationPath)input_JuliaAnimationPath.SelectedIndex;
+            if (CurrentSettings.EditingAnimation == Fractal.Animation.Julia)
+                CurrentSettings.JuliaAnimationPath = (Fractal.JuliaAnimationPath)input_JuliaAnimationPath.SelectedIndex;
+            else if (CurrentSettings.EditingAnimation == Fractal.Animation.Julia_Mating)
+                CurrentSettings.JuliaMatingAnimationPath1 = (Fractal.JuliaAnimationPath)input_JuliaAnimationPath.SelectedIndex;
         }
 
-        private void input_JuliaAnimationFactor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void input_JuliaAnimationRadius_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!TryParse1DFloat(input_JuliaAnimationFactor.Text))
+            if (!TryParse1DFloat(input_JuliaAnimationRadius.Text))
                 e.Cancel = true;
         }
-        private void input_JuliaAnimationFactor_Validated(object sender, EventArgs e)
+        private void input_JuliaAnimationRadius_Validated(object sender, EventArgs e)
         {
-            juliaSettings.JuliaAnimationFactor = float.Parse(input_JuliaAnimationFactor.Text);
-            input_JuliaAnimationFactor.Text = juliaSettings.JuliaAnimationFactor.ToString();
+            if (CurrentSettings.EditingAnimation == Fractal.Animation.Julia)
+            {
+                juliaSettings.JuliaAnimationRadius = float.Parse(input_JuliaAnimationRadius.Text);
+                input_JuliaAnimationRadius.Text = juliaSettings.JuliaAnimationRadius.ToString();
+            }
+            else if (CurrentSettings.EditingAnimation == Fractal.Animation.Julia_Mating)
+            {
+                juliaSettings.JuliaMatingAnimationRadius1 = float.Parse(input_JuliaAnimationRadius.Text);
+                input_JuliaAnimationRadius.Text = juliaSettings.JuliaMatingAnimationRadius1.ToString();
+            }
+        }
+
+        private void input_JuliaMatingAnimationPath_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            CurrentSettings.JuliaMatingAnimationPath2 = (Fractal.JuliaAnimationPath)input_JuliaMatingAnimationPath.SelectedIndex;
+        }
+
+        private void input_JuliaMatingAnimationRadius_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!TryParse1DFloat(input_JuliaMatingAnimationRadius.Text))
+                e.Cancel = true;
+        }
+        private void input_JuliaMatingAnimationRadius_Validated(object sender, EventArgs e)
+        {
+            juliaSettings.JuliaMatingAnimationRadius2 = float.Parse(input_JuliaMatingAnimationRadius.Text);
+            input_JuliaMatingAnimationRadius.Text = juliaSettings.JuliaMatingAnimationRadius2.ToString();
+        }
+
+        private void input_JuliaMatingAnimationOffset_ValueChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.JuliaMatingAnimationOffset.SetValue((float)input_JuliaMatingAnimationOffset.Value);
+        }
+
+        private void checkBox_UseJuliaMatingAnimationReverse_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentSettings.UseJuliaMatingAnimationReverse = checkBox_UseJuliaMatingAnimationReverse.Checked;
         }
 
         #endregion

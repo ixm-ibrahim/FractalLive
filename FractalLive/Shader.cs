@@ -277,6 +277,16 @@ namespace FractalLive
             GL.UseProgram(Handle);
             GL.Uniform2(_uniformLocations[name], data);
         }
+        /// <summary>
+        /// Set a uniform Vector2 on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetVector2(string name, Complex data)
+        {
+            GL.UseProgram(Handle);
+            GL.Uniform2(_uniformLocations[name], new Vector2((float)data.R, (float)data.I));
+        }
         
         /// <summary>
         /// Set a uniform Vector2d on this shader.

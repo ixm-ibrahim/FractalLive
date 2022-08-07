@@ -89,8 +89,8 @@ namespace FractalLive
                 MatingIterations = 25;
                 IntermediateMatingSteps = 16;
                 CurrentMatingStep = -1;
-                MaxIterations = new IntBounds(100, 1, 9999);
-                MinIterations = new IntBounds(1, 1, 9999);
+                MaxIterations = new IntBounds(100, 0, 9999);
+                MinIterations = new IntBounds(0, 0, 9999);
                 UseConjugate = false;
                 StartPosition = Vector2.Zero;
                 C_Power = new Vector2(1, 0);
@@ -225,11 +225,20 @@ namespace FractalLive
 
                 EditingAnimation = Animation.Julia;
                 AnimationSpeed = 1;
+
                 IsJuliaAnimationEnabled = false;
                 UsePeriodicPoint = false;
                 JuliaAnimationPath = JuliaAnimationPath.Circle;
-                JuliaAnimationFactor = (float)Math.PI / 4;
-            }
+                JuliaAnimationRadius = (float)Math.PI / 4;
+
+                IsJuliaMatingAnimationEnabled = false;
+                JuliaMatingAnimationPath1 = JuliaAnimationPath.Period_1;
+                JuliaMatingAnimationRadius1 = 1.1f;
+                JuliaMatingAnimationPath2 = JuliaAnimationPath.Period_1;
+                JuliaMatingAnimationRadius2 = 1.2f;
+                JuliaMatingAnimationOffset = new FloatBounds(0, -1, 1);
+                UseJuliaMatingAnimationReverse = false;
+        }
 
             public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
             public bool Is2DBailout => OrbitTrap == OrbitTrap.Rectangle || OrbitTrap == OrbitTrap.Points;
@@ -1296,10 +1305,19 @@ namespace FractalLive
 
             public Animation EditingAnimation;
             public float AnimationSpeed;
+
             public bool IsJuliaAnimationEnabled;
             public bool UsePeriodicPoint;
             public JuliaAnimationPath JuliaAnimationPath;
-            public float JuliaAnimationFactor;
+            public float JuliaAnimationRadius;
+
+            public bool IsJuliaMatingAnimationEnabled;
+            public JuliaAnimationPath JuliaMatingAnimationPath1;
+            public float JuliaMatingAnimationRadius1;
+            public JuliaAnimationPath JuliaMatingAnimationPath2;
+            public float JuliaMatingAnimationRadius2;
+            public FloatBounds JuliaMatingAnimationOffset;
+            public bool UseJuliaMatingAnimationReverse;
 
         }
 

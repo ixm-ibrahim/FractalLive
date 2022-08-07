@@ -28,17 +28,14 @@ camera axis bug
 camera precision bug
 when no buttons are pressed, don't calulate any values (still image whose values gets passed to new shader that only cares about colors)
 make riemann angle gimbal lock? (rotate with spherical coordinates)
-flat riemann camera controls and aspect ratio
 lower resolution
 miniterations can't exceed maxiterations-1
 interior texture
 other ifs fractals (weather one, etc.)
-post iterations (smooth coloring)
-animate textures, julia (circle, factor*fractal edge, etc), orbit traps, rotate normals
 press g to reset camera
 hide controls that aren't relevant altogether
 exiting the form while mating steps fails or fail textbox validating bug
-julia mating update on another thread
+julia mating update and p3 steps on other threads
 distance estimation on riemann sphere bug
 no riemann adjustment for julia mating?
 you can resize color dialogue
@@ -57,9 +54,11 @@ adding too many lines (points too?) bug
 match orbit trap for texture
 bailout texture cutoff bug
 stripes zooming bug
-uses closest periodic point rather than fixed
 julia matings middle ground bug
 orbit path on left click (new shader)
+change powers in InitializeMating
+animate textures, orbit traps, rotate normals
+was in the middle of debugging domain miniterations for julia
 
 
 terrian (misc menu), julia minimap, load save settings, doubles and quads

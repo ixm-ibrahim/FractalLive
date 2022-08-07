@@ -1018,7 +1018,9 @@ bool IsBounded(int iter, vec2 z)
 
 bool IsWithinIteration(int iter)
 {
-    return iter+1 >= startOrbit && iter+1 <= startOrbit + orbitRange - 1 && iter > minIterations;
+    //return true;startOrbit;orbitRange;
+    return iter >= minIterations;startOrbit;orbitRange;
+    //return iter+1 >= startOrbit && iter+1 <= startOrbit + orbitRange - 1 && iter >= minIterations;
 }
 
 vec2 GetOrbitTrap(vec2 z, int iter, inout vec2 trap, inout vec4 domainZ, inout ivec2 domainIter, inout vec3 texCoords)
@@ -1130,7 +1132,7 @@ vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, b
 
                 break;
             case CALC_FIRST:
-                int start = (minIterations > startOrbit) ? minIterations : startOrbit;
+                int start = (minIterations >= startOrbit) ? minIterations : startOrbit;
 
                 // first
                 if (iter+1 == start)
@@ -1193,7 +1195,7 @@ vec2 CalculateOrbitTrapDistance(vec2 trap, float newDist, int iter, vec2 newZ, b
 
                 break;
             case CALC_FIRST:
-                int start = (minIterations > startOrbit) ? minIterations : startOrbit;
+                int start = (minIterations >= startOrbit) ? minIterations : startOrbit;
 
                 // first
                 if (iter+1 == start)
@@ -1267,7 +1269,7 @@ vec4 CalculateDomainZ(vec4 domainZ, vec2 newZ, int iter, inout ivec2 domainIter)
             domainIter.x = iter-1;
             return vec4((domainZ.xy + newZ) / 2, domainZ.xy);
         case CALC_FIRST:
-            int start = (minIterations > startOrbit) ? minIterations : startOrbit;
+            int start = (minIterations >= startOrbit) ? minIterations : startOrbit;
 
             // first
             if (iter+1 == start)

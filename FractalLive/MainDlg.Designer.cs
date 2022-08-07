@@ -204,8 +204,15 @@
             this.panel_GeneralMenu = new System.Windows.Forms.Panel();
             this.panel_MenuSelect = new System.Windows.Forms.Panel();
             this.panel_MiscMenu = new System.Windows.Forms.Panel();
-            this.label_JuliaAnimationFactor = new System.Windows.Forms.Label();
-            this.input_JuliaAnimationFactor = new System.Windows.Forms.TextBox();
+            this.input_JuliaMatingAnimationOffset = new System.Windows.Forms.NumericUpDown();
+            this.checkBox_UseJuliaMatingAnimationReverse = new System.Windows.Forms.CheckBox();
+            this.label_JuliaMatingAnimationOffset = new System.Windows.Forms.Label();
+            this.label_JuliaMatingAnimationRadius = new System.Windows.Forms.Label();
+            this.input_JuliaMatingAnimationRadius = new System.Windows.Forms.TextBox();
+            this.label_JuliaMatingAnimationPath = new System.Windows.Forms.Label();
+            this.input_JuliaMatingAnimationPath = new System.Windows.Forms.ComboBox();
+            this.label_JuliaAnimationRadius = new System.Windows.Forms.Label();
+            this.input_JuliaAnimationRadius = new System.Windows.Forms.TextBox();
             this.label_JuliaAnimationPath = new System.Windows.Forms.Label();
             this.input_JuliaAnimationPath = new System.Windows.Forms.ComboBox();
             this.checkBox_UsePeriodicPoint = new System.Windows.Forms.CheckBox();
@@ -239,6 +246,7 @@
             this.panel_GeneralMenu.SuspendLayout();
             this.panel_MenuSelect.SuspendLayout();
             this.panel_MiscMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_JuliaMatingAnimationOffset)).BeginInit();
             this.SuspendLayout();
             // 
             // label_MaxIterations
@@ -2330,8 +2338,15 @@
             // panel_MiscMenu
             // 
             this.panel_MiscMenu.AutoScroll = true;
-            this.panel_MiscMenu.Controls.Add(this.label_JuliaAnimationFactor);
-            this.panel_MiscMenu.Controls.Add(this.input_JuliaAnimationFactor);
+            this.panel_MiscMenu.Controls.Add(this.input_JuliaMatingAnimationOffset);
+            this.panel_MiscMenu.Controls.Add(this.checkBox_UseJuliaMatingAnimationReverse);
+            this.panel_MiscMenu.Controls.Add(this.label_JuliaMatingAnimationOffset);
+            this.panel_MiscMenu.Controls.Add(this.label_JuliaMatingAnimationRadius);
+            this.panel_MiscMenu.Controls.Add(this.input_JuliaMatingAnimationRadius);
+            this.panel_MiscMenu.Controls.Add(this.label_JuliaMatingAnimationPath);
+            this.panel_MiscMenu.Controls.Add(this.input_JuliaMatingAnimationPath);
+            this.panel_MiscMenu.Controls.Add(this.label_JuliaAnimationRadius);
+            this.panel_MiscMenu.Controls.Add(this.input_JuliaAnimationRadius);
             this.panel_MiscMenu.Controls.Add(this.label_JuliaAnimationPath);
             this.panel_MiscMenu.Controls.Add(this.input_JuliaAnimationPath);
             this.panel_MiscMenu.Controls.Add(this.checkBox_UsePeriodicPoint);
@@ -2348,26 +2363,119 @@
             this.panel_MiscMenu.Size = new System.Drawing.Size(178, 535);
             this.panel_MiscMenu.TabIndex = 72;
             // 
-            // label_JuliaAnimationFactor
+            // input_JuliaMatingAnimationOffset
             // 
-            this.label_JuliaAnimationFactor.AutoSize = true;
-            this.label_JuliaAnimationFactor.Location = new System.Drawing.Point(8, 164);
-            this.label_JuliaAnimationFactor.Name = "label_JuliaAnimationFactor";
-            this.label_JuliaAnimationFactor.Size = new System.Drawing.Size(50, 15);
-            this.label_JuliaAnimationFactor.TabIndex = 80;
-            this.label_JuliaAnimationFactor.Text = "Radius:*";
+            this.input_JuliaMatingAnimationOffset.DecimalPlaces = 2;
+            this.input_JuliaMatingAnimationOffset.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.input_JuliaMatingAnimationOffset.Location = new System.Drawing.Point(99, 239);
+            this.input_JuliaMatingAnimationOffset.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.input_JuliaMatingAnimationOffset.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.input_JuliaMatingAnimationOffset.Name = "input_JuliaMatingAnimationOffset";
+            this.input_JuliaMatingAnimationOffset.Size = new System.Drawing.Size(51, 23);
+            this.input_JuliaMatingAnimationOffset.TabIndex = 89;
+            this.input_JuliaMatingAnimationOffset.ValueChanged += new System.EventHandler(this.input_JuliaMatingAnimationOffset_ValueChanged);
             // 
-            // input_JuliaAnimationFactor
+            // checkBox_UseJuliaMatingAnimationReverse
             // 
-            this.input_JuliaAnimationFactor.Location = new System.Drawing.Point(99, 161);
-            this.input_JuliaAnimationFactor.Name = "input_JuliaAnimationFactor";
-            this.input_JuliaAnimationFactor.Size = new System.Drawing.Size(51, 23);
-            this.input_JuliaAnimationFactor.TabIndex = 81;
-            this.input_JuliaAnimationFactor.Text = "0.7584";
-            this.input_JuliaAnimationFactor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
-            this.input_JuliaAnimationFactor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
-            this.input_JuliaAnimationFactor.Validating += new System.ComponentModel.CancelEventHandler(this.input_JuliaAnimationFactor_Validating);
-            this.input_JuliaAnimationFactor.Validated += new System.EventHandler(this.input_JuliaAnimationFactor_Validated);
+            this.checkBox_UseJuliaMatingAnimationReverse.AutoSize = true;
+            this.checkBox_UseJuliaMatingAnimationReverse.Location = new System.Drawing.Point(13, 265);
+            this.checkBox_UseJuliaMatingAnimationReverse.Name = "checkBox_UseJuliaMatingAnimationReverse";
+            this.checkBox_UseJuliaMatingAnimationReverse.Size = new System.Drawing.Size(102, 19);
+            this.checkBox_UseJuliaMatingAnimationReverse.TabIndex = 88;
+            this.checkBox_UseJuliaMatingAnimationReverse.Text = "Reverse Path 2";
+            this.checkBox_UseJuliaMatingAnimationReverse.UseVisualStyleBackColor = true;
+            this.checkBox_UseJuliaMatingAnimationReverse.CheckedChanged += new System.EventHandler(this.checkBox_UseJuliaMatingAnimationReverse_CheckedChanged);
+            // 
+            // label_JuliaMatingAnimationOffset
+            // 
+            this.label_JuliaMatingAnimationOffset.AutoSize = true;
+            this.label_JuliaMatingAnimationOffset.Location = new System.Drawing.Point(8, 241);
+            this.label_JuliaMatingAnimationOffset.Name = "label_JuliaMatingAnimationOffset";
+            this.label_JuliaMatingAnimationOffset.Size = new System.Drawing.Size(42, 15);
+            this.label_JuliaMatingAnimationOffset.TabIndex = 86;
+            this.label_JuliaMatingAnimationOffset.Text = "Offset:";
+            // 
+            // label_JuliaMatingAnimationRadius
+            // 
+            this.label_JuliaMatingAnimationRadius.AutoSize = true;
+            this.label_JuliaMatingAnimationRadius.Location = new System.Drawing.Point(8, 216);
+            this.label_JuliaMatingAnimationRadius.Name = "label_JuliaMatingAnimationRadius";
+            this.label_JuliaMatingAnimationRadius.Size = new System.Drawing.Size(59, 15);
+            this.label_JuliaMatingAnimationRadius.TabIndex = 84;
+            this.label_JuliaMatingAnimationRadius.Text = "Radius 2:*";
+            // 
+            // input_JuliaMatingAnimationRadius
+            // 
+            this.input_JuliaMatingAnimationRadius.Location = new System.Drawing.Point(99, 213);
+            this.input_JuliaMatingAnimationRadius.Name = "input_JuliaMatingAnimationRadius";
+            this.input_JuliaMatingAnimationRadius.Size = new System.Drawing.Size(51, 23);
+            this.input_JuliaMatingAnimationRadius.TabIndex = 85;
+            this.input_JuliaMatingAnimationRadius.Text = "1.1";
+            this.input_JuliaMatingAnimationRadius.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_JuliaMatingAnimationRadius.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_JuliaMatingAnimationRadius.Validating += new System.ComponentModel.CancelEventHandler(this.input_JuliaMatingAnimationRadius_Validating);
+            this.input_JuliaMatingAnimationRadius.Validated += new System.EventHandler(this.input_JuliaMatingAnimationRadius_Validated);
+            // 
+            // label_JuliaMatingAnimationPath
+            // 
+            this.label_JuliaMatingAnimationPath.AutoSize = true;
+            this.label_JuliaMatingAnimationPath.Location = new System.Drawing.Point(8, 190);
+            this.label_JuliaMatingAnimationPath.Name = "label_JuliaMatingAnimationPath";
+            this.label_JuliaMatingAnimationPath.Size = new System.Drawing.Size(43, 15);
+            this.label_JuliaMatingAnimationPath.TabIndex = 82;
+            this.label_JuliaMatingAnimationPath.Text = "Path 2:";
+            this.label_JuliaMatingAnimationPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // input_JuliaMatingAnimationPath
+            // 
+            this.input_JuliaMatingAnimationPath.CausesValidation = false;
+            this.input_JuliaMatingAnimationPath.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.input_JuliaMatingAnimationPath.FormattingEnabled = true;
+            this.input_JuliaMatingAnimationPath.Items.AddRange(new object[] {
+            "Circle",
+            "Period 1",
+            "Period 2",
+            "Period 3/1",
+            "Period 3/2",
+            "Custom"});
+            this.input_JuliaMatingAnimationPath.Location = new System.Drawing.Point(68, 187);
+            this.input_JuliaMatingAnimationPath.Name = "input_JuliaMatingAnimationPath";
+            this.input_JuliaMatingAnimationPath.Size = new System.Drawing.Size(82, 23);
+            this.input_JuliaMatingAnimationPath.TabIndex = 83;
+            this.input_JuliaMatingAnimationPath.SelectionChangeCommitted += new System.EventHandler(this.input_JuliaMatingAnimationPath_SelectionChangeCommitted);
+            // 
+            // label_JuliaAnimationRadius
+            // 
+            this.label_JuliaAnimationRadius.AutoSize = true;
+            this.label_JuliaAnimationRadius.Location = new System.Drawing.Point(8, 164);
+            this.label_JuliaAnimationRadius.Name = "label_JuliaAnimationRadius";
+            this.label_JuliaAnimationRadius.Size = new System.Drawing.Size(50, 15);
+            this.label_JuliaAnimationRadius.TabIndex = 80;
+            this.label_JuliaAnimationRadius.Text = "Radius:*";
+            // 
+            // input_JuliaAnimationRadius
+            // 
+            this.input_JuliaAnimationRadius.Location = new System.Drawing.Point(99, 161);
+            this.input_JuliaAnimationRadius.Name = "input_JuliaAnimationRadius";
+            this.input_JuliaAnimationRadius.Size = new System.Drawing.Size(51, 23);
+            this.input_JuliaAnimationRadius.TabIndex = 81;
+            this.input_JuliaAnimationRadius.Text = "1.01";
+            this.input_JuliaAnimationRadius.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_FocusOnEnter);
+            this.input_JuliaAnimationRadius.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.control_ValidateDecimalChar);
+            this.input_JuliaAnimationRadius.Validating += new System.ComponentModel.CancelEventHandler(this.input_JuliaAnimationRadius_Validating);
+            this.input_JuliaAnimationRadius.Validated += new System.EventHandler(this.input_JuliaAnimationRadius_Validated);
             // 
             // label_JuliaAnimationPath
             // 
@@ -2527,6 +2635,7 @@
             this.panel_MenuSelect.ResumeLayout(false);
             this.panel_MiscMenu.ResumeLayout(false);
             this.panel_MiscMenu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.input_JuliaMatingAnimationOffset)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2710,8 +2819,15 @@
         private System.Windows.Forms.CheckBox checkBox_AnimationEnabled;
         private System.Windows.Forms.Label label_JuliaAnimationPath;
         private System.Windows.Forms.ComboBox input_JuliaAnimationPath;
-        private System.Windows.Forms.Label label_JuliaAnimationFactor;
-        private System.Windows.Forms.TextBox input_JuliaAnimationFactor;
+        private System.Windows.Forms.Label label_JuliaAnimationRadius;
+        private System.Windows.Forms.TextBox input_JuliaAnimationRadius;
+        private System.Windows.Forms.Label label_JuliaMatingAnimationRadius;
+        private System.Windows.Forms.TextBox input_JuliaMatingAnimationRadius;
+        private System.Windows.Forms.Label label_JuliaMatingAnimationPath;
+        private System.Windows.Forms.ComboBox input_JuliaMatingAnimationPath;
+        private System.Windows.Forms.CheckBox checkBox_UseJuliaMatingAnimationReverse;
+        private System.Windows.Forms.Label label_JuliaMatingAnimationOffset;
+        private System.Windows.Forms.NumericUpDown input_JuliaMatingAnimationOffset;
     }
 }
 

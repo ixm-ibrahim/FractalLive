@@ -14,23 +14,29 @@ namespace FractalLive
             IsInitialized = false;
         }
 
-        public void InitializeMating(int matingIterations, int intermediateSteps)
+        public void InitializeMating(int matingIterations, int intermediateSteps, bool complete = false)
         {
             IsInitialized = false;
 
             MatingIterations = matingIterations;
             IntermediateSteps = intermediateSteps;
 
-            InitializeMating();
+            if (complete)
+                CompleteMating();
+            else
+                InitializeMating();
         }
-        public void InitializeMating(Vector2 p, Vector2 q)
+        public void InitializeMating(Vector2 p, Vector2 q, bool complete = false)
         {
             P = new BigComplex(p.X, p.Y);
             Q = new BigComplex(q.X, q.Y);
 
-            InitializeMating();
+            if (complete)
+                CompleteMating();
+            else
+                InitializeMating();
         }
-        public void InitializeMating(Vector2 p, Vector2 q, int matingIterations, int intermediateSteps)
+        public void InitializeMating(Vector2 p, Vector2 q, int matingIterations, int intermediateSteps, bool complete = false)
         {
             // Bascilica vs. Rabbit
             //P = new BigComplex(-1, 0);
@@ -40,7 +46,10 @@ namespace FractalLive
             MatingIterations = matingIterations;
             IntermediateSteps = intermediateSteps;
 
-            InitializeMating();
+            if (complete)
+                CompleteMating();
+            else
+                InitializeMating();
         }
         void InitializeMating()
         {
@@ -121,7 +130,7 @@ namespace FractalLive
                 if (currentStep < 0)
                     currentStep = 0;
                 else if (currentStep >= MatingIterations * IntermediateSteps)
-                currentStep = MatingIterations * IntermediateSteps - 1;
+                    currentStep = MatingIterations * IntermediateSteps - 1;
 
             if (currentStep >= MatingIterations * IntermediateSteps)
                 currentStep = MatingIterations * IntermediateSteps - 1;
@@ -183,6 +192,62 @@ namespace FractalLive
 
                 SetStepValues();
             }
+        }
+        public void CompleteMating()
+        {
+            InitializeMating();
+
+            for (currentStep = 0; currentStep < MatingIterations*IntermediateSteps; currentStep++)
+            {
+                int s = (int)currentStep % IntermediateSteps;
+                int n = ((int)currentStep - s) / IntermediateSteps;
+
+                int first = IntermediateSteps + s;
+
+                if (n > 0)
+                {
+                    var z_x = new BigComplex[MatingIterations - n];
+                    var z_y = new BigComplex[MatingIterations - n];
+
+                    var tmp = (1 - Y[first]) / (1 - X[first]);
+
+                    for (int k = 0; k < MatingIterations - n; k++)
+                    {
+                        int k_next = k + 1;
+                        int next = IntermediateSteps * k_next + s;
+                        int prev = IntermediateSteps * k + ((s + IntermediateSteps - 1) % IntermediateSteps);
+
+                        z_x[k] = BigComplex.Sqrt(BigComplex.Proj(tmp * (X[next] - X[first]) / (X[next] - Y[first])));
+                        z_y[k] = BigComplex.Sqrt(BigComplex.Proj(tmp * (1 - (X[first] / Y[next])) / (1 - (Y[first] / Y[next]))));
+
+                        if ((-z_x[k] - X[prev]).RadiusSquared < (z_x[k] - X[prev]).RadiusSquared)
+                            z_x[k] = -z_x[k];
+                        if ((-z_y[k] - Y[prev]).RadiusSquared < (z_y[k] - Y[prev]).RadiusSquared)
+                            z_y[k] = -z_y[k];
+                    }
+
+                    for (int k = 0; k < MatingIterations - n; k++)
+                    {
+                        X[IntermediateSteps * k + s] = z_x[k];
+                        Y[IntermediateSteps * k + s] = z_y[k];
+                    }
+                }
+
+                var d = Y[first] - 1;
+                var c = 1 - X[first];
+                var b = X[first] * d;
+                var a = Y[first] * c;
+
+                Ma[(int)currentStep] = new Vector2d(a.R.ToDouble(), a.I.ToDouble());
+                Mb[(int)currentStep] = new Vector2d(b.R.ToDouble(), b.I.ToDouble());
+                Mc[(int)currentStep] = new Vector2d(c.R.ToDouble(), c.I.ToDouble());
+                Md[(int)currentStep] = new Vector2d(d.R.ToDouble(), d.I.ToDouble());
+            }
+
+            Completed = true;
+            currentStep--;
+            currentStep--; //@ because of bug in final iteration
+            SetStepValues();
         }
 
         public bool IsInitialized { get; set; }
