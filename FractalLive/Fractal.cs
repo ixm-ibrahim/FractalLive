@@ -14,7 +14,7 @@ namespace FractalLive
         #region Enumerations
         public enum Type
         {
-            Mandelbrot = 0, Julia = 1, Julia_Mating = 2
+            Mandelbrot = 0, Julia = 1, Julia_Mating = 2, Mandelbulb = 3
         }
 
         public enum Formula
@@ -55,7 +55,7 @@ namespace FractalLive
 
         public enum Animation
         {
-            Julia, Julia_Mating, OrbitTrap, Texture, Normals, Custom
+            Julia, Julia_Mating, OrbitTrap, Normals, Texture, Custom
         }
 
         public enum JuliaAnimationPath
@@ -238,8 +238,14 @@ namespace FractalLive
                 JuliaMatingAnimationRadius2 = 1.2f;
                 JuliaMatingAnimationOffset = new FloatBounds(0, -1, 1);
                 UseJuliaMatingAnimationReverse = false;
+
+                IsOrbitTrapAnimationEnabled = false;
+                IsTextureAnimationEnabled = false;
+                IsNormalAnimationEnabled = false;
+                IsCustomAnimationEnabled = false;
         }
 
+            public bool NeedsRayMarching => Type == Type.Mandelbulb;
             public bool Is1DBailout => OrbitTrap >= OrbitTrap.Circle && OrbitTrap <= OrbitTrap.Imaginary;
             public bool Is2DBailout => OrbitTrap == OrbitTrap.Rectangle || OrbitTrap == OrbitTrap.Points;
             public bool Is3DBailout => OrbitTrap == OrbitTrap.Spiral;
@@ -1318,6 +1324,11 @@ namespace FractalLive
             public float JuliaMatingAnimationRadius2;
             public FloatBounds JuliaMatingAnimationOffset;
             public bool UseJuliaMatingAnimationReverse;
+
+            public bool IsOrbitTrapAnimationEnabled;
+            public bool IsTextureAnimationEnabled;
+            public bool IsNormalAnimationEnabled;
+            public bool IsCustomAnimationEnabled;
 
         }
 

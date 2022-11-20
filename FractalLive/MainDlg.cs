@@ -179,6 +179,9 @@ namespace FractalLive
 
             juliaMatingShader = new Shader("Shaders/geometry.vert", "Shaders/julia_mating.frag");
             juliaMatingShader.Use();
+
+            mandelbulbShader = new Shader("Shaders/rayplane.vert", "Shaders/mandelbulb.frag");
+            mandelbulbShader.Use();
         }
 
         private void Log(string message)
@@ -276,7 +279,7 @@ namespace FractalLive
 
         private Vector2 GetJulia()
         {
-            if (currentFractalType == Fractal.Type.Julia)
+            if (currentFractalType == Fractal.Type.Julia && CurrentSettings.IsJuliaAnimationEnabled)
                 return GetJulia(juliaSettings.JuliaAnimationPath, juliaSettings.JuliaAnimationRadius, juliaSettings.Julia);
 
             return juliaSettings.Julia;
@@ -347,131 +350,162 @@ namespace FractalLive
             GL.DispatchCompute(glControl.Width, glControl.Height, 1);
             GL.MemoryBarrier(MemoryBarrierFlags.ShaderImageAccessBarrierBit);
 
-
-            shader.SetMatrix4("projection", camera.GetProjectionMatrix());
-            shader.SetMatrix4("view", camera.GetViewMatrix());
-            shader.SetMatrix4("model", Matrix4.Identity);
-
-            shader.SetInt("proj", (int)fractalSettings.Projection);
-            shader.SetBool("is3D", camera.Is3D());
-            shader.SetFloat("zoom", fractalSettings.Zoom);
-            shader.SetFloat("lockedZoom", fractalSettings.LockedZoom);
-            shader.SetFloat("initialRadius", fractalSettings.InitialDisplayRadius.Value);
-            shader.SetFloat("normalizedCoordsWidth", (float)glControl.Width / Math.Max(minGLWidth, minGLHeight));
-            shader.SetFloat("normalizedCoordsHeight", (float)glControl.Height / Math.Max(minGLWidth, minGLHeight));
-
-            shader.SetVector2("center", GetCenter());
-            shader.SetFloat("rollAngle", camera.Roll);
-            shader.SetVector2("riemannAngles", fractalSettings.RiemannAngles);
-
-            if (currentFractalType == Fractal.Type.Julia)
+            if (fractalSettings.NeedsRayMarching)
             {
-                shader.SetVector2("julia", GetJulia());
+                shader.SetFloat("time", fractalTime);
+
+                shader.SetMatrix4("view", camera.GetViewMatrix());
+                shader.SetVector3("pos", camera.Position);
+                shader.SetFloat("fov", MathHelper.DegreesToRadians(camera.FOV));
+                shader.SetInt("longerDim", Math.Max(minGLWidth, minGLHeight));
+                shader.SetFloat("normalizedCoordsWidth", (float)glControl.Width / Math.Max(minGLWidth, minGLHeight));
+                shader.SetFloat("normalizedCoordsHeight", (float)glControl.Height / Math.Max(minGLWidth, minGLHeight));
+
+                shader.SetBool("sphereTrace", true);
+                //shader.SetBool("sphereTrace", false);
+                //shader.SetBool("postMarch", false);
+                shader.SetBool("postMarch", true);
+                shader.SetInt("raymarchIterations", 128);
+                shader.SetInt("postMarchIterations", 200);
+                shader.SetFloat("postMarchBackDist", 1f);
+                shader.SetFloat("fixedStep", .01f);
+                shader.SetFloat("minRaymarchDist", 0.0001f);
+                shader.SetFloat("maxRaymarchDist", 10.0f);
+                shader.SetFloat("universeRadius", camera.CurrentSettings.farClipping);
+
+
+                // Menu 1
+                //shader.SetInt("maxIterations", fractalSettings.MaxIterations.Value);
+                shader.SetInt("maxIterations", 4);
+                shader.SetFloat("power", 8);
             }
-            else if (currentFractalType == Fractal.Type.Julia_Mating)
+            else
             {
-                int s = (int)juliaMating.CurrentStep % juliaMating.IntermediateSteps;
-                int n = ((int)juliaMating.CurrentStep - s) / juliaMating.IntermediateSteps;
+                shader.SetMatrix4("projection", camera.GetProjectionMatrix());
+                shader.SetMatrix4("view", camera.GetViewMatrix());
+                shader.SetMatrix4("model", Matrix4.Identity);
 
-                shader.SetInt("currentMatingIteration", n);
-                shader.SetVector2("p", juliaMating.P.ToComplex());
-                shader.SetVector2("q", juliaMating.Q.ToComplex());
+                shader.SetInt("proj", (int)fractalSettings.Projection);
+                shader.SetBool("is3D", camera.Is3D());
+                shader.SetFloat("zoom", fractalSettings.Zoom);
+                shader.SetFloat("lockedZoom", fractalSettings.LockedZoom);
+                shader.SetFloat("initialRadius", fractalSettings.InitialDisplayRadius.Value);
+                shader.SetFloat("normalizedCoordsWidth", (float)glControl.Width / Math.Max(minGLWidth, minGLHeight));
+                shader.SetFloat("normalizedCoordsHeight", (float)glControl.Height / Math.Max(minGLWidth, minGLHeight));
 
-                shader.SetDouble("R_t", juliaMating.R_t);
-                shader.SetVector2Array("ma", juliaMating.Ma_Step);
-                shader.SetVector2Array("mb", juliaMating.Mb_Step);
-                shader.SetVector2Array("mc", juliaMating.Mc_Step);
-                shader.SetVector2Array("md", juliaMating.Md_Step);
+                shader.SetVector2("center", GetCenter());
+                shader.SetFloat("rollAngle", camera.Roll);
+                shader.SetVector2("riemannAngles", fractalSettings.RiemannAngles);
+
+                if (currentFractalType == Fractal.Type.Julia)
+                {
+                    shader.SetVector2("julia", GetJulia());
+                }
+                else if (currentFractalType == Fractal.Type.Julia_Mating)
+                {
+                    int s = (int)juliaMating.CurrentStep % juliaMating.IntermediateSteps;
+                    int n = ((int)juliaMating.CurrentStep - s) / juliaMating.IntermediateSteps;
+
+                    shader.SetInt("currentMatingIteration", n);
+                    shader.SetVector2("p", juliaMating.P.ToComplex());
+                    shader.SetVector2("q", juliaMating.Q.ToComplex());
+
+                    shader.SetDouble("R_t", juliaMating.R_t);
+                    shader.SetVector2Array("ma", juliaMating.Ma_Step);
+                    shader.SetVector2Array("mb", juliaMating.Mb_Step);
+                    shader.SetVector2Array("mc", juliaMating.Mc_Step);
+                    shader.SetVector2Array("md", juliaMating.Md_Step);
+                }
+
+                // Menu 1
+                shader.SetInt("formula", (int)fractalSettings.Formula);
+                shader.SetInt("maxIterations", fractalSettings.MaxIterations.Value);
+                shader.SetInt("minIterations", fractalSettings.MinIterations.Value);
+                shader.SetBool("useConjugate", fractalSettings.UseConjugate);
+                shader.SetVector2("startPosition", fractalSettings.StartPosition);
+                shader.SetVector2("power", fractalSettings.Power);
+                shader.SetVector2("c_power", fractalSettings.C_Power);
+                shader.SetFloat("foldCount", fractalSettings.FoldCount);
+                shader.SetFloat("foldAngle", MathHelper.DegreesToRadians(fractalSettings.FoldAngle));
+                shader.SetVector2("foldOffset", fractalSettings.FoldOffset);
+
+                // Menu 2
+                shader.SetInt("orbitTrap", (int)fractalSettings.OrbitTrap);
+                shader.SetFloat("bailout", fractalSettings.Bailout);
+                shader.SetVector2("bailoutRectangle", fractalSettings.BailoutRectangle);
+                shader.SetVector4("bailoutSpiral", fractalSettings.BailoutSpiral);
+                shader.SetVector2Array("bailoutPoints", fractalSettings.BailoutPoints);
+                shader.SetInt("bailoutPointsCount", fractalSettings.BailoutPointsCount);
+                shader.SetVector4Array("bailoutLines", fractalSettings.BailoutLines);
+                shader.SetInt("bailoutLinesCount", fractalSettings.BailoutLinesCount);
+                shader.SetInt("bailoutTexture", 0);
+                shader.SetInt("orbitTrapCalculation", (int)fractalSettings.OrbitTrapCalculation);
+                shader.SetBool("useSecondValue", fractalSettings.UseSecondValue);
+                shader.SetFloat("startOrbitDistance", fractalSettings.StartOrbitDistance.Value);
+                shader.SetInt("startOrbit", fractalSettings.StartOrbit.Value);
+                shader.SetInt("orbitRange", fractalSettings.OrbitRange.Value);
+                shader.SetFloat("bailoutFactor1", fractalSettings.BailoutFactor1);
+                shader.SetFloat("bailoutFactor2", fractalSettings.BailoutFactor2);
+                shader.SetFloat("secondValueFactor1", fractalSettings.SecondValueFactor1);
+                shader.SetFloat("secondValueFactor2", fractalSettings.SecondValueFactor2);
+                shader.SetBool("useBailoutTexture", fractalSettings.BailoutTexture != "");
+                shader.SetFloat("bailoutTextureBlend", fractalSettings.BailoutTextureBlend);
+                shader.SetVector2("bailoutTextureScale", new Vector2(fractalSettings.BailoutTextureScaleX, fractalSettings.BailoutTextureScaleY));
+                shader.SetBool("bailoutUsePolarTextureCoordinates", fractalSettings.BailoutUsePolarTextureCoordinates);
+
+                // Menu 3
+                shader.SetFloat("time", fractalTime + 150);
+                bool split = fractalSettings.EditingColor != Fractal.Editing.Both;
+                shader.SetBool("splitInteriorExterior", split);
+
+                shader.SetBool("useCustomPalette", split ? fractalSettings.E_UseCustomPalette : fractalSettings.UseCustomPalette);
+                shader.SetVector4Array("customPalette", split ? fractalSettings.E_CustomPalette : fractalSettings.CustomPalette);
+                shader.SetInt("coloring", (int)(split ? fractalSettings.E_Coloring : fractalSettings.Coloring));
+                shader.SetFloat("colorCycles", split ? fractalSettings.E_ColorCycles : fractalSettings.ColorCycles);
+                shader.SetFloat("colorFactor", split ? fractalSettings.E_ColorFactor : fractalSettings.ColorFactor);
+                shader.SetFloat("orbitTrapFactor", split ? fractalSettings.E_OrbitTrapFactor : fractalSettings.OrbitTrapFactor);
+                shader.SetFloat("stripeDensity", split ? fractalSettings.E_StripeDensity : fractalSettings.StripeDensity);
+                shader.SetInt("domainCalculation", (int)(split ? fractalSettings.I_DomainCalculation : fractalSettings.DomainCalculation));
+                shader.SetBool("matchOrbitTrap", (split ? fractalSettings.I_MatchOrbitTrap : fractalSettings.MatchOrbitTrap) && fractalSettings.OrbitTrap >= Fractal.OrbitTrap.Points);
+                shader.SetBool("useDomainSecondValue", split ? fractalSettings.E_UseSecondDomainValue : fractalSettings.UseSecondDomainValue);
+                shader.SetFloat("secondDomainValueFactor1", split ? fractalSettings.E_SecondDomainValueFactor1 : fractalSettings.SecondDomainValueFactor1);
+                shader.SetFloat("secondDomainValueFactor2", split ? fractalSettings.E_SecondDomainValueFactor2 : fractalSettings.SecondDomainValueFactor2);
+                shader.SetBool("useDomainIteration", split ? fractalSettings.E_UseDomainIteration : fractalSettings.UseDomainIteration);
+                shader.SetBool("useDistanceEstimation", split ? fractalSettings.I_UseDistanceEstimation : fractalSettings.UseDistanceEstimation);
+                shader.SetFloat("maxDistanceEstimation", split ? fractalSettings.I_MaxDistanceEstimation : fractalSettings.MaxDistanceEstimation);
+                shader.SetFloat("distanceEstimationFactor1", split ? fractalSettings.I_DistanceEstimationFactor1 : fractalSettings.DistanceEstimationFactor1);
+                shader.SetFloat("distanceEstimationFactor2", split ? fractalSettings.I_DistanceEstimationFactor2 : fractalSettings.DistanceEstimationFactor2);
+                shader.SetBool("useNormals", split ? fractalSettings.I_UseNormals : fractalSettings.UseNormals);
+                shader.SetBool("useTexture", (split ? fractalSettings.E_Texture : fractalSettings.Texture) != "");
+                shader.SetInt("e_texture", split ? 3 : 1);
+                shader.SetFloat("textureBlend", split ? fractalSettings.E_TextureBlend : fractalSettings.TextureBlend);
+                shader.SetFloat("textureScaleX", split ? fractalSettings.E_TextureScaleX : fractalSettings.TextureScaleX);
+                shader.SetFloat("textureScaleY", split ? fractalSettings.E_TextureScaleY : fractalSettings.TextureScaleY);
+                shader.SetBool("usePolarTextureCoordinates", split ? fractalSettings.E_UsePolarTextureCoordinates : fractalSettings.UsePolarTextureCoordinates);
+                shader.SetBool("useDistortedTexture", split ? fractalSettings.E_UseTextureDistortion : fractalSettings.UseTextureDistortion);
+                shader.SetFloat("textureDistortionFactor", split ? fractalSettings.E_TextureDistortion : fractalSettings.TextureDistortion);
+
+                shader.SetInt("i_coloring", (int)fractalSettings.I_Coloring);
+                shader.SetBool("i_useCustomPalette", fractalSettings.I_UseCustomPalette);
+                shader.SetVector4Array("i_customPalette", fractalSettings.I_CustomPalette);
+                shader.SetFloat("i_colorCycles", fractalSettings.I_ColorCycles);
+                shader.SetFloat("i_colorFactor", fractalSettings.I_ColorFactor);
+                shader.SetFloat("i_orbitTrapFactor", fractalSettings.I_OrbitTrapFactor);
+                shader.SetFloat("i_stripeDensity", fractalSettings.I_StripeDensity);
+                shader.SetBool("i_useDomainSecondValue", fractalSettings.I_UseSecondDomainValue);
+                shader.SetFloat("i_secondDomainValueFactor1", fractalSettings.I_SecondDomainValueFactor1);
+                shader.SetFloat("i_secondDomainValueFactor2", fractalSettings.I_SecondDomainValueFactor2);
+                shader.SetBool("i_useDomainIteration", fractalSettings.I_UseDomainIteration);
+                shader.SetBool("i_useTexture", fractalSettings.I_Texture != "");
+                shader.SetInt("i_texture", 2);
+                shader.SetFloat("i_textureBlend", fractalSettings.I_TextureBlend);
+                shader.SetFloat("i_textureScaleX", fractalSettings.I_TextureScaleX);
+                shader.SetFloat("i_textureScaleY", fractalSettings.I_TextureScaleY);
+                shader.SetBool("i_usePolarTextureCoordinates", fractalSettings.I_UsePolarTextureCoordinates);
+                shader.SetBool("i_useDistortedTexture", fractalSettings.I_UseTextureDistortion);
+                shader.SetFloat("i_textureDistortionFactor", fractalSettings.I_TextureDistortion);
             }
-
-            // Menu 1
-            shader.SetInt("formula", (int)fractalSettings.Formula);
-            shader.SetInt("maxIterations", fractalSettings.MaxIterations.Value);
-            shader.SetInt("minIterations", fractalSettings.MinIterations.Value);
-            shader.SetBool("useConjugate", fractalSettings.UseConjugate);
-            shader.SetVector2("startPosition", fractalSettings.StartPosition);
-            shader.SetVector2("power", fractalSettings.Power);
-            shader.SetVector2("c_power", fractalSettings.C_Power);
-            shader.SetFloat("foldCount", fractalSettings.FoldCount);
-            shader.SetFloat("foldAngle", MathHelper.DegreesToRadians(fractalSettings.FoldAngle));
-            shader.SetVector2("foldOffset", fractalSettings.FoldOffset);
-
-            // Menu 2
-            shader.SetInt("orbitTrap", (int)fractalSettings.OrbitTrap);
-            shader.SetFloat("bailout", fractalSettings.Bailout);
-            shader.SetVector2("bailoutRectangle", fractalSettings.BailoutRectangle);
-            shader.SetVector4("bailoutSpiral", fractalSettings.BailoutSpiral);
-            shader.SetVector2Array("bailoutPoints", fractalSettings.BailoutPoints);
-            shader.SetInt("bailoutPointsCount", fractalSettings.BailoutPointsCount);
-            shader.SetVector4Array("bailoutLines", fractalSettings.BailoutLines);
-            shader.SetInt("bailoutLinesCount", fractalSettings.BailoutLinesCount);
-            shader.SetInt("bailoutTexture", 0);
-            shader.SetInt("orbitTrapCalculation", (int)fractalSettings.OrbitTrapCalculation);
-            shader.SetBool("useSecondValue", fractalSettings.UseSecondValue);
-            shader.SetFloat("startOrbitDistance", fractalSettings.StartOrbitDistance.Value);
-            shader.SetInt("startOrbit", fractalSettings.StartOrbit.Value);
-            shader.SetInt("orbitRange", fractalSettings.OrbitRange.Value);
-            shader.SetFloat("bailoutFactor1", fractalSettings.BailoutFactor1);
-            shader.SetFloat("bailoutFactor2", fractalSettings.BailoutFactor2);
-            shader.SetFloat("secondValueFactor1", fractalSettings.SecondValueFactor1);
-            shader.SetFloat("secondValueFactor2", fractalSettings.SecondValueFactor2);
-            shader.SetBool("useBailoutTexture", fractalSettings.BailoutTexture != "");
-            shader.SetFloat("bailoutTextureBlend", fractalSettings.BailoutTextureBlend);
-            shader.SetVector2("bailoutTextureScale", new Vector2(fractalSettings.BailoutTextureScaleX, fractalSettings.BailoutTextureScaleY));
-            shader.SetBool("bailoutUsePolarTextureCoordinates", fractalSettings.BailoutUsePolarTextureCoordinates);
-
-            // Menu 3
-            shader.SetFloat("time", fractalTime + 150);
-            bool split = fractalSettings.EditingColor != Fractal.Editing.Both;
-            shader.SetBool("splitInteriorExterior", split);
-
-            shader.SetBool("useCustomPalette", split ? fractalSettings.E_UseCustomPalette : fractalSettings.UseCustomPalette);
-            shader.SetVector4Array("customPalette", split ? fractalSettings.E_CustomPalette : fractalSettings.CustomPalette);
-            shader.SetInt("coloring", (int)(split ? fractalSettings.E_Coloring : fractalSettings.Coloring));
-            shader.SetFloat("colorCycles", split ? fractalSettings.E_ColorCycles : fractalSettings.ColorCycles);
-            shader.SetFloat("colorFactor", split ? fractalSettings.E_ColorFactor : fractalSettings.ColorFactor);
-            shader.SetFloat("orbitTrapFactor", split ? fractalSettings.E_OrbitTrapFactor : fractalSettings.OrbitTrapFactor);
-            shader.SetFloat("stripeDensity", split ? fractalSettings.E_StripeDensity : fractalSettings.StripeDensity);
-            shader.SetInt("domainCalculation", (int)(split ? fractalSettings.I_DomainCalculation : fractalSettings.DomainCalculation));
-            shader.SetBool("matchOrbitTrap", (split ? fractalSettings.I_MatchOrbitTrap : fractalSettings.MatchOrbitTrap) && fractalSettings.OrbitTrap >= Fractal.OrbitTrap.Points);
-            shader.SetBool("useDomainSecondValue", split ? fractalSettings.E_UseSecondDomainValue : fractalSettings.UseSecondDomainValue);
-            shader.SetFloat("secondDomainValueFactor1", split ? fractalSettings.E_SecondDomainValueFactor1 : fractalSettings.SecondDomainValueFactor1);
-            shader.SetFloat("secondDomainValueFactor2", split ? fractalSettings.E_SecondDomainValueFactor2 : fractalSettings.SecondDomainValueFactor2);
-            shader.SetBool("useDomainIteration", split ? fractalSettings.E_UseDomainIteration : fractalSettings.UseDomainIteration);
-            shader.SetBool("useDistanceEstimation", split ? fractalSettings.I_UseDistanceEstimation : fractalSettings.UseDistanceEstimation);
-            shader.SetFloat("maxDistanceEstimation", split ? fractalSettings.I_MaxDistanceEstimation : fractalSettings.MaxDistanceEstimation);
-            shader.SetFloat("distanceEstimationFactor1", split ? fractalSettings.I_DistanceEstimationFactor1 : fractalSettings.DistanceEstimationFactor1);
-            shader.SetFloat("distanceEstimationFactor2", split ? fractalSettings.I_DistanceEstimationFactor2 : fractalSettings.DistanceEstimationFactor2);
-            shader.SetBool("useNormals", split ? fractalSettings.I_UseNormals : fractalSettings.UseNormals);
-            shader.SetBool("useTexture", (split ? fractalSettings.E_Texture : fractalSettings.Texture) != "");
-            shader.SetInt("e_texture", split ? 3 : 1);
-            shader.SetFloat("textureBlend", split ? fractalSettings.E_TextureBlend : fractalSettings.TextureBlend);
-            shader.SetFloat("textureScaleX", split ? fractalSettings.E_TextureScaleX : fractalSettings.TextureScaleX);
-            shader.SetFloat("textureScaleY", split ? fractalSettings.E_TextureScaleY : fractalSettings.TextureScaleY);
-            shader.SetBool("usePolarTextureCoordinates", split ? fractalSettings.E_UsePolarTextureCoordinates : fractalSettings.UsePolarTextureCoordinates);
-            shader.SetBool("useDistortedTexture", split ? fractalSettings.E_UseTextureDistortion : fractalSettings.UseTextureDistortion);
-            shader.SetFloat("textureDistortionFactor", split ? fractalSettings.E_TextureDistortion : fractalSettings.TextureDistortion);
             
-            shader.SetInt("i_coloring", (int)fractalSettings.I_Coloring);
-            shader.SetBool("i_useCustomPalette", fractalSettings.I_UseCustomPalette);
-            shader.SetVector4Array("i_customPalette", fractalSettings.I_CustomPalette);
-            shader.SetFloat("i_colorCycles", fractalSettings.I_ColorCycles);
-            shader.SetFloat("i_colorFactor", fractalSettings.I_ColorFactor);
-            shader.SetFloat("i_orbitTrapFactor", fractalSettings.I_OrbitTrapFactor);
-            shader.SetFloat("i_stripeDensity", fractalSettings.I_StripeDensity);
-            shader.SetBool("i_useDomainSecondValue", fractalSettings.I_UseSecondDomainValue);
-            shader.SetFloat("i_secondDomainValueFactor1", fractalSettings.I_SecondDomainValueFactor1);
-            shader.SetFloat("i_secondDomainValueFactor2", fractalSettings.I_SecondDomainValueFactor2);
-            shader.SetBool("i_useDomainIteration", fractalSettings.I_UseDomainIteration);
-            shader.SetBool("i_useTexture", fractalSettings.I_Texture != "");
-            shader.SetInt("i_texture", 2);
-            shader.SetFloat("i_textureBlend", fractalSettings.I_TextureBlend);
-            shader.SetFloat("i_textureScaleX", fractalSettings.I_TextureScaleX);
-            shader.SetFloat("i_textureScaleY", fractalSettings.I_TextureScaleY);
-            shader.SetBool("i_usePolarTextureCoordinates", fractalSettings.I_UsePolarTextureCoordinates);
-            shader.SetBool("i_useDistortedTexture", fractalSettings.I_UseTextureDistortion);
-            shader.SetFloat("i_textureDistortionFactor", fractalSettings.I_TextureDistortion);
-
             shader.Use();
 
             if (CurrentSettings.Projection == Fractal.Projection.Riemann_Sphere)
@@ -519,6 +553,13 @@ namespace FractalLive
 
             juliaMatingSettings = new Fractal.Settings(Fractal.Type.Julia_Mating);
             juliaMatingCamera = new Camera();
+
+            mandelbulbSettings = new Fractal.Settings(Fractal.Type.Mandelbulb);
+            mandelbulbSettings.Julia = Vector2.Zero;
+            mandelbulbSettings.JuliaMating1 = Vector2.Zero;
+            mandelbulbSettings.JuliaMating2 = Vector2.Zero;
+            mandelbulbCamera = new Camera();
+            mandelbulbCamera.ChangeMode(Camera.Mode.FPS);
 
             input_FractalType.SelectedIndex = (int)CurrentSettings.Type;
             input_FractalType_SelectionChangeCommitted(null, null);
@@ -597,6 +638,7 @@ namespace FractalLive
             GL.DeleteProgram(mandelbrotShader.Handle);
             GL.DeleteProgram(juliaJulia.Handle);
             GL.DeleteProgram(juliaMatingShader.Handle);
+            GL.DeleteProgram(mandelbulbShader.Handle);
         }
 
         /// <summary>
@@ -616,6 +658,7 @@ namespace FractalLive
             juliaCamera.AspectRatio = aspect_ratio;
             mandelbrotCamera.AspectRatio = aspect_ratio;
             //juliaMatingCamera.AspectRatio = aspect_ratio;
+            mandelbulbCamera.AspectRatio = aspect_ratio;
         }
 
         /// <summary>
@@ -670,7 +713,7 @@ namespace FractalLive
                 fractalTime += deltaTime * timeFactor;
                 animationTime += deltaTime * timeFactor * CurrentSettings.AnimationSpeed / (float)Math.Pow(2, CurrentSettings.Formula == Fractal.Formula.Lambda ? CurrentSettings.Zoom + 2 : CurrentSettings.Zoom);
             }
-            Log(CurrentSettings.AnimationSpeed.ToString());
+            
             // menu controls
             if (panel_FormulaMenu.Enabled)
             {
@@ -2619,7 +2662,17 @@ namespace FractalLive
                     input_JuliaMatingAnimationOffset.Value = (decimal)juliaSettings.JuliaMatingAnimationOffset.Value;
                     checkBox_UseJuliaMatingAnimationReverse.Checked = juliaSettings.UseJuliaMatingAnimationReverse;
                     break;
-                default:
+                case Fractal.Animation.OrbitTrap:
+                    checkBox_AnimationEnabled.Checked = juliaSettings.IsOrbitTrapAnimationEnabled;
+                    break;
+                case Fractal.Animation.Normals:
+                    checkBox_AnimationEnabled.Checked = juliaSettings.IsNormalAnimationEnabled;
+                    break;
+                case Fractal.Animation.Texture:
+                    checkBox_AnimationEnabled.Checked = juliaSettings.IsTextureAnimationEnabled;
+                    break;
+                case Fractal.Animation.Custom:
+                    checkBox_AnimationEnabled.Checked = juliaSettings.IsCustomAnimationEnabled;
                     break;
             }
 
@@ -2629,6 +2682,14 @@ namespace FractalLive
         private void checkBox_AnimationEnabled_CheckedChanged(object sender, EventArgs e)
         {
             input_AnimationSpeed.Text = juliaSettings.AnimationSpeed.ToString();
+
+            checkBox_UsePeriodicPoint.Enabled = false;
+            input_JuliaAnimationPath.Enabled = false;
+            input_JuliaAnimationRadius.Enabled = false;
+            input_JuliaMatingAnimationPath.Enabled = false;
+            input_JuliaMatingAnimationRadius.Enabled = false;
+            input_JuliaMatingAnimationOffset.Enabled = false;
+            checkBox_UseJuliaMatingAnimationReverse.Enabled = false;
 
             switch (CurrentSettings.EditingAnimation)
             {
@@ -2659,6 +2720,22 @@ namespace FractalLive
                     input_JuliaMatingAnimationOffset.Enabled = juliaMatingSettings.IsJuliaMatingAnimationEnabled;
                     checkBox_UseJuliaMatingAnimationReverse.Enabled = juliaMatingSettings.IsJuliaMatingAnimationEnabled;
 
+                    break;
+                case Fractal.Animation.OrbitTrap:
+                    juliaSettings.IsOrbitTrapAnimationEnabled = checkBox_AnimationEnabled.Checked;
+                    input_AnimationSpeed.Enabled = juliaMatingSettings.IsOrbitTrapAnimationEnabled;
+                    break;
+                case Fractal.Animation.Normals:
+                    juliaSettings.IsNormalAnimationEnabled = checkBox_AnimationEnabled.Checked;
+                    input_AnimationSpeed.Enabled = juliaMatingSettings.IsNormalAnimationEnabled;
+                    break;
+                case Fractal.Animation.Texture:
+                    juliaSettings.IsTextureAnimationEnabled = checkBox_AnimationEnabled.Checked;
+                    input_AnimationSpeed.Enabled = juliaMatingSettings.IsTextureAnimationEnabled;
+                    break;
+                case Fractal.Animation.Custom:
+                    juliaSettings.IsCustomAnimationEnabled = checkBox_AnimationEnabled.Checked;
+                    input_AnimationSpeed.Enabled = juliaMatingSettings.IsCustomAnimationEnabled;
                     break;
             }
         }
@@ -2747,6 +2824,8 @@ namespace FractalLive
                         return ref juliaCamera;
                     case Fractal.Type.Julia_Mating:
                         return ref juliaMatingCamera;
+                    case Fractal.Type.Mandelbulb:
+                        return ref mandelbulbCamera;
                     default:
                         return ref customCamera;
                 }
@@ -2764,6 +2843,8 @@ namespace FractalLive
                         return ref juliaSettings;
                     case Fractal.Type.Julia_Mating:
                         return ref juliaMatingSettings;
+                    case Fractal.Type.Mandelbulb:
+                        return ref mandelbulbSettings;
                     default:
                         return ref customSettings;
                 }
@@ -2781,6 +2862,8 @@ namespace FractalLive
                         return ref juliaJulia;
                     case Fractal.Type.Julia_Mating:
                         return ref juliaMatingShader;
+                    case Fractal.Type.Mandelbulb:
+                        return ref mandelbulbShader;
                     default:
                         return ref custom;
                 }
@@ -2818,6 +2901,10 @@ namespace FractalLive
         private Shader juliaMatingShader;
         private Camera juliaMatingCamera;
         private JuliaMating juliaMating = new JuliaMating();
+
+        private Fractal.Settings mandelbulbSettings;
+        private Shader mandelbulbShader;
+        private Camera mandelbulbCamera;
 
         private Fractal.Settings customSettings;
         private Shader custom;

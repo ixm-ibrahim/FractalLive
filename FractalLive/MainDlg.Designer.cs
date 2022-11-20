@@ -701,7 +701,8 @@
             this.input_FractalType.Items.AddRange(new object[] {
             "Mandelbrot",
             "Julia",
-            "Julia Mating"});
+            "Julia Mating",
+            "Mandelbulb"});
             this.input_FractalType.Location = new System.Drawing.Point(68, 27);
             this.input_FractalType.Name = "input_FractalType";
             this.input_FractalType.Size = new System.Drawing.Size(87, 23);
@@ -1717,7 +1718,7 @@
             this.panel_ColorMenu.Controls.Add(this.checkBox_UsePolarTextureCoordinates);
             this.panel_ColorMenu.Controls.Add(this.checkBox_UseDistortedTexture);
             this.panel_ColorMenu.Controls.Add(this.label_TextureDistortionFactor);
-            this.panel_ColorMenu.Location = new System.Drawing.Point(517, 24);
+            this.panel_ColorMenu.Location = new System.Drawing.Point(701, 24);
             this.panel_ColorMenu.MinimumSize = new System.Drawing.Size(178, 276);
             this.panel_ColorMenu.Name = "panel_ColorMenu";
             this.panel_ColorMenu.Size = new System.Drawing.Size(178, 535);

@@ -59,6 +59,10 @@ orbit path on left click (new shader)
 change powers in InitializeMating
 animate textures, orbit traps, rotate normals
 was in the middle of debugging domain miniterations for julia
+resolution buttons
+lines with stripes 2
+infinity bug with stripes and julia mating smooth
+julia mating animation skipping
 
 
 terrian (misc menu), julia minimap, load save settings, doubles and quads

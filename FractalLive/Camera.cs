@@ -13,7 +13,7 @@ namespace FractalLive
         #region Enumerations
         public enum Mode
         {
-            Flat, FPS, Free
+            Flat, FPS, Free, Raymarch
         }
 
         public enum Projection
@@ -38,7 +38,7 @@ namespace FractalLive
             public float nearClipping;
             public float farClipping;
 
-            public Settings(Mode mode, float fov = 67.5f, Projection projection = Projection.CARTESIAN, bool showTarget = false, bool showAxis = false, float moveSpeed = .03f, float panSpeed = .015f, float turnSpeed = .2f, float zoomSpeed = .1f, float mouseSensitivity = .2f, float nearClipping = 0.001f, float farClipping = 50f)
+            public Settings(Mode mode, float fov = 67.5f, Projection projection = Projection.CARTESIAN, bool showTarget = false, bool showAxis = false, float moveSpeed = .03f, float panSpeed = .015f, float turnSpeed = .2f, float zoomSpeed = .1f, float mouseSensitivity = .2f, float nearClipping = 0.001f, float farClipping = 100f)
             {
                 this.mode = Mode.Flat;
                 this.projection = Projection.CARTESIAN;
@@ -201,7 +201,8 @@ namespace FractalLive
         }
         public void ChangeMode(Fractal.Projection projection)
         {
-            CurrentMode = projection == Fractal.Projection.Riemann_Sphere ? Mode.Free : Mode.Flat;
+            if (CurrentMode != Mode.Raymarch)
+                CurrentMode = projection == Fractal.Projection.Riemann_Sphere ? Mode.Free : Mode.Flat;
         }
 
         public void UpdateTargetDistance()
@@ -464,7 +465,7 @@ namespace FractalLive
 
         public bool Is3D()
         {
-            return CurrentMode != Mode.Flat;
+            return CurrentMode == Mode.Raymarch || CurrentMode != Mode.Flat;
         }
 
         #endregion
@@ -473,6 +474,8 @@ namespace FractalLive
         public Mode CurrentMode { get; private set; }
 
         public float AspectRatio { get; set; }
+        public float Near => CurrentSettings.nearClipping;
+        public float Far => CurrentSettings.farClipping;
         public ref Settings CurrentSettings
         {
             get
